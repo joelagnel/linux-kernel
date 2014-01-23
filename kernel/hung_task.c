@@ -221,8 +221,10 @@ static void check_hung_uninterruptible_tasks(unsigned long timeout)
 		printk_prefer_direct_exit();
 	}
 
-	if (hung_task_call_panic)
+	if (hung_task_call_panic) {
+		show_state_filter(TASK_UNINTERRUPTIBLE);
 		panic("hung_task: blocked tasks");
+	}
 }
 
 static long hung_timeout_jiffies(unsigned long last_checked,
