@@ -333,9 +333,21 @@ int cros_ec_sensors_core_init(struct platform_device *pdev,
 			 * We can not use trigger here, as events are generated
 			 * as soon as sample_frequency is set.
 			 */
+
+#if IS_ENABLED(CONFIG_IIO_CROS_EC_SENSORS_RING)
+			/*
+			 * To preserve backward compatibility, when sensor ring
+			 * is set, all events are going to the ring buffer.
+			 * To pull event to the individual buffers,
+			 * we need triggers.
+			 */
+			ret = devm_iio_triggered_buffer_setup(dev, indio_dev,
+					NULL, trigger_capture, NULL);
+#else
 			ret = devm_iio_kfifo_buffer_setup_ext(dev, indio_dev,
 							      INDIO_BUFFER_SOFTWARE, NULL,
 							      cros_ec_sensor_fifo_attributes);
+#endif
 			if (ret)
 				return ret;
 
