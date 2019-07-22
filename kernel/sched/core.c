@@ -3767,6 +3767,10 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
 	int i, j, cpu, occ = 0;
 	bool need_sync = false;
 
+	cpu = cpu_of(rq);
+	if (cpu_is_offline(cpu))
+		return idle_sched_class.pick_next_task(rq, prev, rf);
+
 	if (!sched_core_enabled(rq))
 		return __pick_next_task(rq, prev, rf);
 
@@ -3799,7 +3803,6 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
 	if (!rq->nr_running)
 		newidle_balance(rq, rf);
 
-	cpu = cpu_of(rq);
 	smt_mask = cpu_smt_mask(cpu);
 
 	/*
@@ -3841,8 +3844,10 @@ again:
 			struct rq *rq_i = cpu_rq(i);
 			struct task_struct *p;
 
-			if (cpu_is_offline(i))
+			if (cpu_is_offline(i)) {
+				rq_i->core_pick = rq_i->idle;
 				continue;
+			}
 
 			if (rq_i->core_pick)
 				continue;
