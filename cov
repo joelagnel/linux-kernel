@@ -1,0 +1,28 @@
+These patches clean up the usage of dynticks nesting counters simplifying the
+code, while preserving the usecases.
+
+It is a much needed simplification, makes the code less confusing, and prevents
+future bugs such as those that arise from forgetting that the
+dynticks_nmi_nesting counter is not a simple counter and can be "crowbarred" in
+common situations.
+
+rcutorture testing with all TREE RCU configurations succeed with
+CONFIG_RCU_EQS_DEBUG=y and CONFIG_PROVE_LOCKING=y.
+
+v1->v2:
+- Rebase on v5.6-rc6
+
+Cc: Frederic Weisbecker <fweisbec@gmail.com>
+Cc: kernel-team@android.com
+Cc: peterz@infradead.org
+Cc: tglx@linutronix.de
+Cc: rostedt@goodmis.org
+Cc: frextrite@gmail.com
+Cc: madhuparnabhowmik04@gmail.com
+Cc: vpillai@digitalocean.com
+Cc: Andy Lutomirski <luto@kernel.org>
+
+
+option-subject RCU dyntick nesting counter cleanups
+option-prefix PATCH v2
+
