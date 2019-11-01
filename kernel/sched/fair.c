@@ -8109,9 +8109,10 @@ int can_migrate_task(struct task_struct *p, struct lb_env *env)
 	/*
 	 * We do not migrate tasks that are:
 	 * 1) throttled_lb_pair, or
-	 * 2) cannot be migrated to this CPU due to cpus_allowed, or
-	 * 3) running (obviously), or
-	 * 4) are cache-hot on their current CPU.
+	 * 2) cannot be migrated to this CPU due to cpus_ptr, or
+	 * 3) task's cookie does not match with this CPU's core cookie
+	 * 4) running (obviously), or
+	 * 5) are cache-hot on their current CPU.
 	 */
 	if (throttled_lb_pair(task_group(p), env->src_cpu, env->dst_cpu))
 		return 0;
@@ -8145,6 +8146,25 @@ int can_migrate_task(struct task_struct *p, struct lb_env *env)
 
 		return 0;
 	}
+
+#ifdef CONFIG_SCHED_CORE
+	if (sched_core_enabled(cpu_rq(env->dst_cpu))) {
+		bool idle_core = true;
+		int cpu;
+
+		for_each_cpu(cpu, cpu_smt_mask(env->dst_cpu)) {
+			if (!available_idle_cpu(cpu))
+				idle_core = false;
+		}
+		/*
+		 * Don't migrate task if task's cookie does not match
+		 * with core cookie, unless the entire core is idle.
+		 */
+		if (!idle_core &&
+		     p->core_cookie != cpu_rq(env->dst_cpu)->core->core_cookie)
+			return 0;
+	}
+#endif
 
 	/* Record that we found atleast one task that could run on dst_cpu */
 	env->flags &= ~LBF_ALL_PINNED;
