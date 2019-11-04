@@ -41,6 +41,7 @@
 extern bool rtw_bf_support;
 extern bool rtw_disable_lps_deep_mode;
 extern unsigned int rtw_debug_mask;
+extern bool rtw_edcca_enabled;
 extern const struct ieee80211_ops rtw_ops;
 
 #define RTW_MAX_CHANNEL_NUM_2G 14
@@ -330,6 +331,8 @@ enum rtw_trx_desc_rate {
 	DESC_RATE_MAX,
 };
 
+#define RTW_REGION_INVALID 0xff
+
 enum rtw_regulatory_domains {
 	RTW_REGD_FCC		= 0,
 	RTW_REGD_MKK		= 1,
@@ -543,6 +546,11 @@ struct rtw_rf_sipi_addr {
 	u32 hssi_2;
 	u32 lssi_read;
 	u32 lssi_read_pi;
+};
+
+struct rtw_hw_reg_offset {
+	struct rtw_hw_reg hw_reg;
+	u8 offset;
 };
 
 struct rtw_backup_info {
@@ -802,6 +810,7 @@ struct rtw_regulatory {
 	char alpha2[2];
 	u8 chplan;
 	u8 txpwr_regd;
+	enum nl80211_dfs_regions region;
 };
 
 struct rtw_chip_ops {
@@ -845,6 +854,8 @@ struct rtw_chip_ops {
 			       enum rtw_bb_path tx_path_1ss,
 			       enum rtw_bb_path tx_path_cck,
 			       bool is_tx2_path);
+	void (*adaptivity_init)(struct rtw_dev *rtwdev);
+	void (*adaptivity)(struct rtw_dev *rtwdev);
 
 	/* for coex */
 	void (*coex_set_init)(struct rtw_dev *rtwdev);
@@ -1192,6 +1203,10 @@ struct rtw_chip_info {
 
 	u8 bfer_su_max_num;
 	u8 bfer_mu_max_num;
+
+	struct rtw_hw_reg_offset *edcca_th;
+	s8 l2h_th_ini_cs;
+	s8 l2h_th_ini_ad;
 
 	const char *wow_fw_name;
 	const struct wiphy_wowlan_support *wowlan_stub;
@@ -1559,6 +1574,20 @@ enum rtw_dm_cap {
 	RTW_DM_CAP_NUM
 };
 
+#define EDCCA_TH_L2H_IDX 0
+#define EDCCA_TH_H2L_IDX 1
+#define EDCCA_TH_L2H_LB 48
+#define EDCCA_ADC_BACKOFF 12
+#define EDCCA_IGI_BASE 50
+#define EDCCA_IGI_L2H_DIFF 8
+#define EDCCA_L2H_H2L_DIFF 7
+#define EDCCA_L2H_H2L_DIFF_NORMAL 8
+
+enum rtw_edcca_mode {
+	RTW_EDCCA_NORMAL	= 0,
+	RTW_EDCCA_ADAPTIVITY	= 1,
+};
+
 struct rtw_dm_info {
 	u32 cck_fa_cnt;
 	u32 ofdm_fa_cnt;
@@ -1634,6 +1663,8 @@ struct rtw_dm_info {
 	bool is_bt_iqk_timeout;
 
 	u8 scan_density;
+	s8 l2h_th_ini;
+	enum rtw_edcca_mode edcca_mode;
 };
 
 struct rtw_efuse {
