@@ -49,8 +49,9 @@ struct xattr {
 	size_t value_len;
 };
 
-ssize_t __vfs_getxattr(struct user_namespace *, struct dentry *, struct inode *,
-		       const char *, void *, size_t);
+ssize_t __vfs_getxattr(struct user_namespace *mnt_userns,
+		       struct dentry *dentry, struct inode *inode,
+		       const char *name, void *buffer, size_t size, int flags);
 ssize_t vfs_getxattr(struct user_namespace *, struct dentry *, const char *,
 		     void *, size_t);
 ssize_t vfs_listxattr(struct dentry *d, char *list, size_t size);
