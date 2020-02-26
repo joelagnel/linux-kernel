@@ -119,6 +119,7 @@ static const struct mfd_cell cros_ec_platform_cells[] = {
 
 static const struct mfd_cell cros_ec_pchg_cells[] = {
 	{ .name = "cros-ec-pchg", },
+	{ .name = "cros-ec-pd-update", },
 };
 
 static const struct mfd_cell cros_ec_lightbar_cells[] = {
