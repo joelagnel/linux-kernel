@@ -7111,6 +7111,56 @@ void ___might_sleep(const char *file, int line, int preempt_offset)
 EXPORT_SYMBOL(___might_sleep);
 #endif
 
+#ifdef CONFIG_SCHED_CORE
+
+/* Ensure that all siblings have rescheduled once */
+static int task_set_core_sched_stopper(void *data)
+{
+	return 0;
+}
+
+int task_set_core_sched(int set)
+{
+	if (set > 1)
+		return -ERANGE;
+
+	if (!static_branch_likely(&sched_smt_present))
+		return -EINVAL;
+
+	if (!!current->core_cookie == set)
+		return 0;
+
+
+	// TODO Add check for if task was tagged through cgroup (and the other
+	// way).
+	// Ans, do if ((current->core_cookie == (unsigned long)current)
+	if (set)
+		sched_core_get();
+
+	// TODO: Do I also need to enqueue curr into sched-core rb tree?
+	// Ans : no
+	current->core_cookie = set ? (unsigned long)current : 0;
+
+	// TODO: Need to run only on SMT siblings?
+	// Ans : Change to IPI + flag.
+	// old_seq = sibling->sched_core_seq;
+	// sched_yield();
+	// while (sibling->sched_core_seq == old_seq);
+	stop_machine(task_set_core_sched_stopper, NULL, NULL);
+
+	 // TODO: Why does cpu_core_tag_write_u64() run __sched_write_tag
+	 // on all cores including non-siblings?
+	 // Ans: Check snip X in diff.
+
+	if (!set)
+		sched_core_put();
+
+	pr_err("prctl success: %s/%d %lx\n", current->comm, current->pid,
+	       current->core_cookie);
+	return 0;
+}
+#endif
+
 #ifdef CONFIG_MAGIC_SYSRQ
 void normalize_rt_tasks(void)
 {
