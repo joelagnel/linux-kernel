@@ -3237,6 +3237,180 @@ int sysctl_schedstats(struct ctl_table *table, int write,
 static inline void init_schedstats(void) {}
 #endif /* CONFIG_SCHEDSTATS */
 
+#ifdef CONFIG_SCHED_CORE
+/*
+ * Ensure that the task has been requeued. The stopper ensures that the task cannot
+ * be migrated to a different CPU while its core scheduler queue state is being updated.
+ * It also makes sure to requeue a task if it was running actively on another CPU.
+ */
+static int sched_core_task_join_stopper(void *data)
+{
+	struct task_struct **pp = (struct task_struct **)data;
+	int i;
+
+	for (i = 0; i < 2; i++) {
+		struct task_struct *p = pp[i];
+		if (!p || task_rq(p) != task_rq(current))
+			continue;
+
+		if (sched_core_enqueued(p)) {
+			sched_core_dequeue(task_rq(p), p);
+			if (!p->core_cookie)
+				continue;
+		}
+
+		if (sched_core_enabled(task_rq(p)) &&
+				p->core_cookie && task_on_rq_queued(p))
+			sched_core_enqueue(task_rq(p), p);
+	}
+
+	return 0;
+}
+
+/*
+ * Allow @new task to join @old task's core-scheduling group allowing @new and @old
+ * to share a core.
+ * @old: An existing task, possibly already using core-scheduling.
+ * @new: A new task wanting to share a core with @old.
+ *
+ * If @old is not yet using core-scheduling, then both @old and @new account
+ * towards enabling of core-scheduling and are assigned cookies.
+ *
+ * If @new is not using core-scheduling (cookie 0), then @old's cookie is also
+ * reset and the core-scheduling reference count is decremented.
+ *
+ * Resetting of a tag can be done only by trying to share a core with a tag 0
+ * process. This can likely be achieved by the user requesting for tagging with
+ * PID 1. This will automatically enforce security checks needed, via
+ * ptrace_may_access(). In other words, an unprivileged user cannot reset its
+ * own tag without privileges.
+ */
+int sched_core_join_task(struct task_struct *old, struct task_struct *new)
+{
+	bool put_after_stopper = false;
+	struct task_struct *for_stopper[2] = {};
+
+	if (!static_branch_likely(&sched_smt_present))
+		return -EINVAL;
+
+	/*
+	 * Serialize because new and old could try to call this
+	 * interface at the same time to generate a cookie.
+	 * CASE 2 is for resetting a cookie. All others are for setting.
+	 *
+	 * 		A (new)		joining		B (old)
+	 * CASE 1:
+	 * before	0				0
+	 * after	new_ptr				new_ptr
+	 *
+	 * CASE 2:
+	 * before	X (non-zero)			0
+	 * after	0				0
+	 *
+	 * CASE 3:
+	 * before	0				X (non-zero)
+	 * after	X				X
+	 *
+	 * CASE 4:
+	 * before	Y (non-zero)			X (non-zero)
+	 * after	X				X
+	 */
+	mutex_lock(&sched_core_mutex);
+
+	for_stopper[0] = new; /* New task always has attributes changed.*/
+	if (!old->core_cookie && !new->core_cookie) {
+		/* CASE 1 */
+		sched_core_get();
+		sched_core_get();
+		new->core_cookie = (unsigned long)new;
+		old->core_cookie = (unsigned long)new;
+		for_stopper[1] = old;
+	} else if (!old->core_cookie && new->core_cookie) {
+		/* CASE 2 */
+		new->core_cookie = 0;
+		/* Do a sched_core_put() after stopper runs. */
+		put_after_stopper = true;
+	} else if (old->core_cookie && !new->core_cookie) {
+		/* CASE 3 */
+		sched_core_get();
+		new->core_cookie = (unsigned long)old;
+	} else {
+		/* CASE 4 */
+		new->core_cookie = (unsigned long)old;
+	}
+
+	mutex_unlock(&sched_core_mutex);
+
+	stop_machine(sched_core_task_join_stopper, (void *)&for_stopper, NULL);
+
+	if (put_after_stopper)
+		sched_core_put();
+
+	return 0;
+}
+
+/* Called from prctl(2). */
+int sched_core_join_pid(pid_t pid)
+{
+	struct task_struct *task;
+	int err;
+
+	rcu_read_lock();
+	task = pid ? find_task_by_vpid(pid) : current;
+	if (!task) {
+		rcu_read_unlock();
+		err = -ESRCH;
+		goto out_put;
+	}
+
+	get_task_struct(task);
+
+	/*
+	 * Check if this process has the right to modify the specified
+	 * process. Use the regular "ptrace_may_access()" checks.
+	 */
+	if (!ptrace_may_access(task, PTRACE_MODE_READ_REALCREDS)) {
+		rcu_read_unlock();
+		err = -EPERM;
+		goto out_put;
+	}
+	rcu_read_unlock();
+
+	err = sched_core_join_task(task, current);
+out_put:
+	put_task_struct(task);
+	return err;
+}
+
+static void sched_core_fork(unsigned long clone_flags, struct task_struct *p)
+{
+	RB_CLEAR_NODE(&p->core_node);
+
+	if (current->core_cookie) {
+		/*
+		 * On fork, cgroup_fork() would have done the right thing if
+		 * task was tagged via CGroups.
+		 */
+		if ((unsigned long)current->core_cookie !=
+				(unsigned long)current->sched_task_group)
+			return;
+
+		/*
+		 * Threads share the same core as their parent task group (TGID).
+		 *
+		 * Processes are isolated to their own core if their parents were tagged.
+		 * In the future new CLONE flags can be added if !CLONE_THREAD sharing
+		 * with parent is desired.
+		 */
+		if (clone_flags & CLONE_THREAD)
+			sched_core_join_task(current, p);
+		else
+			sched_core_join_task(p, p);
+	}
+}
+
+#endif /* CONFIG_SCHED_CORE */
+
 /*
  * fork()/clone()-time setup:
  */
@@ -3319,7 +3493,7 @@ int sched_fork(unsigned long clone_flags, struct task_struct *p)
 	RB_CLEAR_NODE(&p->pushable_dl_tasks);
 #endif
 #ifdef CONFIG_SCHED_CORE
-	RB_CLEAR_NODE(&p->core_node);
+	sched_core_fork(clone_flags, p);
 #endif
 	return 0;
 }

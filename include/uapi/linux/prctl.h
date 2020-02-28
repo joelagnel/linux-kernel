@@ -238,4 +238,7 @@ struct prctl_mm_map {
 #define PR_SET_IO_FLUSHER		57
 #define PR_GET_IO_FLUSHER		58
 
+/* Core scheduling per-task interface */
+#define PR_SET_CORE_SCHED		59
+
 #endif /* _LINUX_PRCTL_H */

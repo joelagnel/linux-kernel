@@ -1986,6 +1986,12 @@ static inline void rseq_execve(struct task_struct *t)
 
 #endif
 
+#ifdef CONFIG_SCHED_CORE
+int sched_core_join_pid(pid_t pid);
+#else
+#define sched_core_join_pid(pid) (-ENOTSUPP)
+#endif
+
 void __exit_umh(struct task_struct *tsk);
 
 static inline void exit_umh(struct task_struct *tsk)
