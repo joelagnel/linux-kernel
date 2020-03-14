@@ -7660,6 +7660,13 @@ pick_task_fair(struct rq *rq)
 				se = curr;
 		}
 
+		if (!se) {
+			pr_warn("pick_next_entity returned NULL but, nr_running = %d, force_idle=%d\n",
+					cfs_rq->nr_running, rq->core->core_forceidle);
+			WARN_ON_ONCE(1);
+			return NULL;
+		}
+
 		cfs_rq = group_cfs_rq(se);
 	} while (cfs_rq);
 
