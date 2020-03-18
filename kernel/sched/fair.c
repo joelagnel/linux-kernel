@@ -10921,11 +10921,12 @@ static void rq_offline_fair(struct rq *rq)
 static void for_each_fair_task(struct rq *rq,
 			       void (*fn)(struct rq *rq, struct task_struct *p))
 {
-	struct cfs_rq *cfs_rq, *pos;
+	struct cfs_rq *cfs_rq;
 	struct sched_entity *se;
 	struct task_struct *task;
 
-	for_each_leaf_cfs_rq_safe(rq, cfs_rq, pos) {
+	rcu_read_lock();
+	for_each_leaf_cfs_rq(rq, cfs_rq) {
 		for (se = __pick_first_entity(cfs_rq);
 		     se != NULL;
 		     se = __pick_next_entity(se)) {
@@ -10937,6 +10938,7 @@ static void for_each_fair_task(struct rq *rq,
 			fn(rq, task);
 		}
 	}
+	rcu_read_unlock();
 }
 
 #ifdef CONFIG_SCHED_CORE
