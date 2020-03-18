@@ -1022,11 +1022,13 @@ struct rq {
 	unsigned int		core_sched_seq;
 	struct rb_root		core_tree;
 	bool			core_forceidle;
+	bool			core_pause_pending;
 
 	/* shared state */
 	unsigned int		core_task_seq;
 	unsigned int		core_pick_seq;
 	unsigned long		core_cookie;
+	bool			core_priv;
 #endif
 };
 

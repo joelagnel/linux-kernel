@@ -4368,6 +4368,10 @@ restart:
 
 #ifdef CONFIG_SCHED_CORE
 
+DEFINE_PER_CPU(bool, sched_core_priv);
+DEFINE_PER_CPU(bool, sched_in_ipi);
+static DEFINE_PER_CPU_SHARED_ALIGNED(call_single_data_t, htpause_csd);
+
 static inline bool cookie_equals(struct task_struct *a, unsigned long cookie)
 {
 	return is_idle_task(a) || (a->core_cookie == cookie);
@@ -4379,6 +4383,201 @@ static inline bool cookie_match(struct task_struct *a, struct task_struct *b)
 		return true;
 
 	return a->core_cookie == b->core_cookie;
+}
+
+/*
+ * If core is in a privileged state due to sibling, just wait for core
+ * to exit this state. We can't return yet to userspace to avoid
+ * MDS/L1TF between this HT and the priv HT (which may be running
+ * IRQ/softirqs). For MDS, this issue is present for both host and
+ * guest attackers. For L1TF, only guests.
+ */
+
+static void sched_core_sibling_pause(void)
+{
+	int cpu = smp_processor_id();
+	struct rq *rq = cpu_rq(cpu);
+
+	if (!rq->core)
+		return;
+
+	WARN_ON_ONCE(this_cpu_read(sched_core_priv));
+
+	trace_printk("[unpriv]: ENTER sibling pause\n");
+	while (READ_ONCE(rq->core->core_priv))
+		cpu_relax();
+	trace_printk("[unpriv]: EXIT sibling pause\n");
+}
+
+static void sched_core_sibling_pause_ipi(void *info)
+{
+	int cpu = smp_processor_id();
+	struct rq *rq = cpu_rq(cpu);
+
+	trace_printk("[unpriv] enter IPI\n");
+	smp_rmb(); /* synchronize with store of core_pause_pending */
+	if (WARN_ON_ONCE(!READ_ONCE(rq->core_pause_pending)))
+		return;
+
+	/*
+	 * Can happen if IPI received during softirq, no need to do anything
+	 * since the softirq is trusted, and also pausing here cause deadlock.
+	 */
+	if (this_cpu_read(sched_core_priv))
+		return;
+redo_pause:
+	/*
+	 * Order start of IPI and load of pause_pending with load of
+	 * ->core_priv in sched_core_sibling_pause() (MP-pattern).
+	 */
+	sched_core_sibling_pause();
+
+	/*
+	 * There could be a race here after exiting the
+	 * sched_core_sibling_pause(), where a new priv_enter() sets
+	 * ->core_priv to true, but does not send a new IPI because
+	 * pause_pending is still true. So we need to recheck after setting
+	 * pause_pending to false below, if ->core_priv is still true and
+	 * retry the pause.
+	 */
+
+	/*
+	 * Order write to _pending with end of IPI and also order it with
+	 * read of ->core_priv (SB-pattern).
+	 */
+	raw_spin_lock(rq_lockp(rq));
+	if (rq->core->core_priv) {
+		raw_spin_unlock(rq_lockp(rq));
+		goto redo_pause;
+	}
+
+	WRITE_ONCE(rq->core_pause_pending, false);
+	raw_spin_unlock(rq_lockp(rq));
+
+	trace_printk("[unpriv] exit IPI\n");
+}
+
+void set_sched_in_ipi(void)
+{
+	smp_store_release(this_cpu_ptr(&sched_in_ipi), true);
+}
+
+void reset_sched_in_ipi(void)
+{
+	smp_store_release(this_cpu_ptr(&sched_in_ipi), false);
+}
+
+/*
+ * Enter the privileged (exclusive) core state where the other HT
+ * should be paused if it is running 'untrusted' code, until
+ * sched_core_priv_exit() is called.
+ *
+ * The core should remain in this state for brief period of time.  This is
+ * needed for protecting interrupts/softirqs in the face of running untrusted
+ * usermode code in the other.
+ */
+void sched_core_priv_enter(void)
+{
+	int i, cpu = smp_processor_id();
+	struct rq *rq = cpu_rq(cpu);
+	const struct cpumask *smt_mask;
+
+	if (!sched_core_enabled(rq))
+		return;
+
+	if (this_cpu_read(sched_in_ipi))
+		return;
+
+	// softirqs could get interrupted while we are in the exclusive state,
+	// and we end up here. In such cases, don't need to do anything.
+	if (this_cpu_read(sched_core_priv))
+		return;
+
+	raw_spin_lock(rq_lockp(rq));
+	smt_mask = cpu_smt_mask(cpu);
+
+	if (!rq->core || !rq->core->core_cookie)
+		goto unlock;
+
+	// If core is already in privileged state, just bail.
+	if (rq->core->core_priv)
+		goto unlock;
+
+	WRITE_ONCE(rq->core->core_priv, true);
+	this_cpu_write(sched_core_priv, true);
+
+	for_each_cpu(i, smt_mask) {
+		call_single_data_t *csd;
+		struct rq *srq = cpu_rq(i);
+
+		if (i == cpu || cpu_is_offline(i))
+			continue;
+
+		if (!srq->curr->mm || is_idle_task(srq->curr))
+			continue;
+
+		// At this point, the HT better be running a tagged task
+		// We don't want to IPI a non-tagged HT.
+		WARN_ON_ONCE(!srq->curr->core_cookie && !srq->core_pick);
+
+		// IPI only if previous pause IPI was not pending
+		// This should prevent any issues resending IPI if
+		// previous one was pending.
+
+		if (!READ_ONCE(srq->core_pause_pending)) {
+
+			WRITE_ONCE(srq->core_pause_pending, true);
+			smp_wmb(); /* Order store to _pending with IPI handler start */
+
+			trace_printk("[priv] sending IPI\n");
+			csd = this_cpu_ptr(&htpause_csd);
+			csd->func = sched_core_sibling_pause_ipi;
+			csd->flags = 0;
+			csd->info = NULL;
+			smp_call_function_single_async(i, csd);
+		}
+
+		// XXX: Wait for pause to start on the receiving side.
+		// Since the smp_call is async, it will not wait for
+		// the handler to finish executing on the receiver.
+		// csd_wait(csd);
+	}
+
+	trace_printk("[priv] ENTER priv state, dump stack\n");
+unlock:
+	raw_spin_unlock(rq_lockp(rq));
+}
+
+/*
+ * Exit the privileged (exclusive) core state where the other HT
+ * was paused if it was running 'untrusted' code. It will be unpaused now.
+ *
+ * This function should be called only if a privileged state was previously
+ * entered in the same context (by calling sched_core_priv_enter()).
+ */
+void sched_core_priv_exit(void)
+{
+	int cpu = smp_processor_id();
+	struct rq *rq = cpu_rq(cpu);
+
+	if (!sched_core_enabled(rq))
+		return;
+
+	// Check if we entered the exclusive state on this CPU, without
+	// acquiring the runqueue lock.
+	if (!this_cpu_read(sched_core_priv))
+		return;
+
+	/* Prevent reorder of IRQ's content with core_priv=false */
+	raw_spin_lock(rq_lockp(rq));
+
+	WARN_ON_ONCE(!rq->core->core_priv);
+	WRITE_ONCE(rq->core->core_priv, false);
+
+	trace_printk("[priv] EXIT priv state, dump stack\n");
+
+	this_cpu_write(sched_core_priv, false);
+	raw_spin_unlock(rq_lockp(rq));
 }
 
 // XXX fairness/fwd progress conditions
@@ -4901,6 +5100,18 @@ static void __sched notrace __schedule(bool preempt)
 		rq->clock_update_flags &= ~(RQCF_ACT_SKIP|RQCF_REQ_SKIP);
 		rq_unlock_irq(rq, &rf);
 	}
+
+#ifdef CONFIG_SCHED_CORE
+	/*
+	 * For when a schedule() happens on one sibling, while a long IRQ
+	 * happens on the other. In this case, the other IRQ-sibling cannot
+	 * pause this sibling since we have crossed the IRQ entry point. So
+	 * make schedule() pause it.
+	 */
+	if (sched_core_enabled(rq) && READ_ONCE(rq->core->core_priv) &&
+	    !is_idle_task(next) && !next->mm && next->core_cookie)
+		sched_core_sibling_pause();
+#endif
 
 	balance_callback(rq);
 }
