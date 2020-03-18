@@ -345,6 +345,7 @@ asmlinkage __visible void do_softirq(void)
 void irq_enter(void)
 {
 	rcu_irq_enter();
+	sched_core_irq_enter();
 	if (is_idle_task(current) && !in_interrupt()) {
 		/*
 		 * Prevent raise_softirq from needlessly waking up ksoftirqd
@@ -413,6 +414,7 @@ void irq_exit(void)
 		invoke_softirq();
 
 	tick_irq_exit();
+	sched_core_irq_exit();
 	rcu_irq_exit();
 	trace_hardirq_exit(); /* must be last! */
 }
