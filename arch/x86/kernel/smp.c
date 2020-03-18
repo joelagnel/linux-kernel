@@ -286,24 +286,30 @@ __visible void __irq_entry smp_reschedule_interrupt(struct pt_regs *regs)
 	scheduler_ipi();
 }
 
+void set_sched_in_ipi(void);
+void reset_sched_in_ipi(void);
 __visible void __irq_entry smp_call_function_interrupt(struct pt_regs *regs)
 {
+	set_sched_in_ipi();
 	ipi_entering_ack_irq();
 	trace_call_function_entry(CALL_FUNCTION_VECTOR);
 	inc_irq_stat(irq_call_count);
 	generic_smp_call_function_interrupt();
 	trace_call_function_exit(CALL_FUNCTION_VECTOR);
 	exiting_irq();
+	reset_sched_in_ipi();
 }
 
 __visible void __irq_entry smp_call_function_single_interrupt(struct pt_regs *r)
 {
+	set_sched_in_ipi();
 	ipi_entering_ack_irq();
 	trace_call_function_single_entry(CALL_FUNCTION_SINGLE_VECTOR);
 	inc_irq_stat(irq_call_count);
 	generic_smp_call_function_single_interrupt();
 	trace_call_function_single_exit(CALL_FUNCTION_SINGLE_VECTOR);
 	exiting_irq();
+	reset_sched_in_ipi();
 }
 
 static int __init nonmi_ipi_setup(char *str)
