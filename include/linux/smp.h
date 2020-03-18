@@ -241,4 +241,12 @@ int smpcfd_prepare_cpu(unsigned int cpu);
 int smpcfd_dead_cpu(unsigned int cpu);
 int smpcfd_dying_cpu(unsigned int cpu);
 
+#ifdef CONFIG_SCHED_CORE
+void sched_core_priv_enter(void);
+void sched_core_priv_exit(void);
+#else
+static void sched_core_priv_enter(void) { }
+static void sched_core_priv_exit(void) { }
+#endif
+
 #endif /* __LINUX_SMP_H */

@@ -4381,6 +4381,95 @@ static inline bool cookie_match(struct task_struct *a, struct task_struct *b)
 	return a->core_cookie == b->core_cookie;
 }
 
+static void sched_core_sibling_pause(void *info)
+{
+	int cpu = smp_processor_id();
+	struct rq *rq = cpu_rq(cpu);
+
+	if (!rq->core)
+		return;
+
+	while (READ_ONCE(rq->core->core_priv))
+		cpu_relax();
+}
+
+/*
+ * The core is about to enter into a code path that requires exclusive access
+ * to the core. This means one sibling HT will have to be paused if it is running
+ * usermode code or guest code (Only tagged tasks are considered) while the other
+ * is running in this exclusive state.
+ * It is intended that the core should remain in this state for brief period of
+ * time.  This is needed for protecting interrupts/softirqs/nmis in one
+ * siblings versus untrusted usermode code in the other.
+ */
+void sched_core_priv_enter(void)
+{
+	int i, cpu = smp_processor_id();
+	struct rq *rq = cpu_rq(cpu);
+	unsigned long flags;
+	bool priv = false;
+	const struct cpumask *smt_mask;
+
+	smt_mask = cpu_smt_mask(cpu);
+
+	raw_spin_lock_irqsave(rq_lockp(rq), flags);
+	if (!rq->core || !rq->core->core_cookie)
+		goto unlock;
+
+	// If core is already in privileged state, just bail.
+	if (rq->core->core_priv)
+		goto unlock;
+
+	for_each_cpu(i, smt_mask) {
+		struct rq *srq = cpu_rq(i);
+
+		if (i == cpu || cpu_is_offline(i) || !srq || !srq->curr)
+			continue;
+
+		// If sibling is not running a tagged task, we are good.
+		if (!srq->curr->core_cookie)
+			continue;
+
+		smp_call_function_single(i, sched_core_sibling_pause, NULL, 0);
+		priv = true;
+	}
+
+	if (priv)
+		rq->core->core_priv = true;
+
+	if (priv)
+		trace_printk("[priv] ENTER priv state, dump stack\n");
+unlock:
+	raw_spin_unlock_irqrestore(rq_lockp(rq), flags);
+}
+
+/*
+ * Exit the privileged core state.
+ *
+ * This function should be called only if a privileged state was previously
+ * entered in the same context (by calling sched_core_priv_enter()).
+ */
+void sched_core_priv_exit(void)
+{
+	int cpu = smp_processor_id();
+	struct rq *rq = cpu_rq(cpu);
+	unsigned long flags;
+	bool priv = false;
+
+	raw_spin_lock_irqsave(rq_lockp(rq), flags);
+	if (!rq->core)
+		goto unlock;
+
+	priv = rq->core->core_priv;
+	if (priv)
+		WRITE_ONCE(rq->core->core_priv, false);
+
+	if (priv)
+		trace_printk("[priv] EXIT priv state, dump stack\n");
+unlock:
+	raw_spin_unlock_irqrestore(rq_lockp(rq), flags);
+}
+
 // XXX fairness/fwd progress conditions
 /*
  * Returns
@@ -4823,6 +4912,7 @@ static void __sched notrace __schedule(bool preempt)
 	struct rq_flags rf;
 	struct rq *rq;
 	int cpu;
+	bool pause_ht = false;
 
 	cpu = smp_processor_id();
 	rq = cpu_rq(cpu);
@@ -4895,12 +4985,42 @@ static void __sched notrace __schedule(bool preempt)
 
 		trace_sched_switch(preempt, prev, next);
 
+#ifdef CONFIG_SCHED_CORE
+		/* While we are on rq lock, check if we should pause HT */
+		pause_ht = (rq->core && rq->core->core_priv && next &&
+			    !is_idle_task(next) && next->core_cookie);
+#endif
+
 		/* Also unlocks the rq: */
 		rq = context_switch(rq, prev, next, &rf);
 	} else {
 		rq->clock_update_flags &= ~(RQCF_ACT_SKIP|RQCF_REQ_SKIP);
 		rq_unlock_irq(rq, &rf);
 	}
+
+#ifdef CONFIG_SCHED_CORE
+	/*
+	 * If core is in a privileged state due to sibling, just wait for core
+	 * to exit this state. We can't return yet to userspace to avoid
+	 * MDS/L1TF between this HT and the priv HT (which may be running
+	 * IRQ/softirqs). For MDS, this issue is present for both host and
+	 * guest attackers. For L1TF, only guests.
+	 */
+	if (pause_ht) {
+		int tr = 0;
+		if (rq->core->core_priv) {
+			trace_printk("[unpriv] START waiting for priv task to end\n");
+			tr = 1;
+		}
+
+		while (READ_ONCE(rq->core->core_priv))
+			cpu_relax();
+
+		if (tr) {
+			trace_printk("[unpriv] END Waiting for priv task to end\n");
+		}
+	}
+#endif
 
 	balance_callback(rq);
 }
