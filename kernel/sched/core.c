@@ -4368,6 +4368,8 @@ restart:
 
 #ifdef CONFIG_SCHED_CORE
 
+DEFINE_PER_CPU(bool, sched_core_priv);
+
 static inline bool cookie_equals(struct task_struct *a, unsigned long cookie)
 {
 	return is_idle_task(a) || (a->core_cookie == cookie);
@@ -4394,13 +4396,13 @@ static void sched_core_sibling_pause(void *info)
 }
 
 /*
- * The core is about to enter into a code path that requires exclusive access
- * to the core. This means one sibling HT will have to be paused if it is running
- * usermode code or guest code (Only tagged tasks are considered) while the other
- * is running in this exclusive state.
- * It is intended that the core should remain in this state for brief period of
- * time.  This is needed for protecting interrupts/softirqs/nmis in one
- * siblings versus untrusted usermode code in the other.
+ * Enter the privileged (exclusive) core state where the other HT
+ * should be paused if it is running 'untrusted' code, until
+ * sched_core_priv_exit() is called.
+ *
+ * The core should remain in this state for brief period of time.  This is
+ * needed for protecting interrupts/softirqs in the face of running untrusted
+ * usermode code in the other.
  */
 void sched_core_priv_enter(void)
 {
@@ -4410,9 +4412,14 @@ void sched_core_priv_enter(void)
 	bool priv = false;
 	const struct cpumask *smt_mask;
 
-	smt_mask = cpu_smt_mask(cpu);
+	// softirqs could get interrupted while we are in the exclusive state,
+	// and we end up here. In such cases, don't need to do anything.
+	if (this_cpu_read(sched_core_priv))
+		return;
 
 	raw_spin_lock_irqsave(rq_lockp(rq), flags);
+	smt_mask = cpu_smt_mask(cpu);
+
 	if (!rq->core || !rq->core->core_cookie)
 		goto unlock;
 
@@ -4434,17 +4441,18 @@ void sched_core_priv_enter(void)
 		priv = true;
 	}
 
-	if (priv)
+	if (priv) {
 		rq->core->core_priv = true;
-
-	if (priv)
+		this_cpu_write(sched_core_priv, true);
 		trace_printk("[priv] ENTER priv state, dump stack\n");
+	}
 unlock:
 	raw_spin_unlock_irqrestore(rq_lockp(rq), flags);
 }
 
 /*
- * Exit the privileged core state.
+ * Exit the privileged (exclusive) core state where the other HT
+ * was paused if it was running 'untrusted' code. It will be unpaused now.
  *
  * This function should be called only if a privileged state was previously
  * entered in the same context (by calling sched_core_priv_enter()).
@@ -4455,6 +4463,11 @@ void sched_core_priv_exit(void)
 	struct rq *rq = cpu_rq(cpu);
 	unsigned long flags;
 	bool priv = false;
+
+	// Check if we entered the exclusive state on this CPU, without
+	// acquiring the runqueue lock.
+	if (!this_cpu_read(sched_core_priv))
+		return;
 
 	raw_spin_lock_irqsave(rq_lockp(rq), flags);
 	if (!rq->core)
@@ -4467,6 +4480,7 @@ void sched_core_priv_exit(void)
 	if (priv)
 		trace_printk("[priv] EXIT priv state, dump stack\n");
 unlock:
+	this_cpu_write(sched_core_priv, false);
 	raw_spin_unlock_irqrestore(rq_lockp(rq), flags);
 }
 
