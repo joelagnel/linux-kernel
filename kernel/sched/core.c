@@ -4369,6 +4369,7 @@ restart:
 #ifdef CONFIG_SCHED_CORE
 
 DEFINE_PER_CPU(bool, sched_core_priv);
+static DEFINE_PER_CPU_SHARED_ALIGNED(call_single_data_t, htpause_csd);
 
 static inline bool cookie_equals(struct task_struct *a, unsigned long cookie)
 {
@@ -4428,6 +4429,7 @@ void sched_core_priv_enter(void)
 		goto unlock;
 
 	for_each_cpu(i, smt_mask) {
+		call_single_data_t *csd;
 		struct rq *srq = cpu_rq(i);
 
 		if (i == cpu || cpu_is_offline(i) || !srq || !srq->curr)
@@ -4437,7 +4439,11 @@ void sched_core_priv_enter(void)
 		if (!srq->curr->core_cookie)
 			continue;
 
-		smp_call_function_single(i, sched_core_sibling_pause, NULL, 0);
+		csd = this_cpu_ptr(&htpause_csd);
+		csd->func = sched_core_sibling_pause;
+		csd->flags = 0;
+		csd->info = NULL;
+		smp_call_function_single_async(i, csd);
 		priv = true;
 	}
 
