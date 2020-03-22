@@ -4369,6 +4369,7 @@ restart:
 #ifdef CONFIG_SCHED_CORE
 
 DEFINE_PER_CPU(bool, sched_core_priv);
+DEFINE_PER_CPU(bool, sched_in_ipi);
 static DEFINE_PER_CPU_SHARED_ALIGNED(call_single_data_t, htpause_csd);
 
 static inline bool cookie_equals(struct task_struct *a, unsigned long cookie)
@@ -4392,8 +4393,20 @@ static void sched_core_sibling_pause(void *info)
 	if (!rq->core)
 		return;
 
+	trace_printk("[priv]: ENTER sibling pause\n");
 	while (READ_ONCE(rq->core->core_priv))
 		cpu_relax();
+	trace_printk("[priv]: EXIT sibling pause\n");
+}
+
+void set_sched_in_ipi(void)
+{
+	this_cpu_write(sched_in_ipi, true);
+}
+
+void reset_sched_in_ipi(void)
+{
+	this_cpu_write(sched_in_ipi, false);
 }
 
 /*
@@ -4412,6 +4425,9 @@ void sched_core_priv_enter(void)
 	unsigned long flags;
 	bool priv = false;
 	const struct cpumask *smt_mask;
+
+	if (this_cpu_read(sched_in_ipi))
+		return;
 
 	// softirqs could get interrupted while we are in the exclusive state,
 	// and we end up here. In such cases, don't need to do anything.
