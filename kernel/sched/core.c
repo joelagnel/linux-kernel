@@ -4426,6 +4426,9 @@ void sched_core_priv_enter(void)
 	bool priv = false;
 	const struct cpumask *smt_mask;
 
+	if (!sched_core_enabled(rq))
+		return;
+
 	if (this_cpu_read(sched_in_ipi))
 		return;
 
@@ -4437,7 +4440,7 @@ void sched_core_priv_enter(void)
 	raw_spin_lock_irqsave(rq_lockp(rq), flags);
 	smt_mask = cpu_smt_mask(cpu);
 
-	if (!rq->core || !rq->core->core_cookie)
+	if (!rq->core->core_cookie)
 		goto unlock;
 
 	// If core is already in privileged state, just bail.
@@ -4451,9 +4454,7 @@ void sched_core_priv_enter(void)
 		if (i == cpu || cpu_is_offline(i) || !srq || !srq->curr)
 			continue;
 
-		// If sibling is not running a tagged task, we are good.
-		if (!srq->curr->core_cookie)
-			continue;
+		WRITE_ONCE(rq->core->core_priv, true);
 
 		csd = this_cpu_ptr(&htpause_csd);
 		csd->func = sched_core_sibling_pause;
@@ -4464,7 +4465,6 @@ void sched_core_priv_enter(void)
 	}
 
 	if (priv) {
-		rq->core->core_priv = true;
 		this_cpu_write(sched_core_priv, true);
 		trace_printk("[priv] ENTER priv state, dump stack\n");
 	}
@@ -4495,12 +4495,9 @@ void sched_core_priv_exit(void)
 	if (!rq->core)
 		goto unlock;
 
-	priv = rq->core->core_priv;
-	if (priv)
-		WRITE_ONCE(rq->core->core_priv, false);
+	WRITE_ONCE(rq->core->core_priv, false);
+	trace_printk("[priv] EXIT priv state, dump stack\n");
 
-	if (priv)
-		trace_printk("[priv] EXIT priv state, dump stack\n");
 unlock:
 	this_cpu_write(sched_core_priv, false);
 	raw_spin_unlock_irqrestore(rq_lockp(rq), flags);
