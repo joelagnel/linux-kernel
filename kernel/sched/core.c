@@ -4425,7 +4425,6 @@ redo_pause:
 	 * Order start of IPI and load of pause_pending with load of
 	 * ->core_priv in sched_core_sibling_pause() (MP-pattern).
 	 */
-	smp_rmb();
 	sched_core_sibling_pause();
 
 	/*
@@ -4436,15 +4435,19 @@ redo_pause:
 	 * pause_pending to false below, if ->core_priv is still true and
 	 * retry the pause.
 	 */
-	WRITE_ONCE(rq->core_pause_pending, false);
 
 	/*
 	 * Order write to _pending with end of IPI and also order it with
 	 * read of ->core_priv (SB-pattern).
 	 */
-	smp_mb();
-	if (READ_ONCE(rq->core->core_priv))
+	raw_spin_lock(rq_lockp(rq));
+	if (rq->core->core_priv) {
+		raw_spin_unlock(rq_lockp(rq));
 		goto redo_pause;
+	}
+
+	WRITE_ONCE(rq->core_pause_pending, false);
+	raw_spin_unlock(rq_lockp(rq));
 }
 
 void set_sched_in_ipi(void)
@@ -4514,8 +4517,6 @@ void sched_core_priv_enter(void)
 		// This should prevent any issues resending IPI if
 		// previous one was pending.
 
-		smp_mb(); /* Order the store of ->core_priv with load/store of _pending */
-
 		if (!READ_ONCE(srq->core_pause_pending)) {
 
 			WRITE_ONCE(srq->core_pause_pending, true);
@@ -4559,24 +4560,14 @@ void sched_core_priv_exit(void)
 	if (!this_cpu_read(sched_core_priv))
 		return;
 
+	/* Prevent reorder of IRQ's content with core_priv=false */
 	raw_spin_lock(rq_lockp(rq));
-	if (!rq->core)
-		goto unlock;
 
 	WARN_ON_ONCE(!rq->core->core_priv);
-	/*
-	 * Order write to ->core_priv with respect to sending of Pause-IPI in
-	 * sched_core_priv_enter(). This forms an MP-pattern:
-	 *
-	 * P0()                       P1()
-	 * Send IPI (write)           Receive IPI (read)
-	 * Reset core_priv (write)    Read core_priv (read)
-	 */
-	smp_wmb();
 	WRITE_ONCE(rq->core->core_priv, false);
 
 	trace_printk("[priv] EXIT priv state, dump stack\n");
-unlock:
+
 	this_cpu_write(sched_core_priv, false);
 	raw_spin_unlock(rq_lockp(rq));
 }
