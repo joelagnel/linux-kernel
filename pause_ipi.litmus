@@ -1,0 +1,70 @@
+C PAUSEIPI
+
+(*
+ * Result: Sometimes
+ *
+ * This litmus test demonstrates that at least some ordering is required
+ * to order the store-buffering pattern, where each process writes to the
+ * variable that the preceding process reads.
+ *)
+
+{
+	int core_priv = 0;
+	int pause_pending = 0;
+	int ipi_hw = 0;
+}
+
+P0(int *core_priv, int *pause_pending, int *ipi_hw)
+{
+	int r0 = 0;
+
+	/* IRQ enter */
+	WRITE_ONCE(*core_priv, 1);
+
+	smp_mb(); /* A, pairs with B -- Order the write to core-priv with future
+					 reads/write to pause_pending. */
+
+	if (READ_ONCE(*pause_pending) == 0)
+	{
+		WRITE_ONCE(*pause_pending, 1);
+		smp_wmb(); /* Make sure IPI sees pending first */
+		WRITE_ONCE(*ipi_hw, 1);
+	}
+
+	/* IRQ exit */
+
+	smp_wmb(); /* Orders setting of ipi_hw with resetting of core_priv */
+	WRITE_ONCE(*core_priv, 0);
+}
+
+P1(int *core_priv, int *pause_pending, int *ipi_hw)
+{
+	int r0 = 0;
+	int r1 = 0;
+	int r2 = 0;
+	int r3 = 0;
+
+	r0 = READ_ONCE(*ipi_hw);
+	smp_rmb(); /* Make sure IPI sees pending first */
+	if (r0 == 1)
+	{
+		/* This is the warn on's load */
+		r1 = READ_ONCE(*pause_pending);
+
+		smp_rmb(); /* B, pairs with A -- order the read from pause_pending
+						 with read from core_priv, this also
+						 orders the start of the IPI with read
+						 from core_priv */
+
+		/* Simulate a loop while(!core_priv); */
+		r2 = READ_ONCE(*core_priv);
+		r3 = READ_ONCE(*core_priv);
+
+		WRITE_ONCE(*pause_pending, 0);
+		smp_wmb(); /* Ensure ordering of pause_pending with ipi_hw */
+		WRITE_ONCE(*ipi_hw, 0);
+	}
+}
+
+/* Here r1 should never be 0 in correct operation */
+exists (1:r0=1 /\ 1:r1=0 /\ 1:r2=1 /\ 1:r3=0)
