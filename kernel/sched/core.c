@@ -4458,12 +4458,12 @@ redo_pause:
 
 void set_sched_in_ipi(void)
 {
-	this_cpu_write(sched_in_ipi, true);
+	smp_store_release(this_cpu_ptr(&sched_in_ipi), true);
 }
 
 void reset_sched_in_ipi(void)
 {
-	this_cpu_write(sched_in_ipi, false);
+	smp_store_release(this_cpu_ptr(&sched_in_ipi), false);
 }
 
 /*
