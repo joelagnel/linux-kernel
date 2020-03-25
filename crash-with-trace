@@ -1,0 +1,1253 @@
+290144]   chrome-3065    3d.h. 709192343us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.290148]   chrome-3065    3d.h. 709192344us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.290152]   <idle>-0       2d..2 709192347us : sched_core_priv_enter: [priv] sending IPI
+[  724.290156]   <idle>-0       2d..2 709192347us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.290160]   chrome-3065    3d.h. 709192348us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.290164]   chrome-3065    3d.h. 709192348us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.290168]   <idle>-0       2d..2 709192356us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.290172]   chrome-3065    3d.h. 709192356us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.290176]   chrome-3065    3d.h. 709192357us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.290179]   <idle>-0       2d..2 709192361us : sched_core_priv_enter: [priv] sending IPI
+[  724.290183]   <idle>-0       2d..2 709192361us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.290187]   chrome-3065    3d.h. 709192362us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.290191]   chrome-3065    3d.h. 709192362us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.290195]   <idle>-0       2d..2 709192371us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.290199]   chrome-3065    3d.h. 709192371us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.290203]   chrome-3065    3d.h. 709192371us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.290207]   <idle>-0       2d..2 709192375us : sched_core_priv_enter: [priv] sending IPI
+[  724.290211]   <idle>-0       2d..2 709192376us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.290215]   chrome-3065    3d.h. 709192376us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.290219]   chrome-3065    3d.h. 709192376us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.290223]   <idle>-0       2d..2 709192385us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.290227]   chrome-3065    3d.h. 709192385us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.290231]   chrome-3065    3d.h. 709192385us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.290235]   <idle>-0       2d..2 709192398us : sched_core_priv_enter: [priv] sending IPI
+[  724.290238]   <idle>-0       2d..2 709192399us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.290242]   chrome-3065    3d.h. 709192399us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.290246]   chrome-3065    3d.h. 709192399us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.290250]   <idle>-0       2d..2 709192408us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.290255]   chrome-3065    3d.h. 709192408us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.290258]   chrome-3065    3d.h. 709192408us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.290262]   <idle>-0       2d..2 709192412us : sched_core_priv_enter: [priv] sending IPI
+[  724.290266]   <idle>-0       2d..2 709192412us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.290270]   chrome-3065    3d.h. 709192413us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.290274]   chrome-3065    3d.h. 709192413us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.290278]   <idle>-0       2d..2 709192422us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.290282]   chrome-3065    3d.h. 709192422us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.290286]   chrome-3065    3d.h. 709192422us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.290290]   <idle>-0       2d..2 709192426us : sched_core_priv_enter: [priv] sending IPI
+[  724.290294]   <idle>-0       2d..2 709192426us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.290297]   chrome-3065    3d.h. 709192426us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.290302]   chrome-3065    3d.h. 709192427us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.290306]   <idle>-0       2d..2 709192435us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.290310]   chrome-3065    3d.h. 709192435us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.290313]   chrome-3065    3d.h. 709192435us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.290317]   <idle>-0       2d..2 709192448us : sched_core_priv_enter: [priv] sending IPI
+[  724.290321]   <idle>-0       2d..2 709192449us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.290325]   chrome-3065    3d.h. 709192449us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.290329]   chrome-3065    3d.h. 709192450us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.290333]   <idle>-0       2d..2 709192458us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.290337]   chrome-3065    3d.h. 709192459us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.290341]   chrome-3065    3d.h. 709192459us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.290345]   <idle>-0       2d..2 709192462us : sched_core_priv_enter: [priv] sending IPI
+[  724.290349]   <idle>-0       2d..2 709192463us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.290352]   chrome-3065    3d.h. 709192463us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.290357]   chrome-3065    3d.h. 709192463us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.290360]   <idle>-0       2d..2 709192472us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.290365]   chrome-3065    3d.h. 709192472us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.290369]   chrome-3065    3d.h. 709192472us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.290372]   <idle>-0       2d..2 709192476us : sched_core_priv_enter: [priv] sending IPI
+[  724.290376]   <idle>-0       2d..2 709192476us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.290380]   chrome-3065    3d.h. 709192477us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.290384]   chrome-3065    3d.h. 709192477us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.290388]   <idle>-0       2d..2 709192486us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.290392]   chrome-3065    3d.h. 709192486us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.290396]   chrome-3065    3d.h. 709192486us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.290400]   <idle>-0       2d..2 709192499us : sched_core_priv_enter: [priv] sending IPI
+[  724.290404]   <idle>-0       2d..2 709192499us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.290408]   chrome-3065    3d.h. 709192500us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.290412]   chrome-3065    3d.h. 709192500us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.290416]   <idle>-0       2d..2 709192510us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.290420]   chrome-3065    3d.h. 709192510us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.290424]   chrome-3065    3d.h. 709192510us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.290427]   <idle>-0       2d..2 709192535us : sched_core_priv_enter: [priv] sending IPI
+[  724.290431]   <idle>-0       2d..2 709192535us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.290435]   chrome-3065    3d.h. 709192536us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.290440]   chrome-3065    3d.h. 709192536us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.290443]   <idle>-0       2d..2 709192548us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.290448]   chrome-3065    3d.h. 709192548us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.290451]   chrome-3065    3d.h. 709192548us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.290455]   <idle>-0       2d..2 709192568us : sched_core_priv_enter: [priv] sending IPI
+[  724.290459]   <idle>-0       2d..2 709192569us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.290463]   chrome-3065    3d.h. 709192569us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.290467]   chrome-3065    3d.h. 709192569us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.290471]   <idle>-0       2d..2 709192579us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.290475]   chrome-3065    3d.h. 709192579us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.290479]   chrome-3065    3d.h. 709192579us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.290483]   <idle>-0       2d..2 709192601us : sched_core_priv_enter: [priv] sending IPI
+[  724.290487]   <idle>-0       2d..2 709192602us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.290490]   chrome-3065    3d.h. 709192602us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.290495]   chrome-3065    3d.h. 709192603us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.290498]   <idle>-0       2d..2 709192612us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.290503]   chrome-3065    3d.h. 709192612us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.290507]   chrome-3065    3d.h. 709192613us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.290510]   <idle>-0       2d..2 709192634us : sched_core_priv_enter: [priv] sending IPI
+[  724.290514]   <idle>-0       2d..2 709192635us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.290518]   chrome-3065    3d.h. 709192635us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.290522]   chrome-3065    3d.h. 709192636us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.290526]   <idle>-0       2d..2 709192645us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.290530]   chrome-3065    3d.h. 709192645us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.290534]   chrome-3065    3d.h. 709192646us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.290538]   <idle>-0       2d..2 709192670us : sched_core_priv_enter: [priv] sending IPI
+[  724.290542]   <idle>-0       2d..2 709192670us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.290545]   chrome-3065    3d.h. 709192671us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.290550]   chrome-3065    3d.h. 709192671us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.290553]   <idle>-0       2d..2 709192681us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.290558]   chrome-3065    3d.h. 709192681us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.290561]   chrome-3065    3d.h. 709192681us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.290565]   <idle>-0       2d..2 709192704us : sched_core_priv_enter: [priv] sending IPI
+[  724.290569]   <idle>-0       2d..2 709192704us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.290573]   chrome-3065    3d.h. 709192705us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.290577]   chrome-3065    3d.h. 709192705us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.290581]   <idle>-0       2d..2 709192714us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.290585]   chrome-3065    3d.h. 709192715us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.290589]   chrome-3065    3d.h. 709192715us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.290593]   <idle>-0       2d..2 709192736us : sched_core_priv_enter: [priv] sending IPI
+[  724.290597]   <idle>-0       2d..2 709192737us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.290600]   chrome-3065    3d.h. 709192737us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.290605]   chrome-3065    3d.h. 709192737us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.290608]   <idle>-0       2d..2 709192747us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.290613]   chrome-3065    3d.h. 709192747us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.290617]   chrome-3065    3d.h. 709192747us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.290620]   <idle>-0       2d..2 709192770us : sched_core_priv_enter: [priv] sending IPI
+[  724.290624]   <idle>-0       2d..2 709192770us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.290628]   chrome-3065    3d.h. 709192771us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.290633]   chrome-3065    3d.h. 709192771us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.290637]   <idle>-0       2d..2 709192781us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.290641]   chrome-3065    3d.h. 709192781us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.290645]   chrome-3065    3d.h. 709192781us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.290648]   <idle>-0       2d..2 709192805us : sched_core_priv_enter: [priv] sending IPI
+[  724.290652]   <idle>-0       2d..2 709192806us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.290656]   chrome-3065    3d.h. 709192806us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.290660]   chrome-3065    3d.h. 709192807us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.290664]   <idle>-0       2d..2 709192816us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.290668]   chrome-3065    3d.h. 709192817us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.290672]   chrome-3065    3d.h. 709192817us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.290676]   <idle>-0       2d..2 709192838us : sched_core_priv_enter: [priv] sending IPI
+[  724.290680]   <idle>-0       2d..2 709192838us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.290683]   chrome-3065    3d.h. 709192839us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.290688]   chrome-3065    3d.h. 709192839us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.290692]   <idle>-0       2d..2 709192849us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.290696]   chrome-3065    3d.h. 709192849us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.290700]   chrome-3065    3d.h. 709192849us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.290703]   <idle>-0       2d..2 709192862us : sched_core_priv_enter: [priv] sending IPI
+[  724.290707]   <idle>-0       2d..2 709192862us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.290711]   chrome-3065    3d.h. 709192863us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.290715]   chrome-3065    3d.h. 709192863us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.290719]   <idle>-0       2d..2 709192872us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.290723]   chrome-3065    3d.h. 709192873us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.290727]   chrome-3065    3d.h. 709192873us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.290731]   <idle>-0       2d..2 709193008us : sched_core_priv_enter: [priv] sending IPI
+[  724.290735]   <idle>-0       2d..2 709193009us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.290739]   chrome-3065    3d.h. 709193010us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.290743]   chrome-3065    3d.h. 709193010us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.290747]   <idle>-0       2d..2 709193023us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.290751]   chrome-3065    3d.h. 709193023us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.290755]   chrome-3065    3d.h. 709193023us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.290759]   <idle>-0       2d..2 709193067us : sched_core_priv_enter: [priv] sending IPI
+[  724.290762]   <idle>-0       2d..2 709193068us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.290766]   chrome-3065    3d.h. 709193069us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.290770]   chrome-3065    3d.h. 709193069us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.290774]   <idle>-0       2d..2 709193079us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.290778]   chrome-3065    3d.h. 709193079us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.290782]   chrome-3065    3d.h. 709193079us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.290786]   <idle>-0       2d..2 709193101us : sched_core_priv_enter: [priv] sending IPI
+[  724.290790]   <idle>-0       2d..2 709193102us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.290794]   chrome-3065    3d.h. 709193102us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.290798]   chrome-3065    3d.h. 709193103us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.290802]   <idle>-0       2d..2 709193112us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.290806]   chrome-3065    3d.h. 709193112us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.290810]   chrome-3065    3d.h. 709193113us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.290814]   <idle>-0       2d..2 709193134us : sched_core_priv_enter: [priv] sending IPI
+[  724.290817]   <idle>-0       2d..2 709193134us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.290821]   chrome-3065    3d.h. 709193135us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.290825]   chrome-3065    3d.h. 709193135us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.290829]   <idle>-0       2d..2 709193145us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.290833]   chrome-3065    3d.h. 709193145us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.290837]   chrome-3065    3d.h. 709193145us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.290841]   <idle>-0       2d..2 709193166us : sched_core_priv_enter: [priv] sending IPI
+[  724.290845]   <idle>-0       2d..2 709193166us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.290849]   chrome-3065    3d.h. 709193167us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.290853]   chrome-3065    3d.h. 709193167us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.290857]   <idle>-0       2d..2 709193176us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.290861]   chrome-3065    3d.h. 709193176us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.290865]   chrome-3065    3d.h. 709193176us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.290869]   <idle>-0       2d..2 709193180us : sched_core_priv_enter: [priv] sending IPI
+[  724.290873]   <idle>-0       2d..2 709193181us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.290876]   chrome-3065    3d.h. 709193181us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.290881]   chrome-3065    3d.h. 709193181us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.290884]   <idle>-0       2d..2 709193190us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.290889]   chrome-3065    3d.h. 709193190us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.290892]   chrome-3065    3d.h. 709193190us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.290896]   <idle>-0       2d..2 709193195us : sched_core_priv_enter: [priv] sending IPI
+[  724.290900]   <idle>-0       2d..2 709193195us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.290904]   chrome-3065    3d.h. 709193196us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.290908]   chrome-3065    3d.h. 709193196us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.290912]   <idle>-0       2d..2 709193204us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.290916]   chrome-3065    3d.h. 709193204us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.290920]   chrome-3065    3d.h. 709193205us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.290924]   <idle>-0       2d..2 709193209us : sched_core_priv_enter: [priv] sending IPI
+[  724.290928]   <idle>-0       2d..2 709193209us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.290931]   chrome-3065    3d.h. 709193210us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.290936]   chrome-3065    3d.h. 709193210us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.290940]   <idle>-0       2d..2 709193219us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.290944]   chrome-3065    3d.h. 709193219us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.290948]   chrome-3065    3d.h. 709193219us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.290951]   <idle>-0       2d..2 709193232us : sched_core_priv_enter: [priv] sending IPI
+[  724.290955]   <idle>-0       2d..2 709193232us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.290959]   chrome-3065    3d.h. 709193233us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.290963]   chrome-3065    3d.h. 709193233us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.290967]   <idle>-0       2d..2 709193242us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.290971]   chrome-3065    3d.h. 709193242us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.290975]   chrome-3065    3d.h. 709193242us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.290979]   <idle>-0       2d..2 709193246us : sched_core_priv_enter: [priv] sending IPI
+[  724.290983]   <idle>-0       2d..2 709193247us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.290987]   chrome-3065    3d.h. 709193247us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.290991]   chrome-3065    3d.h. 709193247us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.290995]   <idle>-0       2d..2 709193256us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.290999]   chrome-3065    3d.h. 709193256us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.291003]   chrome-3065    3d.h. 709193256us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.291007]   <idle>-0       2d..2 709193261us : sched_core_priv_enter: [priv] sending IPI
+[  724.291010]   <idle>-0       2d..2 709193261us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.291014]   chrome-3065    3d.h. 709193262us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.291018]   chrome-3065    3d.h. 709193262us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.291022]   <idle>-0       2d..2 709193270us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.291026]   chrome-3065    3d.h. 709193271us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.291030]   chrome-3065    3d.h. 709193271us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.291034]   <idle>-0       2d..2 709193275us : sched_core_priv_enter: [priv] sending IPI
+[  724.291038]   <idle>-0       2d..2 709193275us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.291042]   chrome-3065    3d.h. 709193276us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.291046]   chrome-3065    3d.h. 709193276us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.291050]   <idle>-0       2d..2 709193285us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.291054]   chrome-3065    3d.h. 709193285us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.291058]   chrome-3065    3d.h. 709193285us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.291062]   chrome-3065    3d..1 709193330us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.291066]   chrome-3065    3d..1 709193335us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.291070]   <idle>-0       2d.s2 709193336us : sched_core_priv_enter: [priv] sending IPI
+[  724.291073]   <idle>-0       2d.s2 709193336us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.291077]   chrome-3065    3d.h. 709193337us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.291081]   chrome-3065    3d.h. 709193337us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.291085]   <idle>-0       2d.s2 709193359us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.291089]   chrome-3065    3d.h. 709193359us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.291093]   chrome-3065    3d.h. 709193359us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.291097]   <idle>-0       2dN.2 709193363us : sched_core_priv_enter: [priv] sending IPI
+[  724.291101]   <idle>-0       2dN.2 709193363us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.291105]   chrome-3065    3d.h. 709193364us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.291110]   chrome-3065    3d.h. 709193364us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.291113]   <idle>-0       2dN.2 709193372us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.291118]   chrome-3065    3d.h. 709193372us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.291121]   chrome-3065    3d.h. 709193373us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.291126]   <idle>-0       2dN.2 709193376us : cfs_prio_less: picked rcu_preempt/10 crosscpu: 460372871960 457669629700 2703242260
+[  724.291130]   <idle>-0       2dN.2 709193385us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.291134]   <idle>-0       3dN.2 709193388us : cfs_prio_less: picked rcu_preempt/10 crosscpu: 460372955391 457669650013 2703305378
+[  724.291138]   <idle>-0       3dN.2 709193389us : cfs_prio_less: picked rcu_preempt/10 crosscpu: 460372955391 457669650013 2703305378
+[  724.291142]   <idle>-0       2dN.2 709193395us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.291146]   <idle>-0       2d..2 709193400us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.291149]   <idle>-0       2d..2 709193410us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.291153]   <idle>-0       2d..2 709193415us : sched_core_priv_enter: [priv] sending IPI
+[  724.291157]   <idle>-0       2d..2 709193416us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.291161]   chrome-3065    3d.h. 709193417us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.291165]   chrome-3065    3d.h. 709193417us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.291169]   <idle>-0       2d..2 709193425us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.291173]   chrome-3065    3d.h. 709193425us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.291177]   chrome-3065    3d.h. 709193425us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.291181]   <idle>-0       2d..2 709193429us : sched_core_priv_enter: [priv] sending IPI
+[  724.291185]   <idle>-0       2d..2 709193430us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.291189]   chrome-3065    3d.h. 709193430us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.291193]   chrome-3065    3d.h. 709193431us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.291197]   <idle>-0       2d..2 709193439us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.291201]   chrome-3065    3d.h. 709193439us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.291205]   chrome-3065    3d.h. 709193439us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.291209]   <idle>-0       2d..2 709193453us : sched_core_priv_enter: [priv] sending IPI
+[  724.291212]   <idle>-0       2d..2 709193453us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.291216]   chrome-3065    3d.h. 709193454us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.291220]   chrome-3065    3d.h. 709193454us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.291224]   <idle>-0       2d..2 709193463us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.291228]   chrome-3065    3d.h. 709193463us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.291232]   chrome-3065    3d.h. 709193463us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.291236]   <idle>-0       2d..2 709193467us : sched_core_priv_enter: [priv] sending IPI
+[  724.291240]   <idle>-0       2d..2 709193468us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.291244]   chrome-3065    3d.h. 709193468us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.291248]   chrome-3065    3d.h. 709193468us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.291252]   <idle>-0       2d..2 709193478us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.291256]   chrome-3065    3d.h. 709193478us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.291260]   chrome-3065    3d.h. 709193478us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.291264]   <idle>-0       2d..2 709193482us : sched_core_priv_enter: [priv] sending IPI
+[  724.291268]   <idle>-0       2d..2 709193482us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.291271]   chrome-3065    3d.h. 709193483us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.291276]   chrome-3065    3d.h. 709193483us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.291279]   <idle>-0       2d..2 709193492us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.291284]   chrome-3065    3d.h. 709193492us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.291288]   chrome-3065    3d.h. 709193492us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.291291]   <idle>-0       2d..2 709193496us : sched_core_priv_enter: [priv] sending IPI
+[  724.291295]   <idle>-0       2d..2 709193497us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.291299]   chrome-3065    3d.h. 709193497us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.291303]   chrome-3065    3d.h. 709193498us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.291307]   <idle>-0       2d..2 709193506us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.291311]   chrome-3065    3d.h. 709193506us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.291315]   chrome-3065    3d.h. 709193506us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.291319]   <idle>-0       2d..2 709193519us : sched_core_priv_enter: [priv] sending IPI
+[  724.291323]   <idle>-0       2d..2 709193520us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.291327]   chrome-3065    3d.h. 709193521us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.291331]   chrome-3065    3d.h. 709193521us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.291335]   <idle>-0       2d..2 709193529us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.291339]   chrome-3065    3d.h. 709193529us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.291343]   chrome-3065    3d.h. 709193529us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.291346]   <idle>-0       2d..2 709193533us : sched_core_priv_enter: [priv] sending IPI
+[  724.291350]   <idle>-0       2d..2 709193534us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.291354]   chrome-3065    3d.h. 709193534us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.291358]   chrome-3065    3d.h. 709193535us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.291362]   <idle>-0       2d..2 709193543us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.291366]   chrome-3065    3d.h. 709193543us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.291370]   chrome-3065    3d.h. 709193543us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.291374]   <idle>-0       2d..2 709193547us : sched_core_priv_enter: [priv] sending IPI
+[  724.291378]   <idle>-0       2d..2 709193548us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.291382]   chrome-3065    3d.h. 709193548us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.291386]   chrome-3065    3d.h. 709193549us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.291390]   <idle>-0       2d..2 709193557us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.291394]   chrome-3065    3d.h. 709193557us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.291398]   chrome-3065    3d.h. 709193557us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.291402]   <idle>-0       2d..2 709193570us : sched_core_priv_enter: [priv] sending IPI
+[  724.291405]   <idle>-0       2d..2 709193570us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.291409]   chrome-3065    3d.h. 709193571us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.291413]   chrome-3065    3d.h. 709193571us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.291417]   <idle>-0       2d..2 709193580us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.291421]   chrome-3065    3d.h. 709193580us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.291425]   chrome-3065    3d.h. 709193580us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.291429]   <idle>-0       2d..2 709193584us : sched_core_priv_enter: [priv] sending IPI
+[  724.291433]   <idle>-0       2d..2 709193584us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.291437]   chrome-3065    3d.h. 709193585us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.291441]   chrome-3065    3d.h. 709193585us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.291445]   <idle>-0       2d..2 709193594us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.291449]   chrome-3065    3d.h. 709193594us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.291453]   chrome-3065    3d.h. 709193594us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.291457]   <idle>-0       2d..2 709193598us : sched_core_priv_enter: [priv] sending IPI
+[  724.291460]   <idle>-0       2d..2 709193598us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.291464]   chrome-3065    3d.h. 709193599us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.291468]   chrome-3065    3d.h. 709193599us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.291472]   <idle>-0       2d..2 709193611us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.291476]   chrome-3065    3d.h. 709193611us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.291480]   chrome-3065    3d.h. 709193611us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.291484]   <idle>-0       2d..2 709193615us : sched_core_priv_enter: [priv] sending IPI
+[  724.291488]   <idle>-0       2d..2 709193616us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.291492]   chrome-3065    3d.h. 709193616us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.291496]   chrome-3065    3d.h. 709193616us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.291500]   <idle>-0       2d..2 709193625us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.291504]   chrome-3065    3d.h. 709193625us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.291508]   chrome-3065    3d.h. 709193625us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.291512]   <idle>-0       2d..2 709193638us : sched_core_priv_enter: [priv] sending IPI
+[  724.291516]   <idle>-0       2d..2 709193638us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.291520]   chrome-3065    3d.h. 709193639us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.291524]   chrome-3065    3d.h. 709193639us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.291528]   <idle>-0       2d..2 709193648us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.291532]   chrome-3065    3d.h. 709193648us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.291536]   chrome-3065    3d.h. 709193648us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.291540]   <idle>-0       2d..2 709193652us : sched_core_priv_enter: [priv] sending IPI
+[  724.291543]   <idle>-0       2d..2 709193652us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.291547]   chrome-3065    3d.h. 709193653us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.291552]   chrome-3065    3d.h. 709193653us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.291555]   <idle>-0       2d..2 709193662us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.291560]   chrome-3065    3d.h. 709193662us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.291563]   chrome-3065    3d.h. 709193662us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.291567]   <idle>-0       2d..2 709193666us : sched_core_priv_enter: [priv] sending IPI
+[  724.291571]   <idle>-0       2d..2 709193666us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.291575]   chrome-3065    3d.h. 709193667us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.291579]   chrome-3065    3d.h. 709193667us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.291583]   <idle>-0       2d..2 709193676us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.291587]   chrome-3065    3d.h. 709193676us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.291591]   chrome-3065    3d.h. 709193676us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.291595]   <idle>-0       2d..2 709193688us : sched_core_priv_enter: [priv] sending IPI
+[  724.291599]   <idle>-0       2d..2 709193689us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.291602]   chrome-3065    3d.h. 709193690us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.291607]   chrome-3065    3d.h. 709193690us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.291611]   <idle>-0       2d..2 709193698us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.291615]   chrome-3065    3d.h. 709193698us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.291619]   chrome-3065    3d.h. 709193698us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.291622]   <idle>-0       2d..2 709193703us : sched_core_priv_enter: [priv] sending IPI
+[  724.291626]   <idle>-0       2d..2 709193703us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.291630]   chrome-3065    3d.h. 709193704us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.291634]   chrome-3065    3d.h. 709193704us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.291638]   <idle>-0       2d..2 709193712us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.291642]   chrome-3065    3d.h. 709193712us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.291646]   chrome-3065    3d.h. 709193712us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.291650]   <idle>-0       2d..2 709193725us : sched_core_priv_enter: [priv] sending IPI
+[  724.291654]   <idle>-0       2d..2 709193726us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.291658]   chrome-3065    3d.h. 709193726us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.291662]   chrome-3065    3d.h. 709193726us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.291666]   <idle>-0       2d..2 709193736us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.291670]   chrome-3065    3d.h. 709193736us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.291674]   chrome-3065    3d.h. 709193736us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.291677]   <idle>-0       2d..2 709193759us : sched_core_priv_enter: [priv] sending IPI
+[  724.291681]   <idle>-0       2d..2 709193759us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.291685]   chrome-3065    3d.h. 709193760us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.291689]   chrome-3065    3d.h. 709193760us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.291693]   <idle>-0       2d..2 709193770us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.291697]   chrome-3065    3d.h. 709193770us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.291701]   chrome-3065    3d.h. 709193770us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.291705]   <idle>-0       2d..2 709193792us : sched_core_priv_enter: [priv] sending IPI
+[  724.291709]   <idle>-0       2d..2 709193793us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.291713]   chrome-3065    3d.h. 709193794us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.291717]   chrome-3065    3d.h. 709193794us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.291721]   <idle>-0       2d..2 709193803us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.291725]   chrome-3065    3d.h. 709193804us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.291729]   chrome-3065    3d.h. 709193804us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.291733]   <idle>-0       2d..2 709193825us : sched_core_priv_enter: [priv] sending IPI
+[  724.291736]   <idle>-0       2d..2 709193825us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.291740]   chrome-3065    3d.h. 709193826us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.291744]   chrome-3065    3d.h. 709193826us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.291748]   <idle>-0       2d..2 709193834us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.291752]   chrome-3065    3d.h. 709193834us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.291756]   chrome-3065    3d.h. 709193835us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.291760]   <idle>-0       2d..2 709193839us : sched_core_priv_enter: [priv] sending IPI
+[  724.291764]   <idle>-0       2d..2 709193839us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.291768]   chrome-3065    3d.h. 709193840us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.291772]   chrome-3065    3d.h. 709193840us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.291776]   <idle>-0       2d..2 709193848us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.291780]   chrome-3065    3d.h. 709193849us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.291784]   chrome-3065    3d.h. 709193849us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.291788]   <idle>-0       2d..2 709193853us : sched_core_priv_enter: [priv] sending IPI
+[  724.291791]   <idle>-0       2d..2 709193853us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.291795]   chrome-3065    3d.h. 709193854us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.291799]   chrome-3065    3d.h. 709193854us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.291803]   <idle>-0       2d..2 709193862us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.291808]   chrome-3065    3d.h. 709193863us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.291811]   chrome-3065    3d.h. 709193863us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.291815]   <idle>-0       2d..2 709193875us : sched_core_priv_enter: [priv] sending IPI
+[  724.291819]   <idle>-0       2d..2 709193876us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.291823]   chrome-3065    3d.h. 709193876us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.291827]   chrome-3065    3d.h. 709193876us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.291831]   <idle>-0       2d..2 709193885us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.291835]   chrome-3065    3d.h. 709193885us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.291839]   chrome-3065    3d.h. 709193885us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.291843]   <idle>-0       2d..2 709193889us : sched_core_priv_enter: [priv] sending IPI
+[  724.291847]   <idle>-0       2d..2 709193890us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.291850]   chrome-3065    3d.h. 709193890us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.291855]   chrome-3065    3d.h. 709193890us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.291858]   <idle>-0       2d..2 709193899us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.291863]   chrome-3065    3d.h. 709193899us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.291866]   chrome-3065    3d.h. 709193899us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.291870]   <idle>-0       2d..2 709193903us : sched_core_priv_enter: [priv] sending IPI
+[  724.291874]   <idle>-0       2d..2 709193904us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.291878]   chrome-3065    3d.h. 709193904us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.291882]   chrome-3065    3d.h. 709193904us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.291886]   <idle>-0       2d..2 709193913us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.291890]   chrome-3065    3d.h. 709193913us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.291894]   chrome-3065    3d.h. 709193913us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.291898]   <idle>-0       2d..2 709193926us : sched_core_priv_enter: [priv] sending IPI
+[  724.291901]   <idle>-0       2d..2 709193926us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.291905]   chrome-3065    3d.h. 709193927us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.291909]   chrome-3065    3d.h. 709193927us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.291913]   <idle>-0       2d..2 709193935us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.291918]   chrome-3065    3d.h. 709193936us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.291921]   chrome-3065    3d.h. 709193936us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.291925]   <idle>-0       2d..2 709193940us : sched_core_priv_enter: [priv] sending IPI
+[  724.291929]   <idle>-0       2d..2 709193940us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.291933]   chrome-3065    3d.h. 709193941us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.291937]   chrome-3065    3d.h. 709193941us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.291941]   <idle>-0       2d..2 709193949us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.291945]   chrome-3065    3d.h. 709193950us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.291949]   chrome-3065    3d.h. 709193950us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.291953]   <idle>-0       2d..2 709193954us : sched_core_priv_enter: [priv] sending IPI
+[  724.291957]   <idle>-0       2d..2 709193954us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.291960]   chrome-3065    3d.h. 709193955us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.291965]   chrome-3065    3d.h. 709193955us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.291968]   <idle>-0       2d..2 709193964us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.291973]   chrome-3065    3d.h. 709193964us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.291977]   chrome-3065    3d.h. 709193964us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.291980]   <idle>-0       2d..2 709193977us : sched_core_priv_enter: [priv] sending IPI
+[  724.291984]   <idle>-0       2d..2 709193977us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.291988]   chrome-3065    3d.h. 709193978us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.291992]   chrome-3065    3d.h. 709193978us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.291996]   <idle>-0       2d..2 709193986us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.292000]   chrome-3065    3d.h. 709193986us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.292004]   chrome-3065    3d.h. 709193987us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.292008]   <idle>-0       2d..2 709193991us : sched_core_priv_enter: [priv] sending IPI
+[  724.292012]   <idle>-0       2d..2 709193991us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.292015]   chrome-3065    3d.h. 709193992us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.292020]   chrome-3065    3d.h. 709193992us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.292024]   <idle>-0       2d..2 709194000us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.292028]   chrome-3065    3d.h. 709194000us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.292032]   chrome-3065    3d.h. 709194001us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.292036]   <idle>-0       2d..2 709194005us : sched_core_priv_enter: [priv] sending IPI
+[  724.292039]   <idle>-0       2d..2 709194005us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.292043]   chrome-3065    3d.h. 709194006us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.292048]   chrome-3065    3d.h. 709194006us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.292052]   <idle>-0       2d..2 709194014us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.292056]   chrome-3065    3d.h. 709194014us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.292060]   chrome-3065    3d.h. 709194015us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.292063]   <idle>-0       2d..2 709194027us : sched_core_priv_enter: [priv] sending IPI
+[  724.292067]   <idle>-0       2d..2 709194028us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.292071]   chrome-3065    3d.h. 709194028us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.292075]   chrome-3065    3d.h. 709194028us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.292079]   <idle>-0       2d..2 709194037us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.292083]   chrome-3065    3d.h. 709194037us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.292087]   chrome-3065    3d.h. 709194037us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.292091]   <idle>-0       2d..2 709194041us : sched_core_priv_enter: [priv] sending IPI
+[  724.292095]   <idle>-0       2d..2 709194042us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.292098]   chrome-3065    3d.h. 709194042us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.292103]   chrome-3065    3d.h. 709194042us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.292107]   <idle>-0       2d..2 709194051us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.292111]   chrome-3065    3d.h. 709194051us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.292115]   chrome-3065    3d.h. 709194051us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.292119]   <idle>-0       2d..2 709194055us : sched_core_priv_enter: [priv] sending IPI
+[  724.292122]   <idle>-0       2d..2 709194056us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.292126]   chrome-3065    3d.h. 709194056us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.292130]   chrome-3065    3d.h. 709194056us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.292134]   <idle>-0       2d..2 709194065us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.292138]   chrome-3065    3d.h. 709194065us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.292142]   chrome-3065    3d.h. 709194065us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.292146]   <idle>-0       2d..2 709194078us : sched_core_priv_enter: [priv] sending IPI
+[  724.292150]   <idle>-0       2d..2 709194078us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.292154]   chrome-3065    3d.h. 709194079us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.292158]   chrome-3065    3d.h. 709194079us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.292162]   <idle>-0       2d..2 709194088us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.292166]   chrome-3065    3d.h. 709194088us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.292170]   chrome-3065    3d.h. 709194088us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.292174]   <idle>-0       2d..2 709194092us : sched_core_priv_enter: [priv] sending IPI
+[  724.292177]   <idle>-0       2d..2 709194092us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.292181]   chrome-3065    3d.h. 709194093us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.292185]   chrome-3065    3d.h. 709194093us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.292189]   <idle>-0       2d..2 709194102us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.292193]   chrome-3065    3d.h. 709194102us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.292197]   chrome-3065    3d.h. 709194102us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.292201]   <idle>-0       2d..2 709194106us : sched_core_priv_enter: [priv] sending IPI
+[  724.292205]   <idle>-0       2d..2 709194106us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.292209]   chrome-3065    3d.h. 709194107us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.292213]   chrome-3065    3d.h. 709194107us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.292217]   <idle>-0       2d..2 709194116us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.292221]   chrome-3065    3d.h. 709194116us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.292225]   chrome-3065    3d.h. 709194116us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.292229]   <idle>-0       2d..2 709194129us : sched_core_priv_enter: [priv] sending IPI
+[  724.292233]   <idle>-0       2d..2 709194129us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.292236]   chrome-3065    3d.h. 709194130us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.292241]   chrome-3065    3d.h. 709194130us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.292244]   <idle>-0       2d..2 709194141us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.292249]   chrome-3065    3d.h. 709194141us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.292253]   chrome-3065    3d.h. 709194141us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.292256]   <idle>-0       2d..2 709194211us : sched_core_priv_enter: [priv] sending IPI
+[  724.292260]   <idle>-0       2d..2 709194212us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.292264]   chrome-3065    3d.h. 709194212us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.292268]   chrome-3065    3d.h. 709194213us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.292272]   <idle>-0       2d..2 709194224us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.292276]   chrome-3065    3d.h. 709194225us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.292280]   chrome-3065    3d.h. 709194225us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.292284]   <idle>-0       2d..2 709194270us : sched_core_priv_enter: [priv] sending IPI
+[  724.292288]   <idle>-0       2d..2 709194270us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.292292]   chrome-3065    3d.h. 709194271us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.292296]   chrome-3065    3d.h. 709194271us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.292300]   <idle>-0       2d..2 709194281us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.292304]   chrome-3065    3d.h. 709194281us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.292308]   chrome-3065    3d.h. 709194281us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.292311]   <idle>-0       2d..2 709194303us : sched_core_priv_enter: [priv] sending IPI
+[  724.292315]   <idle>-0       2d..2 709194304us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.292319]   chrome-3065    3d.h. 709194304us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.292323]   chrome-3065    3d.h. 709194305us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.292327]   <idle>-0       2d..2 709194314us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.292331]   chrome-3065    3d.h. 709194314us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.292335]   chrome-3065    3d.h. 709194314us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.292339]   chrome-3065    3d..1 709194323us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.292343]   chrome-3065    3d..1 709194328us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.292347]   <idle>-0       2d..2 709194335us : sched_core_priv_enter: [priv] sending IPI
+[  724.292350]   <idle>-0       2d..2 709194336us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.292354]   chrome-3065    3d.h. 709194336us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.292358]   chrome-3065    3d.h. 709194337us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.292362]   <idle>-0       2d..2 709194346us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.292367]   chrome-3065    3d.h. 709194346us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.292370]   chrome-3065    3d.h. 709194346us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.292374]   <idle>-0       2d..2 709194370us : sched_core_priv_enter: [priv] sending IPI
+[  724.292378]   <idle>-0       2d..2 709194370us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.292382]   chrome-3065    3d.h. 709194371us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.292386]   chrome-3065    3d.h. 709194371us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.292390]   <idle>-0       2d..2 709194379us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.292394]   chrome-3065    3d.h. 709194379us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.292398]   chrome-3065    3d.h. 709194380us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.292402]   <idle>-0       2d..2 709194384us : sched_core_priv_enter: [priv] sending IPI
+[  724.292406]   <idle>-0       2d..2 709194384us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.292409]   chrome-3065    3d.h. 709194385us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.292414]   chrome-3065    3d.h. 709194385us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.292418]   <idle>-0       2d..2 709194393us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.292422]   chrome-3065    3d.h. 709194394us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.292426]   chrome-3065    3d.h. 709194394us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.292430]   <idle>-0       2d..2 709194398us : sched_core_priv_enter: [priv] sending IPI
+[  724.292434]   <idle>-0       2d..2 709194398us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.292437]   chrome-3065    3d.h. 709194399us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.292442]   chrome-3065    3d.h. 709194399us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.292445]   <idle>-0       2d..2 709194407us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.292450]   chrome-3065    3d.h. 709194407us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.292454]   chrome-3065    3d.h. 709194408us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.292457]   <idle>-0       2d..2 709194420us : sched_core_priv_enter: [priv] sending IPI
+[  724.292461]   <idle>-0       2d..2 709194421us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.292465]   chrome-3065    3d.h. 709194421us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.292469]   chrome-3065    3d.h. 709194421us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.292473]   <idle>-0       2d..2 709194430us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.292477]   chrome-3065    3d.h. 709194430us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.292481]   chrome-3065    3d.h. 709194430us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.292485]   <idle>-0       2d..2 709194434us : sched_core_priv_enter: [priv] sending IPI
+[  724.292489]   <idle>-0       2d..2 709194435us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.292493]   chrome-3065    3d.h. 709194435us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.292497]   chrome-3065    3d.h. 709194435us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.292501]   <idle>-0       2d..2 709194444us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.292505]   chrome-3065    3d.h. 709194444us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.292509]   chrome-3065    3d.h. 709194444us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.292513]   <idle>-0       2d..2 709194448us : sched_core_priv_enter: [priv] sending IPI
+[  724.292516]   <idle>-0       2d..2 709194448us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.292520]   chrome-3065    3d.h. 709194449us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.292525]   chrome-3065    3d.h. 709194449us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.292529]   <idle>-0       2d..2 709194457us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.292533]   chrome-3065    3d.h. 709194457us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.292537]   chrome-3065    3d.h. 709194458us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.292541]   <idle>-0       2dN.2 709194468us : cfs_prio_less: picked Chrome_ChildIOT/3068 crosscpu: 460374610325 457678629700 2695980625
+[  724.292545]   <idle>-0       2d..2 709194619us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.292548]   <idle>-0       2d..2 709194629us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.292552]   <idle>-0       2d..2 709194633us : sched_core_priv_enter: [priv] sending IPI
+[  724.292556]   <idle>-0       2d..2 709194634us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.292560]   chrome-3065    3d.h. 709194635us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.292564]   chrome-3065    3d.h. 709194635us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.292568]   <idle>-0       2d..2 709194643us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.292572]   chrome-3065    3d.h. 709194643us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.292576]   chrome-3065    3d.h. 709194643us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.292580]   <idle>-0       2d..2 709194657us : sched_core_priv_enter: [priv] sending IPI
+[  724.292584]   <idle>-0       2d..2 709194657us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.292587]   chrome-3065    3d.h. 709194658us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.292592]   chrome-3065    3d.h. 709194658us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.292596]   <idle>-0       2d..2 709194667us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.292600]   chrome-3065    3d.h. 709194667us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.292604]   chrome-3065    3d.h. 709194667us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.292607]   <idle>-0       2d..2 709194671us : sched_core_priv_enter: [priv] sending IPI
+[  724.292611]   <idle>-0       2d..2 709194671us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.292615]   chrome-3065    3d.h. 709194672us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.292619]   chrome-3065    3d.h. 709194672us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.292623]   <idle>-0       2d..2 709194680us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.292627]   chrome-3065    3d.h. 709194681us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.292631]   chrome-3065    3d.h. 709194681us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.292635]   <idle>-0       2d..2 709194685us : sched_core_priv_enter: [priv] sending IPI
+[  724.292639]   <idle>-0       2d..2 709194685us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.292643]   chrome-3065    3d.h. 709194686us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.292647]   chrome-3065    3d.h. 709194686us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.292651]   <idle>-0       2d..2 709194694us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.292655]   chrome-3065    3d.h. 709194695us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.292659]   chrome-3065    3d.h. 709194695us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.292662]   <idle>-0       2d..2 709194707us : sched_core_priv_enter: [priv] sending IPI
+[  724.292666]   <idle>-0       2d..2 709194708us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.292670]   chrome-3065    3d.h. 709194708us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.292674]   chrome-3065    3d.h. 709194709us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.292678]   <idle>-0       2d..2 709194717us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.292682]   chrome-3065    3d.h. 709194717us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.292686]   chrome-3065    3d.h. 709194717us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.292690]   <idle>-0       2d..2 709194722us : sched_core_priv_enter: [priv] sending IPI
+[  724.292694]   <idle>-0       2d..2 709194722us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.292698]   chrome-3065    3d.h. 709194723us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.292702]   chrome-3065    3d.h. 709194723us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.292706]   <idle>-0       2d..2 709194731us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.292710]   chrome-3065    3d.h. 709194731us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.292714]   chrome-3065    3d.h. 709194732us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.292717]   <idle>-0       2d..2 709194736us : sched_core_priv_enter: [priv] sending IPI
+[  724.292721]   <idle>-0       2d..2 709194736us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.292725]   chrome-3065    3d.h. 709194737us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.292729]   chrome-3065    3d.h. 709194737us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.292733]   <idle>-0       2d..2 709194745us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.292737]   chrome-3065    3d.h. 709194745us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.292741]   chrome-3065    3d.h. 709194746us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.292745]   <idle>-0       2d..2 709194750us : sched_core_priv_enter: [priv] sending IPI
+[  724.292749]   <idle>-0       2d..2 709194750us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.292753]   chrome-3065    3d.h. 709194751us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.292757]   chrome-3065    3d.h. 709194751us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.292761]   <idle>-0       2d..2 709194763us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.292765]   chrome-3065    3d.h. 709194763us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.292769]   chrome-3065    3d.h. 709194763us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.292773]   <idle>-0       2d..2 709194767us : sched_core_priv_enter: [priv] sending IPI
+[  724.292776]   <idle>-0       2d..2 709194768us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.292780]   chrome-3065    3d.h. 709194768us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.292784]   chrome-3065    3d.h. 709194769us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.292788]   <idle>-0       2d..2 709194778us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.292793]   chrome-3065    3d.h. 709194778us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.292796]   chrome-3065    3d.h. 709194778us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.292800]   <idle>-0       2d..2 709194792us : sched_core_priv_enter: [priv] sending IPI
+[  724.292804]   <idle>-0       2d..2 709194793us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.292808]   chrome-3065    3d.h. 709194793us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.292812]   chrome-3065    3d.h. 709194793us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.292816]   <idle>-0       2d..2 709194802us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.292820]   chrome-3065    3d.h. 709194802us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.292824]   chrome-3065    3d.h. 709194802us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.292828]   <idle>-0       2d..2 709194806us : sched_core_priv_enter: [priv] sending IPI
+[  724.292832]   <idle>-0       2d..2 709194807us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.292835]   chrome-3065    3d.h. 709194807us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.292840]   chrome-3065    3d.h. 709194807us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.292843]   <idle>-0       2d..2 709194816us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.292848]   chrome-3065    3d.h. 709194816us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.292852]   chrome-3065    3d.h. 709194816us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.292855]   <idle>-0       2d..2 709194820us : sched_core_priv_enter: [priv] sending IPI
+[  724.292859]   <idle>-0       2d..2 709194821us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.292863]   chrome-3065    3d.h. 709194821us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.292867]   chrome-3065    3d.h. 709194821us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.292871]   <idle>-0       2d..2 709194830us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.292875]   chrome-3065    3d.h. 709194830us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.292879]   chrome-3065    3d.h. 709194830us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.292883]   <idle>-0       2d..2 709194843us : sched_core_priv_enter: [priv] sending IPI
+[  724.292887]   <idle>-0       2d..2 709194843us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.292890]   chrome-3065    3d.h. 709194844us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.292895]   chrome-3065    3d.h. 709194844us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.292899]   <idle>-0       2d..2 709194852us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.292903]   chrome-3065    3d.h. 709194853us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.292907]   chrome-3065    3d.h. 709194853us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.292910]   <idle>-0       2d..2 709194857us : sched_core_priv_enter: [priv] sending IPI
+[  724.292914]   <idle>-0       2d..2 709194857us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.292918]   chrome-3065    3d.h. 709194858us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.292922]   chrome-3065    3d.h. 709194858us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.292926]   <idle>-0       2d..2 709194866us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.292930]   chrome-3065    3d.h. 709194867us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.292934]   chrome-3065    3d.h. 709194867us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.292938]   <idle>-0       2d..2 709194871us : sched_core_priv_enter: [priv] sending IPI
+[  724.292942]   <idle>-0       2d..2 709194871us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.292945]   chrome-3065    3d.h. 709194872us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.292950]   chrome-3065    3d.h. 709194872us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.292953]   <idle>-0       2d..2 709194880us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.292958]   chrome-3065    3d.h. 709194881us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.292961]   chrome-3065    3d.h. 709194881us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.292965]   <idle>-0       2d..2 709194893us : sched_core_priv_enter: [priv] sending IPI
+[  724.292969]   <idle>-0       2d..2 709194894us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.292973]   chrome-3065    3d.h. 709194894us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.292977]   chrome-3065    3d.h. 709194895us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.292981]   <idle>-0       2d..2 709194903us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.292985]   chrome-3065    3d.h. 709194903us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.292989]   chrome-3065    3d.h. 709194903us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.292993]   <idle>-0       2d..2 709194908us : sched_core_priv_enter: [priv] sending IPI
+[  724.292997]   <idle>-0       2d..2 709194908us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.293000]   chrome-3065    3d.h. 709194909us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.293005]   chrome-3065    3d.h. 709194909us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.293008]   <idle>-0       2d..2 709194917us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.293013]   chrome-3065    3d.h. 709194917us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.293016]   chrome-3065    3d.h. 709194917us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.293020]   <idle>-0       2d..2 709194921us : sched_core_priv_enter: [priv] sending IPI
+[  724.293024]   <idle>-0       2d..2 709194922us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.293028]   chrome-3065    3d.h. 709194922us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.293032]   chrome-3065    3d.h. 709194923us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.293036]   <idle>-0       2d..2 709194931us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.293040]   chrome-3065    3d.h. 709194931us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.293044]   chrome-3065    3d.h. 709194931us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.293048]   <idle>-0       2d..2 709194944us : sched_core_priv_enter: [priv] sending IPI
+[  724.293052]   <idle>-0       2d..2 709194945us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.293056]   chrome-3065    3d.h. 709194945us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.293060]   chrome-3065    3d.h. 709194945us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.293064]   <idle>-0       2d..2 709194954us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.293068]   chrome-3065    3d.h. 709194954us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.293072]   chrome-3065    3d.h. 709194954us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.293076]   <idle>-0       2d..2 709194958us : sched_core_priv_enter: [priv] sending IPI
+[  724.293080]   <idle>-0       2d..2 709194959us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.293083]   chrome-3065    3d.h. 709194959us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.293088]   chrome-3065    3d.h. 709194960us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.293092]   <idle>-0       2d..2 709194968us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.293096]   chrome-3065    3d.h. 709194968us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.293100]   chrome-3065    3d.h. 709194969us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.293103]   <idle>-0       2d..2 709194972us : sched_core_priv_enter: [priv] sending IPI
+[  724.293107]   <idle>-0       2d..2 709194973us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.293111]   chrome-3065    3d.h. 709194973us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.293115]   chrome-3065    3d.h. 709194974us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.293119]   <idle>-0       2d..2 709194982us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.293123]   chrome-3065    3d.h. 709194982us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.293127]   chrome-3065    3d.h. 709194983us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.293131]   <idle>-0       2d..2 709194995us : sched_core_priv_enter: [priv] sending IPI
+[  724.293135]   <idle>-0       2d..2 709194996us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.293139]   chrome-3065    3d.h. 709194996us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.293143]   chrome-3065    3d.h. 709194997us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.293147]   <idle>-0       2d..2 709195005us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.293151]   chrome-3065    3d.h. 709195005us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.293155]   chrome-3065    3d.h. 709195005us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.293158]   <idle>-0       2d..2 709195009us : sched_core_priv_enter: [priv] sending IPI
+[  724.293162]   <idle>-0       2d..2 709195010us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.293166]   chrome-3065    3d.h. 709195010us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.293170]   chrome-3065    3d.h. 709195010us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.293174]   <idle>-0       2d..2 709195021us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.293178]   chrome-3065    3d.h. 709195021us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.293182]   chrome-3065    3d.h. 709195021us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.293186]   <idle>-0       2d..2 709195026us : sched_core_priv_enter: [priv] sending IPI
+[  724.293190]   <idle>-0       2d..2 709195026us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.293194]   chrome-3065    3d.h. 709195027us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.293198]   chrome-3065    3d.h. 709195027us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.293202]   <idle>-0       2d..2 709195035us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.293206]   chrome-3065    3d.h. 709195035us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.293210]   chrome-3065    3d.h. 709195035us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.293214]   <idle>-0       2d..2 709195040us : sched_core_priv_enter: [priv] sending IPI
+[  724.293217]   <idle>-0       2d..2 709195040us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.293221]   chrome-3065    3d.h. 709195041us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.293225]   chrome-3065    3d.h. 709195041us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.293229]   <idle>-0       2d..2 709195049us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.293234]   chrome-3065    3d.h. 709195049us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.293237]   chrome-3065    3d.h. 709195050us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.293241]   <idle>-0       2d..2 709195062us : sched_core_priv_enter: [priv] sending IPI
+[  724.293245]   <idle>-0       2d..2 709195063us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.293249]   chrome-3065    3d.h. 709195064us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.293253]   chrome-3065    3d.h. 709195064us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.293257]   <idle>-0       2d..2 709195072us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.293261]   chrome-3065    3d.h. 709195072us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.293265]   chrome-3065    3d.h. 709195072us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.293269]   <idle>-0       2d..2 709195076us : sched_core_priv_enter: [priv] sending IPI
+[  724.293273]   <idle>-0       2d..2 709195077us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.293277]   chrome-3065    3d.h. 709195078us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.293281]   chrome-3065    3d.h. 709195078us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.293285]   <idle>-0       2d..2 709195086us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.293289]   chrome-3065    3d.h. 709195086us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.293293]   chrome-3065    3d.h. 709195086us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.293296]   <idle>-0       2d..2 709195090us : sched_core_priv_enter: [priv] sending IPI
+[  724.293300]   <idle>-0       2d..2 709195091us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.293304]   chrome-3065    3d.h. 709195091us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.293308]   chrome-3065    3d.h. 709195092us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.293312]   <idle>-0       2d..2 709195100us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.293316]   chrome-3065    3d.h. 709195100us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.293320]   chrome-3065    3d.h. 709195101us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.293324]   <idle>-0       2d..2 709195114us : sched_core_priv_enter: [priv] sending IPI
+[  724.293328]   <idle>-0       2d..2 709195115us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.293332]   chrome-3065    3d.h. 709195115us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.293336]   chrome-3065    3d.h. 709195115us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.293340]   <idle>-0       2d..2 709195125us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.293344]   chrome-3065    3d.h. 709195125us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.293348]   chrome-3065    3d.h. 709195125us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.293352]   <idle>-0       2d..2 709195148us : sched_core_priv_enter: [priv] sending IPI
+[  724.293355]   <idle>-0       2d..2 709195149us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.293359]   chrome-3065    3d.h. 709195149us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.293363]   chrome-3065    3d.h. 709195149us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.293367]   <idle>-0       2d..2 709195159us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.293371]   chrome-3065    3d.h. 709195159us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.293375]   chrome-3065    3d.h. 709195159us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.293379]   <idle>-0       2d..2 709195181us : sched_core_priv_enter: [priv] sending IPI
+[  724.293383]   <idle>-0       2d..2 709195181us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.293387]   chrome-3065    3d.h. 709195182us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.293391]   chrome-3065    3d.h. 709195182us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.293395]   <idle>-0       2d..2 709195190us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.293399]   chrome-3065    3d.h. 709195191us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.293403]   chrome-3065    3d.h. 709195191us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.293407]   <idle>-0       2d..2 709195195us : sched_core_priv_enter: [priv] sending IPI
+[  724.293410]   <idle>-0       2d..2 709195195us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.293414]   chrome-3065    3d.h. 709195196us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.293418]   chrome-3065    3d.h. 709195196us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.293422]   <idle>-0       2d..2 709195204us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.293426]   chrome-3065    3d.h. 709195204us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.293430]   chrome-3065    3d.h. 709195205us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.293434]   <idle>-0       2d..2 709195209us : sched_core_priv_enter: [priv] sending IPI
+[  724.293438]   <idle>-0       2d..2 709195209us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.293442]   chrome-3065    3d.h. 709195210us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.293446]   chrome-3065    3d.h. 709195210us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.293450]   <idle>-0       2d..2 709195218us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.293454]   chrome-3065    3d.h. 709195219us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.293458]   chrome-3065    3d.h. 709195219us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.293462]   <idle>-0       2d..2 709195232us : sched_core_priv_enter: [priv] sending IPI
+[  724.293465]   <idle>-0       2d..2 709195232us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.293469]   chrome-3065    3d.h. 709195233us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.293474]   chrome-3065    3d.h. 709195233us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.293477]   <idle>-0       2d..2 709195242us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.293482]   chrome-3065    3d.h. 709195242us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.293485]   chrome-3065    3d.h. 709195242us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.293489]   <idle>-0       2d..2 709195246us : sched_core_priv_enter: [priv] sending IPI
+[  724.293493]   <idle>-0       2d..2 709195247us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.293497]   chrome-3065    3d.h. 709195247us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.293501]   chrome-3065    3d.h. 709195247us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.293505]   <idle>-0       2d..2 709195256us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.293509]   chrome-3065    3d.h. 709195256us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.293513]   chrome-3065    3d.h. 709195256us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.293517]   <idle>-0       2d..2 709195261us : sched_core_priv_enter: [priv] sending IPI
+[  724.293521]   <idle>-0       2d..2 709195262us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.293524]   chrome-3065    3d.h. 709195262us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.293529]   chrome-3065    3d.h. 709195262us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.293532]   <idle>-0       2d..2 709195271us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.293537]   chrome-3065    3d.h. 709195271us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.293541]   chrome-3065    3d.h. 709195271us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.293544]   <idle>-0       2d..2 709195276us : sched_core_priv_enter: [priv] sending IPI
+[  724.293548]   <idle>-0       2d..2 709195276us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.293552]   chrome-3065    3d.h. 709195277us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.293557]   chrome-3065    3d.h. 709195277us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.293561]   <idle>-0       2d..2 709195286us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.293565]   chrome-3065    3d.h. 709195286us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.293569]   chrome-3065    3d.h. 709195286us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.293572]   <idle>-0       2d..2 709195291us : sched_core_priv_enter: [priv] sending IPI
+[  724.293576]   <idle>-0       2d..2 709195291us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.293580]   chrome-3065    3d.h. 709195293us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.293584]   chrome-3065    3d.h. 709195293us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.293588]   <idle>-0       2d..2 709195301us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.293592]   chrome-3065    3d.h. 709195301us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.293596]   chrome-3065    3d.h. 709195301us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.293600]   <idle>-0       2d..2 709195315us : sched_core_priv_enter: [priv] sending IPI
+[  724.293604]   <idle>-0       2d..2 709195315us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.293608]   chrome-3065    3d.h. 709195316us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.293612]   chrome-3065    3d.h. 709195316us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.293616]   <idle>-0       2d..2 709195325us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.293620]   chrome-3065    3d.h. 709195325us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.293624]   chrome-3065    3d.h. 709195325us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.293628]   <idle>-0       2d..2 709195326us : sched_core_priv_enter: [priv] sending IPI
+[  724.293631]   <idle>-0       2d..2 709195326us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.293635]   chrome-3065    3d.H. 709195333us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.293640]   chrome-3065    3d.H. 709195333us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.293644]   <idle>-0       2d.s2 709195352us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.293648]   chrome-3065    3d.H. 709195352us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.293652]   chrome-3065    3d.H. 709195353us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.293655]   <idle>-0       2d..2 709195433us : sched_core_priv_enter: [priv] sending IPI
+[  724.293659]   <idle>-0       2d..2 709195434us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.293663]   chrome-3065    3d.h. 709195434us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.293667]   chrome-3065    3d.h. 709195435us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.293672]   chrome-3065    3d.h. 709195447us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.293676]   <idle>-0       2d..2 709195447us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.293679]   chrome-3065    3d.h. 709195448us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.293683]   <idle>-0       2d..2 709195492us : sched_core_priv_enter: [priv] sending IPI
+[  724.293687]   <idle>-0       2d..2 709195492us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.293691]   chrome-3065    3d.h. 709195493us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.293695]   chrome-3065    3d.h. 709195493us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.293699]   <idle>-0       2d..2 709195503us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.293703]   chrome-3065    3d.h. 709195503us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.293707]   chrome-3065    3d.h. 709195504us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.293711]   <idle>-0       2d..2 709195524us : sched_core_priv_enter: [priv] sending IPI
+[  724.293715]   <idle>-0       2d..2 709195525us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.293718]   chrome-3065    3d.h. 709195526us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.293723]   chrome-3065    3d.h. 709195526us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.293726]   <idle>-0       2d..2 709195535us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.293731]   chrome-3065    3d.h. 709195535us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.293734]   chrome-3065    3d.h. 709195536us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.293738]   <idle>-0       2d..2 709195558us : sched_core_priv_enter: [priv] sending IPI
+[  724.293742]   <idle>-0       2d..2 709195558us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.293746]   chrome-3065    3d.h. 709195559us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.293750]   chrome-3065    3d.h. 709195559us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.293754]   <idle>-0       2d..2 709195569us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.293758]   chrome-3065    3d.h. 709195569us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.293762]   chrome-3065    3d.h. 709195569us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.293766]   <idle>-0       2d..2 709195592us : sched_core_priv_enter: [priv] sending IPI
+[  724.293770]   <idle>-0       2d..2 709195592us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.293773]   chrome-3065    3d.h. 709195593us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.293778]   chrome-3065    3d.h. 709195593us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.293782]   <idle>-0       2d..2 709195603us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.293786]   chrome-3065    3d.h. 709195603us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.293790]   chrome-3065    3d.h. 709195603us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.293793]   <idle>-0       2d..2 709195627us : sched_core_priv_enter: [priv] sending IPI
+[  724.293797]   <idle>-0       2d..2 709195627us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.293801]   chrome-3065    3d.h. 709195628us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.293805]   chrome-3065    3d.h. 709195628us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.293810]   chrome-3065    3d.h. 709195638us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.293813]   <idle>-0       2d..2 709195638us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.293817]   chrome-3065    3d.h. 709195638us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.293821]   <idle>-0       2d..2 709195659us : sched_core_priv_enter: [priv] sending IPI
+[  724.293825]   <idle>-0       2d..2 709195660us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.293829]   chrome-3065    3d.h. 709195662us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.293833]   chrome-3065    3d.h. 709195662us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.293837]   <idle>-0       2d..2 709195670us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.293841]   chrome-3065    3d.h. 709195670us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.293845]   chrome-3065    3d.h. 709195671us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.293848]   <idle>-0       2d..2 709195693us : sched_core_priv_enter: [priv] sending IPI
+[  724.293852]   <idle>-0       2d..2 709195694us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.293856]   chrome-3065    3d.h. 709195694us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.293860]   chrome-3065    3d.h. 709195695us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.293864]   <idle>-0       2d..2 709195705us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.293868]   chrome-3065    3d.h. 709195705us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.293872]   chrome-3065    3d.h. 709195705us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.293876]   <idle>-0       2d..2 709195725us : sched_core_priv_enter: [priv] sending IPI
+[  724.293880]   <idle>-0       2d..2 709195725us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.293884]   chrome-3065    3d.h. 709195726us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.293888]   chrome-3065    3d.h. 709195726us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.293892]   <idle>-0       2d..2 709195739us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.293896]   chrome-3065    3d.h. 709195739us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.293900]   chrome-3065    3d.h. 709195739us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.293904]   <idle>-0       2d..2 709195744us : sched_core_priv_enter: [priv] sending IPI
+[  724.293907]   <idle>-0       2d..2 709195744us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.293911]   chrome-3065    3d.h. 709195745us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.293915]   chrome-3065    3d.h. 709195745us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.293919]   <idle>-0       2d..2 709195754us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.293923]   chrome-3065    3d.h. 709195754us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.293927]   chrome-3065    3d.h. 709195754us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.293931]   <idle>-0       2d..2 709195758us : sched_core_priv_enter: [priv] sending IPI
+[  724.293935]   <idle>-0       2d..2 709195759us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.293939]   chrome-3065    3d.h. 709195759us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.293943]   chrome-3065    3d.h. 709195760us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.293947]   <idle>-0       2d..2 709195768us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.293951]   chrome-3065    3d.h. 709195769us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.293955]   chrome-3065    3d.h. 709195769us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.293959]   <idle>-0       2d..2 709195773us : sched_core_priv_enter: [priv] sending IPI
+[  724.293963]   <idle>-0       2d..2 709195774us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.293967]   chrome-3065    3d.h. 709195775us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.293971]   chrome-3065    3d.h. 709195775us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.293975]   <idle>-0       2d..2 709195783us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.293979]   chrome-3065    3d.h. 709195783us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.293983]   chrome-3065    3d.h. 709195783us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.293987]   <idle>-0       2d..2 709195788us : sched_core_priv_enter: [priv] sending IPI
+[  724.293990]   <idle>-0       2d..2 709195788us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.293994]   chrome-3065    3d.h. 709195789us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.293999]   chrome-3065    3d.h. 709195789us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.294002]   <idle>-0       2d..2 709195797us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.294007]   chrome-3065    3d.h. 709195797us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.294010]   chrome-3065    3d.h. 709195798us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.294014]   <idle>-0       2d..2 709195811us : sched_core_priv_enter: [priv] sending IPI
+[  724.294018]   <idle>-0       2d..2 709195811us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.294022]   chrome-3065    3d.h. 709195812us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.294026]   chrome-3065    3d.h. 709195813us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.294030]   <idle>-0       2d..2 709195822us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.294034]   chrome-3065    3d.h. 709195822us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.294038]   chrome-3065    3d.h. 709195822us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.294042]   <idle>-0       2d..2 709195845us : sched_core_priv_enter: [priv] sending IPI
+[  724.294046]   <idle>-0       2d..2 709195845us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.294049]   chrome-3065    3d.h. 709195846us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.294054]   chrome-3065    3d.h. 709195846us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.294057]   <idle>-0       2d..2 709195856us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.294062]   chrome-3065    3d.h. 709195856us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.294065]   chrome-3065    3d.h. 709195856us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.294069]   <idle>-0       2d..2 709195879us : sched_core_priv_enter: [priv] sending IPI
+[  724.294073]   <idle>-0       2d..2 709195879us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.294077]   chrome-3065    3d.h. 709195880us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.294081]   chrome-3065    3d.h. 709195880us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.294085]   <idle>-0       2d..2 709195889us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.294089]   chrome-3065    3d.h. 709195890us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.294093]   chrome-3065    3d.h. 709195890us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.294097]   <idle>-0       2d..2 709195890us : sched_core_priv_enter: [priv] sending IPI
+[  724.294101]   <idle>-0       2d..2 709195891us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.294104]   chrome-3065    3d.h. 709195891us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.294109]   chrome-3065    3d.h. 709195892us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.294113]   <idle>-0       0dN.2 709195893us : cfs_prio_less: picked VizCompositorTh/1311 crosscpu: 339126090596 339117090596 9000000
+[  724.294117]   <idle>-0       2dN.2 709195895us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.294121]   <idle>-0       0dN.2 709195895us : cfs_prio_less: picked VizCompositorTh/1311 crosscpu: 339126090596 339117090596 9000000
+[  724.294125]   chrome-3065    3d.h. 709195895us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.294129]   chrome-3065    3d.h. 709195896us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.294133]   <idle>-0       2dN.2 709195896us : sched_core_priv_enter: [priv] sending IPI
+[  724.294137]   <idle>-0       2dN.2 709195896us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.294141]   chrome-3065    3d.h. 709195897us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.294145]   chrome-3065    3d.h. 709195897us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.294149]   <idle>-0       2dN.2 709195905us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.294153]   chrome-3065    3d.h. 709195905us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.294157]   chrome-3065    3d.h. 709195906us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.294161] Composit-3071    2d..2 709195911us : sched_core_priv_enter: [priv] sending IPI
+[  724.294164] Composit-3071    2d..2 709195912us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.294168]   chrome-3065    3d.h. 709195912us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.294172]   chrome-3065    3d.h. 709195913us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.294176] Composit-3071    2d..2 709195921us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.294180]   chrome-3065    3d.h. 709195921us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.294184]   chrome-3065    3d.h. 709195921us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.294188] Composit-3071    2d..1 709195926us : sched_core_priv_enter: [priv] sending IPI
+[  724.294192] Composit-3071    2d..1 709195926us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.294196]   chrome-3065    3d.h. 709195927us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.294200]   chrome-3065    3d.h. 709195927us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.294204] Composit-3071    2d..1 709195936us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.294208]   chrome-3065    3d.h. 709195936us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.294212]   chrome-3065    3d.h. 709195937us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.294216] Composit-3071    2d..1 709195940us : sched_core_priv_enter: [priv] sending IPI
+[  724.294219] Composit-3071    2d..1 709195940us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.294223]   chrome-3065    3d.h. 709195941us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.294227]   chrome-3065    3d.h. 709195941us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.294231] Composit-3071    2d..1 709195950us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.294235]   chrome-3065    3d.h. 709195950us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.294239]   chrome-3065    3d.h. 709195950us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.294243] Composit-3071    2d..1 709195954us : sched_core_priv_enter: [priv] sending IPI
+[  724.294247] Composit-3071    2d..1 709195955us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.294251]   chrome-3065    3d.h. 709195955us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.294255]   chrome-3065    3d.h. 709195955us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.294259] Composit-3071    2d..1 709195964us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.294263]   chrome-3065    3d.h. 709195964us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.294267]   chrome-3065    3d.h. 709195965us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.294271] Composit-3071    2d..1 709195977us : sched_core_priv_enter: [priv] sending IPI
+[  724.294274] Composit-3071    2d..1 709195977us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.294278]   chrome-3065    3d.h. 709195978us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.294282]   chrome-3065    3d.h. 709195978us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.294286] Composit-3071    2d..1 709195990us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.294290]   chrome-3065    3d.h. 709195990us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.294294]   chrome-3065    3d.h. 709195990us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.294298] Composit-3071    2d..1 709195994us : sched_core_priv_enter: [priv] sending IPI
+[  724.294302] Composit-3071    2d..1 709195995us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.294306]   chrome-3065    3d.h. 709195995us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.294310]   chrome-3065    3d.h. 709195995us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.294314] Composit-3071    2d..1 709196004us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.294318]   chrome-3065    3d.h. 709196004us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.294322]   chrome-3065    3d.h. 709196004us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.294326] Composit-3071    2d..1 709196009us : sched_core_priv_enter: [priv] sending IPI
+[  724.294329] Composit-3071    2d..1 709196010us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.294333]   chrome-3065    3d.h. 709196010us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.294337]   chrome-3065    3d.h. 709196010us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.294341] Composit-3071    2d..1 709196019us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.294346]   chrome-3065    3d.h. 709196020us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.294349]   chrome-3065    3d.h. 709196020us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.294353] Composit-3071    2d..1 709196024us : sched_core_priv_enter: [priv] sending IPI
+[  724.294357] Composit-3071    2d..1 709196024us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.294361]   chrome-3065    3d.h. 709196025us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.294365]   chrome-3065    3d.h. 709196025us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.294369] Composit-3071    2d..1 709196034us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.294373]   chrome-3065    3d.h. 709196034us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.294377]   chrome-3065    3d.h. 709196034us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.294381] Composit-3071    2d..1 709196046us : sched_core_priv_enter: [priv] sending IPI
+[  724.294384] Composit-3071    2d..1 709196047us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.294388]   chrome-3065    3d.h. 709196048us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.294393]   chrome-3065    3d.h. 709196048us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.294397] Chrome_C-3483    0d..2 709196057us : cfs_prio_less: picked VizCompositorTh/1311 crosscpu: 339126198333 339117108494 9089839
+[  724.294401] Composit-3071    2d..1 709196057us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.294405]   chrome-3065    3d.h. 709196057us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.294409]   chrome-3065    3d.h. 709196057us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.294413] Chrome_C-3483    0d..2 709196058us : cfs_prio_less: picked VizCompositorTh/1311 crosscpu: 339126198333 339117108494 9089839
+[  724.294417] Composit-3071    2d..1 709196062us : sched_core_priv_enter: [priv] sending IPI
+[  724.294421] Composit-3071    2d..1 709196062us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.294424]   chrome-3065    3d.h. 709196063us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.294429]   chrome-3065    3d.h. 709196063us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.294433] Composit-3071    2d..1 709196072us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.294437]   chrome-3065    3d.h. 709196072us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.294441]   chrome-3065    3d.h. 709196072us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.294445] Composit-3071    2d..1 709196077us : sched_core_priv_enter: [priv] sending IPI
+[  724.294448] Composit-3071    2d..1 709196077us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.294452]   chrome-3065    3d.h. 709196078us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.294456]   chrome-3065    3d.h. 709196078us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.294460] Composit-3071    2d..1 709196086us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.294465]   chrome-3065    3d.h. 709196086us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.294468]   chrome-3065    3d.h. 709196087us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.294472] Composit-3071    2d..1 709196090us : sched_core_priv_enter: [priv] sending IPI
+[  724.294476] Composit-3071    2d..1 709196091us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.294480]   chrome-3065    3d.h. 709196092us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.294484]   chrome-3065    3d.h. 709196092us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.294488] Composit-3071    2d..1 709196101us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.294492]   chrome-3065    3d.h. 709196101us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.294496]   chrome-3065    3d.h. 709196101us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.294500] Composit-3071    2d..1 709196113us : sched_core_priv_enter: [priv] sending IPI
+[  724.294504] Composit-3071    2d..1 709196114us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.294507]   chrome-3065    3d.h. 709196115us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.294512]   chrome-3065    3d.h. 709196115us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.294516] Composit-3071    2d..1 709196123us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.294520]   chrome-3065    3d.h. 709196123us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.294524]   chrome-3065    3d.h. 709196123us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.294527] Composit-3071    2d..1 709196127us : sched_core_priv_enter: [priv] sending IPI
+[  724.294531] Composit-3071    2d..1 709196127us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.294535]   chrome-3065    3d.h. 709196128us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.294539]   chrome-3065    3d.h. 709196128us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.294543] Composit-3071    2d..1 709196136us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.294547]   chrome-3065    3d.h. 709196137us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.294551]   chrome-3065    3d.h. 709196137us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.294555] Composit-3071    2d..1 709196140us : sched_core_priv_enter: [priv] sending IPI
+[  724.294559] Composit-3071    2d..1 709196141us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.294563]   chrome-3065    3d.h. 709196141us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.294567]   chrome-3065    3d.h. 709196141us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.294571] Composit-3071    2d..1 709196150us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.294575]   chrome-3065    3d.h. 709196150us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.294579]   chrome-3065    3d.h. 709196150us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.294583] Composit-3071    2d..3 709196166us : cfs_prio_less: picked CompositorTileW/3073 samecpu: 118751094831 118704107378 46987453
+[  724.294587] Composit-3071    2d..3 709196171us : sched_core_priv_enter: [priv] sending IPI
+[  724.294591] Composit-3071    2d..3 709196171us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.294595]   chrome-3065    3dN.2 709196176us : cfs_prio_less: picked Chrome_ChildIOT/3068 samecpu: 65481734452 65481518054 216398
+[  724.294599]   chrome-3065    3dN.2 709196179us : cfs_prio_less: picked Chrome_ChildIOT/3068 crosscpu: 460377661366 457679021947 2698639419
+[  724.294603]   chrome-3065    3dN.2 709196180us : cfs_prio_less: picked Chrome_ChildIOT/3068 crosscpu: 460377661366 457679021947 2698639419
+[  724.294607]   <idle>-0       3d.h1 709196184us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.294611]   <idle>-0       3d.h1 709196184us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.294615] Composit-3071    2dn.3 709196189us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.294619]   <idle>-0       3d.h1 709196189us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.294623]   <idle>-0       3d.h1 709196189us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.294628] DrmThrea-1307    0d..2 709196191us : cfs_prio_less: picked chrome/1287 crosscpu: 339126198333 339117384930 8813403
+[  724.294632] DrmThrea-1307    0d..2 709196193us : cfs_prio_less: picked chrome/1287 crosscpu: 339126198333 339117384930 8813403
+[  724.294636] Composit-3071    2d..2 709196269us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.294640] Composit-3071    2d..2 709196286us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.294644] Composit-3071    2d..3 709196290us : cfs_prio_less: picked CompositorTileW/3073 samecpu: 118751929431 118742940826 8988605
+[  724.294648] Composit-3071    2d..1 709196300us : sched_core_priv_enter: [priv] sending IPI
+[  724.294651] Composit-3071    2d..1 709196300us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.294655] Composit-3073    3d.h. 709196301us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.294660] Composit-3073    3d.h. 709196301us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.294663] Composit-3071    2d..1 709196310us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.294668] Composit-3073    3d.h. 709196310us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.294672] Composit-3073    3d.h. 709196310us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.294675] Composit-3071    2d..1 709196314us : sched_core_priv_enter: [priv] sending IPI
+[  724.294679] Composit-3071    2d..1 709196314us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.294683] Composit-3073    3d.h. 709196315us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.294687] Composit-3073    3d.h. 709196315us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.294691]   chrome-3480    1d..1 709196323us : sched_core_priv_enter: [priv] sending IPI
+[  724.294695] Composit-3071    2d..1 709196323us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.294699] Composit-3073    3d.h. 709196323us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.294703] Composit-3073    3d.h. 709196324us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.294707]   chrome-3480    1d..1 709196324us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.294711] Composit-3071    2d..1 709196324us : sched_core_priv_enter: [priv] sending IPI
+[  724.294714] Composit-3071    2d..1 709196325us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.294718] Composit-3073    3d.H. 709196332us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.294722] Composit-3073    3d.H. 709196332us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.294726]   chrome-3480    1d..1 709196332us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.294730]   <idle>-0       0d..2 709196332us : sched_core_priv_enter: [priv] sending IPI
+[  724.294734]   <idle>-0       0d..2 709196333us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.294738]   chrome-3480    1d.h. 709196334us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.294742]   chrome-3480    1d.h. 709196334us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.294746]   <idle>-0       0d.H1 709196334us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.294749] Composit-3071    2d.s1 709196348us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.294754] Composit-3073    3d.H. 709196348us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.294757] Composit-3073    3d.H. 709196348us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.294761] Composit-3071    2d..1 709196368us : sched_core_priv_enter: [priv] sending IPI
+[  724.294764] Composit-3071    2d..1 709196369us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.294768]   chrome-3065    3d.h. 709196369us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.294772]   chrome-3065    3d.h. 709196370us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.294776] Composit-3071    2d..1 709196378us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.294780]   chrome-3065    3d.h. 709196378us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.294784]   chrome-3065    3d.h. 709196378us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.294788] Composit-3071    2d..2 709196383us : sched_core_priv_enter: [priv] sending IPI
+[  724.294791] Composit-3071    2d..2 709196383us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.294795]   chrome-3065    3d.h. 709196384us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.294799]   chrome-3065    3d.h. 709196384us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.294803] Composit-3071    2d..2 709196392us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.294807]   chrome-3065    3d.h. 709196392us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.294810]   chrome-3065    3d.h. 709196393us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.294814] Composit-3071    2d..1 709196396us : sched_core_priv_enter: [priv] sending IPI
+[  724.294818] Composit-3071    2d..1 709196397us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.294821]   chrome-3065    3d.h. 709196398us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.294825]   chrome-3065    3d.h. 709196398us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.294829] Composit-3071    2d..1 709196406us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.294833]   chrome-3065    3d.h. 709196406us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.294837]   chrome-3065    3d.h. 709196406us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.294840] Composit-3071    2d..1 709196410us : sched_core_priv_enter: [priv] sending IPI
+[  724.294844] Composit-3071    2d..1 709196410us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.294847]   chrome-3065    3d.h. 709196411us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.294851]   chrome-3065    3d.h. 709196411us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.294855] Composit-3071    2d..1 709196419us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.294859]   chrome-3065    3d.h. 709196419us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.294863]   chrome-3065    3d.h. 709196420us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.294866] Composit-3071    2d..1 709196433us : sched_core_priv_enter: [priv] sending IPI
+[  724.294870] Composit-3071    2d..1 709196433us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.294874]   chrome-3065    3d.h. 709196434us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.294878]   chrome-3065    3d.h. 709196434us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.294881] Composit-3071    2d..1 709196443us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.294886]   chrome-3065    3d.h. 709196443us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.294889]   chrome-3065    3d.h. 709196443us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.294893] Composit-3071    2d..1 709196447us : sched_core_priv_enter: [priv] sending IPI
+[  724.294897] Composit-3071    2d..1 709196447us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.294901]   chrome-3065    3d.h. 709196448us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.294905]   chrome-3065    3d.h. 709196448us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.294908] Composit-3071    2d..1 709196456us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.294912]   chrome-3065    3d.h. 709196456us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.294916]   chrome-3065    3d.h. 709196456us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.294920] Composit-3071    2d..1 709196469us : sched_core_priv_enter: [priv] sending IPI
+[  724.294923] Composit-3071    2d..1 709196470us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.294927]   chrome-3065    3d.h. 709196470us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.294931]   chrome-3065    3d.h. 709196470us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.294935] Composit-3071    2d..1 709196479us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.294939]   chrome-3065    3d.h. 709196479us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.294942]   chrome-3065    3d.h. 709196479us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.294946] Composit-3071    2d..1 709196483us : sched_core_priv_enter: [priv] sending IPI
+[  724.294949] Composit-3071    2d..1 709196483us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.294953]   chrome-3065    3d.h. 709196484us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.294957]   chrome-3065    3d.h. 709196484us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.294961] Composit-3071    2d..1 709196492us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.294965]   chrome-3065    3d.h. 709196492us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.294968]   chrome-3065    3d.h. 709196493us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.294972] Composit-3071    2d..1 709196496us : sched_core_priv_enter: [priv] sending IPI
+[  724.294976] Composit-3071    2d..1 709196497us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.294979]   chrome-3065    3d.h. 709196497us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.294983]   chrome-3065    3d.h. 709196498us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.294987] Composit-3071    2d..1 709196506us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.294991]   chrome-3065    3d.h. 709196506us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.294995]   chrome-3065    3d.h. 709196506us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.294998] Composit-3071    2d..1 709196519us : sched_core_priv_enter: [priv] sending IPI
+[  724.295002] Composit-3071    2d..1 709196519us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.295006]   chrome-3065    3d.h. 709196520us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.295010]   chrome-3065    3d.h. 709196520us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.295014]   chrome-3065    3d.h. 709196529us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.295018] Composit-3071    2d..1 709196529us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.295021]   chrome-3065    3d.h. 709196529us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.295025] Composit-3071    2d..1 709196533us : sched_core_priv_enter: [priv] sending IPI
+[  724.295029] Composit-3071    2d..1 709196533us : sched_core_priv_enter: [priv] ENTER priv state, dump stack
+[  724.295032]   chrome-3065    3d.h. 709196534us : sched_core_sibling_pause_ipi: [unpriv] enter IPI
+[  724.295036]   chrome-3065    3d.h. 709196534us : sched_core_sibling_pause: [unpriv]: ENTER sibling pause
+[  724.295040] Composit-3071    2d..1 709196542us : sched_core_priv_exit: [priv] EXIT priv state, dump stack
+[  724.295044]   chrome-3065    3d.h. 709196542us : sched_core_sibling_pause: [unpriv]: EXIT sibling pause
+[  724.295047]   chrome-3065    3d.h. 709196543us : sched_core_sibling_pause_ipi: [unpriv] exit IPI
+[  724.295051]   <idle>-0       0dnH1 709196544us : sched_core_sibling_pause: WARNING PRINTED!!
+[  724.295053] ---------------------------------
+[  724.295056] Kernel Offset: 0x20c00000 from 0xffffffff81000000 (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
+[  724.296993] gsmi: Log Shutdown Reason 0x02
+[  724.303624] ACPI MEMORY or I/O RESET_REG.

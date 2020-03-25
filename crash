@@ -1,0 +1,1337 @@
+[    0.000000] Linux version 5.4.22htcore (joelaf@joelaf.cam.corp.google.com) (Chromium OS 10.0_pre380035_p20200212-r1 clang version 10.0.0 (/var/cache/chromeos-cache/distfiles/host/egit-src/llvm-project a21beccea2020f950845cbb68db663d0737e174c)) #31 SMP PREEMPT Tue Mar 24 21:14:13 EDT 2020
+[    0.000000] Command line: cros_secure console= loglevel=7 init=/sbin/init cros_secure root=PARTUUID=02f728cd-e1e3-dc4d-b2e6-0f3acecc06c6/PARTNROFF=1 rootwait ro dm_verity.error_behavior=3 dm_verity.max_bios=-1 dm_verity.dev_wait=0 dm="1 vroot none ro 1,0 4710400 verity payload=ROOT_DEV hashtree=HASH_DEV hashstart=4710400 alg=sha256 root_hexdigest=73109d254dfde2d887864696ad80a2aa07df59ac352c8681ee923bea26aeaa3d salt=51383650f3d938a4b5f5d46273634ff2dc491ce0a064c1b091894e24396af861" noinitrd cros_debug vt.global_cursor_default=0 kern_guid=02f728cd-e1e3-dc4d-b2e6-0f3acecc06c6 add_efi_memmap boot=local noresume noswap i915.modeset=1 nmi_watchdog=panic,lapic disablevmx=off 
+[    0.000000] x86/fpu: Supporting XSAVE feature 0x001: 'x87 floating point registers'
+[    0.000000] x86/fpu: Supporting XSAVE feature 0x002: 'SSE registers'
+[    0.000000] x86/fpu: Supporting XSAVE feature 0x004: 'AVX registers'
+[    0.000000] x86/fpu: Supporting XSAVE feature 0x008: 'MPX bounds registers'
+[    0.000000] x86/fpu: Supporting XSAVE feature 0x010: 'MPX CSR'
+[    0.000000] x86/fpu: xstate_offset[2]:  576, xstate_sizes[2]:  256
+[    0.000000] x86/fpu: xstate_offset[3]:  832, xstate_sizes[3]:   64
+[    0.000000] x86/fpu: xstate_offset[4]:  896, xstate_sizes[4]:   64
+[    0.000000] x86/fpu: Enabled xstate features 0x1f, context size is 960 bytes, using 'compacted' format.
+[    0.000000] BIOS-provided physical RAM map:
+[    0.000000] BIOS-e820: [mem 0x0000000000000000-0x0000000000000fff] type 16
+[    0.000000] BIOS-e820: [mem 0x0000000000001000-0x000000000009ffff] usable
+[    0.000000] BIOS-e820: [mem 0x00000000000a0000-0x00000000000fffff] reserved
+[    0.000000] BIOS-e820: [mem 0x0000000000100000-0x000000007a989fff] usable
+[    0.000000] BIOS-e820: [mem 0x000000007a98a000-0x000000007affffff] type 16
+[    0.000000] BIOS-e820: [mem 0x000000007b000000-0x000000007fffffff] reserved
+[    0.000000] BIOS-e820: [mem 0x00000000e0000000-0x00000000e3ffffff] reserved
+[    0.000000] BIOS-e820: [mem 0x00000000fd000000-0x00000000ffffffff] reserved
+[    0.000000] BIOS-e820: [mem 0x0000000100000000-0x000000047effffff] usable
+[    0.000000] NX (Execute Disable) protection: active
+[    0.000000] SMBIOS 2.7 present.
+[    0.000000] DMI: Google Eve/Eve, BIOS Google_Eve.9584.174.0 05/29/2018
+[    0.000000] tsc: Initial usec timer 5497273
+[    0.000000] tsc: Detected 1600.000 MHz processor
+[    0.000014] tsc: Detected 1599.960 MHz TSC
+[    0.000026] last_pfn = 0x47f000 max_arch_pfn = 0x400000000
+[    0.000748] x86/PAT: Configuration [0-7]: WB  WC  UC- UC  WB  WP  UC- WT  
+[    0.001748] last_pfn = 0x7a98a max_arch_pfn = 0x400000000
+[    0.016857] check: Scanning 1 areas for low memory corruption
+[    0.016871] Using GB pages for direct mapping
+[    0.017074] ACPI: Early table checksum verification disabled
+[    0.017086] ACPI: RSDP 0x00000000000F0000 000024 (v02 CORE  )
+[    0.017093] ACPI: XSDT 0x000000007AA9B0E0 000064 (v01 CORE   COREBOOT 00000000 CORE 00000000)
+[    0.017102] ACPI: FACP 0x000000007AA9F560 0000F4 (v04 CORE   COREBOOT 00000000 CORE 00000000)
+[    0.017111] ACPI: DSDT 0x000000007AA9B280 0042D2 (v05 COREv4 COREBOOT 20110725 INTL 20150717)
+[    0.017117] ACPI: FACS 0x000000007AA9B240 000040
+[    0.017121] ACPI: FACS 0x000000007AA9B240 000040
+[    0.017125] ACPI: SSDT 0x000000007AA9F660 000D2A (v02 CORE   COREBOOT 0000002A CORE 0000002A)
+[    0.017131] ACPI: MCFG 0x000000007AAA0390 00003C (v01 CORE   COREBOOT 00000000 CORE 00000000)
+[    0.017136] ACPI: TCPA 0x000000007AAA03D0 000032 (v02 CORE   COREBOOT 00000000 CORE 00000000)
+[    0.017140] ACPI: APIC 0x000000007AAA0410 00006C (v01 CORE   COREBOOT 00000000 CORE 00000000)
+[    0.017145] ACPI: NHLT 0x000000007AAA0480 000404 (v05 GOOGLE EVEMAX   00000000 CORE 00000000)
+[    0.017150] ACPI: DBG2 0x000000007AAA2890 000061 (v00 CORE   COREBOOT 00000000 CORE 00000000)
+[    0.017155] ACPI: HPET 0x000000007AAA2900 000038 (v01 CORE   COREBOOT 00000000 CORE 00000000)
+[    0.017204] Zone ranges:
+[    0.017206]   DMA      [mem 0x0000000000001000-0x0000000000ffffff]
+[    0.017209]   DMA32    [mem 0x0000000001000000-0x00000000ffffffff]
+[    0.017211]   Normal   [mem 0x0000000100000000-0x000000047effffff]
+[    0.017214] Movable zone start for each node
+[    0.017215] Early memory node ranges
+[    0.017218]   node   0: [mem 0x0000000000001000-0x000000000009ffff]
+[    0.017220]   node   0: [mem 0x0000000000100000-0x000000007a989fff]
+[    0.017222]   node   0: [mem 0x0000000100000000-0x000000047effffff]
+[    0.017490] Zeroed struct page in unavailable ranges: 26327 pages
+[    0.017492] Initmem setup node 0 [mem 0x0000000000001000-0x000000047effffff]
+[    0.084972] Reserving Intel graphics memory at [mem 0x7c000000-0x7fffffff]
+[    0.085352] ACPI: PM-Timer IO Port: 0x1808
+[    0.085397] IOAPIC[0]: apic_id 2, version 32, address 0xfec00000, GSI 0-119
+[    0.085401] ACPI: INT_SRC_OVR (bus 0 bus_irq 0 global_irq 2 dfl dfl)
+[    0.085404] ACPI: INT_SRC_OVR (bus 0 bus_irq 9 global_irq 9 high level)
+[    0.085411] Using ACPI (MADT) for SMP configuration information
+[    0.085414] ACPI: HPET id: 0x8086a701 base: 0xfed00000
+[    0.085419] smpboot: Allowing 4 CPUs, 0 hotplug CPUs
+[    0.085434] [mem 0x80000000-0xdfffffff] available for PCI devices
+[    0.085440] clocksource: refined-jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 1910969940391419 ns
+[    0.207801] setup_percpu: NR_CPUS:8 nr_cpumask_bits:8 nr_cpu_ids:4 nr_node_ids:1
+[    0.208274] percpu: Embedded 52 pages/cpu s172392 r8192 d32408 u524288
+[    0.208308] Built 1 zonelists, mobility grouping on.  Total pages: 4102827
+[    0.208312] Kernel command line: cros_secure console= loglevel=7 init=/sbin/init cros_secure root=PARTUUID=02f728cd-e1e3-dc4d-b2e6-0f3acecc06c6/PARTNROFF=1 rootwait ro dm_verity.error_behavior=3 dm_verity.max_bios=-1 dm_verity.dev_wait=0 dm="1 vroot none ro 1,0 4710400 verity payload=ROOT_DEV hashtree=HASH_DEV hashstart=4710400 alg=sha256 root_hexdigest=73109d254dfde2d887864696ad80a2aa07df59ac352c8681ee923bea26aeaa3d salt=51383650f3d938a4b5f5d46273634ff2dc491ce0a064c1b091894e24396af861" noinitrd cros_debug vt.global_cursor_default=0 kern_guid=02f728cd-e1e3-dc4d-b2e6-0f3acecc06c6 add_efi_memmap boot=local noresume noswap i915.modeset=1 nmi_watchdog=panic,lapic disablevmx=off 
+[    0.211373] Dentry cache hash table entries: 2097152 (order: 12, 16777216 bytes, linear)
+[    0.212698] Inode-cache hash table entries: 1048576 (order: 11, 8388608 bytes, linear)
+[    0.212769] mem auto-init: stack:all, heap alloc:off, heap free:off
+[    0.279484] Memory: 16291616K/16671908K available (14344K kernel code, 1325K rwdata, 3376K rodata, 1608K init, 748K bss, 380292K reserved, 0K cma-reserved)
+[    0.279569] SLUB: HWalign=64, Order=0-3, MinObjects=0, CPUs=4, Nodes=1
+[    0.279582] Kernel/User page tables isolation: enabled
+[    0.279604] ftrace: allocating 44493 entries in 174 pages
+[    0.312257] 
+[    0.312260] **********************************************************
+[    0.312262] **   NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE   **
+[    0.312263] **                                                      **
+[    0.312265] ** trace_printk() being used. Allocating extra memory.  **
+[    0.312266] **                                                      **
+[    0.312267] ** This means that this is a DEBUG kernel and it is     **
+[    0.312269] ** unsafe for production use.                           **
+[    0.312270] **                                                      **
+[    0.312271] ** If you see this message and you are not debugging    **
+[    0.312273] ** the kernel, report this immediately to your vendor!  **
+[    0.312274] **                                                      **
+[    0.312275] **   NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE   **
+[    0.312277] **********************************************************
+[    0.312515] rcu: Preemptible hierarchical RCU implementation.
+[    0.312518] rcu: 	RCU restricting CPUs from NR_CPUS=8 to nr_cpu_ids=4.
+[    0.312520] 	Tasks RCU enabled.
+[    0.312522] rcu: RCU calculated value of scheduler-enlistment delay is 100 jiffies.
+[    0.312524] rcu: Adjusting geometry for rcu_fanout_leaf=16, nr_cpu_ids=4
+[    0.315532] NR_IRQS: 4352, nr_irqs: 1024, preallocated irqs: 16
+[    0.316002] random: get_random_bytes called from start_kernel+0x220/0x425 with crng_init=0
+[    0.316026] ACPI: Core revision 20190816
+[    0.316200] clocksource: hpet: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 79635855245 ns
+[    0.316244] APIC: Switch to symmetric I/O mode setup
+[    0.320373] ..TIMER: vector=0x30 apic1=0 pin1=2 apic2=-1 pin2=-1
+[    0.325305] clocksource: tsc-early: mask: 0xffffffffffffffff max_cycles: 0x170fff30cc4, max_idle_ns: 440795237869 ns
+[    0.325309] Calibrating delay loop (skipped), value calculated using timer frequency.. 3199.92 BogoMIPS (lpj=1599960)
+[    0.325313] pid_max: default: 32768 minimum: 301
+[    0.325337] LSM: Security Framework initializing
+[    0.325347] Yama: becoming mindful.
+[    0.325353] LoadPin: ready to pin (currently not enforcing)
+[    0.325359] Chromium OS LSM: enabled
+[    0.325360] SELinux:  Initializing.
+[    0.325432] Mount-cache hash table entries: 32768 (order: 6, 262144 bytes, linear)
+[    0.325472] Mountpoint-cache hash table entries: 32768 (order: 6, 262144 bytes, linear)
+[    0.325818] mce: CPU0: Thermal monitoring enabled (TM1)
+[    0.325850] process: using mwait in idle threads
+[    0.325854] Last level iTLB entries: 4KB 64, 2MB 8, 4MB 8
+[    0.325856] Last level dTLB entries: 4KB 64, 2MB 0, 4MB 0, 1GB 4
+[    0.325858] Spectre V1 : Mitigation: usercopy/swapgs barriers and __user pointer sanitization
+[    0.325868] Spectre V2 : Mitigation: Full generic retpoline
+[    0.325869] Spectre V2 : Spectre v2 / SpectreRSB mitigation: Filling RSB on context switch
+[    0.325871] Spectre V2 : Enabling Restricted Speculation for firmware calls
+[    0.325886] Spectre V2 : mitigation: Enabling conditional Indirect Branch Prediction Barrier
+[    0.325887] Spectre V2 : User space: Mitigation: STIBP via seccomp and prctl
+[    0.325896] Speculative Store Bypass: Mitigation: Speculative Store Bypass disabled via prctl and seccomp
+[    0.325899] TAA: Vulnerable: Clear CPU buffers attempted, no microcode
+[    0.325900] MDS: Vulnerable: Clear CPU buffers attempted, no microcode
+[    0.326550] Freeing SMP alternatives memory: 36K
+[    0.327272] smpboot: CPU0: Intel(R) Core(TM) i7-7Y75 CPU @ 1.30GHz (family: 0x6, model: 0x8e, stepping: 0x9)
+[    0.332355] Performance Events: PEBS fmt3+, Skylake events, 32-deep LBR, full-width counters, Intel PMU driver.
+[    0.332365] ... version:                4
+[    0.332367] ... bit width:              48
+[    0.332368] ... generic registers:      4
+[    0.332370] ... value mask:             0000ffffffffffff
+[    0.332372] ... max period:             00007fffffffffff
+[    0.332374] ... fixed-purpose events:   3
+[    0.332375] ... event mask:             000000070000000f
+[    0.334324] core: 0 -> 0
+[    0.334330] rcu: Hierarchical SRCU implementation.
+[    0.337514] NMI watchdog: Enabled. Permanently consumes one hw-PMU counter.
+[    0.339322] smp: Bringing up secondary CPUs ...
+[    0.347466] x86: Booting SMP configuration:
+[    0.347468] .... node  #0, CPUs:      #1
+[    0.005424] core: 1 -> 0
+[    0.348373] MDS CPU bug present and SMT on, data leak possible. See https://www.kernel.org/doc/html/latest/admin-guide/hw-vuln/mds.html for more details.
+[    0.348373] TAA CPU bug present and SMT on, data leak possible. See https://www.kernel.org/doc/html/latest/admin-guide/hw-vuln/tsx_async_abort.html for more details.
+[    0.356482]  #2
+[    0.005424] core: 2 -> 2
+[    0.365465]  #3
+[    0.005424] core: 3 -> 2
+[    0.366371] smp: Brought up 1 node, 4 CPUs
+[    0.366377] smpboot: Max logical packages: 1
+[    0.366377] smpboot: Total of 4 processors activated (12799.68 BogoMIPS)
+[    0.367708] devtmpfs: initialized
+[    0.368589] clocksource: jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 1911260446275000 ns
+[    0.368589] futex hash table entries: 1024 (order: 4, 65536 bytes, linear)
+[    0.368589] pinctrl core: initialized pinctrl subsystem
+[    0.368589] PM: RTC time: 01:15:37, date: 2020-03-25
+[    0.368589] thermal_sys: Registered thermal governor 'step_wise'
+[    0.368589] thermal_sys: Registered thermal governor 'user_space'
+[    0.368780] NET: Registered protocol family 16
+[    0.369404] audit: initializing netlink subsys (disabled)
+[    0.369415] audit: type=2000 audit(1585098937.049:1): state=initialized audit_enabled=0 res=1
+[    0.369434] cpuidle: using governor ladder
+[    0.369441] cpuidle: using governor menu
+[    0.369642] ACPI: bus type PCI registered
+[    0.369642] PCI: MMCONFIG for domain 0000 [bus 00-ff] at [mem 0xe0000000-0xefffffff] (base 0xe0000000)
+[    0.369642] PCI: MMCONFIG at [mem 0xe0000000-0xefffffff] reserved in E820
+[    0.369642] PCI: MMCONFIG for 0000 [bus00-3f] at [mem 0xe0000000-0xe3ffffff] (base 0xe0000000) (size reduced!)
+[    0.369642] PCI: Using configuration type 1 for base access
+[    0.374340] cryptd: max_cpu_qlen set to 1000
+[    0.376426] ACPI: Added _OSI(Module Device)
+[    0.376429] ACPI: Added _OSI(Processor Device)
+[    0.376432] ACPI: Added _OSI(3.0 _SCP Extensions)
+[    0.376434] ACPI: Added _OSI(Processor Aggregator Device)
+[    0.376436] ACPI: Added _OSI(Linux-Dell-Video)
+[    0.376438] ACPI: Added _OSI(Linux-Lenovo-NV-HDMI-Audio)
+[    0.376441] ACPI: Added _OSI(Linux-HPI-Hybrid-Graphics)
+[    0.379312] ACPI: 2 ACPI AML tables successfully acquired and loaded
+[    0.382155] ACPI: EC: EC started
+[    0.382158] ACPI: EC: interrupt blocked
+[    0.382356] ACPI: \_SB_.PCI0.LPCB.EC0_: Used as first EC
+[    0.382360] ACPI: \_SB_.PCI0.LPCB.EC0_: GPE=0x6e, EC_CMD/EC_SC=0x66, EC_DATA=0x62
+[    0.382363] ACPI: \_SB_.PCI0.LPCB.EC0_: Boot DSDT EC used to handle transactions
+[    0.382365] ACPI: Interpreter enabled
+[    0.382384] ACPI: (supports S0 S3 S5)
+[    0.382387] ACPI: Using IOAPIC for interrupt routing
+[    0.382420] PCI: Using host bridge windows from ACPI; if necessary, use "pci=nocrs" and report a bug
+[    0.390480] ACPI: PCI Root Bridge [PCI0] (domain 0000 [bus 00-ff])
+[    0.390489] acpi PNP0A08:00: _OSC: OS supports [ExtendedConfig ASPM ClockPM Segments MSI HPX-Type3]
+[    0.390550] acpi PNP0A08:00: _OSC: OS now controls [PCIeHotplug PME AER PCIeCapability LTR]
+[    0.390556] acpi PNP0A08:00: [Firmware Info]: MMCONFIG for domain 0000 [bus 00-3f] only partially covers this bridge
+[    0.390713] PCI host bridge to bus 0000:00
+[    0.390717] pci_bus 0000:00: root bus resource [io  0x0000-0x0cf7 window]
+[    0.390721] pci_bus 0000:00: root bus resource [io  0x0d00-0xffff window]
+[    0.390724] pci_bus 0000:00: root bus resource [mem 0x000a0000-0x000bffff window]
+[    0.390726] pci_bus 0000:00: root bus resource [mem 0x000c0000-0x000c3fff window]
+[    0.390729] pci_bus 0000:00: root bus resource [mem 0x000c4000-0x000c7fff window]
+[    0.390731] pci_bus 0000:00: root bus resource [mem 0x000c8000-0x000cbfff window]
+[    0.390734] pci_bus 0000:00: root bus resource [mem 0x000cc000-0x000cffff window]
+[    0.390736] pci_bus 0000:00: root bus resource [mem 0x000d0000-0x000d3fff window]
+[    0.390739] pci_bus 0000:00: root bus resource [mem 0x000d4000-0x000d7fff window]
+[    0.390741] pci_bus 0000:00: root bus resource [mem 0x000d8000-0x000dbfff window]
+[    0.390744] pci_bus 0000:00: root bus resource [mem 0x000dc000-0x000dffff window]
+[    0.390746] pci_bus 0000:00: root bus resource [mem 0x000e0000-0x000e3fff window]
+[    0.390749] pci_bus 0000:00: root bus resource [mem 0x000e4000-0x000e7fff window]
+[    0.390752] pci_bus 0000:00: root bus resource [mem 0x000e8000-0x000ebfff window]
+[    0.390754] pci_bus 0000:00: root bus resource [mem 0x000ec000-0x000effff window]
+[    0.390757] pci_bus 0000:00: root bus resource [mem 0x000f0000-0x000fffff window]
+[    0.390759] pci_bus 0000:00: root bus resource [mem 0x80000001-0xdfffffff window]
+[    0.390762] pci_bus 0000:00: root bus resource [mem 0x800000000-0xbffffffff window]
+[    0.390765] pci_bus 0000:00: root bus resource [mem 0xfd000000-0xfe7fffff window]
+[    0.390767] pci_bus 0000:00: root bus resource [mem 0xfed40000-0xfed44fff window]
+[    0.390770] pci_bus 0000:00: root bus resource [bus 00-ff]
+[    0.390791] pci 0000:00:00.0: [8086:590c] type 00 class 0x060000
+[    0.391031] pci 0000:00:02.0: [8086:591e] type 00 class 0x030000
+[    0.391053] pci 0000:00:02.0: reg 0x10: [mem 0xd0000000-0xd0ffffff 64bit]
+[    0.391064] pci 0000:00:02.0: reg 0x18: [mem 0xc0000000-0xcfffffff 64bit pref]
+[    0.391073] pci 0000:00:02.0: reg 0x20: [io  0x1c00-0x1c3f]
+[    0.391268] pci 0000:00:04.0: [8086:1903] type 00 class 0x118000
+[    0.391291] pci 0000:00:04.0: reg 0x10: [mem 0xd1220000-0xd1227fff 64bit]
+[    0.391540] pci 0000:00:08.0: [8086:1911] type 00 class 0x088000
+[    0.391565] pci 0000:00:08.0: reg 0x10: [mem 0xd1230000-0xd1230fff 64bit]
+[    0.391802] pci 0000:00:14.0: [8086:9d2f] type 00 class 0x0c0330
+[    0.391834] pci 0000:00:14.0: reg 0x10: [mem 0xd1200000-0xd120ffff 64bit]
+[    0.391935] pci 0000:00:14.0: PME# supported from D3hot D3cold
+[    0.392120] pci 0000:00:14.2: [8086:9d31] type 00 class 0x118000
+[    0.392152] pci 0000:00:14.2: reg 0x10: [mem 0xd1231000-0xd1231fff 64bit]
+[    0.392407] pci 0000:00:15.0: [8086:9d60] type 00 class 0x118000
+[    0.392449] pci 0000:00:15.0: reg 0x10: [mem 0xd1232000-0xd1232fff 64bit]
+[    0.392741] pci 0000:00:15.1: [8086:9d61] type 00 class 0x118000
+[    0.392783] pci 0000:00:15.1: reg 0x10: [mem 0xd1233000-0xd1233fff 64bit]
+[    0.393075] pci 0000:00:15.2: [8086:9d62] type 00 class 0x118000
+[    0.393116] pci 0000:00:15.2: reg 0x10: [mem 0xd1234000-0xd1234fff 64bit]
+[    0.393434] pci 0000:00:16.0: [8086:9d3a] type 00 class 0x078000
+[    0.393469] pci 0000:00:16.0: reg 0x10: [mem 0xd1235000-0xd1235fff 64bit]
+[    0.393571] pci 0000:00:16.0: PME# supported from D3hot
+[    0.393751] pci 0000:00:19.0: [8086:9d66] type 00 class 0x118000
+[    0.393793] pci 0000:00:19.0: reg 0x10: [mem 0xd1236000-0xd1236fff 64bit]
+[    0.393816] pci 0000:00:19.0: reg 0x18: [mem 0xd1237000-0xd1237fff 64bit]
+[    0.394085] pci 0000:00:19.2: [8086:9d64] type 00 class 0x118000
+[    0.394127] pci 0000:00:19.2: reg 0x10: [mem 0xd1238000-0xd1238fff 64bit]
+[    0.394447] pci 0000:00:1c.0: [8086:9d10] type 01 class 0x060400
+[    0.394571] pci 0000:00:1c.0: PME# supported from D0 D3hot D3cold
+[    0.394775] pci 0000:00:1c.4: [8086:9d14] type 01 class 0x060400
+[    0.394898] pci 0000:00:1c.4: PME# supported from D0 D3hot D3cold
+[    0.395096] pci 0000:00:1e.0: [8086:9d27] type 00 class 0x118000
+[    0.395137] pci 0000:00:1e.0: reg 0x10: [mem 0xd1239000-0xd1239fff 64bit]
+[    0.395158] pci 0000:00:1e.0: reg 0x18: [mem 0xd123a000-0xd123afff 64bit]
+[    0.395421] pci 0000:00:1e.2: [8086:9d29] type 00 class 0x118000
+[    0.395462] pci 0000:00:1e.2: reg 0x10: [mem 0xd123b000-0xd123bfff 64bit]
+[    0.395753] pci 0000:00:1e.4: [8086:9d2b] type 00 class 0x080501
+[    0.395792] pci 0000:00:1e.4: reg 0x10: [mem 0xd123c000-0xd123cfff 64bit]
+[    0.396111] pci 0000:00:1f.0: [8086:9d4b] type 00 class 0x060100
+[    0.396362] pci 0000:00:1f.2: [8086:9d21] type 00 class 0x058000
+[    0.396386] pci 0000:00:1f.2: reg 0x10: [mem 0xd1228000-0xd122bfff]
+[    0.396607] pci 0000:00:1f.3: [8086:9d71] type 00 class 0x040100
+[    0.396645] pci 0000:00:1f.3: reg 0x10: [mem 0xd122c000-0xd122ffff 64bit]
+[    0.396688] pci 0000:00:1f.3: reg 0x20: [mem 0xd1210000-0xd121ffff 64bit]
+[    0.396758] pci 0000:00:1f.3: PME# supported from D3hot D3cold
+[    0.396951] pci 0000:00:1f.4: [8086:9d23] type 00 class 0x0c0500
+[    0.397015] pci 0000:00:1f.4: reg 0x10: [mem 0xd123e000-0xd123e0ff 64bit]
+[    0.397088] pci 0000:00:1f.4: reg 0x20: [io  0xefa0-0xefbf]
+[    0.397308] pci 0000:00:1f.5: [8086:9d24] type 00 class 0x000000
+[    0.397340] pci 0000:00:1f.5: reg 0x10: [mem 0xd123d000-0xd123dfff]
+[    0.397841] pci 0000:01:00.0: [8086:095a] type 00 class 0x028000
+[    0.397952] pci 0000:01:00.0: reg 0x10: [mem 0xd1000000-0xd1001fff 64bit]
+[    0.398467] pci 0000:01:00.0: PME# supported from D0 D3hot D3cold
+[    0.399389] pci 0000:00:1c.0: PCI bridge to [bus 01]
+[    0.399397] pci 0000:00:1c.0:   bridge window [mem 0xd1000000-0xd10fffff]
+[    0.399674] pci 0000:02:00.0: [144d:a806] type 00 class 0x010802
+[    0.399713] pci 0000:02:00.0: reg 0x10: [mem 0xd1100000-0xd1103fff 64bit]
+[    0.400169] pci 0000:00:1c.4: PCI bridge to [bus 02]
+[    0.400177] pci 0000:00:1c.4:   bridge window [mem 0xd1100000-0xd11fffff]
+[    0.401499] ACPI: PCI Interrupt Link [LNKA] (IRQs 3 4 5 6 10 12 14 15) *11
+[    0.401606] ACPI: PCI Interrupt Link [LNKB] (IRQs 3 4 5 6 *10 12 14 15)
+[    0.401707] ACPI: PCI Interrupt Link [LNKC] (IRQs 3 4 5 6 10 12 14 15) *11
+[    0.401808] ACPI: PCI Interrupt Link [LNKD] (IRQs 3 4 5 6 10 12 14 15) *11
+[    0.401898] ACPI: PCI Interrupt Link [LNKE] (IRQs 3 4 5 6 10 12 14 15) *11
+[    0.401987] ACPI: PCI Interrupt Link [LNKF] (IRQs 3 4 5 6 10 12 14 15) *11
+[    0.402071] ACPI: PCI Interrupt Link [LNKG] (IRQs 3 4 5 6 10 12 14 15) *11
+[    0.402388] ACPI: PCI Interrupt Link [LNKH] (IRQs 3 4 5 6 10 12 14 15) *11
+[    0.403730] ACPI: EC: interrupt unblocked
+[    0.403749] ACPI: EC: event unblocked
+[    0.403762] ACPI: \_SB_.PCI0.LPCB.EC0_: GPE=0x6e, EC_CMD/EC_SC=0x66, EC_DATA=0x62
+[    0.403765] ACPI: \_SB_.PCI0.LPCB.EC0_: Boot DSDT EC used to handle transactions and events
+[    0.403896] SCSI subsystem initialized
+[    0.403896] ACPI: bus type USB registered
+[    0.403896] usbcore: registered new interface driver usbfs
+[    0.403896] usbcore: registered new interface driver hub
+[    0.403896] usbcore: registered new device driver usb
+[    0.403896] mc: Linux media interface: v0.10
+[    0.403896] videodev: Linux video capture interface: v2.00
+[    0.404433] chromeos_acpi: registering CHSW 0
+[    0.404625] chromeos_acpi: registering VBNV 0
+[    0.404628] chromeos_acpi: registering VBNV 1
+[    0.405008] chromeos_acpi: truncating buffer from 3072 to 1336
+[    0.405251] chromeos_acpi: installed
+[    0.405281] Advanced Linux Sound Architecture Driver Initialized.
+[    0.405283] PCI: Using ACPI for IRQ routing
+[    0.413104] hpet0: at MMIO 0xfed00000, IRQs 2, 8, 0, 0, 0, 0, 0, 0
+[    0.413104] hpet0: 8 comparators, 64-bit 24.000000 MHz counter
+[    0.415341] clocksource: Switched to clocksource tsc-early
+[    0.438635] VFS: Disk quotas dquot_6.6.0
+[    0.438659] VFS: Dquot-cache hash table entries: 512 (order 0, 4096 bytes)
+[    0.438742] pnp: PnP ACPI init
+[    0.438997] system 00:00: [mem 0xfed10000-0xfed17fff] has been reserved
+[    0.439001] system 00:00: [mem 0xfed18000-0xfed18fff] has been reserved
+[    0.439004] system 00:00: [mem 0xfed19000-0xfed19fff] has been reserved
+[    0.439007] system 00:00: [mem 0xe0000000-0xe3ffffff] has been reserved
+[    0.439010] system 00:00: [mem 0xfed20000-0xfed3ffff] has been reserved
+[    0.439013] system 00:00: [mem 0xfed90000-0xfed93fff] has been reserved
+[    0.439016] system 00:00: [mem 0xfed45000-0xfed8ffff] has been reserved
+[    0.439018] system 00:00: [mem 0xff000000-0xffffffff] has been reserved
+[    0.439021] system 00:00: [mem 0xfee00000-0xfeefffff] has been reserved
+[    0.439024] system 00:00: [mem 0xfed00000-0xfed003ff] has been reserved
+[    0.439380] system 00:01: [io  0x1800-0x18fe] has been reserved
+[    0.439493] system 00:03: [io  0x0900-0x09fe] has been reserved
+[    0.439567] system 00:04: [io  0x0200] has been reserved
+[    0.439570] system 00:04: [io  0x0204] has been reserved
+[    0.439573] system 00:04: [io  0x0800-0x087f] has been reserved
+[    0.439576] system 00:04: [io  0x0880-0x08ff] has been reserved
+[    0.439949] pnp: PnP ACPI: found 6 devices
+[    0.444864] clocksource: acpi_pm: mask: 0xffffff max_cycles: 0xffffff, max_idle_ns: 2085701024 ns
+[    0.445000] pci 0000:00:1c.0: PCI bridge to [bus 01]
+[    0.445020] pci 0000:00:1c.0:   bridge window [mem 0xd1000000-0xd10fffff]
+[    0.445031] pci 0000:00:1c.4: PCI bridge to [bus 02]
+[    0.445046] pci 0000:00:1c.4:   bridge window [mem 0xd1100000-0xd11fffff]
+[    0.445059] pci_bus 0000:00: resource 4 [io  0x0000-0x0cf7 window]
+[    0.445061] pci_bus 0000:00: resource 5 [io  0x0d00-0xffff window]
+[    0.445064] pci_bus 0000:00: resource 6 [mem 0x000a0000-0x000bffff window]
+[    0.445067] pci_bus 0000:00: resource 7 [mem 0x000c0000-0x000c3fff window]
+[    0.445070] pci_bus 0000:00: resource 8 [mem 0x000c4000-0x000c7fff window]
+[    0.445072] pci_bus 0000:00: resource 9 [mem 0x000c8000-0x000cbfff window]
+[    0.445075] pci_bus 0000:00: resource 10 [mem 0x000cc000-0x000cffff window]
+[    0.445077] pci_bus 0000:00: resource 11 [mem 0x000d0000-0x000d3fff window]
+[    0.445080] pci_bus 0000:00: resource 12 [mem 0x000d4000-0x000d7fff window]
+[    0.445083] pci_bus 0000:00: resource 13 [mem 0x000d8000-0x000dbfff window]
+[    0.445085] pci_bus 0000:00: resource 14 [mem 0x000dc000-0x000dffff window]
+[    0.445088] pci_bus 0000:00: resource 15 [mem 0x000e0000-0x000e3fff window]
+[    0.445091] pci_bus 0000:00: resource 16 [mem 0x000e4000-0x000e7fff window]
+[    0.445093] pci_bus 0000:00: resource 17 [mem 0x000e8000-0x000ebfff window]
+[    0.445096] pci_bus 0000:00: resource 18 [mem 0x000ec000-0x000effff window]
+[    0.445098] pci_bus 0000:00: resource 19 [mem 0x000f0000-0x000fffff window]
+[    0.445101] pci_bus 0000:00: resource 20 [mem 0x80000001-0xdfffffff window]
+[    0.445104] pci_bus 0000:00: resource 21 [mem 0x800000000-0xbffffffff window]
+[    0.445106] pci_bus 0000:00: resource 22 [mem 0xfd000000-0xfe7fffff window]
+[    0.445109] pci_bus 0000:00: resource 23 [mem 0xfed40000-0xfed44fff window]
+[    0.445112] pci_bus 0000:01: resource 1 [mem 0xd1000000-0xd10fffff]
+[    0.445115] pci_bus 0000:02: resource 1 [mem 0xd1100000-0xd11fffff]
+[    0.445248] NET: Registered protocol family 2
+[    0.445453] tcp_listen_portaddr_hash hash table entries: 8192 (order: 6, 327680 bytes, linear)
+[    0.445548] TCP established hash table entries: 131072 (order: 8, 1048576 bytes, linear)
+[    0.445804] TCP bind hash table entries: 65536 (order: 9, 2097152 bytes, linear)
+[    0.446363] TCP: Hash tables configured (established 131072 bind 65536)
+[    0.446406] UDP hash table entries: 8192 (order: 7, 786432 bytes, linear)
+[    0.446598] UDP-Lite hash table entries: 8192 (order: 7, 786432 bytes, linear)
+[    0.446825] NET: Registered protocol family 1
+[    0.446848] pci 0000:00:02.0: Video device with shadowed ROM at [mem 0x000c0000-0x000dffff]
+[    0.447668] PCI: CLS 64 bytes, default 64
+[    0.447725] PCI-DMA: Using software bounce buffering for IO (SWIOTLB)
+[    0.447728] software IO TLB: mapped [mem 0x7698a000-0x7a98a000] (64MB)
+[    0.447985] RAPL PMU: API unit is 2^-32 Joules, 5 fixed counters, 655360 ms ovfl timer
+[    0.447987] RAPL PMU: hw unit of domain pp0-core 2^-14 Joules
+[    0.447989] RAPL PMU: hw unit of domain package 2^-14 Joules
+[    0.447991] RAPL PMU: hw unit of domain dram 2^-14 Joules
+[    0.447993] RAPL PMU: hw unit of domain pp1-gpu 2^-14 Joules
+[    0.447994] RAPL PMU: hw unit of domain psys 2^-14 Joules
+[    0.448459] kvm: already loaded the other module
+[    0.468246] check: Scanning for low memory corruption every 60 seconds
+[    0.469515] workingset: timestamp_bits=62 max_order=22 bucket_order=0
+[    0.472625] squashfs: version 4.0 (2009/01/31) Phillip Lougher
+[    0.472754] Registering esdfs 0.2
+[    0.472819] alt_syscall: table 'read_write_test' available.
+[    0.472837] alt_syscall: table 'android' available.
+[    0.472853] alt_syscall: table 'android_permissive' available.
+[    0.472867] alt_syscall: table 'third_party' available.
+[    0.472878] alt_syscall: table 'third_party_permissive' available.
+[    0.472889] alt_syscall: table 'complete' available.
+[    0.472900] alt_syscall: table 'complete_permissive' available.
+[    0.479193] Block layer SCSI generic (bsg) driver version 0.4 loaded (major 248)
+[    0.479196] io scheduler mq-deadline registered
+[    0.479198] io scheduler kyber registered
+[    0.479241] io scheduler bfq registered
+[    0.479768] pcieport 0000:00:1c.0: PME: Signaling with IRQ 120
+[    0.479870] pcieport 0000:00:1c.0: AER: enabled with IRQ 120
+[    0.480261] pcieport 0000:00:1c.4: PME: Signaling with IRQ 121
+[    0.480388] pcieport 0000:00:1c.4: AER: enabled with IRQ 121
+[    0.481073] input: Power Button as /devices/LNXSYSTM:00/LNXSYBUS:00/PNP0C0C:00/input/input0
+[    0.481109] ACPI: Power Button [PWRB]
+[    0.481190] input: Lid Switch as /devices/LNXSYSTM:00/LNXSYBUS:00/PNP0A08:00/device:01/PNP0C09:00/PNP0C0D:00/input/input1
+[    0.482356] ACPI: Lid Switch [LID0]
+[    0.482442] input: Power Button as /devices/LNXSYSTM:00/LNXPWRBN:00/input/input2
+[    0.483349] ACPI: Power Button [PWRF]
+[    0.484525] Non-volatile memory driver v1.3
+[    0.484758] Linux agpgart interface v0.103
+[    0.484854] battery: ACPI: Battery Slot [BAT0] (battery present)
+[    0.536505] [drm] Supports vblank timestamp caching Rev 2 (21.10.2013).
+[    0.536509] [drm] Driver supports precise vblank timestamp query.
+[    0.564294] [drm] Initialized i915 1.6.0 20190822 for 0000:00:02.0 on minor 0
+[    0.564746] [drm] Initialized vgem 1.0.0 20120112 for vgem on minor 1
+[    0.564765] usbcore: registered new interface driver udl
+[    0.567212] loop: module loaded
+[    0.567367] lkdtm: No crash points registered, enable through debugfs
+[    0.567876] idma64 idma64.0: Found Intel integrated DMA 64-bit
+[    0.570398] idma64 idma64.1: Found Intel integrated DMA 64-bit
+[    0.573367] cr50_i2c i2c-GOOG0005:00: cr50 TPM 2.0 (i2c 0x50 irq 24 id 0x28)
+[    0.616903] random: fast init done
+[    0.661696] idma64 idma64.2: Found Intel integrated DMA 64-bit
+[    0.667006] idma64 idma64.5: Found Intel integrated DMA 64-bit
+[    0.667570] idma64 idma64.6: Found Intel integrated DMA 64-bit
+[    0.669420] nvme nvme0: pci function 0000:02:00.0
+[    0.669635] libphy: Fixed MDIO Bus: probed
+[    0.669637] PPP generic driver version 2.4.2
+[    0.669747] PPP MPPE Compression module registered
+[    0.669815] ehci_hcd: USB 2.0 'Enhanced' Host Controller (EHCI) Driver
+[    0.669817] ehci-pci: EHCI PCI platform driver
+[    0.669836] ohci_hcd: USB 1.1 'Open' Host Controller (OHCI) Driver
+[    0.669841] ohci-pci: OHCI PCI platform driver
+[    0.669858] uhci_hcd: USB Universal Host Controller Interface driver
+[    0.670376] xhci_hcd 0000:00:14.0: xHCI Host Controller
+[    0.670445] xhci_hcd 0000:00:14.0: new USB bus registered, assigned bus number 1
+[    0.671585] xhci_hcd 0000:00:14.0: hcc params 0x200077c1 hci version 0x100 quirks 0x0000000081109810
+[    0.671598] xhci_hcd 0000:00:14.0: cache line size of 64 is not supported
+[    0.671913] usb usb1: New USB device found, idVendor=1d6b, idProduct=0002, bcdDevice= 5.04
+[    0.671916] usb usb1: New USB device strings: Mfr=3, Product=2, SerialNumber=1
+[    0.671919] usb usb1: Product: xHCI Host Controller
+[    0.671922] usb usb1: Manufacturer: Linux 5.4.22htcore xhci-hcd
+[    0.671924] usb usb1: SerialNumber: 0000:00:14.0
+[    0.672113] hub 1-0:1.0: USB hub found
+[    0.672145] hub 1-0:1.0: 12 ports detected
+[    0.672729] xhci_hcd 0000:00:14.0: xHCI Host Controller
+[    0.672777] xhci_hcd 0000:00:14.0: new USB bus registered, assigned bus number 2
+[    0.672782] xhci_hcd 0000:00:14.0: Host supports USB 3.0 SuperSpeed
+[    0.672856] usb usb2: New USB device found, idVendor=1d6b, idProduct=0003, bcdDevice= 5.04
+[    0.672859] usb usb2: New USB device strings: Mfr=3, Product=2, SerialNumber=1
+[    0.672862] usb usb2: Product: xHCI Host Controller
+[    0.672864] usb usb2: Manufacturer: Linux 5.4.22htcore xhci-hcd
+[    0.672866] usb usb2: SerialNumber: 0000:00:14.0
+[    0.673011] hub 2-0:1.0: USB hub found
+[    0.673036] hub 2-0:1.0: 6 ports detected
+[    0.673382] usbcore: registered new interface driver cdc_acm
+[    0.673384] cdc_acm: USB Abstract Control Model driver for USB modems and ISDN adapters
+[    0.673395] usbcore: registered new interface driver uas
+[    0.673420] usbcore: registered new interface driver usb-storage
+[    0.673437] usbcore: registered new interface driver ums-realtek
+[    0.673460] usbcore: registered new interface driver usbserial_generic
+[    0.673467] usbserial: USB Serial support registered for generic
+[    0.673510] i8042: PNP: PS/2 Controller [PNP0303:PS2K] at 0x60,0x64 irq 1
+[    0.673514] i8042: PNP: PS/2 appears to have AUX port disabled, if this is incorrect please boot with i8042.nopnp
+[    0.674476] i8042: Warning: Keylock active
+[    0.674682] serio: i8042 KBD port at 0x60,0x64 irq 1
+[    0.675240] rtc_cmos 00:02: RTC can wake from S4
+[    0.675811] rtc_cmos 00:02: registered as rtc0
+[    0.675836] rtc_cmos 00:02: alarms up to one month, 242 bytes nvram, hpet irqs
+[    0.675863] i2c /dev entries driver
+[    0.676453] i801_smbus 0000:00:1f.4: SPD Write Disable is set
+[    0.676487] i801_smbus 0000:00:1f.4: SMBus using PCI interrupt
+[    0.676821] IR NEC protocol handler initialized
+[    0.676823] IR RC5(x/sz) protocol handler initialized
+[    0.676824] IR RC6 protocol handler initialized
+[    0.676826] IR JVC protocol handler initialized
+[    0.676828] IR Sony protocol handler initialized
+[    0.676830] IR SANYO protocol handler initialized
+[    0.676831] IR Sharp protocol handler initialized
+[    0.676833] IR MCE Keyboard/mouse protocol handler initialized
+[    0.676835] IR XMP protocol handler initialized
+[    0.678093] input: AT Translated Set 2 keyboard as /devices/platform/i8042/serio0/input/input3
+[    0.679227] intel_rapl_common: Found RAPL domain package
+[    0.679228] random: crng init done
+[    0.679232] intel_rapl_common: Found RAPL domain dram
+[    0.679344] proc_thermal 0000:00:04.0: Creating sysfs group for PROC_THERMAL_PCI
+[    0.679401] iTCO_wdt: Intel TCO WatchDog Timer Driver v1.11
+[    0.679470] iTCO_wdt: Found a Intel PCH TCO device (Version=4, TCOBASE=0x0400)
+[    0.679593] iTCO_wdt: initialized. heartbeat=30 sec (nowayout=0)
+[    0.679610] iTCO_vendor_support: vendor-support=0
+[    0.679710] device-mapper: ioctl: 4.41.0-ioctl (2019-09-16) initialised: dm-devel@redhat.com
+[    0.679786] device-mapper: verity-chromeos: dm-verity-chromeos registered
+[    0.679794] intel_pstate: Intel P-state driver initializing
+[    0.680035] intel_pstate: HWP enabled
+[    0.680046] sdhci: Secure Digital Host Controller Interface driver
+[    0.680047] sdhci: Copyright(c) Pierre Ossman
+[    0.680064] sdhci-pci 0000:00:1e.4: SDHCI controller found [8086:9d2b] (rev 21)
+[    0.680332] mmc0: SDHCI controller on PCI [0000:00:1e.4] using ADMA 64-bit
+[    0.680535] Registered efivars operations
+[    0.680537] gsmi version 1.0 loaded
+[    0.680856] hidraw: raw HID events driver (C) Jiri Kosina
+[    0.680954] usbcore: registered new interface driver usbhid
+[    0.680955] usbhid: USB HID core driver
+[    0.725302] input: WCOM50C1:00 2D1F:5143 as /devices/pci0000:00/0000:00:15.0/i2c_designware.0/i2c-6/i2c-WCOM50C1:00/0018:2D1F:5143.0001/input/input4
+[    0.725386] input: WCOM50C1:00 2D1F:5143 UNKNOWN as /devices/pci0000:00/0000:00:15.0/i2c_designware.0/i2c-6/i2c-WCOM50C1:00/0018:2D1F:5143.0001/input/input5
+[    0.725650] input: WCOM50C1:00 2D1F:5143 as /devices/pci0000:00/0000:00:15.0/i2c_designware.0/i2c-6/i2c-WCOM50C1:00/0018:2D1F:5143.0001/input/input6
+[    0.725731] input: WCOM50C1:00 2D1F:5143 UNKNOWN as /devices/pci0000:00/0000:00:15.0/i2c_designware.0/i2c-6/i2c-WCOM50C1:00/0018:2D1F:5143.0001/input/input7
+[    0.725794] input: WCOM50C1:00 2D1F:5143 Mouse as /devices/pci0000:00/0000:00:15.0/i2c_designware.0/i2c-6/i2c-WCOM50C1:00/0018:2D1F:5143.0001/input/input8
+[    0.725851] hid-multitouch 0018:2D1F:5143.0001: input,hidraw0: I2C HID v1.00 Mouse [WCOM50C1:00 2D1F:5143] on i2c-WCOM50C1:00
+[    0.752413] input: ACPI0C50:00 18D1:5028 as /devices/pci0000:00/0000:00:15.2/i2c_designware.2/i2c-8/i2c-ACPI0C50:00/0018:18D1:5028.0002/input/input9
+[    0.752468] hid-multitouch 0018:18D1:5028.0002: input,hidraw1: I2C HID v1.00 Device [ACPI0C50:00 18D1:5028] on i2c-ACPI0C50:00
+[    0.752527] ashmem: initialized
+[    0.752528] intel_telemetry_core Init
+[    0.752622] intel_pmc_core intel_pmc_core.0:  initialized
+[    0.752652] chromeos ramoops using acpi device.
+[    0.753303] printk: console [pstore-1] enabled
+[    0.753304] pstore: Registered ramoops as persistent store backend
+[    0.753306] ramoops: using 0x100000@0x7a99b000, ecc: 0
+[    0.753341] input: Tablet Mode Switch as /devices/LNXSYSTM:00/LNXSYBUS:00/PNP0A08:00/device:01/PNP0C09:00/GOOG0006:00/input/input10
+[    0.758095] cros-ec-dev cros-ec-dev.1.auto: CrOS Touchpad MCU detected
+[    0.760093] cros-ec-i2c i2c-GOOG0008:00: Chrome EC device registered
+[    0.760229] cros_ec_lpcs GOOG0004:00: IRQ index 0 not found
+[    0.769475] cros-usbpd-charger cros-usbpd-charger.9.auto: Unable to get the number of ports (err:0xffffffb9)
+[    0.769477] cros-usbpd-charger cros-usbpd-charger.9.auto: Could not get charger port count
+[    0.770393] cros_ec_lpcs GOOG0004:00: Chrome EC device registered
+[    0.781607] nvme nvme0: Shutdown timeout set to 10 seconds
+[    0.784371] nvme nvme0: 4/0/0 default/read/poll queues
+[    0.784569] intel_rapl_common: Found RAPL domain package
+[    0.784571] intel_rapl_common: Found RAPL domain core
+[    0.784573] intel_rapl_common: Found RAPL domain uncore
+[    0.784575] intel_rapl_common: Found RAPL domain dram
+[    0.785094] GACT probability NOT on
+[    0.785331] xt_time: kernel timezone is -0000
+[    0.785399] Initializing XFRM netlink socket
+[    0.785475] NET: Registered protocol family 10
+[    0.785644] Segment Routing with IPv6
+[    0.785680] NET: Registered protocol family 17
+[    0.785683] NET: Registered protocol family 15
+[    0.785994] microcode: sig=0x806e9, pf=0x80, revision=0x8e
+[    0.786024] microcode: Microcode Update Driver: v2.2.
+[    0.786027] IPI shorthand broadcast: enabled
+[    0.786033] AVX2 version of gcm_enc/dec engaged.
+[    0.786034] AES CTR mode by8 optimization enabled
+[    0.786892] sched_clock: Marking stable (782455425, 4424547)->(790378485, -3498513)
+[    0.786966] registered taskstats version 1
+[    0.786984] Key type ._fscrypt registered
+[    0.786993] Key type .fscrypt registered
+[    0.787065] pstore: Using crash dump compression: deflate
+[    0.787205] Key type encrypted registered
+[    0.791293]  nvme0n1: p1 p2 p3 p4 p5 p6 p7 p8 p9 p10 p11 p12
+[    0.804427] PM:   Magic number: 12:681:256
+[    0.804553] device-mapper: init: waiting for all devices to be available before creating mapped devices
+[    0.804792] device-mapper: table: 254:0: verity: Data device lookup failed
+[    0.804794] device-mapper: ioctl: error adding target to table
+[    0.805184] ALSA device list:
+[    0.805196]   No soundcards found.
+[    0.805213] Warning: unable to open an initial console.
+[    0.805670] EXT4-fs (nvme0n1p5): mounting ext2 file system using the ext4 subsystem
+[    0.807457] EXT4-fs (nvme0n1p5): mounted filesystem without journal. Opts: (null)
+[    0.807485] VFS: Mounted root (ext2 filesystem) readonly on device 259:5.
+[    0.809068] devtmpfs: mounted
+[    0.810480] Freeing unused kernel image memory: 1608K
+[    0.816322] Write protecting the kernel read-only data: 20480k
+[    0.817171] Freeing unused kernel image memory: 1992K
+[    0.817413] Freeing unused kernel image memory: 720K
+[    0.817432] Run /sbin/init as init process
+[    0.860156] LoadPin: nvme0n1p5 (259:5): writable
+[    0.860173] LoadPin: enforcement can be disabled.
+[    0.860186] LoadPin: firmware pinned obj="/lib/firmware/i915/kbl_dmc_ver1_04.bin" pid=70 cmdline=""
+[    0.861078] [drm] Finished loading DMC firmware i915/kbl_dmc_ver1_04.bin (v1.4)
+[    0.949428] init: early-failure main process (195) terminated with status 124
+[    0.958059] udevd[204]: starting version 225
+[    0.966492] NMI watchdog: Enabled. Permanently consumes one hw-PMU counter.
+[    0.985879] SafeSetID: insecure policy detected: uid 213 is constrained but transitively unconstrained through uid 307
+[    0.985884] SafeSetID: insecure policy detected: uid 213 is constrained but transitively unconstrained through uid 300
+[    0.985886] SafeSetID: insecure policy detected: uid 213 is constrained but transitively unconstrained through uid 305
+[    0.985887] SafeSetID: insecure policy detected: uid 213 is constrained but transitively unconstrained through uid 308
+[    0.985889] SafeSetID: insecure policy detected: uid 213 is constrained but transitively unconstrained through uid 302
+[    0.985891] SafeSetID: insecure policy detected: uid 213 is constrained but transitively unconstrained through uid 1000
+[    0.985893] SafeSetID: insecure policy detected: uid 213 is constrained but transitively unconstrained through uid 301
+[    0.996322] usb 1-2: new high-speed USB device number 2 using xhci_hcd
+[    1.025993] usb 1-2: New USB device found, idVendor=0bda, idProduct=564b, bcdDevice= 0.06
+[    1.025998] usb 1-2: New USB device strings: Mfr=3, Product=1, SerialNumber=2
+[    1.026001] usb 1-2: Product: WebCamera
+[    1.026003] usb 1-2: Manufacturer: Generic
+[    1.026006] usb 1-2: SerialNumber: LOE65001063010A77500DF0AI06BF12000
+[    1.048902] EXT4-fs (nvme0n1p1): mounted filesystem with ordered data mode. Opts: commit=600
+[    1.051751] EXT4-fs (nvme0n1p8): mounted filesystem with ordered data mode. Opts: (null)
+[    1.120444] frecon[383]: Frecon using drm driver i915, version 1.6, date(20190822), desc(Intel Graphics) using atomic
+[    1.142320] usb 1-3: new full-speed USB device number 3 using xhci_hcd
+[    1.200472] frecon[383]: Frecon using drm driver i915, version 1.6, date(20190822), desc(Intel Graphics) using atomic
+[    1.269230] usb 1-3: New USB device found, idVendor=8087, idProduct=0a2a, bcdDevice= 0.03
+[    1.269234] usb 1-3: New USB device strings: Mfr=0, Product=0, SerialNumber=0
+[    1.347098] EXT4-fs (dm-0): mounted filesystem with ordered data mode. Opts: discard,commit=600
+[    1.492707] EXT4-fs (nvme0n1p1): re-mounted. Opts: resgid=20119,commit=600
+[    1.503362] tsc: Refined TSC clocksource calibration: 1607.995 MHz
+[    1.503380] clocksource: tsc: mask: 0xffffffffffffffff max_cycles: 0x172da5a2e4c, max_idle_ns: 440795256865 ns
+[    1.503458] clocksource: Switched to clocksource tsc
+[    1.537925] low_mem: threshold[0] 827 MB
+[    1.537929] low_mem: threshold[1] 6365 MB
+[    1.548715] systemd-journald[578]: Running without systemd.
+[    1.559069] systemd-journald[578]: Received request to flush runtime journal from PID 599
+[    1.567008] Intel(R) Wireless WiFi driver for Linux
+[    1.567012] Copyright(c) 2003- 2015 Intel Corporation
+[    1.576184] zram: Added device: zram0
+[    1.577854] iwlwifi 0000:01:00.0: loaded firmware version 29.3089823483.0 op_mode iwlmvm
+[    1.603695] mce: CPU0: Core temperature above threshold, cpu clock throttled (total events = 1)
+[    1.603696] mce: CPU1: Core temperature above threshold, cpu clock throttled (total events = 1)
+[    1.603697] mce: CPU3: Package temperature above threshold, cpu clock throttled (total events = 1)
+[    1.603698] mce: CPU2: Package temperature above threshold, cpu clock throttled (total events = 1)
+[    1.603700] mce: CPU1: Package temperature above threshold, cpu clock throttled (total events = 1)
+[    1.603702] mce: CPU0: Package temperature above threshold, cpu clock throttled (total events = 1)
+[    1.605687] mce: CPU0: Core temperature/speed normal
+[    1.605688] mce: CPU1: Core temperature/speed normal
+[    1.605689] mce: CPU3: Package temperature/speed normal
+[    1.605691] mce: CPU2: Package temperature/speed normal
+[    1.605691] mce: CPU1: Package temperature/speed normal
+[    1.605693] mce: CPU0: Package temperature/speed normal
+[    1.627946] iwlwifi 0000:01:00.0: Detected Intel(R) Dual Band Wireless AC 7265, REV=0x210
+[    1.633178] zram0: detected capacity change from 0 to 24443961344
+[    1.644331] Adding 23871052k swap on /dev/zram0.  Priority:-2 extents:1 across:23871052k SS
+[    1.649032] iwlwifi 0000:01:00.0: base HW address: f4:96:34:f1:16:66
+[    1.689010] traps: pca_agentd[760] general protection fault ip:7fdcaff82f28 sp:7ffdc8fa2460 error:0 in libc-2.27.so[7fdcaff4b000+1b0000]
+[    1.718081] thermal thermal_zone7: failed to read out thermal zone (-61)
+[    1.756034] init: pca_agentd main process (760) killed by SEGV signal
+[    1.756051] init: pca_agentd main process ended, respawning
+[    1.793653] audit: type=1326 audit(1585098938.472:2): auid=4294967295 uid=247 gid=247 ses=4294967295 subj=kernel pid=867 comm="pca_agentd" exe="/usr/sbin/pca_agentd" sig=31 arch=c000003e syscall=41 compat=0 ip=0x7c607b58b417 code=0x0
+[    1.821303] uvcvideo: Found UVC 1.00 device WebCamera (0bda:564b)
+[    1.824753] uvcvideo 1-2:1.0: Entity type for entity Extension 4 was not initialized!
+[    1.824760] uvcvideo 1-2:1.0: Entity type for entity Processing 2 was not initialized!
+[    1.824763] uvcvideo 1-2:1.0: Entity type for entity Camera 1 was not initialized!
+[    1.824862] usbcore: registered new interface driver uvcvideo
+[    1.824865] USB Video Class driver (1.1.1)
+[    1.848074] init: pca_agentd main process (867) killed by SYS signal
+[    1.848091] init: pca_agentd main process ended, respawning
+[    1.870272] Bluetooth: af_bluetooth.c:bt_init() Core ver 2.22
+[    1.870298] NET: Registered protocol family 31
+[    1.870301] Bluetooth: af_bluetooth.c:bt_init() HCI device and connection manager initialized
+[    1.870307] Bluetooth: hci_sock.c:hci_sock_init() HCI socket layer initialized
+[    1.870320] Bluetooth: l2cap_sock.c:l2cap_init_sockets() L2CAP socket layer initialized
+[    1.870326] Bluetooth: sco.c:sco_init() SCO socket layer initialized
+[    1.873738] usbcore: registered new interface driver btusb
+[    1.914025] audit: type=1326 audit(1585098938.592:3): auid=4294967295 uid=247 gid=247 ses=4294967295 subj=kernel pid=985 comm="pca_agentd" exe="/usr/sbin/pca_agentd" sig=31 arch=c000003e syscall=41 compat=0 ip=0x7aed8f6fb417 code=0x0
+[    1.916016] Bluetooth: btusb.c:btusb_setup_intel() hci0: read Intel version: 370810225019140f00
+[    1.916515] Bluetooth: btusb.c:btusb_setup_intel_get_fw() hci0: Intel Bluetooth firmware file: intel/ibt-hw-37.8.10-fw-22.50.19.14.f.bseq
+[    1.981011] init: pca_agentd main process (985) killed by SYS signal
+[    1.981027] init: pca_agentd main process ended, respawning
+[    2.037810] audit: type=1326 audit(1585098938.716:4): auid=4294967295 uid=247 gid=247 ses=4294967295 subj=kernel pid=1109 comm="pca_agentd" exe="/usr/sbin/pca_agentd" sig=31 arch=c000003e syscall=41 compat=0 ip=0x7dc1f6f11417 code=0x0
+[    2.149927] init: pca_agentd main process (1109) killed by SYS signal
+[    2.149946] init: pca_agentd main process ended, respawning
+[    2.195933] audit: type=1326 audit(1585098938.874:5): auid=4294967295 uid=247 gid=247 ses=4294967295 subj=kernel pid=1202 comm="pca_agentd" exe="/usr/sbin/pca_agentd" sig=31 arch=c000003e syscall=41 compat=0 ip=0x7e7704d12417 code=0x0
+[    2.245038] init: pca_agentd main process (1202) killed by SYS signal
+[    2.245058] init: pca_agentd main process ended, respawning
+[    2.291921] audit: type=1326 audit(1585098938.970:6): auid=4294967295 uid=247 gid=247 ses=4294967295 subj=kernel pid=1240 comm="pca_agentd" exe="/usr/sbin/pca_agentd" sig=31 arch=c000003e syscall=41 compat=0 ip=0x7f13e6a49417 code=0x0
+[    2.324890] init: pca_agentd main process (1240) killed by SYS signal
+[    2.324912] init: pca_agentd main process ended, respawning
+[    2.348842] audit: type=1326 audit(1585098939.027:7): auid=4294967295 uid=247 gid=247 ses=4294967295 subj=kernel pid=1257 comm="pca_agentd" exe="/usr/sbin/pca_agentd" sig=31 arch=c000003e syscall=41 compat=0 ip=0x7db204a3b417 code=0x0
+[    2.381687] init: pca_agentd main process (1257) killed by SYS signal
+[    2.381704] init: pca_agentd main process ended, respawning
+[    2.425211] audit: type=1326 audit(1585098939.103:8): auid=4294967295 uid=247 gid=247 ses=4294967295 subj=kernel pid=1291 comm="pca_agentd" exe="/usr/sbin/pca_agentd" sig=31 arch=c000003e syscall=41 compat=0 ip=0x7bace4b8f417 code=0x0
+[    2.477114] init: pca_agentd main process (1291) killed by SYS signal
+[    2.477145] init: pca_agentd main process ended, respawning
+[    2.492025] Bluetooth: btusb.c:btusb_setup_intel() hci0: Intel Bluetooth fw patch 0x3f completed and activated
+[    2.508503] audit: type=1326 audit(1585098939.187:9): auid=4294967295 uid=247 gid=247 ses=4294967295 subj=kernel pid=1309 comm="pca_agentd" exe="/usr/sbin/pca_agentd" sig=31 arch=c000003e syscall=41 compat=0 ip=0x7ecb2fc7b417 code=0x0
+[    2.554029] init: pca_agentd main process (1309) killed by SYS signal
+[    2.554081] init: pca_agentd main process ended, respawning
+[    2.554489] core sched enabled
+[    2.558180] prctl success: chrome/1325 ffff9af7c4d50000
+[    2.578355] prctl success: chrome/1332 ffff9af7c4d53f00
+[    2.595835] prctl success: chrome/1333 ffff9af7ec3e6e40
+[    2.649892] init: pca_agentd main process (1335) killed by SYS signal
+[    2.649930] init: pca_agentd main process ended, respawning
+[    2.710931] init: pca_agentd main process (1361) killed by SYS signal
+[    2.710948] init: pca_agentd respawning too fast, stopped
+[    2.887932] init: failsafe-delay main process (726) killed by TERM signal
+[    2.936676] fuse: init (API version 7.31)
+[    3.226784] udevd[1489]: error opening ATTR{/sys/devices/pci0000:00/0000:00:1e.4/power/wakeup} for writing: Permission denied
+[    3.739450] NOHZ: local_softirq_pending 282
+[    3.746331] NOHZ: local_softirq_pending 202
+[    3.746351] NOHZ: local_softirq_pending 202
+[    3.746366] NOHZ: local_softirq_pending 202
+[    3.746382] NOHZ: local_softirq_pending 202
+[    3.746397] NOHZ: local_softirq_pending 202
+[    3.746415] NOHZ: local_softirq_pending 202
+[    3.746431] NOHZ: local_softirq_pending 202
+[    3.746449] NOHZ: local_softirq_pending 202
+[    3.746465] NOHZ: local_softirq_pending 202
+[    4.855095] Bluetooth: sock.c:rfcomm_init_sockets() RFCOMM socket layer initialized
+[    4.855117] Bluetooth: core.c:rfcomm_init() RFCOMM ver 1.11
+[    5.454905] wlan0: authenticate with b0:7f:b9:fd:4e:75
+[    5.463608] wlan0: send auth to b0:7f:b9:fd:4e:75 (try 1/3)
+[    5.466815] wlan0: authenticated
+[    5.467570] wlan0: associate with b0:7f:b9:fd:4e:75 (try 1/3)
+[    5.475289] wlan0: RX AssocResp from b0:7f:b9:fd:4e:75 (capab=0x31 status=0 aid=11)
+[    5.476561] wlan0: associated
+[    5.625554] IPv6: ADDRCONF(NETDEV_CHANGE): wlan0: link becomes ready
+[  679.900359] i2c_hid i2c-ACPI0C50:00: i2c_hid_get_input: incomplete report (74/60490)
+[ 1026.199938] ------------[ cut here ]------------
+[ 1026.199954] WARNING: CPU: 3 PID: 0 at kernel/sched/core.c:4406 sched_core_sibling_pause+0x6c/0x71
+[ 1026.199957] Modules linked in: ccm cmac rfcomm uinput xt_MASQUERADE fuse btusb btrtl btintel btbcm bluetooth ecdh_generic ecc uvcvideo videobuf2_v4l2 videobuf2_common videobuf2_vmalloc videobuf2_memops iio_trig_sysfs cros_ec_light_prox cros_ec_sensors cros_ec_activity cros_ec_sensors_core cros_ec_sensors_ring industrialio_triggered_buffer kfifo_buf industrialio cros_ec_sensorsupport iwlmvm lzo_rle mac80211 lzo_compress zram iwlwifi cfg80211 joydev
+[ 1026.199991] CPU: 3 PID: 0 Comm: swapper/3 Not tainted 5.4.22htcore #31
+[ 1026.199995] Hardware name: Google Eve/Eve, BIOS Google_Eve.9584.174.0 05/29/2018
+[ 1026.200002] RIP: 0010:sched_core_sibling_pause+0x6c/0x71
+[ 1026.200007] Code: 00 48 8b 83 b0 9a 02 00 80 b8 68 0c 00 00 00 74 04 f3 90 eb ec 48 8b 35 74 18 3e 01 48 c7 c7 05 50 55 aa 5b 5d e9 1c 16 09 00 <0f> 0b 5b 5d c3 0f 1f 44 00 00 55 48 89 e5 41 57 41 56 41 55 41 54
+[ 1026.200011] RSP: 0018:ffffb71e00128e58 EFLAGS: 00010002
+[ 1026.200016] RAX: 0000000000000001 RBX: ffff9af7eeb80000 RCX: 0000000000000000
+[ 1026.200020] RDX: 0000000000000001 RSI: 00000000000005b0 RDI: ffff9af7ecf88c00
+[ 1026.200024] RBP: ffffb71e00128e60 R08: 00000000007f3ca5 R09: 0000000000000004
+[ 1026.200027] R10: 0000000000000000 R11: ffffffffaa5db75e R12: 0000000000000000
+[ 1026.200031] R13: 0000000000000000 R14: 0000000000000000 R15: ffff9af7eeba9dc0
+[ 1026.200036] FS:  0000000000000000(0000) GS:ffff9af7eeb80000(0000) knlGS:0000000000000000
+[ 1026.200040] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[ 1026.200044] CR2: 000003c2b59a9008 CR3: 000000044da6c003 CR4: 00000000003606e0
+[ 1026.200047] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[ 1026.200051] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[ 1026.200054] Call Trace:
+[ 1026.200059]  <IRQ>
+[ 1026.200067]  sched_core_sibling_pause_ipi+0x48/0xe2
+[ 1026.200074]  flush_smp_call_function_queue+0x7b/0xf2
+[ 1026.200080]  smp_call_function_single_interrupt+0x93/0x102
+[ 1026.200086]  call_function_single_interrupt+0xf/0x20
+[ 1026.200092] RIP: 0010:__do_softirq+0x6e/0x2c5
+[ 1026.200097] Code: 85 e2 54 65 81 05 fa 5c e1 54 00 01 00 00 c7 45 cc 0a 00 00 00 48 89 5d b0 0f b7 d8 65 66 c7 05 d6 85 e2 54 00 00 fb 89 5d c4 <b8> ff ff ff ff 0f bc 45 c4 41 89 c6 41 ff c6 75 4c 65 48 8b 05 99
+[ 1026.200101] RSP: 0018:ffffb71e00128f80 EFLAGS: 00000282 ORIG_RAX: ffffffffffffff04
+[ 1026.200105] RAX: 0000000000200080 RBX: 0000000000000080 RCX: 0000000000000080
+[ 1026.200109] RDX: 0000000000000001 RSI: 0000000000000594 RDI: ffff9af7ec655e80
+[ 1026.200112] RBP: ffffb71e00128fd8 R08: 00000000007f3ca4 R09: 0000000000000004
+[ 1026.200116] R10: 0000000000000000 R11: ffffffffaa5db75e R12: 0000000000000000
+[ 1026.200119] R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+[ 1026.200125]  ? call_function_single_interrupt+0xa/0x20
+[ 1026.200130]  ? elf_core_extra_data_size+0xd/0xd
+[ 1026.200139]  irq_exit+0xa1/0xa3
+[ 1026.200144]  reschedule_interrupt+0xf/0x20
+[ 1026.200147]  </IRQ>
+[ 1026.200154] RIP: 0010:_raw_spin_unlock_irq+0x16/0x21
+[ 1026.200158] Code: e9 b1 1b 55 74 07 48 83 c4 08 5b 5d c3 e8 0f 6e 5a ff eb f2 0f 1f 44 00 00 55 48 89 e5 e8 d4 a4 71 ff fb 65 ff 0d c3 b1 1b 55 <74> 02 5d c3 e8 ee 6d 5a ff eb f7 0f 1f 44 00 00 55 48 89 e5 e8 b3
+[ 1026.200162] RSP: 0018:ffffb71e0008be18 EFLAGS: 00000282 ORIG_RAX: ffffffffffffff02
+[ 1026.200166] RAX: 0000000000000003 RBX: ffff9af7ec326e40 RCX: 0000000000000003
+[ 1026.200170] RDX: 0000000000000000 RSI: ffff9af7ecfb5e80 RDI: ffff9af7eeb28e80
+[ 1026.200173] RBP: ffffb71e0008be18 R08: 00000000007f3ca2 R09: 0000000000000000
+[ 1026.200177] R10: ffffb71e00c93bd8 R11: ffffffffaa5db75e R12: ffff9af7ecfb5e80
+[ 1026.200180] R13: 0000000000000001 R14: ffff9af7eeba8e80 R15: 0000000000000000
+[ 1026.200185]  ? elf_core_extra_data_size+0xd/0xd
+[ 1026.200193]  ? _raw_spin_unlock_irq+0xe/0x21
+[ 1026.200197]  finish_task_switch+0xfb/0x25a
+[ 1026.200204]  __schedule+0x459/0x678
+[ 1026.200210]  schedule_idle+0x21/0x2d
+[ 1026.200216]  do_idle+0x1d5/0x1f8
+[ 1026.200223]  cpu_startup_entry+0x1d/0x1f
+[ 1026.200229]  start_secondary+0x159/0x174
+[ 1026.200234]  secondary_startup_64+0xa4/0xb0
+[ 1026.200240] ---[ end trace 6cc41ad77f8a8e06 ]---
+[ 1027.238421] i2c_designware i2c_designware.0: controller timed out
+[ 1027.263665] i2c_designware i2c_designware.0: timeout in disabling adapter
+[ 1027.285986] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1027.308320] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1027.330604] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1027.352959] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1027.375272] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1027.397451] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1027.419669] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1027.441887] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1027.464104] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1027.486292] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1027.508509] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1027.530728] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1027.552947] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1027.575166] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1027.597351] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1027.619569] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1027.641788] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1027.664006] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1027.686192] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1027.708409] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1027.730629] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1027.752847] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1027.775066] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1027.797251] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1027.819470] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1027.841688] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1027.863906] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1027.886092] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1027.908310] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1027.930528] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1027.952745] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1027.974967] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1027.997151] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1028.019370] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1028.041588] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1028.063807] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1028.085992] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1028.108210] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1028.130428] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1028.152648] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1028.174866] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1028.197051] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1028.219269] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1028.241488] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1028.263707] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1028.285892] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1028.308110] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1028.330328] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1028.352547] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1028.374767] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1028.396951] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1028.419169] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1028.441387] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1028.463607] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1028.485792] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1028.508009] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1028.530228] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1028.552446] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1028.574666] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1028.596851] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1028.619069] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1028.641287] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1028.663507] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1028.685692] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1028.707910] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1028.730128] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1028.752346] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1028.774566] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1028.796750] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1028.818969] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1028.841187] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1028.863407] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1028.885592] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1028.907809] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1028.930028] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1028.952247] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1028.974465] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1028.996650] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1029.018869] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1029.041088] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1029.063305] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1029.085492] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1029.107709] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1029.129928] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1029.152149] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1029.174366] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1029.196437] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1029.218654] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1029.240873] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1029.263091] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1029.285309] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1029.307495] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1029.329713] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1029.351932] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1029.374151] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1029.396337] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1029.418554] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1029.440772] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1029.462991] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1029.485209] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1029.507395] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1029.529613] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1029.551835] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1029.574051] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1029.596237] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1029.618454] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1029.640670] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1029.662892] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1029.685111] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1029.707294] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1029.729511] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1029.751729] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1029.773947] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1029.796136] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1029.818353] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1029.840570] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1029.862788] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1029.885007] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1029.907198] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1029.929412] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1029.951629] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1029.973847] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1029.996036] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1030.018253] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1030.040470] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1030.062688] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1030.084907] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1030.107094] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1030.129312] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1030.151529] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1030.173748] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1030.195937] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1030.218153] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1030.240371] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1030.262588] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1030.284806] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1030.306994] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1030.329212] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1030.351428] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1030.373647] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1030.395837] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1030.418053] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1030.440270] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1030.462488] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1030.484706] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1030.506895] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1030.529113] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1030.551329] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1030.573548] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1030.595737] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1030.617953] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1030.640171] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1030.662388] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1030.684606] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1030.706794] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1030.729012] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1030.751229] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1030.773447] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1030.795637] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1030.817853] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1030.840070] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1030.862288] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1030.884506] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1030.906695] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1030.928912] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1030.951129] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1030.973348] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1030.995537] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1031.017753] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1031.039970] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1031.062188] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1031.084407] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1031.106594] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1031.128812] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1031.151030] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1031.173247] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1031.195437] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1031.217653] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1031.239871] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1031.262088] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1031.284306] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1031.306495] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1031.328712] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1031.350930] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1031.373147] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1031.395337] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1031.417554] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1031.439771] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1031.461989] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1031.484206] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1031.506396] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1031.528614] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1031.550832] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1031.573052] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1031.595238] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1031.617455] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1031.639673] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1031.661891] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1031.684111] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1031.706296] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1031.728514] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1031.750734] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1031.772951] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1031.795138] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1031.817356] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1031.839573] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1031.861793] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1031.884011] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1031.906196] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1031.928413] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1031.950633] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1031.972851] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1031.995038] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1032.017254] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1032.039474] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1032.061692] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1032.083911] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1032.106096] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1032.128314] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1032.150532] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1032.172752] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1032.194937] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1032.217155] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1032.239373] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1032.261591] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1032.283811] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1032.305996] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1032.328214] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1032.350434] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1032.372652] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1032.394838] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1032.417055] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1032.439274] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1032.461489] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1032.483707] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1032.505895] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1032.528113] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1032.550330] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1032.572548] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1032.594737] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1032.616954] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1032.639171] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1032.661389] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1032.683607] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1032.705795] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1032.728012] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1032.750230] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1032.772448] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1032.794637] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1032.816854] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1032.839071] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1032.861289] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1032.883507] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1032.905695] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1032.927912] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1032.950130] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1032.972348] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1032.994538] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1033.016754] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1033.038971] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1033.061189] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1033.083406] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1033.105595] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1033.127812] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1033.150030] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1033.172248] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1033.194437] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1033.216654] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1033.238871] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1033.261089] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1033.283308] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1033.305495] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1033.327712] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1033.349930] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1033.372148] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1033.394337] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1033.416554] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1033.438771] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1033.460990] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1033.483208] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1033.505395] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1033.527612] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1033.549830] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1033.572048] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1033.594238] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1033.616454] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1033.638671] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1033.660890] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1033.683106] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1033.705298] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1033.727512] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1033.749730] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1033.771947] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1033.794137] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1033.816354] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1033.838572] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1033.860789] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1033.883007] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1033.905196] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1033.927413] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1033.949631] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1033.971849] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1033.994038] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1034.016254] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1034.038472] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1034.060689] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1034.082907] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1034.105096] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1034.127313] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1034.149530] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1034.171749] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1034.193937] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1034.216154] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1034.238371] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1034.260589] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1034.282806] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1034.304995] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1034.327213] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1034.349430] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1034.371646] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1034.393838] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1034.416056] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1034.438274] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1034.460493] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1034.482712] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1034.504897] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1034.527116] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1034.549333] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1034.571550] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1034.593739] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1034.615956] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1034.638174] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1034.660393] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1034.682612] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1034.704797] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1034.727015] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1034.749233] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1034.771453] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1034.793638] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1034.815856] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1034.838074] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1034.860293] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1034.882511] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1034.904697] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1034.926915] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1034.949133] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1034.971352] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1034.993538] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1035.015756] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1035.037974] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1035.060193] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1035.082411] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1035.104598] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1035.126815] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1035.149033] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1035.171252] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1035.193439] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1035.215655] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1035.237872] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1035.260089] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1035.282307] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1035.304498] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1035.326713] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1035.348931] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1035.371149] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1035.393338] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1035.415554] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1035.437772] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1035.459989] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1035.482207] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1035.504396] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1035.526613] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1035.548831] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1035.571049] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1035.593238] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1035.615455] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1035.637672] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1035.659890] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1035.682108] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1035.704296] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1035.726513] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1035.748730] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1035.770949] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1035.793139] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1035.815355] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1035.837572] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1035.859790] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1035.882008] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1035.904196] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1035.926413] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1035.948633] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1035.970849] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1035.993038] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1036.015255] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1036.037472] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1036.059690] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1036.081908] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1036.104096] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1036.126313] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1036.148531] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1036.170748] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1036.192938] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1036.215155] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1036.237373] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1036.259590] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1036.281807] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1036.303996] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1036.326214] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1036.348431] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1036.370649] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1036.392839] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1036.415054] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1036.437272] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1036.459490] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1036.481708] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1036.503896] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1036.526114] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1036.548332] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1036.570549] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1036.592738] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1036.614955] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1036.637172] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1036.659391] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1036.681608] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1036.703796] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1036.726014] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1036.748232] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1036.770449] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1036.792639] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1036.814855] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1036.837072] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1036.859290] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1036.881509] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1036.903697] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1036.925914] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1036.948131] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1036.970349] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1036.992538] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1037.014755] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1037.036973] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1037.059190] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1037.081414] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1037.103597] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1037.125816] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1037.148035] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1037.170253] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1037.192439] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1037.214656] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1037.236875] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1037.259093] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1037.281313] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1037.303498] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1037.325715] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1037.347935] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1037.370150] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1037.392340] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1037.414556] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1037.436775] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1037.458993] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1037.481212] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1037.503396] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1037.525615] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1037.547835] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1037.570053] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1037.592240] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1037.614456] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1037.636675] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1037.658894] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1037.681112] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1037.703297] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1037.725516] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1037.747735] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1037.769953] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1037.792140] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1037.814357] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1037.836575] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1037.858794] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1037.881012] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1037.903198] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1037.925416] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1037.947634] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1037.969849] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1037.992039] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1038.014255] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1038.036473] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1038.058691] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1038.080908] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1038.103097] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1038.125314] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1038.147532] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1038.169748] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1038.191939] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1038.214156] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1038.236373] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1038.258591] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1038.280808] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1038.302996] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1038.325214] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1038.347432] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1038.369650] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1038.391839] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1038.414055] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1038.436273] i2c_designware i2c_designware.0: timeout waiting for bus ready
+[ 1038.455964] watchdog: BUG: soft lockup - CPU#0 stuck for 12s! [chrome:1325]
+[ 1038.455968] Modules linked in: ccm cmac rfcomm uinput xt_MASQUERADE fuse btusb btrtl btintel btbcm bluetooth ecdh_generic ecc uvcvideo videobuf2_v4l2 videobuf2_common videobuf2_vmalloc videobuf2_memops iio_trig_sysfs cros_ec_light_prox cros_ec_sensors cros_ec_activity cros_ec_sensors_core cros_ec_sensors_ring industrialio_triggered_buffer kfifo_buf industrialio cros_ec_sensorsupport iwlmvm lzo_rle mac80211 lzo_compress zram iwlwifi cfg80211 joydev
+[ 1038.455995] CPU: 0 PID: 1325 Comm: chrome Tainted: G        W         5.4.22htcore #31
+[ 1038.455999] Hardware name: Google Eve/Eve, BIOS Google_Eve.9584.174.0 05/29/2018
+[ 1038.456009] RIP: 0010:smp_call_function_single+0xc1/0x12a
+[ 1038.456014] Code: 83 00 00 00 65 8b 35 6a 84 a6 55 f7 c6 00 01 1f 00 75 69 85 c0 74 1e 48 89 e3 48 89 de e8 71 00 00 00 f6 43 18 01 74 0b f3 90 <8b> 4c 24 18 f6 c1 01 75 f5 eb 27 48 c7 c6 00 9e 02 00 65 48 03 35
+[ 1038.456017] RSP: 0000:ffffb71e00cf3ba0 EFLAGS: 00000202 ORIG_RAX: ffffffffffffff13
+[ 1038.456021] RAX: 0000000000000000 RBX: ffffb71e00cf3ba0 RCX: 0000000000000003
+[ 1038.456025] RDX: 0000000000000800 RSI: 00000000000000fb RDI: 0000000000000004
+[ 1038.456028] RBP: ffffb71e00cf3c10 R08: 0000000000000000 R09: 0000000000000000
+[ 1038.456031] R10: 0400000000000080 R11: ffffffffaa4b9dbf R12: 0000000000000000
+[ 1038.456033] R13: ffffffffaa4c9247 R14: 0000000000000000 R15: ffffb71e00cf3cd0
+[ 1038.456037] FS:  000079716b5dd8c0(0000) GS:ffff9af7eea00000(0000) knlGS:0000000000000000
+[ 1038.456040] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[ 1038.456043] CR2: 00002e7b23919000 CR3: 0000000444c88001 CR4: 00000000003606f0
+[ 1038.456046] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[ 1038.456049] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[ 1038.456051] Call Trace:
+[ 1038.456060]  ? trace_tlb_flush+0x73/0x73
+[ 1038.456066]  ? __schedule+0x459/0x678
+[ 1038.456070]  smp_call_function_many+0x23a/0x26b
+[ 1038.456075]  ? trace_tlb_flush+0x73/0x73
+[ 1038.456080]  ? flush_tlb_func_remote+0x34/0x34
+[ 1038.456085]  ? trace_tlb_flush+0x73/0x73
+[ 1038.456089]  on_each_cpu_mask+0x3f/0xa3
+[ 1038.456093]  on_each_cpu_cond_mask+0xc7/0xfa
+[ 1038.456098]  ? trace_tlb_flush+0x73/0x73
+[ 1038.456101]  flush_tlb_mm_range+0xbe/0xd5
+[ 1038.456107]  ptep_clear_flush+0x3f/0x45
+[ 1038.456112]  wp_page_copy+0x349/0x5ad
+[ 1038.456118]  do_wp_page+0x17a/0x36d
+[ 1038.456123]  handle_mm_fault+0x467/0x106c
+[ 1038.456128]  do_user_addr_fault+0x1fd/0x3f4
+[ 1038.456134]  page_fault+0x2f/0x40
+[ 1038.456138] RIP: 0033:0x5c2537007d4e
+[ 1038.456142] Code: 01 00 74 06 5d e9 22 7c cd fc 5d e9 fc 12 02 00 cc cc cc cc cc cc cc cc cc cc cc cc 55 48 89 e5 0f b6 47 02 c1 e0 10 c1 e6 0b <66> 89 37 81 e6 00 00 01 00 25 00 00 fe 00 09 f0 c1 e8 10 88 47 02
+[ 1038.456145] RSP: 002b:00007ffeafeefe00 EFLAGS: 00010246
+[ 1038.456149] RAX: 0000000000000000 RBX: 00002e7b23919000 RCX: 0000000000000004
+[ 1038.456151] RDX: 00000000000005d6 RSI: 0000000000000000 RDI: 00002e7b23919000
+[ 1038.456154] RBP: 00007ffeafeefe00 R08: 0000000000000008 R09: 0000000000000000
+[ 1038.456157] R10: 00000d8fe1acf9f8 R11: 0000000000266b89 R12: 00005c2539108778
+[ 1038.456160] R13: 00002e7b23918fc8 R14: 0000000000000017 R15: 4094d40000000000
+[ 1038.456164] Kernel panic - not syncing: softlockup: hung tasks
+[ 1038.456169] CPU: 0 PID: 1325 Comm: chrome Tainted: G        W    L    5.4.22htcore #31
+[ 1038.456171] Hardware name: Google Eve/Eve, BIOS Google_Eve.9584.174.0 05/29/2018
+[ 1038.456174] Call Trace:
+[ 1038.456177]  <IRQ>
+[ 1038.456182]  dump_stack+0x97/0xdb
+[ 1038.456187]  panic+0x11f/0x31b
+[ 1038.456191]  ? 0xffffffffabbd5000
+[ 1038.456196]  watchdog_timer_fn+0x236/0x236
+[ 1038.456201]  ? proc_watchdog_cpumask+0x80/0x80
+[ 1038.456206]  __hrtimer_run_queues+0x196/0x289
+[ 1038.456211]  hrtimer_interrupt+0xfe/0x211
+[ 1038.456216]  smp_apic_timer_interrupt+0xbf/0x159
+[ 1038.456220]  apic_timer_interrupt+0xf/0x20
+[ 1038.456223]  </IRQ>
+[ 1038.456227] RIP: 0010:smp_call_function_single+0xc1/0x12a
+[ 1038.456230] Code: 83 00 00 00 65 8b 35 6a 84 a6 55 f7 c6 00 01 1f 00 75 69 85 c0 74 1e 48 89 e3 48 89 de e8 71 00 00 00 f6 43 18 01 74 0b f3 90 <8b> 4c 24 18 f6 c1 01 75 f5 eb 27 48 c7 c6 00 9e 02 00 65 48 03 35
+[ 1038.456233] RSP: 0000:ffffb71e00cf3ba0 EFLAGS: 00000202 ORIG_RAX: ffffffffffffff13
+[ 1038.456237] RAX: 0000000000000000 RBX: ffffb71e00cf3ba0 RCX: 0000000000000003
+[ 1038.456240] RDX: 0000000000000800 RSI: 00000000000000fb RDI: 0000000000000004
+[ 1038.456242] RBP: ffffb71e00cf3c10 R08: 0000000000000000 R09: 0000000000000000
+[ 1038.456245] R10: 0400000000000080 R11: ffffffffaa4b9dbf R12: 0000000000000000
+[ 1038.456247] R13: ffffffffaa4c9247 R14: 0000000000000000 R15: ffffb71e00cf3cd0
+[ 1038.456254]  ? flush_tlb_func_remote+0x34/0x34
+[ 1038.456259]  ? native_apic_mem_read+0xe/0xe
+[ 1038.456266]  ? trace_tlb_flush+0x73/0x73
+[ 1038.456272]  ? __schedule+0x459/0x678
+[ 1038.456277]  smp_call_function_many+0x23a/0x26b
+[ 1038.456282]  ? trace_tlb_flush+0x73/0x73
+[ 1038.456286]  ? flush_tlb_func_remote+0x34/0x34
+[ 1038.456290]  ? trace_tlb_flush+0x73/0x73
+[ 1038.456295]  on_each_cpu_mask+0x3f/0xa3
+[ 1038.456299]  on_each_cpu_cond_mask+0xc7/0xfa
+[ 1038.456303]  ? trace_tlb_flush+0x73/0x73
+[ 1038.456307]  flush_tlb_mm_range+0xbe/0xd5
+[ 1038.456311]  ptep_clear_flush+0x3f/0x45
+[ 1038.456316]  wp_page_copy+0x349/0x5ad
+[ 1038.456321]  do_wp_page+0x17a/0x36d
+[ 1038.456326]  handle_mm_fault+0x467/0x106c
+[ 1038.456331]  do_user_addr_fault+0x1fd/0x3f4
+[ 1038.456335]  page_fault+0x2f/0x40
+[ 1038.456338] RIP: 0033:0x5c2537007d4e
+[ 1038.456341] Code: 01 00 74 06 5d e9 22 7c cd fc 5d e9 fc 12 02 00 cc cc cc cc cc cc cc cc cc cc cc cc 55 48 89 e5 0f b6 47 02 c1 e0 10 c1 e6 0b <66> 89 37 81 e6 00 00 01 00 25 00 00 fe 00 09 f0 c1 e8 10 88 47 02
+[ 1038.456344] RSP: 002b:00007ffeafeefe00 EFLAGS: 00010246
+[ 1038.456347] RAX: 0000000000000000 RBX: 00002e7b23919000 RCX: 0000000000000004
+[ 1038.456350] RDX: 00000000000005d6 RSI: 0000000000000000 RDI: 00002e7b23919000
+[ 1038.456352] RBP: 00007ffeafeefe00 R08: 0000000000000008 R09: 0000000000000000
+[ 1038.456355] R10: 00000d8fe1acf9f8 R11: 0000000000266b89 R12: 00005c2539108778
+[ 1038.456358] R13: 00002e7b23918fc8 R14: 0000000000000017 R15: 4094d40000000000
+[ 1039.577765] Shutting down cpus with NMI
+[ 1039.577774] Kernel Offset: 0x29400000 from 0xffffffff81000000 (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
+[ 1039.579853] gsmi: Log Shutdown Reason 0x02
+[ 1039.588759] ACPI MEMORY or I/O RESET_REG.
