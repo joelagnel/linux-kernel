@@ -4406,10 +4406,10 @@ static void sched_core_sibling_pause(void)
 	if (WARN_ON_ONCE(this_cpu_read(sched_core_priv)))
 		return;
 
-	trace_printk("[priv]: ENTER sibling pause\n");
+	trace_printk("[unpriv]: ENTER sibling pause\n");
 	while (READ_ONCE(rq->core->core_priv))
 		cpu_relax();
-	trace_printk("[priv]: EXIT sibling pause\n");
+	trace_printk("[unpriv]: EXIT sibling pause\n");
 }
 
 static void sched_core_sibling_pause_ipi(void *info)
@@ -4417,6 +4417,7 @@ static void sched_core_sibling_pause_ipi(void *info)
 	int cpu = smp_processor_id();
 	struct rq *rq = cpu_rq(cpu);
 
+	trace_printk("[unpriv] enter IPI\n");
 	smp_rmb(); /* synchronize with store of core_pause_pending */
 	if (WARN_ON_ONCE(!READ_ONCE(rq->core_pause_pending)))
 		return;
@@ -4448,6 +4449,8 @@ redo_pause:
 
 	WRITE_ONCE(rq->core_pause_pending, false);
 	raw_spin_unlock(rq_lockp(rq));
+
+	trace_printk("[unpriv] exit IPI\n");
 }
 
 void set_sched_in_ipi(void)
@@ -4522,6 +4525,7 @@ void sched_core_priv_enter(void)
 			WRITE_ONCE(srq->core_pause_pending, true);
 			smp_wmb(); /* Order store to _pending with IPI handler start */
 
+			trace_printk("[priv] sending IPI\n");
 			csd = this_cpu_ptr(&htpause_csd);
 			csd->func = sched_core_sibling_pause_ipi;
 			csd->flags = 0;
