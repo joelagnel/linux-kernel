@@ -22,6 +22,9 @@
 #define CREATE_TRACE_POINTS
 #include <trace/events/sched.h>
 
+#undef trace_printk
+#define trace_printk(...)
+
 DEFINE_PER_CPU_SHARED_ALIGNED(struct rq, runqueues);
 
 #if defined(CONFIG_SCHED_DEBUG) && defined(HAVE_JUMP_LABEL)
