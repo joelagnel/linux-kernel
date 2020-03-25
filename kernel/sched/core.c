@@ -4423,8 +4423,12 @@ static void sched_core_sibling_pause_ipi(void *info)
 	 * Can happen if IPI received during softirq, no need to do anything
 	 * since the softirq is trusted, and also pausing here cause deadlock.
 	 */
-	if (this_cpu_read(sched_core_priv))
+	if (this_cpu_read(sched_core_priv)) {
+		raw_spin_lock(rq_lockp(rq));
+		WRITE_ONCE(rq->core_pause_pending, false);
+		raw_spin_unlock(rq_lockp(rq));
 		return;
+	}
 redo_pause:
 	/*
 	 * Order start of IPI and load of pause_pending with load of
