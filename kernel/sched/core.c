@@ -3903,7 +3903,7 @@ static void sched_core_sibling_pause_ipi(void *info)
 	 */
 	if (this_cpu_read(sched_core_priv)) {
 		raw_spin_lock(rq_lockp(rq));
-		WRITE_ONCE(rq->core_pause_pending, false);
+		rq->core_pause_pending = false;
 		raw_spin_unlock(rq_lockp(rq));
 		return;
 	}
@@ -3933,7 +3933,7 @@ redo_pause:
 		goto redo_pause;
 	}
 
-	WRITE_ONCE(rq->core_pause_pending, false);
+	rq->core_pause_pending = false;
 	raw_spin_unlock(rq_lockp(rq));
 
 	trace_printk("[unpriv] exit IPI\n");
@@ -4008,7 +4008,7 @@ void sched_core_priv_enter(void)
 
 		if (!READ_ONCE(srq->core_pause_pending)) {
 
-			WRITE_ONCE(srq->core_pause_pending, true);
+			srq->core_pause_pending = true;
 			smp_wmb(); /* Order store to _pending with IPI handler start */
 
 			trace_printk("[priv] sending IPI\n");
