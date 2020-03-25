@@ -4401,13 +4401,7 @@ static void sched_core_sibling_pause(void)
 	if (!rq->core)
 		return;
 
-	// The CPU that is in a priv state should never
-	// try to pause.
-	if (WARN_ON_ONCE(this_cpu_read(sched_core_priv))) {
-		trace_printk("WARNING PRINTED!!\n");
-		tracing_stop();
-		return;
-	}
+	WARN_ON_ONCE(this_cpu_read(sched_core_priv));
 
 	trace_printk("[unpriv]: ENTER sibling pause\n");
 	while (READ_ONCE(rq->core->core_priv))
@@ -4423,6 +4417,13 @@ static void sched_core_sibling_pause_ipi(void *info)
 	trace_printk("[unpriv] enter IPI\n");
 	smp_rmb(); /* synchronize with store of core_pause_pending */
 	if (WARN_ON_ONCE(!READ_ONCE(rq->core_pause_pending)))
+		return;
+
+	/*
+	 * Can happen if IPI received during softirq, no need to do anything
+	 * since the softirq is trusted, and also pausing here cause deadlock.
+	 */
+	if (this_cpu_read(sched_core_priv))
 		return;
 redo_pause:
 	/*
