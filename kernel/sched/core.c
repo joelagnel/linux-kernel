@@ -3847,7 +3847,6 @@ restart:
 #ifdef CONFIG_SCHED_CORE
 
 DEFINE_PER_CPU(bool, sched_core_priv);
-DEFINE_PER_CPU(bool, sched_in_ipi);
 static DEFINE_PER_CPU_SHARED_ALIGNED(call_single_data_t, htpause_csd);
 
 static inline bool cookie_equals(struct task_struct *a, unsigned long cookie)
@@ -3939,16 +3938,6 @@ redo_pause:
 	trace_printk("[unpriv] exit IPI\n");
 }
 
-void set_sched_in_ipi(void)
-{
-	smp_store_release(this_cpu_ptr(&sched_in_ipi), true);
-}
-
-void reset_sched_in_ipi(void)
-{
-	smp_store_release(this_cpu_ptr(&sched_in_ipi), false);
-}
-
 /*
  * Enter the privileged (exclusive) core state where the other HT
  * should be paused if it is running 'untrusted' code, until
@@ -3967,7 +3956,8 @@ void sched_core_priv_enter(void)
 	if (!sched_core_enabled(rq))
 		return;
 
-	if (this_cpu_read(sched_in_ipi))
+	// Return if we are in an IPI sent from the other sibling.
+	if (READ_ONCE(rq->core_pause_pending))
 		return;
 
 	// softirqs could get interrupted while we are in the exclusive state,
