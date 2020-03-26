@@ -69,11 +69,6 @@ static int cpu_subsys_online(struct device *dev)
 
 static int cpu_subsys_offline(struct device *dev)
 {
-	/*
-	 * HACK: Prevent cpu offlining
-	 */
-	return 0;
-
 	return cpu_down(dev->id);
 }
 
