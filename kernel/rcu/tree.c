@@ -526,7 +526,8 @@ static void rcu_eqs_enter(bool user)
 	rcu_preempt_deferred_qs(current);
 	WRITE_ONCE(rdp->dynticks_nesting, 0); /* Avoid irq-access tearing. */
 	rcu_dynticks_eqs_enter();
-	rcu_dynticks_task_enter();
+	if (user)
+		rcu_dynticks_task_enter();
 }
 
 /**
@@ -680,7 +681,8 @@ static void rcu_eqs_exit(bool user)
 		rdp->dynticks_nesting++;
 		return;
 	}
-	rcu_dynticks_task_exit();
+	if (user)
+		rcu_dynticks_task_exit();
 	rcu_dynticks_eqs_exit();
 	rcu_cleanup_after_idle();
 	trace_rcu_dyntick(TPS("End"), (user ? TPS("USER") : TPS("IDLE")),
