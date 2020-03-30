@@ -1,0 +1,30 @@
+Hello,
+These patches improve kfree_rcu() to support:
+- kfree_rcu() headless usage.
+- both vmalloc() and slab free'ing support using array of pointers.
+- simpler debugobjects handling.
+
+It applies on rcu/dev branch as of March 29th.
+
+Testing with rcuperf shows following changes. The memory footprint reduces and
+batches go slightly up. This is assumed an acceptable change.
+
+with all patches:
+Total time taken by all kfree'ers: 27312964461 ns, loops: 20000, batches: 3120, memory footprint: 211MB
+Total time taken by all kfree'ers: 26773272309 ns, loops: 20000, batches: 3084, memory footprint: 208M
+
+without:
+Total time taken by all kfree'ers: 25711621811 ns, loops: 20000, batches: 2814, memory footprint: 230MB          
+ Total time taken by all kfree'ers: 25775800546 ns, loops: 20000, batches: 2755, memory footprint: 230MB
+
+These have been pushed to the git tree at:
+git://git.kernel.org/pub/scm/linux/kernel/git/jfern/linux.git (branch rcu/kfree)
+
+cgit view:
+https://git.kernel.org/pub/scm/linux/kernel/git/jfern/linux.git/log/?h=rcu/kfree
+
+thanks,
+
+ - Joel
+
+option-subject kfree_rcu() improvements for -rcu dev
