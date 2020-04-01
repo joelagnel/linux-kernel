@@ -110,6 +110,10 @@ module_param(rcu_fanout_exact, bool, 0444);
 static int rcu_fanout_leaf = RCU_FANOUT_LEAF;
 module_param(rcu_fanout_leaf, int, 0444);
 int rcu_num_lvls __read_mostly = RCU_NUM_LVLS;
+/* Silence the kvfree_rcu() complaint (warning) that it blocks */
+int rcu_kfree_nowarn;
+module_param(rcu_kfree_nowarn, int, 0444);
+
 /* Number of rcu_nodes at specified level. */
 int num_rcu_lvl[] = NUM_RCU_LVL_INIT;
 int rcu_num_nodes __read_mostly = NUM_RCU_NODES; /* Total # rcu_nodes in use. */
@@ -3266,6 +3270,12 @@ unlock_return:
 	 * state.
 	 */
 	if (!success) {
+		/*
+		 * Please embed an rcu_head and pass it along if you hit this
+		 * warning. Doing so would avoid long kfree_rcu() latencies.
+		 */
+		if (!rcu_kfree_nowarn)
+			WARN_ON_ONCE(1);
 		debug_rcu_head_unqueue(ptr);
 		synchronize_rcu();
 		kvfree(ptr);
