@@ -3932,6 +3932,11 @@
 			latencies, which will choose a value aligned
 			with the appropriate hardware boundaries.
 
+	rcutree.rcu_kfree_nowarn= [KNL]
+			Suppress the warning if the user so choses to,
+			about kfree_rcu() hitting the synchronous path
+			where it could cause long synchronous latencies.
+
 	rcutree.jiffies_till_first_fqs= [KNL]
 			Set delay from grace-period initialization to
 			first attempt to force quiescent states.
