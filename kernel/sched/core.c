@@ -4368,7 +4368,7 @@ restart:
 
 #ifdef CONFIG_SCHED_CORE
 
-DEFINE_PER_CPU(bool, sched_core_priv);
+DEFINE_PER_CPU(int, sched_core_priv);
 static DEFINE_PER_CPU_SHARED_ALIGNED(call_single_data_t, htpause_csd);
 
 static inline bool cookie_equals(struct task_struct *a, unsigned long cookie)
@@ -4474,17 +4474,13 @@ void sched_core_priv_enter(void)
 	int i, cpu = smp_processor_id();
 	struct rq *rq = cpu_rq(cpu);
 	const struct cpumask *smt_mask;
+	int nesting; /* Only a debug variable, can be removed */
 
 	if (!sched_core_enabled(rq))
 		return;
 
 	// Return if we are in an IPI sent from the other sibling.
 	if (READ_ONCE(rq->core_pause_pending))
-		return;
-
-	// softirqs could get interrupted while we are in the exclusive state,
-	// and we end up here. In such cases, don't need to do anything.
-	if (this_cpu_read(sched_core_priv))
 		return;
 
 	raw_spin_lock(rq_lockp(rq));
@@ -4497,8 +4493,14 @@ void sched_core_priv_enter(void)
 	if (rq->core->core_priv)
 		goto unlock;
 
+	// softirqs could get interrupted while we are in the exclusive state,
+	// and we end up here. In such cases, don't need to do anything.
+	if ((nesting = this_cpu_inc_return(sched_core_priv)) > 1) {
+		trace_printk("[priv] ENTER nested priv state, nesting=%d\n", nesting);
+		goto unlock;
+	}
+
 	WRITE_ONCE(rq->core->core_priv, true);
-	this_cpu_write(sched_core_priv, true);
 
 	for_each_cpu(i, smt_mask) {
 		call_single_data_t *csd;
@@ -4553,14 +4555,20 @@ void sched_core_priv_exit(void)
 {
 	int cpu = smp_processor_id();
 	struct rq *rq = cpu_rq(cpu);
+	int nesting;
 
 	if (!sched_core_enabled(rq))
 		return;
 
 	// Check if we entered the exclusive state on this CPU, without
 	// acquiring the runqueue lock.
-	if (!this_cpu_read(sched_core_priv))
+	if (!(nesting = this_cpu_read(sched_core_priv)))
 		return;
+
+	if (this_cpu_dec_return(sched_core_priv) > 0) {
+		trace_printk("[priv] EXIT nested priv state, nesting=%d\n", nesting);
+		return;
+	}
 
 	/* Prevent reorder of IRQ's content with core_priv=false */
 	raw_spin_lock(rq_lockp(rq));
@@ -4570,7 +4578,6 @@ void sched_core_priv_exit(void)
 
 	trace_printk("[priv] EXIT priv state, dump stack\n");
 
-	this_cpu_write(sched_core_priv, false);
 	raw_spin_unlock(rq_lockp(rq));
 }
 
