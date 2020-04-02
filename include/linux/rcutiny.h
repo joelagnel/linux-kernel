@@ -46,7 +46,7 @@ static inline void rcu_softirq_qs(void)
 	rcu_qs();
 }
 
-#define rcu_note_context_switch(preempt) \
+#define rcu_note_context_switch(preempt, curr_next) \
 	do { \
 		rcu_qs(); \
 		rcu_tasks_qs(current); \

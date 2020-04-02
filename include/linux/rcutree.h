@@ -18,7 +18,7 @@
 #define __LINUX_RCUTREE_H
 
 void rcu_softirq_qs(void);
-void rcu_note_context_switch(bool preempt);
+void rcu_note_context_switch(bool preempt, bool curr_next);
 int rcu_needs_cpu(u64 basem, u64 *nextevt);
 void rcu_cpu_stall_reset(void);
 
@@ -29,7 +29,7 @@ void rcu_cpu_stall_reset(void);
  */
 static inline void rcu_virt_note_context_switch(int cpu)
 {
-	rcu_note_context_switch(false);
+	rcu_note_context_switch(false, false);
 }
 
 void synchronize_rcu_expedited(void);

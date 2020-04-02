@@ -282,7 +282,7 @@ static void rcu_qs(void)
  *
  * Caller must disable interrupts.
  */
-void rcu_note_context_switch(bool preempt)
+void rcu_note_context_switch(bool preempt, bool curr_next)
 {
 	struct task_struct *t = current;
 	struct rcu_data *rdp = this_cpu_ptr(&rcu_data);
@@ -291,6 +291,26 @@ void rcu_note_context_switch(bool preempt)
 	trace_rcu_utilization(TPS("Start context switch"));
 	lockdep_assert_irqs_disabled();
 	WARN_ON_ONCE(!preempt && t->rcu_read_lock_nesting > 0);
+
+	/*
+	 * We are not sure if curr_next can ever happen, hence the warning to
+	 * test if it does.
+	 *
+	 * In this case, it would tremendously slow down the read-side critical
+	 * section.
+	 */
+	WARN_ON_ONCE(curr_next);
+
+	/*
+	 * If we are in the middle of a reader at context-switch but the
+	 * scheduler chose the same task, don't do any blocked list task
+	 * addition, or reporting of QS. Why would you? Don't be silly - you
+	 * never got preempted.
+	 */
+	if (curr_next && t->rcu_read_lock_nesting > 0 &&
+	    !t->rcu_read_unlock_special.b.blocked)
+		return;
+
 	if (t->rcu_read_lock_nesting > 0 &&
 	    !t->rcu_read_unlock_special.b.blocked) {
 
@@ -841,7 +861,7 @@ EXPORT_SYMBOL_GPL(rcu_all_qs);
 /*
  * Note a PREEMPT=n context switch.  The caller must have disabled interrupts.
  */
-void rcu_note_context_switch(bool preempt)
+void rcu_note_context_switch(bool preempt, bool curr_next)
 {
 	trace_rcu_utilization(TPS("Start context switch"));
 	rcu_qs();

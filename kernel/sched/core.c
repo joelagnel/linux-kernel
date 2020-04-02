@@ -5027,7 +5027,6 @@ static void __sched notrace __schedule(bool preempt)
 		hrtick_clear(rq);
 
 	local_irq_disable();
-	rcu_note_context_switch(preempt);
 
 	/*
 	 * Make sure that signal_pending_state()->signal_pending() below
@@ -5062,6 +5061,8 @@ static void __sched notrace __schedule(bool preempt)
 	next = pick_next_task(rq, prev, &rf);
 	clear_tsk_need_resched(prev);
 	clear_preempt_need_resched();
+
+	rcu_note_context_switch(preempt, (curr == next));
 
 	if (likely(prev != next)) {
 		rq->nr_switches++;
