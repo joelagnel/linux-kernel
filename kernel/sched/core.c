@@ -2808,6 +2808,13 @@ int sched_fork(unsigned long clone_flags, struct task_struct *p)
 #endif
 #ifdef CONFIG_SCHED_CORE
 	RB_CLEAR_NODE(&p->core_node);
+
+	/*
+	 * If task is using prctl for tagging, do the same for the child.
+	 * Otherwise let the CGroup interface do it.
+	 */
+	if (current->core_cookie && ((unsigned long)current == current->core_cookie))
+		task_set_core_sched(1, p);
 #endif
 	return 0;
 }
@@ -7119,27 +7126,35 @@ static int task_set_core_sched_stopper(void *data)
 	return 0;
 }
 
-int task_set_core_sched(int set)
+int task_set_core_sched(int set, struct task_struct *tsk)
 {
+	if (!tsk)
+		tsk = current;
+
 	if (set > 1)
 		return -ERANGE;
 
 	if (!static_branch_likely(&sched_smt_present))
 		return -EINVAL;
 
-	if (!!current->core_cookie == set)
+	/*
+	 * If cookie was set previously, do nothing.  If we have to take care
+	 * of fork()'d processes getting their own cookies so that threads
+	 * don't run in the same security domain as their parents.
+	 */
+	if (!!tsk->core_cookie == set && tsk->core_cookie == (unsigned long)tsk)
 		return 0;
 
 
 	// TODO Add check for if task was tagged through cgroup (and the other
 	// way).
-	// Ans, do if ((current->core_cookie == (unsigned long)current)
+	// Ans, do if ((tsk->core_cookie == (unsigned long)tsk)
 	if (set)
 		sched_core_get();
 
 	// TODO: Do I also need to enqueue curr into sched-core rb tree?
 	// Ans : no
-	current->core_cookie = set ? (unsigned long)current : 0;
+	tsk->core_cookie = set ? (unsigned long)tsk : 0;
 
 	// TODO: Need to run only on SMT siblings?
 	// Ans : Change to IPI + flag.
@@ -7155,8 +7170,8 @@ int task_set_core_sched(int set)
 	if (!set)
 		sched_core_put();
 
-	pr_err("prctl success: %s/%d %lx\n", current->comm, current->pid,
-	       current->core_cookie);
+	pr_err("prctl success: %s/%d %lx (fork: %d)\n", tsk->comm, tsk->pid,
+	       tsk->core_cookie, tsk != current);
 	return 0;
 }
 #endif
