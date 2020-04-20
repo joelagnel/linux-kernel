@@ -1,0 +1,6 @@
+Hi,
+Some of these patches would prevent breakage on PREEMPT_RT. I have marked them
+as "rcu/dev fixes". Please consider applying for v5.8. The exceptions are 3/4
+and 4/4 which some small clean-ups. Thanks!
+
+option-prefix PATCH rcu/dev -fixes
