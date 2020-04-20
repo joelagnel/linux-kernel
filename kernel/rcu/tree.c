@@ -3043,15 +3043,15 @@ static inline bool queue_kfree_rcu_work(struct kfree_rcu_cpu *krcp)
 static inline void kfree_rcu_drain_unlock(struct kfree_rcu_cpu *krcp,
 					  unsigned long flags)
 {
-	// Attempt to start a new batch.
+	/* Attempt to start a new batch. */
 	krcp->monitor_todo = false;
 	if (queue_kfree_rcu_work(krcp)) {
-		// Success! Our job is done here.
+		/* Success! Our job is done here. */
 		raw_spin_unlock_irqrestore(&krcp->lock, flags);
 		return;
 	}
 
-	// Previous RCU batch still in progress, try again later.
+	/* Previous RCU batch still in progress, try again later. */
 	krcp->monitor_todo = true;
 	schedule_delayed_work(&krcp->monitor_work, KFREE_DRAIN_JIFFIES);
 	raw_spin_unlock_irqrestore(&krcp->lock, flags);
@@ -3151,14 +3151,14 @@ void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
 	unsigned long flags;
 	struct kfree_rcu_cpu *krcp;
 
-	local_irq_save(flags);	// For safely calling this_cpu_ptr().
+	local_irq_save(flags);	/* For safely calling this_cpu_ptr(). */
 	krcp = this_cpu_ptr(&krc);
 	if (krcp->initialized)
 		raw_spin_lock(&krcp->lock);
 
-	// Queue the object but don't yet schedule the batch.
+	/* Queue the object but don't yet schedule the batch. */
 	if (debug_rcu_head_queue(head)) {
-		// Probable double kfree_rcu(), just leak.
+		/* Probable double kfree_rcu(), just leak. */
 		WARN_ONCE(1, "%s(): Double-freed call. rcu_head %p\n",
 			  __func__, head);
 		goto unlock_return;
@@ -3176,7 +3176,7 @@ void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
 
 	WRITE_ONCE(krcp->count, krcp->count + 1);
 
-	// Set timer to drain after KFREE_DRAIN_JIFFIES.
+	/* Set timer to drain after KFREE_DRAIN_JIFFIES. */
 	if (rcu_scheduler_active == RCU_SCHEDULER_RUNNING &&
 	    !krcp->monitor_todo) {
 		krcp->monitor_todo = true;
@@ -3722,7 +3722,7 @@ int rcutree_offline_cpu(unsigned int cpu)
 
 	rcutree_affinity_setting(cpu, cpu);
 
-	// nohz_full CPUs need the tick for stop-machine to work quickly
+	/* nohz_full CPUs need the tick for stop-machine to work quickly */
 	tick_dep_set(TICK_DEP_BIT_RCU);
 	return 0;
 }
