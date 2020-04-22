@@ -7138,17 +7138,22 @@ int task_set_core_sched(int set, struct task_struct *tsk)
 		return -EINVAL;
 
 	/*
-	 * If cookie was set previously, do nothing.  If we have to take care
-	 * of fork()'d processes getting their own cookies so that threads
-	 * don't run in the same security domain as their parents.
+	 * If cookie was set previously, do nothing, but only if either of the
+	 * following are true:
+	 * 1. Task was previously tagged by CGroup method.
+	 * 2. Task or its parent was set by prctl() but not reset.
+	 *
+	 * Note that, if CGroup tagging was done after prctl(), then that would
+	 * override the cookie. However, if prctl() was done after task was
+	 * added to tagged CGroup, then the prctl() does nothing.
 	 */
-	if (!!tsk->core_cookie == set && tsk->core_cookie == (unsigned long)tsk)
-		return 0;
+	if (!!tsk->core_cookie == set) {
+		if ((tsk->core_cookie == (unsigned long)tsk) ||
+		    (tsk->core_cookie == (unsigned long)tsk->sched_task_group)) {
+			return 0;
+		}
+	}
 
-
-	// TODO Add check for if task was tagged through cgroup (and the other
-	// way).
-	// Ans, do if ((tsk->core_cookie == (unsigned long)tsk)
 	if (set)
 		sched_core_get();
 
