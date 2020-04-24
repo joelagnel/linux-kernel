@@ -449,9 +449,111 @@ find_matching_se(struct sched_entity **se, struct sched_entity **pse)
 
 #endif	/* CONFIG_FAIR_GROUP_SCHED */
 
+static inline struct cfs_rq *root_cfs_rq(struct cfs_rq *cfs_rq)
+{
+	return &rq_of(cfs_rq)->cfs;
+}
+
+static inline bool is_root_cfs_rq(struct cfs_rq *cfs_rq)
+{
+	return cfs_rq == root_cfs_rq(cfs_rq);
+}
+
+static inline struct cfs_rq *core_cfs_rq(struct cfs_rq *cfs_rq)
+{
+	return &rq_of(cfs_rq)->core->cfs;
+}
+
 static inline u64 cfs_rq_min_vruntime(struct cfs_rq *cfs_rq)
 {
-	return cfs_rq->min_vruntime;
+	if (!sched_core_enabled(rq_of(cfs_rq)) || !is_root_cfs_rq(cfs_rq))
+		return cfs_rq->min_vruntime;
+
+	return core_cfs_rq(cfs_rq)->min_vruntime;
+}
+
+#ifndef CONFIG_64BIT
+static inline u64 cfs_rq_min_vruntime_copy(struct cfs_rq *cfs_rq)
+{
+	if (!sched_core_enabled(rq_of(cfs_rq)) || !is_root_cfs_rq(cfs_rq))
+		return cfs_rq->min_vruntime_copy;
+
+	return core_cfs_rq(cfs_rq)->min_vruntime_copy;
+}
+#endif
+
+bool cfs_prio_less(struct task_struct *a, struct task_struct *b)
+{
+	struct sched_entity *sea = &a->se;
+	struct sched_entity *seb = &b->se;
+	bool samecpu = task_cpu(a) == task_cpu(b);
+	s64 delta;
+
+	if (samecpu) {
+		/* vruntime is per cfs_rq */
+		while (!is_same_group(sea, seb)) {
+			int sea_depth = sea->depth;
+			int seb_depth = seb->depth;
+
+			if (sea_depth >= seb_depth)
+				sea = parent_entity(sea);
+			if (sea_depth <= seb_depth)
+				seb = parent_entity(seb);
+		}
+
+		delta = (s64)(sea->vruntime - seb->vruntime);
+		goto out;
+	}
+
+	/* crosscpu: compare root level se's vruntime to decide priority */
+	while (sea->parent)
+		sea = sea->parent;
+	while (seb->parent)
+		seb = seb->parent;
+	delta = (s64)(sea->vruntime - seb->vruntime);
+
+out:
+	return delta > 0;
+}
+
+/*
+ * This function takes care of adjusting the min_vruntime of siblings of
+ * a core during coresched enable/disable.
+ * This is called in stop machine context so no need to take the rq lock.
+ *
+ * Coresched enable case
+ *  Once Core scheduling is enabled, the root level sched entities
+ *  of both siblings will use cfs_rq->min_vruntime as the common cfs_rq
+ *  min_vruntime, so it's necessary to normalize vruntime of existing root
+ *  level sched entities in sibling_cfs_rq.
+ *
+ *  Update of sibling_cfs_rq's min_vruntime isn't necessary as we will be
+ *  only using cfs_rq->min_vruntime during the entire run of core scheduling.
+ *
+ * Coresched disable case
+ *  During the entire run of core scheduling, sibling_cfs_rq's min_vruntime
+ *  is left unused and could lag far behind its still queued sched entities.
+ *  Sync it to the up2date core wide one to avoid problems.
+ */
+void sched_core_adjust_sibling_vruntime(int cpu, bool coresched_enabled)
+{
+	struct cfs_rq *cfs = &cpu_rq(cpu)->cfs;
+	struct cfs_rq *core_cfs = &cpu_rq(cpu)->core->cfs;
+	if (coresched_enabled) {
+		struct sched_entity *se, *next;
+		s64 delta = core_cfs->min_vruntime - cfs->min_vruntime;
+		rbtree_postorder_for_each_entry_safe(se, next,
+				&cfs->tasks_timeline.rb_root,
+				run_node) {
+			se->vruntime += delta;
+		}
+	} else {
+		cfs->min_vruntime = core_cfs->min_vruntime;
+#ifndef CONFIG_64BIT
+		smp_wmb();
+		cfs->min_vruntime_copy = core_cfs->min_vruntime;
+#endif
+	}
 }
 
 static __always_inline
@@ -509,8 +611,11 @@ static void update_min_vruntime(struct cfs_rq *cfs_rq)
 			vruntime = min_vruntime(vruntime, se->vruntime);
 	}
 
+	if (sched_core_enabled(rq_of(cfs_rq)) && is_root_cfs_rq(cfs_rq))
+		cfs_rq = core_cfs_rq(cfs_rq);
+
 	/* ensure we never gain time by being placed backwards. */
-	cfs_rq->min_vruntime = max_vruntime(cfs_rq_min_vruntime(cfs_rq), vruntime);
+	cfs_rq->min_vruntime = max_vruntime(cfs_rq->min_vruntime, vruntime);
 #ifndef CONFIG_64BIT
 	smp_wmb();
 	cfs_rq->min_vruntime_copy = cfs_rq->min_vruntime;
@@ -6451,9 +6556,9 @@ static void migrate_task_rq_fair(struct task_struct *p, int new_cpu)
 		u64 min_vruntime_copy;
 
 		do {
-			min_vruntime_copy = cfs_rq->min_vruntime_copy;
+			min_vruntime_copy = cfs_rq_min_vruntime_copy(cfs_rq);
 			smp_rmb();
-			min_vruntime = cfs_rq->min_vruntime;
+			min_vruntime = cfs_rq_min_vruntime(cfs_rq);
 		} while (min_vruntime != min_vruntime_copy);
 #else
 		min_vruntime = cfs_rq_min_vruntime(cfs_rq);
