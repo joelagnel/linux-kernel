@@ -1,0 +1,1587 @@
+d NULL but, nr_running = 1, force_idle=0
+[   31.691474] pick_next_entity returned NULL but, nr_running = 1, force_idle=0
+[   31.691483] pick_next_entity returned NULL but, nr_running = 1, force_idle=0
+[   31.691493] pick_next_entity returned NULL but, nr_running = 1, force_idle=0
+[   31.692184] pick_next_entity returned NULL but, nr_running = 1, force_idle=0
+[   31.692189] pick_next_entity returned NULL but, nr_running = 1, force_idle=0
+[   31.692207] pick_next_entity returned NULL but, nr_running = 1, force_idle=0
+[   31.692619] pick_next_entity returned NULL but, nr_running = 1, force_idle=0
+[   31.692623] pick_next_entity returned NULL but, nr_running = 1, force_idle=0
+[   31.692640] pick_next_entity returned NULL but, nr_running = 1, force_idle=0
+[   31.692650] pick_next_entity returned NULL but, nr_running = 1, force_idle=0
+[   31.693182] pick_next_entity returned NULL but, nr_running = 1, force_idle=0
+[   31.693199] pick_next_entity returned NULL but, nr_running = 1, force_idle=0
+[   31.693784] pick_next_entity returned NULL but, nr_running = 1, force_idle=0
+[   31.693788] pick_next_entity returned NULL but, nr_running = 1, force_idle=0
+[   31.693806] pick_next_entity returned NULL but, nr_running = 1, force_idle=0
+[   31.693816] pick_next_entity returned NULL but, nr_running = 1, force_idle=0
+[   31.694182] pick_next_entity returned NULL but, nr_running = 1, force_idle=0
+[   31.694198] pick_next_entity returned NULL but, nr_running = 1, force_idle=0
+[   31.694943] pick_next_entity returned NULL but, nr_running = 1, force_idle=0
+[   31.694947] pick_next_entity returned NULL but, nr_running = 1, force_idle=0
+[   31.694965] pick_next_entity returned NULL but, nr_running = 1, force_idle=0
+[   31.694975] pick_next_entity returned NULL but, nr_running = 1, force_idle=0
+[   31.695181] pick_next_entity returned NULL but, nr_running = 1, force_idle=0
+[   31.695195] pick_next_entity returned NULL but, nr_running = 1, force_idle=0
+[   31.695200] pick_next_entity returned NULL but, nr_running = 1, force_idle=0
+[   31.696105] pick_next_entity returned NULL but, nr_running = 1, force_idle=0
+[   31.696109] pick_next_entity returned NULL but, nr_running = 1, force_idle=0
+[   31.696126] pick_next_entity returned NULL but, nr_running = 1, force_idle=0
+[   31.696135] pick_next_entity returned NULL but, nr_running = 1, force_idle=0
+[   31.696180] pick_next_entity returned NULL but, nr_running = 1, force_idle=0
+[   31.696198] pick_next_entity returned NULL but, nr_running = 1, force_idle=0
+[   31.696204] pick_next_entity returned NULL but, nr_running = 1, force_idle=0
+[   31.696215] pick_next_entity returned NULL but, nr_running = 1, force_idle=0
+[   31.697180] pick_next_entity returned NULL but, nr_running = 1, force_idle=0
+[   31.697191] pick_next_entity returned NULL but, nr_running = 1, force_idle=0
+[   31.697195] pick_next_entity returned NULL but, nr_running = 1, force_idle=0
+[   31.697267] pick_next_entity returned NULL but, nr_running = 1, force_idle=0
+[   31.697271] pick_next_entity returned NULL but, nr_running = 1, force_idle=0
+[   31.697280] pick_next_entity returned NULL but, nr_running = 1, force_idle=0
+[   31.697290] pick_next_entity returned NULL but, nr_running = 1, force_idle=0
+[   31.698191] pick_next_entity returned NULL but, nr_running = 1, force_idle=0
+[   37.884585] prctl success: chrome/2513 ffff9e392a5d4c40 (fork: 0)
+[   37.886451] prctl success: chrome/2513 ffff9e392a5d0f40 (fork: 1)
+[   37.886527] prctl success: chrome/2513 ffff9e392a5d2dc0 (fork: 1)
+[   37.886580] prctl success: chrome/2513 ffff9e38f77e3d00 (fork: 1)
+[   37.887704] prctl success: chrome/2513 ffff9e38f77e6ac0 (fork: 1)
+[   37.892488] prctl success: chrome/2513 ffff9e38f77e1e80 (fork: 1)
+[   37.892568] prctl success: ThreadPoolForeg/2515 ffff9e38f77e4c40 (fork: 1)
+[   37.893036] prctl success: chrome/2513 ffff9e38faa22dc0 (fork: 1)
+[   37.893318] prctl success: chrome/2513 ffff9e38faa20000 (fork: 1)
+[   37.893676] prctl success: chrome/2513 ffff9e38faa25b80 (fork: 1)
+[   37.893747] prctl success: chrome/2513 ffff9e38faa20f40 (fork: 1)
+[   38.444558] prctl success: ThreadPoolForeg/2367 ffff9e38faa24c40 (fork: 1)
+[   40.016027] prctl success: chrome/2535 ffff9e38faa26ac0 (fork: 0)
+[   40.017975] prctl success: chrome/2535 ffff9e3923adadc0 (fork: 1)
+[   40.018168] prctl success: chrome/2535 ffff9e3923addb80 (fork: 1)
+[   40.018281] prctl success: chrome/2535 ffff9e3923ad9e80 (fork: 1)
+[   40.020379] prctl success: chrome/2535 ffff9e38f774adc0 (fork: 1)
+[   40.025282] prctl success: ThreadPoolForeg/2537 ffff9e38f7748f40 (fork: 1)
+[   40.047361] prctl success: chrome/2535 ffff9e392b35bd00 (fork: 1)
+[   40.047902] prctl success: chrome/2535 ffff9e392b3aadc0 (fork: 1)
+[   40.048154] prctl success: chrome/2535 ffff9e392b3a8000 (fork: 1)
+[   40.048204] prctl success: chrome/2535 ffff9e392b3a9e80 (fork: 1)
+[   40.048238] prctl success: chrome/2535 ffff9e38f77d1e80 (fork: 1)
+[   40.064303] prctl success: chrome/2541 ffff9e38f774db80 (fork: 0)
+[   40.080273] prctl success: chrome/2541 ffff9e3902bbdb80 (fork: 1)
+[   40.080405] prctl success: chrome/2541 ffff9e3902bbeac0 (fork: 1)
+[   40.080467] prctl success: chrome/2541 ffff9e3902bb8000 (fork: 1)
+[   40.082822] prctl success: chrome/2541 ffff9e3902bbbd00 (fork: 1)
+[   40.089392] prctl success: ThreadPoolForeg/2548 ffff9e3902bb8f40 (fork: 1)
+[   40.114823] prctl success: chrome/2541 ffff9e38fcc65b80 (fork: 1)
+[   40.115493] prctl success: chrome/2541 ffff9e38f77d0000 (fork: 1)
+[   40.115611] prctl success: chrome/2541 ffff9e38f77d4c40 (fork: 1)
+[   40.115660] prctl success: chrome/2541 ffff9e38f77d2dc0 (fork: 1)
+[   40.115698] prctl success: chrome/2541 ffff9e38f77d6ac0 (fork: 1)
+[   40.232169] prctl success: chrome/2558 ffff9e38fcc62dc0 (fork: 0)
+[   40.247074] prctl success: chrome/2558 ffff9e3902bbcc40 (fork: 1)
+[   40.247210] prctl success: chrome/2558 ffff9e38fa8e9e80 (fork: 1)
+[   40.247346] prctl success: chrome/2558 ffff9e38fa8edb80 (fork: 1)
+[   40.258431] prctl success: chrome/2558 ffff9e38fa8eeac0 (fork: 1)
+[   40.265590] prctl success: ThreadPoolForeg/2560 ffff9e38fa8e8000 (fork: 1)
+[   40.309285] prctl success: chrome/2558 ffff9e38fa8ebd00 (fork: 1)
+[   40.309984] prctl success: chrome/2558 ffff9e38fa8b9e80 (fork: 1)
+[   40.310108] prctl success: chrome/2558 ffff9e38fa8beac0 (fork: 1)
+[   40.310171] prctl success: chrome/2558 ffff9e38fa8b8f40 (fork: 1)
+[   40.310214] prctl success: chrome/2558 ffff9e38fa8bbd00 (fork: 1)
+[   40.510632] prctl success: ThreadPoolForeg/2519 ffff9e38fccb0f40 (fork: 1)
+[   40.795051] prctl success: ThreadPoolForeg/2548 ffff9e392bd6bd00 (fork: 1)
+[   40.853776] prctl success: chrome/2541 ffff9e38fccb2dc0 (fork: 1)
+[   40.871182] prctl success: DedicatedWorker/2571 ffff9e38fccb4c40 (fork: 1)
+[   50.544003] prctl success: chrome/2644 ffff9e38f77e5b80 (fork: 0)
+[   50.549140] prctl success: chrome/2644 ffff9e38f77e0000 (fork: 1)
+[   50.549211] prctl success: chrome/2644 ffff9e38f77e2dc0 (fork: 1)
+[   50.549265] prctl success: chrome/2644 ffff9e38fa9d0f40 (fork: 1)
+[   50.550985] prctl success: chrome/2644 ffff9e38fa9d6ac0 (fork: 1)
+[   50.557345] prctl success: chrome/2644 ffff9e38fa9d2dc0 (fork: 1)
+[   50.557436] prctl success: ThreadPoolForeg/2646 ffff9e38fa8fadc0 (fork: 1)
+[   50.559033] prctl success: chrome/2644 ffff9e38fce0eac0 (fork: 1)
+[   50.559263] prctl success: chrome/2644 ffff9e38fce0bd00 (fork: 1)
+[   50.559381] prctl success: chrome/2644 ffff9e38fce09e80 (fork: 1)
+[   50.559497] prctl success: chrome/2644 ffff9e38fce08f40 (fork: 1)
+[   54.709616] prctl success: chrome/2644 ffff9e38fce0cc40 (fork: 1)
+[   66.375199] prctl success: chrome/2730 ffff9e38fa806ac0 (fork: 0)
+[   66.378830] prctl success: chrome/2730 ffff9e38faa01e80 (fork: 1)
+[   66.378900] prctl success: chrome/2730 ffff9e38faa03d00 (fork: 1)
+[   66.378972] prctl success: chrome/2730 ffff9e38faa05b80 (fork: 1)
+[   66.385526] prctl success: chrome/2730 ffff9e38faa00000 (fork: 1)
+[   66.385721] prctl success: ThreadPoolForeg/2732 ffff9e38fcc66ac0 (fork: 1)
+[   66.390860] prctl success: chrome/2730 ffff9e38faa02dc0 (fork: 1)
+[   66.391377] prctl success: chrome/2730 ffff9e38fcc63d00 (fork: 1)
+[   66.391463] prctl success: chrome/2730 ffff9e38fcc64c40 (fork: 1)
+[   66.391490] prctl success: chrome/2730 ffff9e38fcc61e80 (fork: 1)
+[   66.391519] prctl success: chrome/2730 ffff9e38fcc60f40 (fork: 1)
+[   66.532473] prctl success: ThreadPoolForeg/2735 ffff9e38fccb1e80 (fork: 1)
+[  102.192261] prctl success: chrome/2343 ffff9e38faa00000 (fork: 1)
+[  107.869084] prctl success: ThreadPoolForeg/2367 ffff9e38faa02dc0 (fork: 1)
+[  110.122872] prctl success: ThreadPoolForeg/2570 ffff9e38fccb0f40 (fork: 1)
+[  110.131569] prctl success: chrome/2513 ffff9e38fa9eeac0 (fork: 1)
+[  110.131665] prctl success: chrome/2513 ffff9e38fa9ecc40 (fork: 1)
+[  140.474210] prctl success: ThreadPoolForeg/2790 ffff9e3923b61e80 (fork: 1)
+[  161.888865] prctl success: chrome/2845 ffff9e38fa9e8f40 (fork: 0)
+[  161.894440] prctl success: chrome/2845 ffff9e38faa02dc0 (fork: 1)
+[  161.894553] prctl success: chrome/2845 ffff9e38faa06ac0 (fork: 1)
+[  161.894621] prctl success: chrome/2845 ffff9e38faa05b80 (fork: 1)
+[  161.895484] prctl success: chrome/2845 ffff9e38faa04c40 (fork: 1)
+[  161.901769] prctl success: chrome/2845 ffff9e38faa03d00 (fork: 1)
+[  161.901873] prctl success: ThreadPoolForeg/2847 ffff9e38faa01e80 (fork: 1)
+[  161.902405] prctl success: chrome/2845 ffff9e38fccb5b80 (fork: 1)
+[  161.902485] prctl success: chrome/2845 ffff9e38fccb1e80 (fork: 1)
+[  161.902520] prctl success: chrome/2845 ffff9e38fccb3d00 (fork: 1)
+[  161.902547] prctl success: chrome/2845 ffff9e3911dc0f40 (fork: 1)
+[  165.959977] prctl success: chrome/2845 ffff9e38f77d1e80 (fork: 1)
+[  193.962762] prctl success: ThreadPoolForeg/2519 ffff9e392bd68000 (fork: 1)
+[  193.991220] prctl success: ThreadPoolForeg/2570 ffff9e392bd68f40 (fork: 1)
+[  193.991492] prctl success: ThreadPoolForeg/2570 ffff9e392bd6adc0 (fork: 1)
+[  193.991822] prctl success: ThreadPoolForeg/2519 ffff9e38fa9eeac0 (fork: 1)
+[  230.160717] prctl success: chrome/2513 ffff9e38faa02dc0 (fork: 1)
+[  230.160753] prctl success: ThreadPoolForeg/2888 ffff9e38f7781e80 (fork: 1)
+[  235.213755] prctl success: chrome/2558 ffff9e38fa9e8f40 (fork: 1)
+[  235.213784] prctl success: ThreadPoolForeg/2560 ffff9e38f7782dc0 (fork: 1)
+[  286.961793] prctl success: ThreadPoolForeg/2890 ffff9e38fcc60f40 (fork: 1)
+[  286.985695] prctl success: ThreadPoolForeg/2927 ffff9e38fa9eeac0 (fork: 1)
+[  286.986879] prctl success: chrome/2513 ffff9e38fcc64c40 (fork: 1)
+[  318.895134] prctl success: ThreadPoolForeg/2376 ffff9e38fccb1e80 (fork: 1)
+[  330.614263] prctl success: chrome/3051 ffff9e38f7785b80 (fork: 0)
+[  330.615867] prctl success: chrome/3051 ffff9e38fcc64c40 (fork: 1)
+[  330.615916] prctl success: chrome/3051 ffff9e38fcc66ac0 (fork: 1)
+[  330.615984] prctl success: chrome/3051 ffff9e38fcc63d00 (fork: 1)
+[  330.616694] prctl success: chrome/3051 ffff9e39292dcc40 (fork: 1)
+[  330.621054] prctl success: chrome/3051 ffff9e39292d8f40 (fork: 1)
+[  330.622117] prctl success: chrome/3051 ffff9e38fa87db80 (fork: 1)
+[  330.622205] prctl success: chrome/3051 ffff9e38fa879e80 (fork: 1)
+[  330.622237] prctl success: chrome/3051 ffff9e38fa878f40 (fork: 1)
+[  330.622280] prctl success: chrome/3051 ffff9e38fa87adc0 (fork: 1)
+[  330.622991] prctl success: ThreadPoolForeg/3053 ffff9e38faa04c40 (fork: 1)
+[  334.677738] prctl success: chrome/3051 ffff9e38fa9e8000 (fork: 1)
+[  339.744798] prctl success: ThreadPoolForeg/2367 ffff9e38faa03d00 (fork: 1)
+[  346.713803] prctl success: ThreadPoolForeg/2984 ffff9e38fa9e8000 (fork: 1)
+[  346.713856] prctl success: chrome/2541 ffff9e38f0801e80 (fork: 1)
+[  346.721716] prctl success: chrome/2513 ffff9e38faa04c40 (fork: 1)
+[  399.710311] prctl success: ThreadPoolForeg/2367 ffff9e38faa03d00 (fork: 1)
+[  412.877776] prctl success: ThreadPoolForeg/3083 ffff9e38f7783d00 (fork: 1)
+[  412.877947] prctl success: ThreadPoolForeg/3083 ffff9e38fcc64c40 (fork: 1)
+[  412.894406] prctl success: ThreadPoolForeg/3082 ffff9e38f0806ac0 (fork: 1)
+[  412.894738] prctl success: chrome/2541 ffff9e38fcc61e80 (fork: 1)
+[  500.716584] prctl success: ThreadPoolForeg/3145 ffff9e38f7786ac0 (fork: 1)
+[  500.719715] prctl success: chrome/2513 ffff9e38faa03d00 (fork: 1)
+[  593.750411] prctl success: ThreadPoolForeg/3232 ffff9e38f7784c40 (fork: 1)
+[  593.750740] prctl success: chrome/2513 ffff9e38fcc63d00 (fork: 1)
+[  593.768169] prctl success: ThreadPoolForeg/3148 ffff9e38fcc66ac0 (fork: 1)
+[  618.927367] prctl success: ThreadPoolForeg/2376 ffff9e38f0804c40 (fork: 1)
+[  684.776715] prctl success: ThreadPoolForeg/3148 ffff9e38fcc60f40 (fork: 1)
+[  684.776780] prctl success: chrome/2541 ffff9e38f7786ac0 (fork: 1)
+[  684.781366] prctl success: chrome/2513 ffff9e38f0804c40 (fork: 1)
+[  684.781411] prctl success: chrome/2513 ffff9e38f0800f40 (fork: 1)
+[  759.587161] prctl success: ThreadPoolForeg/3440 ffff9e38f0806ac0 (fork: 1)
+[  838.388617] prctl success: chrome/2541 ffff9e38f7782dc0 (fork: 1)
+[  838.388625] prctl success: ThreadPoolForeg/3438 ffff9e38fcc61e80 (fork: 1)
+[  838.392679] prctl success: ThreadPoolForeg/3440 ffff9e38fcc63d00 (fork: 1)
+[  838.407602] prctl success: ThreadPoolForeg/3440 ffff9e38fcc66ac0 (fork: 1)
+[  918.891689] prctl success: ThreadPoolForeg/2376 ffff9e38f0806ac0 (fork: 1)
+[  932.496686] prctl success: ThreadPoolForeg/3440 ffff9e38fcc60f40 (fork: 1)
+[  932.525192] prctl success: ThreadPoolForeg/3440 ffff9e38fcc63d00 (fork: 1)
+[  932.979787] prctl success: chrome/2541 ffff9e392cf98f40 (fork: 1)
+[  932.979900] prctl success: chrome/2558 ffff9e38f0802dc0 (fork: 1)
+[  932.983542] prctl success: chrome/2210 ffff9e38f7786ac0 (fork: 1)
+[  932.985481] prctl success: chrome/2513 ffff9e38fccb5b80 (fork: 1)
+[  999.409669] prctl success: ThreadPoolForeg/2367 ffff9e392cef8000 (fork: 1)
+[ 1021.702758] prctl success: ThreadPoolForeg/3684 ffff9e39292dcc40 (fork: 1)
+[ 1021.702910] prctl success: ThreadPoolForeg/3684 ffff9e39292d8f40 (fork: 1)
+[ 1021.713510] prctl success: ThreadPoolForeg/3588 ffff9e38fcc60f40 (fork: 1)
+[ 1138.285936] prctl success: chrome/2513 ffff9e38fccb0f40 (fork: 1)
+[ 1138.285978] prctl success: chrome/2513 ffff9e38fccb3d00 (fork: 1)
+[ 1218.855327] prctl success: ThreadPoolForeg/2376 ffff9e38fccb0f40 (fork: 1)
+[ 1298.635275] prctl success: ThreadPoolForeg/3588 ffff9e392bd68000 (fork: 1)
+[ 1298.637990] prctl success: chrome/2541 ffff9e392b350000 (fork: 1)
+[ 1298.640681] prctl success: ThreadPoolForeg/3684 ffff9e392b350f40 (fork: 1)
+[ 1298.640896] prctl success: ThreadPoolForeg/3684 ffff9e392b352dc0 (fork: 1)
+[ 1492.073204] prctl success: ThreadPoolForeg/4074 ffff9e38f776db80 (fork: 1)
+[ 1492.073746] prctl success: ThreadPoolForeg/4256 ffff9e39292dcc40 (fork: 1)
+[ 1518.826936] prctl success: ThreadPoolForeg/2376 ffff9e38fccb0f40 (fork: 1)
+[ 1644.275529] prctl success: ThreadPoolForeg/4256 ffff9e392b351e80 (fork: 1)
+[ 1644.281524] prctl success: ThreadPoolForeg/4256 ffff9e392b352dc0 (fork: 1)
+[ 1644.284413] prctl success: ThreadPoolForeg/4072 ffff9e392b350000 (fork: 1)
+[ 1818.811501] prctl success: ThreadPoolForeg/2376 ffff9e38faa01e80 (fork: 1)
+[ 1825.821814] prctl success: ThreadPoolForeg/4418 ffff9e38f776bd00 (fork: 1)
+[ 1825.822012] prctl success: ThreadPoolForeg/4418 ffff9e38f7768000 (fork: 1)
+[ 1960.577604] CPU1: Core temperature above threshold, cpu clock throttled (total events = 165)
+[ 1960.577605] CPU0: Core temperature above threshold, cpu clock throttled (total events = 165)
+[ 1960.577606] CPU3: Package temperature above threshold, cpu clock throttled (total events = 173)
+[ 1960.577608] CPU0: Package temperature above threshold, cpu clock throttled (total events = 169)
+[ 1960.577609] CPU2: Package temperature above threshold, cpu clock throttled (total events = 173)
+[ 1960.577611] CPU1: Package temperature above threshold, cpu clock throttled (total events = 169)
+[ 1960.658734] CPU0: Core temperature/speed normal
+[ 1960.658734] CPU1: Core temperature/speed normal
+[ 1960.658735] CPU2: Package temperature/speed normal
+[ 1960.658736] CPU3: Package temperature/speed normal
+[ 1960.658738] CPU1: Package temperature/speed normal
+[ 1960.658740] CPU0: Package temperature/speed normal
+[ 2017.553210] perf: interrupt took too long (2507 > 2500), lowering kernel.perf_event_max_sample_rate to 79000
+[ 2022.539707] prctl success: ThreadPoolForeg/4418 ffff9e38f776eac0 (fork: 1)
+[ 2022.540418] prctl success: ThreadPoolForeg/4418 ffff9e38f7768000 (fork: 1)
+[ 2022.559480] prctl success: ThreadPoolForeg/4072 ffff9e392a664c40 (fork: 1)
+[ 2118.775636] prctl success: ThreadPoolForeg/2376 ffff9e38f76eeac0 (fork: 1)
+[ 2202.932244] prctl success: ThreadPoolForeg/4818 ffff9e38f776eac0 (fork: 1)
+[ 2202.932870] prctl success: ThreadPoolForeg/5013 ffff9e38f76e9e80 (fork: 1)
+[ 2412.092195] prctl success: ThreadPoolForeg/4818 ffff9e38fcc63d00 (fork: 1)
+[ 2412.092376] prctl success: ThreadPoolForeg/4818 ffff9e38f76e9e80 (fork: 1)
+[ 2418.740852] prctl success: ThreadPoolForeg/2376 ffff9e38f76eadc0 (fork: 1)
+[ 2606.802434] prctl success: ThreadPoolForeg/4072 ffff9e38f77deac0 (fork: 1)
+[ 2606.802497] prctl success: chrome/2541 ffff9e38f7768f40 (fork: 1)
+[ 2606.803960] prctl success: ThreadPoolForeg/4818 ffff9e38f776db80 (fork: 1)
+[ 2606.807317] prctl success: ThreadPoolForeg/5423 ffff9e38f76e9e80 (fork: 1)
+[ 2718.735316] prctl success: ThreadPoolForeg/2376 ffff9e38f76e9e80 (fork: 1)
+[ 2848.642004] prctl success: ThreadPoolForeg/4818 ffff9e38fcc63d00 (fork: 1)
+[ 2848.642283] prctl success: ThreadPoolForeg/4818 ffff9e38fcc60f40 (fork: 1)
+[ 2848.653280] prctl success: ThreadPoolForeg/5422 ffff9e38f776bd00 (fork: 1)
+[ 2848.653515] prctl success: ThreadPoolForeg/5422 ffff9e38f776adc0 (fork: 1)
+[ 3018.698450] prctl success: ThreadPoolForeg/2376 ffff9e38f76ecc40 (fork: 1)
+[ 3107.979051] prctl success: ThreadPoolForeg/5674 ffff9e392a5c3d00 (fork: 1)
+[ 3248.310124] prctl success: ThreadPoolForeg/2367 ffff9e38f7768000 (fork: 1)
+[ 3297.821569] PM: suspend entry (deep)
+[ 3297.821574] PM: Syncing filesystems ... done.
+[ 3297.838578] Freezing user space processes ... (elapsed 0.001 seconds) done.
+[ 3297.839946] OOM killer disabled.
+[ 3297.839948] Freezing remaining freezable tasks ... (elapsed 0.001 seconds) done.
+[ 3297.853931] rfkill rfkill1: calling rfkill_suspend+0x0/0x1d @ 6193, parent: hci0
+[ 3297.853937] rfkill rfkill1: rfkill_suspend+0x0/0x1d returned 0 after 0 usecs
+[ 3297.853943] rfkill rfkill0: calling rfkill_suspend+0x0/0x1d @ 6193, parent: phy0
+[ 3297.853945] rfkill rfkill0: rfkill_suspend+0x0/0x1d returned 0 after 0 usecs
+[ 3297.853954] leds phy0-led: calling led_suspend+0x0/0x2a @ 6193, parent: 0000:01:00.0
+[ 3297.853957] leds phy0-led: led_suspend+0x0/0x2a returned 0 after 0 usecs
+[ 3297.853965] ieee80211 phy0: calling wiphy_suspend+0x0/0x2af [cfg80211] @ 4675, parent: 0000:01:00.0
+[ 3297.853970] wlan0: deauthenticating from b0:7f:b9:fd:4e:75 by local choice (Reason: 3=DEAUTH_LEAVING)
+[ 3297.853978] platform regulatory.0: calling platform_pm_suspend+0x0/0x49 @ 6193, parent: platform
+[ 3297.853981] platform regulatory.0: platform_pm_suspend+0x0/0x49 returned 0 after 0 usecs
+[ 3297.854309] cros-ec-pd-update cros-ec-pd-update.22.auto: calling platform_pm_suspend+0x0/0x49 @ 6193, parent: cros-ec-dev.7.auto
+[ 3297.854314] cros-ec-pd-update cros-ec-pd-update.22.auto: platform_pm_suspend+0x0/0x49 returned 0 after 0 usecs
+[ 3297.854317] cros-ec-pd-update cros-ec-pd-update.6.auto: calling platform_pm_suspend+0x0/0x49 @ 6193, parent: cros-ec-dev.0.auto
+[ 3297.854320] cros-ec-pd-update cros-ec-pd-update.6.auto: platform_pm_suspend+0x0/0x49 returned 0 after 0 usecs
+[ 3297.854326] platform microcode: calling platform_pm_suspend+0x0/0x49 @ 6193, parent: platform
+[ 3297.854328] platform microcode: platform_pm_suspend+0x0/0x49 returned 0 after 0 usecs
+[ 3297.854335] snd-soc-dummy snd-soc-dummy: calling platform_pm_suspend+0x0/0x49 @ 6193, parent: platform
+[ 3297.854338] snd-soc-dummy snd-soc-dummy: platform_pm_suspend+0x0/0x49 returned 0 after 0 usecs
+[ 3297.854350] leds chromeos::kbd_backlight: calling led_suspend+0x0/0x2a @ 6193, parent: GOOG0002:00
+[ 3297.854363] usb 1-2: calling usb_dev_suspend+0x0/0x14 @ 5261, parent: usb1
+[ 3297.854370] usb 1-2: usb_dev_suspend+0x0/0x14 returned 0 after 0 usecs
+[ 3297.854430] usb 1-3: calling usb_dev_suspend+0x0/0x14 @ 6195, parent: usb1
+[ 3297.855030] leds chromeos::kbd_backlight: led_suspend+0x0/0x2a returned 0 after 657 usecs
+[ 3297.855058] cros-ec-sysfs cros-ec-sysfs.21.auto: calling platform_pm_suspend+0x0/0x49 @ 6193, parent: cros-ec-dev.7.auto
+[ 3297.855062] cros-ec-sysfs cros-ec-sysfs.21.auto: platform_pm_suspend+0x0/0x49 returned 0 after 0 usecs
+[ 3297.855066] cros-ec-pd-sysfs cros-ec-pd-sysfs.20.auto: calling platform_pm_suspend+0x0/0x49 @ 6193, parent: cros-ec-dev.7.auto
+[ 3297.855069] cros-ec-pd-sysfs cros-ec-pd-sysfs.20.auto: platform_pm_suspend+0x0/0x49 returned 0 after 0 usecs
+[ 3297.855072] platform cros-ec-lightbar.19.auto: calling platform_pm_suspend+0x0/0x49 @ 6193, parent: cros-ec-dev.7.auto
+[ 3297.855074] platform cros-ec-lightbar.19.auto: platform_pm_suspend+0x0/0x49 returned 0 after 0 usecs
+[ 3297.855077] cros-ec-debugfs cros-ec-debugfs.18.auto: calling platform_pm_suspend+0x0/0x49 @ 6193, parent: cros-ec-dev.7.auto
+[ 3297.855081] cros-ec-debugfs cros-ec-debugfs.18.auto: platform_pm_suspend+0x0/0x49 returned 0 after 1 usecs
+[ 3297.855084] cros-ec-chardev cros-ec-chardev.17.auto: calling platform_pm_suspend+0x0/0x49 @ 6193, parent: cros-ec-dev.7.auto
+[ 3297.855087] cros-ec-chardev cros-ec-chardev.17.auto: platform_pm_suspend+0x0/0x49 returned 0 after 0 usecs
+[ 3297.855090] cros-usbpd-logger cros-usbpd-logger.16.auto: calling platform_pm_suspend+0x0/0x49 @ 6193, parent: cros-ec-dev.7.auto
+[ 3297.855093] cros-usbpd-logger cros-usbpd-logger.16.auto: platform_pm_suspend+0x0/0x49 returned 0 after 0 usecs
+[ 3297.855100] cros-usbpd-charger cros-usbpd-charger.15.auto: calling platform_pm_suspend+0x0/0x49 @ 6193, parent: cros-ec-dev.7.auto
+[ 3297.855104] cros-usbpd-charger cros-usbpd-charger.15.auto: platform_pm_suspend+0x0/0x49 returned 0 after 0 usecs
+[ 3297.855109] cros-ec-ring cros-ec-ring.14.auto: calling platform_pm_suspend+0x0/0x49 @ 6193, parent: cros-ec-dev.7.auto
+[ 3297.855112] cros-ec-ring cros-ec-ring.14.auto: platform_pm_suspend+0x0/0x49 returned 0 after 0 usecs
+[ 3297.855159] cros-ec-activity cros-ec-activity.13.auto: calling platform_pm_suspend+0x0/0x49 @ 6193, parent: cros-ec-dev.7.auto
+[ 3297.855163] cros-ec-activity cros-ec-activity.13.auto: platform_pm_suspend+0x0/0x49 returned 0 after 0 usecs
+[ 3297.855167] cros-ec-light-prox cros-ec-light.12.auto: calling platform_pm_suspend+0x0/0x49 @ 6193, parent: cros-ec-dev.7.auto
+[ 3297.855169] cros-ec-light-prox cros-ec-light.12.auto: platform_pm_suspend+0x0/0x49 returned 0 after 0 usecs
+[ 3297.855173] cros-ec-sensors cros-ec-mag.11.auto: calling platform_pm_suspend+0x0/0x49 @ 6193, parent: cros-ec-dev.7.auto
+[ 3297.855175] cros-ec-sensors cros-ec-mag.11.auto: platform_pm_suspend+0x0/0x49 returned 0 after 0 usecs
+[ 3297.855179] cros-ec-sensors cros-ec-gyro.10.auto: calling platform_pm_suspend+0x0/0x49 @ 6193, parent: cros-ec-dev.7.auto
+[ 3297.855181] cros-ec-sensors cros-ec-gyro.10.auto: platform_pm_suspend+0x0/0x49 returned 0 after 0 usecs
+[ 3297.855184] cros-ec-sensors cros-ec-accel.9.auto: calling platform_pm_suspend+0x0/0x49 @ 6193, parent: cros-ec-dev.7.auto
+[ 3297.855187] cros-ec-sensors cros-ec-accel.9.auto: platform_pm_suspend+0x0/0x49 returned 0 after 0 usecs
+[ 3297.855190] cros-ec-sensors cros-ec-accel.8.auto: calling platform_pm_suspend+0x0/0x49 @ 6193, parent: cros-ec-dev.7.auto
+[ 3297.855192] cros-ec-sensors cros-ec-accel.8.auto: platform_pm_suspend+0x0/0x49 returned 0 after 0 usecs
+[ 3297.855198] cros-ec-dev cros-ec-dev.7.auto: calling platform_pm_suspend+0x0/0x49 @ 6193, parent: GOOG0004:00
+[ 3297.855200] cros-ec-dev cros-ec-dev.7.auto: platform_pm_suspend+0x0/0x49 returned 0 after 0 usecs
+[ 3297.855203] cros-ec-sysfs cros-ec-sysfs.5.auto: calling platform_pm_suspend+0x0/0x49 @ 6193, parent: cros-ec-dev.0.auto
+[ 3297.855206] cros-ec-sysfs cros-ec-sysfs.5.auto: platform_pm_suspend+0x0/0x49 returned 0 after 0 usecs
+[ 3297.855209] cros-ec-pd-sysfs cros-ec-pd-sysfs.4.auto: calling platform_pm_suspend+0x0/0x49 @ 6193, parent: cros-ec-dev.0.auto
+[ 3297.855211] cros-ec-pd-sysfs cros-ec-pd-sysfs.4.auto: platform_pm_suspend+0x0/0x49 returned 0 after 0 usecs
+[ 3297.855214] platform cros-ec-lightbar.3.auto: calling platform_pm_suspend+0x0/0x49 @ 6193, parent: cros-ec-dev.0.auto
+[ 3297.855217] platform cros-ec-lightbar.3.auto: platform_pm_suspend+0x0/0x49 returned 0 after 0 usecs
+[ 3297.855220] cros-ec-debugfs cros-ec-debugfs.2.auto: calling platform_pm_suspend+0x0/0x49 @ 6193, parent: cros-ec-dev.0.auto
+[ 3297.855222] cros-ec-debugfs cros-ec-debugfs.2.auto: platform_pm_suspend+0x0/0x49 returned 0 after 0 usecs
+[ 3297.855225] cros-ec-chardev cros-ec-chardev.1.auto: calling platform_pm_suspend+0x0/0x49 @ 6193, parent: cros-ec-dev.0.auto
+[ 3297.855228] cros-ec-chardev cros-ec-chardev.1.auto: platform_pm_suspend+0x0/0x49 returned 0 after 0 usecs
+[ 3297.855232] cros-ec-dev cros-ec-dev.0.auto: calling platform_pm_suspend+0x0/0x49 @ 6193, parent: i2c-GOOG0008:00
+[ 3297.855235] cros-ec-dev cros-ec-dev.0.auto: platform_pm_suspend+0x0/0x49 returned 0 after 0 usecs
+[ 3297.855240] input input10: calling input_dev_suspend+0x0/0x43 @ 6193, parent: GOOG0006:00
+[ 3297.855243] input input10: input_dev_suspend+0x0/0x43 returned 0 after 0 usecs
+[ 3297.855247] ramoops ramoops.0: calling platform_pm_suspend+0x0/0x49 @ 6193, parent: platform
+[ 3297.855249] ramoops ramoops.0: platform_pm_suspend+0x0/0x49 returned 0 after 0 usecs
+[ 3297.855252] intel_pmc_core intel_pmc_core.0: calling platform_pm_suspend+0x0/0x49 @ 6193, parent: platform
+[ 3297.855255] intel_pmc_core intel_pmc_core.0: platform_pm_suspend+0x0/0x49 returned 0 after 0 usecs
+[ 3297.855261] input input9: calling input_dev_suspend+0x0/0x43 @ 6193, parent: 0018:18D1:5028.0002
+[ 3297.855264] input input9: input_dev_suspend+0x0/0x43 returned 0 after 0 usecs
+[ 3297.855272] input input6: calling input_dev_suspend+0x0/0x43 @ 6193, parent: 0018:2D1F:5143.0001
+[ 3297.855276] input input6: input_dev_suspend+0x0/0x43 returned 0 after 0 usecs
+[ 3297.855281] input input4: calling input_dev_suspend+0x0/0x43 @ 6193, parent: 0018:2D1F:5143.0001
+[ 3297.855283] input input4: input_dev_suspend+0x0/0x43 returned 0 after 0 usecs
+[ 3297.855310] gsmi gsmi: calling platform_pm_suspend+0x0/0x49 @ 6193, parent: platform
+[ 3297.855312] gsmi gsmi: platform_pm_suspend+0x0/0x49 returned 0 after 0 usecs
+[ 3297.855318] leds mmc0::: calling led_suspend+0x0/0x2a @ 6193, parent: 0000:00:1e.4
+[ 3297.855321] leds mmc0::: led_suspend+0x0/0x2a returned 0 after 0 usecs
+[ 3297.855326] leds input3::scrolllock: calling led_suspend+0x0/0x2a @ 6193, parent: input3
+[ 3297.855328] leds input3::scrolllock: led_suspend+0x0/0x2a returned 0 after 0 usecs
+[ 3297.855331] leds input3::capslock: calling led_suspend+0x0/0x2a @ 6193, parent: input3
+[ 3297.855334] leds input3::capslock: led_suspend+0x0/0x2a returned 0 after 0 usecs
+[ 3297.855337] leds input3::numlock: calling led_suspend+0x0/0x2a @ 6193, parent: input3
+[ 3297.855340] leds input3::numlock: led_suspend+0x0/0x2a returned 0 after 0 usecs
+[ 3297.855344] input input3: calling input_dev_suspend+0x0/0x43 @ 6193, parent: serio0
+[ 3297.855347] input input3: input_dev_suspend+0x0/0x43 returned 0 after 0 usecs
+[ 3297.855357] coretemp coretemp.0: calling platform_pm_suspend+0x0/0x49 @ 6193, parent: platform
+[ 3297.855359] coretemp coretemp.0: platform_pm_suspend+0x0/0x49 returned 0 after 0 usecs
+[ 3297.855364] iTCO_wdt iTCO_wdt: calling platform_pm_suspend+0x0/0x49 @ 6193, parent: 0000:00:1f.4
+[ 3297.855367] iTCO_wdt iTCO_wdt: platform_pm_suspend+0x0/0x49 returned 0 after 0 usecs
+[ 3297.855377] atkbd serio0: calling serio_suspend+0x0/0x19 @ 6193, parent: i8042
+[ 3297.855554] atkbd serio0: serio_suspend+0x0/0x19 returned 0 after 170 usecs
+[ 3297.855558] i8042 i8042: calling platform_pm_suspend+0x0/0x49 @ 6193, parent: platform
+[ 3297.857356] i8042 i8042: platform_pm_suspend+0x0/0x49 returned 0 after 1753 usecs
+[ 3297.857369] platform intel_xhci_usb_sw: calling platform_pm_suspend+0x0/0x49 @ 6193, parent: 0000:00:14.0
+[ 3297.857372] platform intel_xhci_usb_sw: platform_pm_suspend+0x0/0x49 returned 0 after 0 usecs
+[ 3297.857378] usb usb2: calling usb_dev_suspend+0x0/0x14 @ 6196, parent: 0000:00:14.0
+[ 3297.857386] platform Fixed MDIO bus.0: calling platform_pm_suspend+0x0/0x49 @ 6193, parent: platform
+[ 3297.857389] platform Fixed MDIO bus.0: platform_pm_suspend+0x0/0x49 returned 0 after 0 usecs
+[ 3297.857397] pxa2xx-spi pxa2xx-spi.6: calling platform_pm_suspend+0x0/0x49 @ 6193, parent: 0000:00:1e.2
+[ 3297.857405] pxa2xx-spi pxa2xx-spi.6: platform_pm_suspend+0x0/0x49 returned 0 after 4 usecs
+[ 3297.857411] idma64 idma64.6: calling platform_pm_suspend+0x0/0x49 @ 6193, parent: 0000:00:1e.2
+[ 3297.857416] idma64 idma64.6: platform_pm_suspend+0x0/0x49 returned 0 after 2 usecs
+[ 3297.857419] platform dw-apb-uart.5: calling platform_pm_suspend+0x0/0x49 @ 6193, parent: 0000:00:1e.0
+[ 3297.857422] platform dw-apb-uart.5: platform_pm_suspend+0x0/0x49 returned 0 after 0 usecs
+[ 3297.857426] idma64 idma64.5: calling platform_pm_suspend+0x0/0x49 @ 6193, parent: 0000:00:1e.0
+[ 3297.857830] idma64 idma64.5: platform_pm_suspend+0x0/0x49 returned 0 after 392 usecs
+[ 3297.857886] i2c_designware i2c_designware.4: calling platform_pm_suspend+0x0/0x49 @ 6193, parent: 0000:00:19.2
+[ 3297.857889] i2c_designware i2c_designware.4: platform_pm_suspend+0x0/0x49 returned 0 after 0 usecs
+[ 3297.857892] platform dw-apb-uart.3: calling platform_pm_suspend+0x0/0x49 @ 6193, parent: 0000:00:19.0
+[ 3297.857894] platform dw-apb-uart.3: platform_pm_suspend+0x0/0x49 returned 0 after 0 usecs
+[ 3297.857905] cros-ec-i2c i2c-GOOG0008:00: calling acpi_subsys_suspend+0x0/0x55 @ 6197, parent: i2c-8
+[ 3297.857909] cros-ec-i2c i2c-GOOG0008:00: acpi_subsys_suspend+0x0/0x55 returned 0 after 0 usecs
+[ 3297.857911] i2c_hid i2c-ACPI0C50:00: calling acpi_subsys_suspend+0x0/0x55 @ 5261, parent: i2c-8
+[ 3297.860871] i2c_hid i2c-ACPI0C50:00: acpi_subsys_suspend+0x0/0x55 returned 0 after 2887 usecs
+[ 3297.860885] i2c_designware i2c_designware.2: calling platform_pm_suspend+0x0/0x49 @ 6193, parent: 0000:00:15.2
+[ 3297.860890] i2c_designware i2c_designware.2: platform_pm_suspend+0x0/0x49 returned 0 after 0 usecs
+[ 3297.860895] idma64 idma64.2: calling platform_pm_suspend+0x0/0x49 @ 6193, parent: 0000:00:15.2
+[ 3297.860900] idma64 idma64.2: platform_pm_suspend+0x0/0x49 returned 0 after 1 usecs
+[ 3297.860911] cr50_i2c i2c-GOOG0005:00: calling acpi_subsys_suspend+0x0/0x55 @ 5261, parent: i2c-7
+[ 3297.867152] usb usb2: usb_dev_suspend+0x0/0x14 returned 0 after 9543 usecs
+[ 3297.880332] ieee80211 phy0: wiphy_suspend+0x0/0x2af [cfg80211] returned 0 after 25747 usecs
+[ 3297.925230] cr50_i2c i2c-GOOG0005:00: acpi_subsys_suspend+0x0/0x55 returned 0 after 62825 usecs
+[ 3297.925329] i2c_designware i2c_designware.1: calling platform_pm_suspend+0x0/0x49 @ 6193, parent: 0000:00:15.1
+[ 3297.925347] i2c_designware i2c_designware.1: platform_pm_suspend+0x0/0x49 returned 0 after 0 usecs
+[ 3297.925362] idma64 idma64.1: calling platform_pm_suspend+0x0/0x49 @ 6193, parent: 0000:00:15.1
+[ 3297.925380] idma64 idma64.1: platform_pm_suspend+0x0/0x49 returned 0 after 9 usecs
+[ 3297.925414] i2c_hid i2c-WCOM50C1:00: calling acpi_subsys_suspend+0x0/0x55 @ 5261, parent: i2c-6
+[ 3297.928715] i2c_hid i2c-WCOM50C1:00: acpi_subsys_suspend+0x0/0x55 returned 0 after 3204 usecs
+[ 3297.928814] i2c_designware i2c_designware.0: calling platform_pm_suspend+0x0/0x49 @ 6193, parent: 0000:00:15.0
+[ 3297.928829] i2c_designware i2c_designware.0: platform_pm_suspend+0x0/0x49 returned 0 after 0 usecs
+[ 3297.928845] idma64 idma64.0: calling platform_pm_suspend+0x0/0x49 @ 6193, parent: 0000:00:15.0
+[ 3297.928863] idma64 idma64.0: platform_pm_suspend+0x0/0x49 returned 0 after 9 usecs
+[ 3297.928901] platform vgem: calling platform_pm_suspend+0x0/0x49 @ 6193, parent: platform
+[ 3297.928909] platform vgem: platform_pm_suspend+0x0/0x49 returned 0 after 0 usecs
+[ 3297.928932] backlight intel_backlight: calling backlight_suspend+0x0/0x78 @ 6193, parent: card0-eDP-1
+[ 3297.928943] backlight intel_backlight: backlight_suspend+0x0/0x78 returned 0 after 0 usecs
+[ 3297.928984] input input2: calling input_dev_suspend+0x0/0x43 @ 6193, parent: LNXPWRBN:00
+[ 3297.928995] input input2: input_dev_suspend+0x0/0x43 returned 0 after 0 usecs
+[ 3297.929008] input input1: calling input_dev_suspend+0x0/0x43 @ 6193, parent: PNP0C0D:00
+[ 3297.929051] input input1: input_dev_suspend+0x0/0x43 returned 0 after 0 usecs
+[ 3297.929064] input input0: calling input_dev_suspend+0x0/0x43 @ 6193, parent: PNP0C0C:00
+[ 3297.929074] input input0: input_dev_suspend+0x0/0x43 returned 0 after 0 usecs
+[ 3297.929128] alarmtimer alarmtimer: calling platform_pm_suspend+0x0/0x49 @ 6193, parent: platform
+[ 3297.929143] alarmtimer alarmtimer: platform_pm_suspend+0x0/0x49 returned 0 after 1 usecs
+[ 3297.929159] platform platform-framebuffer.0: calling platform_pm_suspend+0x0/0x49 @ 6193, parent: platform
+[ 3297.929168] platform platform-framebuffer.0: platform_pm_suspend+0x0/0x49 returned 0 after 0 usecs
+[ 3297.929208] i8042 kbd 00:05: calling pnp_bus_suspend+0x0/0x14 @ 6193, parent: pnp0
+[ 3297.929218] i8042 kbd 00:05: pnp_bus_suspend+0x0/0x14 returned 0 after 1 usecs
+[ 3297.929227] system 00:04: calling pnp_bus_suspend+0x0/0x14 @ 6193, parent: pnp0
+[ 3297.929235] system 00:04: pnp_bus_suspend+0x0/0x14 returned 0 after 0 usecs
+[ 3297.929244] system 00:03: calling pnp_bus_suspend+0x0/0x14 @ 6193, parent: pnp0
+[ 3297.929252] system 00:03: pnp_bus_suspend+0x0/0x14 returned 0 after 0 usecs
+[ 3297.929263] rtc_cmos 00:02: calling pnp_bus_suspend+0x0/0x14 @ 6193, parent: pnp0
+[ 3297.929342] rtc_cmos 00:02: pnp_bus_suspend+0x0/0x14 returned 0 after 69 usecs
+[ 3297.929351] system 00:01: calling pnp_bus_suspend+0x0/0x14 @ 6193, parent: pnp0
+[ 3297.929359] system 00:01: pnp_bus_suspend+0x0/0x14 returned 0 after 0 usecs
+[ 3297.929368] system 00:00: calling pnp_bus_suspend+0x0/0x14 @ 6193, parent: pnp0
+[ 3297.929375] system 00:00: pnp_bus_suspend+0x0/0x14 returned 0 after 0 usecs
+[ 3297.929392] platform chromeos_acpi: calling platform_pm_suspend+0x0/0x49 @ 6193, parent: platform
+[ 3297.929401] platform chromeos_acpi: platform_pm_suspend+0x0/0x49 returned 0 after 0 usecs
+[ 3297.929417] button LNXPWRBN:00: calling acpi_button_suspend+0x0/0x15 @ 6193, parent: LNXSYSTM:00
+[ 3297.929428] button LNXPWRBN:00: acpi_button_suspend+0x0/0x15 returned 0 after 0 usecs
+[ 3297.929455] coreboot_table_acpi BOOT0000:00: calling acpi_subsys_suspend+0x0/0x55 @ 6193, parent: platform
+[ 3297.929466] coreboot_table_acpi BOOT0000:00: acpi_subsys_suspend+0x0/0x55 returned 0 after 1 usecs
+[ 3297.929476] platform GGL0001:00: calling platform_pm_suspend+0x0/0x49 @ 6193, parent: platform
+[ 3297.929484] platform GGL0001:00: platform_pm_suspend+0x0/0x49 returned 0 after 0 usecs
+[ 3297.929496] int3403 thermal INT3403:04: calling acpi_subsys_suspend+0x0/0x55 @ 6193, parent: INT3400:00
+[ 3297.929506] int3403 thermal INT3403:04: acpi_subsys_suspend+0x0/0x55 returned 0 after 0 usecs
+[ 3297.929516] int3403 thermal INT3403:03: calling acpi_subsys_suspend+0x0/0x55 @ 6193, parent: INT3400:00
+[ 3297.929526] int3403 thermal INT3403:03: acpi_subsys_suspend+0x0/0x55 returned 0 after 0 usecs
+[ 3297.929537] int3403 thermal INT3403:02: calling acpi_subsys_suspend+0x0/0x55 @ 6193, parent: INT3400:00
+[ 3297.929546] int3403 thermal INT3403:02: acpi_subsys_suspend+0x0/0x55 returned 0 after 0 usecs
+[ 3297.929556] int3403 thermal INT3403:01: calling acpi_subsys_suspend+0x0/0x55 @ 6193, parent: INT3400:00
+[ 3297.929566] int3403 thermal INT3403:01: acpi_subsys_suspend+0x0/0x55 returned 0 after 0 usecs
+[ 3297.929576] int3403 thermal INT3403:00: calling acpi_subsys_suspend+0x0/0x55 @ 6193, parent: INT3400:00
+[ 3297.929586] int3403 thermal INT3403:00: acpi_subsys_suspend+0x0/0x55 returned 0 after 0 usecs
+[ 3297.929598] int3400 thermal INT3400:00: calling acpi_subsys_suspend+0x0/0x55 @ 6193, parent: platform
+[ 3297.929608] int3400 thermal INT3400:00: acpi_subsys_suspend+0x0/0x55 returned 0 after 0 usecs
+[ 3297.929619] chromeos-keyboard-leds GOOG0002:00: calling acpi_subsys_suspend+0x0/0x55 @ 6193, parent: platform
+[ 3297.929629] chromeos-keyboard-leds GOOG0002:00: acpi_subsys_suspend+0x0/0x55 returned 0 after 0 usecs
+[ 3297.929640] chromeos_pstore GOOG9999:00: calling acpi_subsys_suspend+0x0/0x55 @ 6193, parent: platform
+[ 3297.929649] chromeos_pstore GOOG9999:00: acpi_subsys_suspend+0x0/0x55 returned 0 after 0 usecs
+[ 3297.929659] platform GOOG0006:00: calling platform_pm_suspend+0x0/0x49 @ 6193, parent: PNP0C09:00
+[ 3297.929668] platform GOOG0006:00: platform_pm_suspend+0x0/0x49 returned 0 after 0 usecs
+[ 3297.929679] cros-usbpd-notify-acpi GOOG0003:00: calling acpi_subsys_suspend+0x0/0x55 @ 6193, parent: PNP0C09:00
+[ 3297.929688] cros-usbpd-notify-acpi GOOG0003:00: acpi_subsys_suspend+0x0/0x55 returned 0 after 0 usecs
+[ 3297.929699] cros_ec_lpcs GOOG0004:00: calling acpi_subsys_suspend+0x0/0x55 @ 6193, parent: PNP0C09:00
+[ 3297.929709] cros_ec_lpcs GOOG0004:00: acpi_subsys_suspend+0x0/0x55 returned 0 after 0 usecs
+[ 3297.929719] platform PNP0C0A:00: calling platform_pm_suspend+0x0/0x49 @ 6193, parent: PNP0C09:00
+[ 3297.929727] platform PNP0C0A:00: platform_pm_suspend+0x0/0x49 returned 0 after 0 usecs
+[ 3297.929736] platform ACPI0003:00: calling platform_pm_suspend+0x0/0x49 @ 6193, parent: PNP0C09:00
+[ 3297.929744] platform ACPI0003:00: platform_pm_suspend+0x0/0x49 returned 0 after 0 usecs
+[ 3297.929754] platform PNP0C0D:00: calling platform_pm_suspend+0x0/0x49 @ 6193, parent: PNP0C09:00
+[ 3297.929762] platform PNP0C0D:00: platform_pm_suspend+0x0/0x49 returned 0 after 0 usecs
+[ 3297.929772] platform PNP0C09:00: calling platform_pm_suspend+0x0/0x49 @ 6193, parent: 0000:00:1f.0
+[ 3297.929780] platform PNP0C09:00: platform_pm_suspend+0x0/0x49 returned 0 after 0 usecs
+[ 3297.929790] platform PNP0C04:00: calling platform_pm_suspend+0x0/0x49 @ 6193, parent: 0000:00:1f.0
+[ 3297.929798] platform PNP0C04:00: platform_pm_suspend+0x0/0x49 returned 0 after 0 usecs
+[ 3297.929807] platform PNP0103:00: calling platform_pm_suspend+0x0/0x49 @ 6193, parent: 0000:00:1f.0
+[ 3297.929815] platform PNP0103:00: platform_pm_suspend+0x0/0x49 returned 0 after 0 usecs
+[ 3297.929824] platform INT0800:00: calling platform_pm_suspend+0x0/0x49 @ 6193, parent: 0000:00:1f.0
+[ 3297.929832] platform INT0800:00: platform_pm_suspend+0x0/0x49 returned 0 after 0 usecs
+[ 3297.929847] sunrisepoint-pinctrl INT344B:00: calling acpi_subsys_suspend+0x0/0x55 @ 6193, parent: pci0000:00
+[ 3297.929857] sunrisepoint-pinctrl INT344B:00: acpi_subsys_suspend+0x0/0x55 returned 0 after 0 usecs
+[ 3297.929903] nvme 0000:02:00.0: calling pci_pm_suspend+0x0/0x1c1 @ 6196, parent: 0000:00:1c.4
+[ 3297.929921] iwlwifi 0000:01:00.0: calling pci_pm_suspend+0x0/0x1c1 @ 4675, parent: 0000:00:1c.0
+[ 3297.929935] iwlwifi 0000:01:00.0: pci_pm_suspend+0x0/0x1c1 returned 0 after 2 usecs
+[ 3297.929943] i801_smbus 0000:00:1f.4: calling pci_pm_suspend+0x0/0x1c1 @ 6197, parent: pci0000:00
+[ 3297.929951] platform PNP0C0C:00: calling platform_pm_suspend+0x0/0x49 @ 6193, parent: platform
+[ 3297.929958] pci 0000:00:1f.3: calling pci_pm_suspend+0x0/0x1c1 @ 4675, parent: pci0000:00
+[ 3297.929964] platform PNP0C0C:00: platform_pm_suspend+0x0/0x49 returned 0 after 0 usecs
+[ 3297.929971] pci 0000:00:1f.3: pci_pm_suspend+0x0/0x1c1 returned 0 after 0 usecs
+[ 3297.929985] pci 0000:00:1f.2: calling pci_pm_suspend+0x0/0x1c1 @ 4675, parent: pci0000:00
+[ 3297.929994] pci 0000:00:1f.2: pci_pm_suspend+0x0/0x1c1 returned 0 after 0 usecs
+[ 3297.930009] pci 0000:00:1f.0: calling pci_pm_suspend+0x0/0x1c1 @ 4675, parent: pci0000:00
+[ 3297.930067] pci 0000:00:1f.0: pci_pm_suspend+0x0/0x1c1 returned 0 after 0 usecs
+[ 3297.930084] i801_smbus 0000:00:1f.4: pci_pm_suspend+0x0/0x1c1 returned 0 after 127 usecs
+[ 3297.930091] sdhci-pci 0000:00:1e.4: calling pci_pm_suspend+0x0/0x1c1 @ 4675, parent: pci0000:00
+[ 3297.930220] intel-lpss 0000:00:1e.2: calling pci_pm_suspend+0x0/0x1c1 @ 6197, parent: pci0000:00
+[ 3297.930236] intel-lpss 0000:00:1e.2: pci_pm_suspend+0x0/0x1c1 returned 0 after 1 usecs
+[ 3297.930256] intel-lpss 0000:00:1e.0: calling pci_pm_suspend+0x0/0x1c1 @ 6197, parent: pci0000:00
+[ 3297.930272] intel-lpss 0000:00:1e.0: pci_pm_suspend+0x0/0x1c1 returned 0 after 1 usecs
+[ 3297.930290] button PNP0C0D:00: calling acpi_button_suspend+0x0/0x15 @ 6193, parent: PNP0C09:00
+[ 3297.930302] pci 0000:00:1f.5: calling pci_pm_suspend+0x0/0x1c1 @ 5261, parent: pci0000:00
+[ 3297.930313] pci 0000:00:1f.5: pci_pm_suspend+0x0/0x1c1 returned 0 after 0 usecs
+[ 3297.930327] button PNP0C0D:00: acpi_button_suspend+0x0/0x15 returned 0 after 0 usecs
+[ 3297.930336] pcieport 0000:00:1c.0: calling pci_pm_suspend+0x0/0x1c1 @ 5261, parent: pci0000:00
+[ 3297.930354] ec PNP0C09:00: calling acpi_ec_suspend+0x0/0x6b @ 6193, parent: device:01
+[ 3297.930363] ec PNP0C09:00: acpi_ec_suspend+0x0/0x6b returned 0 after 0 usecs
+[ 3297.930373] pcieport 0000:00:1c.0: pci_pm_suspend+0x0/0x1c1 returned 0 after 24 usecs
+[ 3297.930388] intel-lpss 0000:00:19.2: calling pci_pm_suspend+0x0/0x1c1 @ 5261, parent: pci0000:00
+[ 3297.930405] intel-lpss 0000:00:19.2: pci_pm_suspend+0x0/0x1c1 returned 0 after 1 usecs
+[ 3297.930423] intel-lpss 0000:00:19.0: calling pci_pm_suspend+0x0/0x1c1 @ 5261, parent: pci0000:00
+[ 3297.930438] intel-lpss 0000:00:19.0: pci_pm_suspend+0x0/0x1c1 returned 0 after 0 usecs
+[ 3297.930444] button PNP0C0C:00: calling acpi_button_suspend+0x0/0x15 @ 6193, parent: LNXSYBUS:00
+[ 3297.930453] button PNP0C0C:00: acpi_button_suspend+0x0/0x15 returned 0 after 0 usecs
+[ 3297.930475] pci 0000:00:16.0: calling pci_pm_suspend+0x0/0x1c1 @ 5261, parent: pci0000:00
+[ 3297.930490] pci 0000:00:16.0: pci_pm_suspend+0x0/0x1c1 returned 0 after 0 usecs
+[ 3297.930551] intel-lpss 0000:00:15.2: calling pci_pm_suspend+0x0/0x1c1 @ 5261, parent: pci0000:00
+[ 3297.930567] intel-lpss 0000:00:15.2: pci_pm_suspend+0x0/0x1c1 returned 0 after 1 usecs
+[ 3297.930586] intel-lpss 0000:00:15.1: calling pci_pm_suspend+0x0/0x1c1 @ 6198, parent: pci0000:00
+[ 3297.930598] intel-lpss 0000:00:15.0: calling pci_pm_suspend+0x0/0x1c1 @ 5261, parent: pci0000:00
+[ 3297.930609] intel-lpss 0000:00:15.0: pci_pm_suspend+0x0/0x1c1 returned 0 after 0 usecs
+[ 3297.930626] intel-lpss 0000:00:15.1: pci_pm_suspend+0x0/0x1c1 returned 0 after 1 usecs
+[ 3297.930635] pci 0000:00:14.2: calling pci_pm_suspend+0x0/0x1c1 @ 5261, parent: pci0000:00
+[ 3297.930645] pci 0000:00:14.2: pci_pm_suspend+0x0/0x1c1 returned 0 after 0 usecs
+[ 3297.930672] pci 0000:00:08.0: calling pci_pm_suspend+0x0/0x1c1 @ 6198, parent: pci0000:00
+[ 3297.930687] pci 0000:00:08.0: pci_pm_suspend+0x0/0x1c1 returned 0 after 0 usecs
+[ 3297.930693] proc_thermal 0000:00:04.0: calling pci_pm_suspend+0x0/0x1c1 @ 6201, parent: pci0000:00
+[ 3297.930707] proc_thermal 0000:00:04.0: pci_pm_suspend+0x0/0x1c1 returned 0 after 5 usecs
+[ 3297.930726] skl_uncore 0000:00:00.0: calling pci_pm_suspend+0x0/0x1c1 @ 6198, parent: pci0000:00
+[ 3297.930732] i915 0000:00:02.0: calling pci_pm_suspend+0x0/0x1c1 @ 6201, parent: pci0000:00
+[ 3297.930750] skl_uncore 0000:00:00.0: pci_pm_suspend+0x0/0x1c1 returned 0 after 0 usecs
+[ 3297.938391] sdhci-pci 0000:00:1e.4: pci_pm_suspend+0x0/0x1c1 returned 0 after 8094 usecs
+[ 3297.963976] usb 1-3: usb_dev_suspend+0x0/0x14 returned 0 after 107011 usecs
+[ 3297.964130] usb usb1: calling usb_dev_suspend+0x0/0x14 @ 5949, parent: 0000:00:14.0
+[ 3297.964402] usb usb1: usb_dev_suspend+0x0/0x14 returned 0 after 243 usecs
+[ 3297.964457] xhci_hcd 0000:00:14.0: calling pci_pm_suspend+0x0/0x1c1 @ 5261, parent: pci0000:00
+[ 3297.964597] xhci_hcd 0000:00:14.0: pci_pm_suspend+0x0/0x1c1 returned 0 after 121 usecs
+[ 3298.144393] nvme 0000:02:00.0: pci_pm_suspend+0x0/0x1c1 returned 0 after 209385 usecs
+[ 3298.144509] pcieport 0000:00:1c.4: calling pci_pm_suspend+0x0/0x1c1 @ 6197, parent: pci0000:00
+[ 3298.144551] pcieport 0000:00:1c.4: pci_pm_suspend+0x0/0x1c1 returned 0 after 19 usecs
+[ 3298.651502] i915 0000:00:02.0: pci_pm_suspend+0x0/0x1c1 returned 0 after 704209 usecs
+[ 3298.651958] intel_pmc_core intel_pmc_core.0: calling pmc_core_suspend+0x0/0x8e @ 6193, parent: platform
+[ 3298.651977] intel_pmc_core intel_pmc_core.0: pmc_core_suspend+0x0/0x8e returned 0 after 0 usecs
+[ 3298.652355] cros-ec-i2c i2c-GOOG0008:00: calling acpi_subsys_suspend_late+0x0/0x4e @ 6197, parent: i2c-8
+[ 3298.652369] i2c_hid i2c-ACPI0C50:00: calling acpi_subsys_suspend_late+0x0/0x4e @ 6198, parent: i2c-8
+[ 3298.652382] i2c_hid i2c-ACPI0C50:00: acpi_subsys_suspend_late+0x0/0x4e returned 0 after 1 usecs
+[ 3298.653197] cros-ec-i2c i2c-GOOG0008:00: acpi_subsys_suspend_late+0x0/0x4e returned 0 after 768 usecs
+[ 3298.653304] i2c_designware i2c_designware.2: calling dw_i2c_plat_suspend+0x0/0x38 @ 6193, parent: 0000:00:15.2
+[ 3298.653330] i2c_designware i2c_designware.2: dw_i2c_plat_suspend+0x0/0x38 returned 0 after 7 usecs
+[ 3298.653433] cr50_i2c i2c-GOOG0005:00: calling acpi_subsys_suspend_late+0x0/0x4e @ 6197, parent: i2c-7
+[ 3298.653454] cr50_i2c i2c-GOOG0005:00: acpi_subsys_suspend_late+0x0/0x4e returned 0 after 1 usecs
+[ 3298.653524] i2c_designware i2c_designware.1: calling dw_i2c_plat_suspend+0x0/0x38 @ 6193, parent: 0000:00:15.1
+[ 3298.653542] i2c_designware i2c_designware.1: dw_i2c_plat_suspend+0x0/0x38 returned 0 after 4 usecs
+[ 3298.653583] i2c_hid i2c-WCOM50C1:00: calling acpi_subsys_suspend_late+0x0/0x4e @ 6197, parent: i2c-6
+[ 3298.653597] i2c_hid i2c-WCOM50C1:00: acpi_subsys_suspend_late+0x0/0x4e returned 0 after 0 usecs
+[ 3298.653625] i2c_designware i2c_designware.0: calling dw_i2c_plat_suspend+0x0/0x38 @ 6193, parent: 0000:00:15.0
+[ 3298.653642] i2c_designware i2c_designware.0: dw_i2c_plat_suspend+0x0/0x38 returned 0 after 5 usecs
+[ 3298.653881] coreboot_table_acpi BOOT0000:00: calling acpi_subsys_suspend_late+0x0/0x4e @ 6193, parent: platform
+[ 3298.653895] coreboot_table_acpi BOOT0000:00: acpi_subsys_suspend_late+0x0/0x4e returned 0 after 1 usecs
+[ 3298.653911] int3403 thermal INT3403:04: calling acpi_subsys_suspend_late+0x0/0x4e @ 6193, parent: INT3400:00
+[ 3298.653922] int3403 thermal INT3403:04: acpi_subsys_suspend_late+0x0/0x4e returned 0 after 0 usecs
+[ 3298.653934] int3403 thermal INT3403:03: calling acpi_subsys_suspend_late+0x0/0x4e @ 6193, parent: INT3400:00
+[ 3298.653945] int3403 thermal INT3403:03: acpi_subsys_suspend_late+0x0/0x4e returned 0 after 0 usecs
+[ 3298.653957] int3403 thermal INT3403:02: calling acpi_subsys_suspend_late+0x0/0x4e @ 6193, parent: INT3400:00
+[ 3298.653968] int3403 thermal INT3403:02: acpi_subsys_suspend_late+0x0/0x4e returned 0 after 0 usecs
+[ 3298.653979] int3403 thermal INT3403:01: calling acpi_subsys_suspend_late+0x0/0x4e @ 6193, parent: INT3400:00
+[ 3298.653990] int3403 thermal INT3403:01: acpi_subsys_suspend_late+0x0/0x4e returned 0 after 0 usecs
+[ 3298.654002] int3403 thermal INT3403:00: calling acpi_subsys_suspend_late+0x0/0x4e @ 6193, parent: INT3400:00
+[ 3298.654013] int3403 thermal INT3403:00: acpi_subsys_suspend_late+0x0/0x4e returned 0 after 0 usecs
+[ 3298.654027] int3400 thermal INT3400:00: calling acpi_subsys_suspend_late+0x0/0x4e @ 6193, parent: platform
+[ 3298.654038] int3400 thermal INT3400:00: acpi_subsys_suspend_late+0x0/0x4e returned 0 after 0 usecs
+[ 3298.654051] chromeos-keyboard-leds GOOG0002:00: calling acpi_subsys_suspend_late+0x0/0x4e @ 6193, parent: platform
+[ 3298.654062] chromeos-keyboard-leds GOOG0002:00: acpi_subsys_suspend_late+0x0/0x4e returned 0 after 0 usecs
+[ 3298.654074] chromeos_pstore GOOG9999:00: calling acpi_subsys_suspend_late+0x0/0x4e @ 6193, parent: platform
+[ 3298.654085] chromeos_pstore GOOG9999:00: acpi_subsys_suspend_late+0x0/0x4e returned 0 after 0 usecs
+[ 3298.654100] cros-usbpd-notify-acpi GOOG0003:00: calling acpi_subsys_suspend_late+0x0/0x4e @ 6193, parent: PNP0C09:00
+[ 3298.654111] cros-usbpd-notify-acpi GOOG0003:00: acpi_subsys_suspend_late+0x0/0x4e returned 0 after 0 usecs
+[ 3298.654123] cros_ec_lpcs GOOG0004:00: calling acpi_subsys_suspend_late+0x0/0x4e @ 6193, parent: PNP0C09:00
+[ 3298.655160] cros_ec_lpcs GOOG0004:00: acpi_subsys_suspend_late+0x0/0x4e returned 0 after 1000 usecs
+[ 3298.655190] sunrisepoint-pinctrl INT344B:00: calling acpi_subsys_suspend_late+0x0/0x4e @ 6193, parent: pci0000:00
+[ 3298.657710] sunrisepoint-pinctrl INT344B:00: acpi_subsys_suspend_late+0x0/0x4e returned 0 after 2450 usecs
+[ 3298.657762] nvme 0000:02:00.0: calling pci_pm_suspend_late+0x0/0x36 @ 5261, parent: 0000:00:1c.4
+[ 3298.657784] nvme 0000:02:00.0: pci_pm_suspend_late+0x0/0x36 returned 0 after 1 usecs
+[ 3298.657810] iwlwifi 0000:01:00.0: calling pci_pm_suspend_late+0x0/0x36 @ 5261, parent: 0000:00:1c.0
+[ 3298.657826] iwlwifi 0000:01:00.0: pci_pm_suspend_late+0x0/0x36 returned 0 after 0 usecs
+[ 3298.657850] pci 0000:00:1f.5: calling pci_pm_suspend_late+0x0/0x36 @ 6197, parent: pci0000:00
+[ 3298.657868] pci 0000:00:1f.3: calling pci_pm_suspend_late+0x0/0x36 @ 5261, parent: pci0000:00
+[ 3298.657880] i801_smbus 0000:00:1f.4: calling pci_pm_suspend_late+0x0/0x36 @ 6198, parent: pci0000:00
+[ 3298.657893] pci 0000:00:1f.3: pci_pm_suspend_late+0x0/0x36 returned 0 after 0 usecs
+[ 3298.657903] i801_smbus 0000:00:1f.4: pci_pm_suspend_late+0x0/0x36 returned 0 after 1 usecs
+[ 3298.657915] pci 0000:00:1f.2: calling pci_pm_suspend_late+0x0/0x36 @ 5261, parent: pci0000:00
+[ 3298.657927] pci 0000:00:1f.0: calling pci_pm_suspend_late+0x0/0x36 @ 6198, parent: pci0000:00
+[ 3298.657936] pci 0000:00:1f.2: pci_pm_suspend_late+0x0/0x36 returned 0 after 0 usecs
+[ 3298.657947] pci 0000:00:1f.0: pci_pm_suspend_late+0x0/0x36 returned 0 after 0 usecs
+[ 3298.657958] sdhci-pci 0000:00:1e.4: calling pci_pm_suspend_late+0x0/0x36 @ 5261, parent: pci0000:00
+[ 3298.657969] intel-lpss 0000:00:1e.2: calling pci_pm_suspend_late+0x0/0x36 @ 6198, parent: pci0000:00
+[ 3298.657978] sdhci-pci 0000:00:1e.4: pci_pm_suspend_late+0x0/0x36 returned 0 after 0 usecs
+[ 3298.657998] intel-lpss 0000:00:1e.0: calling pci_pm_suspend_late+0x0/0x36 @ 5261, parent: pci0000:00
+[ 3298.658009] intel-lpss 0000:00:1e.0: pci_pm_suspend_late+0x0/0x36 returned 0 after 0 usecs
+[ 3298.658030] pcieport 0000:00:1c.4: calling pci_pm_suspend_late+0x0/0x36 @ 5261, parent: pci0000:00
+[ 3298.658043] pcieport 0000:00:1c.4: pci_pm_suspend_late+0x0/0x36 returned 0 after 0 usecs
+[ 3298.658060] pcieport 0000:00:1c.0: calling pci_pm_suspend_late+0x0/0x36 @ 5261, parent: pci0000:00
+[ 3298.658068] pci 0000:00:1f.5: pci_pm_suspend_late+0x0/0x36 returned 0 after 0 usecs
+[ 3298.658080] intel-lpss 0000:00:1e.2: pci_pm_suspend_late+0x0/0x36 returned 0 after 96 usecs
+[ 3298.658093] intel-lpss 0000:00:19.2: calling pci_pm_suspend_late+0x0/0x36 @ 6197, parent: pci0000:00
+[ 3298.658104] intel-lpss 0000:00:19.2: pci_pm_suspend_late+0x0/0x36 returned 0 after 0 usecs
+[ 3298.658113] intel-lpss 0000:00:19.0: calling pci_pm_suspend_late+0x0/0x36 @ 6198, parent: pci0000:00
+[ 3298.658125] pci 0000:00:16.0: calling pci_pm_suspend_late+0x0/0x36 @ 6197, parent: pci0000:00
+[ 3298.658133] intel-lpss 0000:00:19.0: pci_pm_suspend_late+0x0/0x36 returned 0 after 0 usecs
+[ 3298.658144] pci 0000:00:16.0: pci_pm_suspend_late+0x0/0x36 returned 0 after 0 usecs
+[ 3298.658156] intel-lpss 0000:00:15.2: calling pci_pm_suspend_late+0x0/0x36 @ 6198, parent: pci0000:00
+[ 3298.658167] intel-lpss 0000:00:15.1: calling pci_pm_suspend_late+0x0/0x36 @ 6197, parent: pci0000:00
+[ 3298.658192] pcieport 0000:00:1c.0: pci_pm_suspend_late+0x0/0x36 returned 0 after 0 usecs
+[ 3298.658220] intel-lpss 0000:00:15.0: calling pci_pm_suspend_late+0x0/0x36 @ 5261, parent: pci0000:00
+[ 3298.658370] intel-lpss 0000:00:15.2: pci_pm_suspend_late+0x0/0x36 returned 0 after 199 usecs
+[ 3298.658392] intel-lpss 0000:00:15.1: pci_pm_suspend_late+0x0/0x36 returned 0 after 207 usecs
+[ 3298.658399] pci 0000:00:14.2: calling pci_pm_suspend_late+0x0/0x36 @ 6198, parent: pci0000:00
+[ 3298.658410] pci 0000:00:14.2: pci_pm_suspend_late+0x0/0x36 returned 0 after 0 usecs
+[ 3298.658428] intel-lpss 0000:00:15.0: pci_pm_suspend_late+0x0/0x36 returned 0 after 187 usecs
+[ 3298.658439] xhci_hcd 0000:00:14.0: calling pci_pm_suspend_late+0x0/0x36 @ 6198, parent: pci0000:00
+[ 3298.658451] pci 0000:00:08.0: calling pci_pm_suspend_late+0x0/0x36 @ 6197, parent: pci0000:00
+[ 3298.658458] xhci_hcd 0000:00:14.0: pci_pm_suspend_late+0x0/0x36 returned 0 after 0 usecs
+[ 3298.658469] pci 0000:00:08.0: pci_pm_suspend_late+0x0/0x36 returned 0 after 0 usecs
+[ 3298.658482] proc_thermal 0000:00:04.0: calling pci_pm_suspend_late+0x0/0x36 @ 6198, parent: pci0000:00
+[ 3298.658493] i915 0000:00:02.0: calling pci_pm_suspend_late+0x0/0x36 @ 6197, parent: pci0000:00
+[ 3298.658502] proc_thermal 0000:00:04.0: pci_pm_suspend_late+0x0/0x36 returned 0 after 0 usecs
+[ 3298.658522] skl_uncore 0000:00:00.0: calling pci_pm_suspend_late+0x0/0x36 @ 6198, parent: pci0000:00
+[ 3298.658533] skl_uncore 0000:00:00.0: pci_pm_suspend_late+0x0/0x36 returned 0 after 0 usecs
+[ 3298.671933] i915 0000:00:02.0: pci_pm_suspend_late+0x0/0x36 returned 0 after 13104 usecs
+[ 3298.672774] gsmi gsmi: calling gsmi_log_s0ix_suspend+0x0/0x20 @ 6193, parent: platform
+[ 3298.672796] gsmi gsmi: gsmi_log_s0ix_suspend+0x0/0x20 returned 0 after 0 usecs
+[ 3298.672850] iTCO_wdt iTCO_wdt: calling iTCO_wdt_suspend_noirq+0x0/0x54 @ 6193, parent: 0000:00:1f.4
+[ 3298.672861] iTCO_wdt iTCO_wdt: iTCO_wdt_suspend_noirq+0x0/0x54 returned 0 after 0 usecs
+[ 3298.673128] cros-ec-i2c i2c-GOOG0008:00: calling acpi_subsys_suspend_noirq+0x0/0x66 @ 6197, parent: i2c-8
+[ 3298.673142] i2c_hid i2c-ACPI0C50:00: calling acpi_subsys_suspend_noirq+0x0/0x66 @ 5261, parent: i2c-8
+[ 3298.673154] i2c_hid i2c-ACPI0C50:00: acpi_subsys_suspend_noirq+0x0/0x66 returned 0 after 1 usecs
+[ 3298.673177] cros-ec-i2c i2c-GOOG0008:00: acpi_subsys_suspend_noirq+0x0/0x66 returned 0 after 1 usecs
+[ 3298.673229] cr50_i2c i2c-GOOG0005:00: calling acpi_subsys_suspend_noirq+0x0/0x66 @ 6197, parent: i2c-7
+[ 3298.673241] cr50_i2c i2c-GOOG0005:00: acpi_subsys_suspend_noirq+0x0/0x66 returned 0 after 0 usecs
+[ 3298.673288] i2c_hid i2c-WCOM50C1:00: calling acpi_subsys_suspend_noirq+0x0/0x66 @ 6197, parent: i2c-6
+[ 3298.673299] i2c_hid i2c-WCOM50C1:00: acpi_subsys_suspend_noirq+0x0/0x66 returned 0 after 0 usecs
+[ 3298.673487] coreboot_table_acpi BOOT0000:00: calling acpi_subsys_suspend_noirq+0x0/0x66 @ 6193, parent: platform
+[ 3298.673499] coreboot_table_acpi BOOT0000:00: acpi_subsys_suspend_noirq+0x0/0x66 returned 0 after 0 usecs
+[ 3298.673514] int3403 thermal INT3403:04: calling acpi_subsys_suspend_noirq+0x0/0x66 @ 6193, parent: INT3400:00
+[ 3298.673525] int3403 thermal INT3403:04: acpi_subsys_suspend_noirq+0x0/0x66 returned 0 after 0 usecs
+[ 3298.673537] int3403 thermal INT3403:03: calling acpi_subsys_suspend_noirq+0x0/0x66 @ 6193, parent: INT3400:00
+[ 3298.673547] int3403 thermal INT3403:03: acpi_subsys_suspend_noirq+0x0/0x66 returned 0 after 0 usecs
+[ 3298.673559] int3403 thermal INT3403:02: calling acpi_subsys_suspend_noirq+0x0/0x66 @ 6193, parent: INT3400:00
+[ 3298.673570] int3403 thermal INT3403:02: acpi_subsys_suspend_noirq+0x0/0x66 returned 0 after 0 usecs
+[ 3298.673581] int3403 thermal INT3403:01: calling acpi_subsys_suspend_noirq+0x0/0x66 @ 6193, parent: INT3400:00
+[ 3298.673592] int3403 thermal INT3403:01: acpi_subsys_suspend_noirq+0x0/0x66 returned 0 after 0 usecs
+[ 3298.673603] int3403 thermal INT3403:00: calling acpi_subsys_suspend_noirq+0x0/0x66 @ 6193, parent: INT3400:00
+[ 3298.673614] int3403 thermal INT3403:00: acpi_subsys_suspend_noirq+0x0/0x66 returned 0 after 0 usecs
+[ 3298.673627] int3400 thermal INT3400:00: calling acpi_subsys_suspend_noirq+0x0/0x66 @ 6193, parent: platform
+[ 3298.673640] int3400 thermal INT3400:00: acpi_subsys_suspend_noirq+0x0/0x66 returned 0 after 0 usecs
+[ 3298.673682] chromeos-keyboard-leds GOOG0002:00: calling acpi_subsys_suspend_noirq+0x0/0x66 @ 6193, parent: platform
+[ 3298.673693] chromeos-keyboard-leds GOOG0002:00: acpi_subsys_suspend_noirq+0x0/0x66 returned 0 after 0 usecs
+[ 3298.673705] chromeos_pstore GOOG9999:00: calling acpi_subsys_suspend_noirq+0x0/0x66 @ 6193, parent: platform
+[ 3298.673715] chromeos_pstore GOOG9999:00: acpi_subsys_suspend_noirq+0x0/0x66 returned 0 after 0 usecs
+[ 3298.673729] cros-usbpd-notify-acpi GOOG0003:00: calling acpi_subsys_suspend_noirq+0x0/0x66 @ 6193, parent: PNP0C09:00
+[ 3298.673740] cros-usbpd-notify-acpi GOOG0003:00: acpi_subsys_suspend_noirq+0x0/0x66 returned 0 after 0 usecs
+[ 3298.673752] cros_ec_lpcs GOOG0004:00: calling acpi_subsys_suspend_noirq+0x0/0x66 @ 6193, parent: PNP0C09:00
+[ 3298.673763] cros_ec_lpcs GOOG0004:00: acpi_subsys_suspend_noirq+0x0/0x66 returned 0 after 0 usecs
+[ 3298.673789] sunrisepoint-pinctrl INT344B:00: calling acpi_subsys_suspend_noirq+0x0/0x66 @ 6193, parent: pci0000:00
+[ 3298.673801] sunrisepoint-pinctrl INT344B:00: acpi_subsys_suspend_noirq+0x0/0x66 returned 0 after 0 usecs
+[ 3298.673841] nvme 0000:02:00.0: calling pci_pm_suspend_noirq+0x0/0x27a @ 5261, parent: 0000:00:1c.4
+[ 3298.673864] iwlwifi 0000:01:00.0: calling pci_pm_suspend_noirq+0x0/0x27a @ 6197, parent: 0000:00:1c.0
+[ 3298.673880] pci 0000:00:1f.5: calling pci_pm_suspend_noirq+0x0/0x27a @ 6196, parent: pci0000:00
+[ 3298.674536] ec PNP0C09:00: calling acpi_ec_suspend_noirq+0x0/0x4d @ 6193, parent: device:01
+[ 3298.674544] ACPI: EC: interrupt blocked
+[ 3298.674555] ec PNP0C09:00: acpi_ec_suspend_noirq+0x0/0x4d returned 0 after 7 usecs
+[ 3298.676227] pci 0000:00:1f.5: pci_pm_suspend_noirq+0x0/0x27a returned 0 after 2282 usecs
+[ 3298.676336] i801_smbus 0000:00:1f.4: calling pci_pm_suspend_noirq+0x0/0x27a @ 6196, parent: pci0000:00
+[ 3298.676918] pci 0000:00:1f.3: calling pci_pm_suspend_noirq+0x0/0x27a @ 6198, parent: pci0000:00
+[ 3298.678048] i801_smbus 0000:00:1f.4: pci_pm_suspend_noirq+0x0/0x27a returned 0 after 1635 usecs
+[ 3298.678054] pci 0000:00:1f.2: calling pci_pm_suspend_noirq+0x0/0x27a @ 6196, parent: pci0000:00
+[ 3298.678065] pci 0000:00:1f.3: pci_pm_suspend_noirq+0x0/0x27a returned 0 after 1110 usecs
+[ 3298.678073] pci 0000:00:1f.0: calling pci_pm_suspend_noirq+0x0/0x27a @ 6198, parent: pci0000:00
+[ 3298.678088] pci 0000:00:1f.2: pci_pm_suspend_noirq+0x0/0x27a returned 0 after 30 usecs
+[ 3298.678094] sdhci-pci 0000:00:1e.4: calling pci_pm_suspend_noirq+0x0/0x27a @ 6196, parent: pci0000:00
+[ 3298.678115] pci 0000:00:1f.0: pci_pm_suspend_noirq+0x0/0x27a returned 0 after 37 usecs
+[ 3298.678121] intel-lpss 0000:00:1e.2: calling pci_pm_suspend_noirq+0x0/0x27a @ 6198, parent: pci0000:00
+[ 3298.678181] intel-lpss 0000:00:1e.0: calling pci_pm_suspend_noirq+0x0/0x27a @ 6201, parent: pci0000:00
+[ 3298.678185] intel-lpss 0000:00:1e.0: pci_pm_suspend_noirq+0x0/0x27a returned 0 after 0 usecs
+[ 3298.678193] intel-lpss 0000:00:19.2: calling pci_pm_suspend_noirq+0x0/0x27a @ 6195, parent: pci0000:00
+[ 3298.678198] intel-lpss 0000:00:19.2: pci_pm_suspend_noirq+0x0/0x27a returned 0 after 0 usecs
+[ 3298.678212] intel-lpss 0000:00:19.0: calling pci_pm_suspend_noirq+0x0/0x27a @ 6195, parent: pci0000:00
+[ 3298.678214] sdhci-pci 0000:00:1e.4: pci_pm_suspend_noirq+0x0/0x27a returned 0 after 113 usecs
+[ 3298.678219] pci 0000:00:16.0: calling pci_pm_suspend_noirq+0x0/0x27a @ 6196, parent: pci0000:00
+[ 3298.678221] intel-lpss 0000:00:19.0: pci_pm_suspend_noirq+0x0/0x27a returned 0 after 0 usecs
+[ 3298.678226] intel-lpss 0000:00:15.2: calling pci_pm_suspend_noirq+0x0/0x27a @ 6195, parent: pci0000:00
+[ 3298.678291] pci 0000:00:16.0: pci_pm_suspend_noirq+0x0/0x27a returned 0 after 64 usecs
+[ 3298.678297] intel-lpss 0000:00:15.1: calling pci_pm_suspend_noirq+0x0/0x27a @ 6196, parent: pci0000:00
+[ 3298.678301] intel-lpss 0000:00:15.0: calling pci_pm_suspend_noirq+0x0/0x27a @ 4675, parent: pci0000:00
+[ 3298.678305] pci 0000:00:14.2: calling pci_pm_suspend_noirq+0x0/0x27a @ 6203, parent: pci0000:00
+[ 3298.678395] pci 0000:00:14.2: pci_pm_suspend_noirq+0x0/0x27a returned 0 after 83 usecs
+[ 3298.678402] xhci_hcd 0000:00:14.0: calling pci_pm_suspend_noirq+0x0/0x27a @ 6203, parent: pci0000:00
+[ 3298.678628] pci 0000:00:08.0: calling pci_pm_suspend_noirq+0x0/0x27a @ 6202, parent: pci0000:00
+[ 3298.678653] pci 0000:00:08.0: pci_pm_suspend_noirq+0x0/0x27a returned 0 after 18 usecs
+[ 3298.678659] proc_thermal 0000:00:04.0: calling pci_pm_suspend_noirq+0x0/0x27a @ 6204, parent: pci0000:00
+[ 3298.678661] i915 0000:00:02.0: calling pci_pm_suspend_noirq+0x0/0x27a @ 6202, parent: pci0000:00
+[ 3298.678665] i915 0000:00:02.0: pci_pm_suspend_noirq+0x0/0x27a returned 0 after 0 usecs
+[ 3298.678670] skl_uncore 0000:00:00.0: calling pci_pm_suspend_noirq+0x0/0x27a @ 6202, parent: pci0000:00
+[ 3298.678696] proc_thermal 0000:00:04.0: pci_pm_suspend_noirq+0x0/0x27a returned 0 after 26 usecs
+[ 3298.678698] skl_uncore 0000:00:00.0: pci_pm_suspend_noirq+0x0/0x27a returned 0 after 23 usecs
+[ 3298.688852] nvme 0000:02:00.0: pci_pm_suspend_noirq+0x0/0x27a returned 0 after 14652 usecs
+[ 3298.688866] pcieport 0000:00:1c.4: calling pci_pm_suspend_noirq+0x0/0x27a @ 5949, parent: pci0000:00
+[ 3298.689654] intel-lpss 0000:00:1e.2: pci_pm_suspend_noirq+0x0/0x27a returned 0 after 11263 usecs
+[ 3298.689817] iwlwifi 0000:01:00.0: pci_pm_suspend_noirq+0x0/0x27a returned 0 after 15560 usecs
+[ 3298.689828] intel-lpss 0000:00:15.0: pci_pm_suspend_noirq+0x0/0x27a returned 0 after 11257 usecs
+[ 3298.689837] pcieport 0000:00:1c.0: calling pci_pm_suspend_noirq+0x0/0x27a @ 6201, parent: pci0000:00
+[ 3298.689841] intel-lpss 0000:00:15.2: pci_pm_suspend_noirq+0x0/0x27a returned 0 after 11344 usecs
+[ 3298.689855] intel-lpss 0000:00:15.1: pci_pm_suspend_noirq+0x0/0x27a returned 0 after 11288 usecs
+[ 3298.700664] pcieport 0000:00:1c.4: pci_pm_suspend_noirq+0x0/0x27a returned 0 after 11519 usecs
+[ 3298.701654] pcieport 0000:00:1c.0: pci_pm_suspend_noirq+0x0/0x27a returned 0 after 11536 usecs
+[ 3298.701709] xhci_hcd 0000:00:14.0: pci_pm_suspend_noirq+0x0/0x27a returned 0 after 22766 usecs
+[ 3298.702542] ACPI: Preparing to enter system sleep state S3
+[ 3298.702680] ACPI: EC: event blocked
+[ 3298.702685] ACPI: EC: EC stopped
+[ 3298.702690] PM: Saving platform NVS memory
+[ 3298.702695] Disabling non-boot CPUs ...
+[ 3298.710544] smpboot: CPU 1 is now offline
+[ 3298.734541] smpboot: CPU 2 is now offline
+[ 3298.743495] smpboot: CPU 3 is now offline
+[ 3298.748498] TSC at resume: 1153878817
+[ 3298.748507] ACPI: Low-level resume complete
+[ 3298.748576] ACPI: EC: EC started
+[ 3298.748579] PM: Restoring platform NVS memory
+[ 3298.749240] Enabling non-boot CPUs ...
+[ 3298.749299] x86: Booting SMP configuration:
+[ 3298.749303] smpboot: Booting Node 0 Processor 1 APIC 0x1
+[ 3298.753529] core: 1 -> 1
+[ 3298.754091] CPU1 is up
+[ 3298.754150] smpboot: Booting Node 0 Processor 2 APIC 0x2
+[ 3298.754482] core: 2 -> 2
+[ 3298.754808] CPU2 is up
+[ 3298.754852] smpboot: Booting Node 0 Processor 3 APIC 0x3
+[ 3298.755281] core: 3 -> 2
+[ 3298.755620] CPU3 is up
+[ 3298.758856] ACPI: Waking up from system sleep state S3
+[ 3298.759034] pci 0000:00:08.0: calling pci_pm_resume_noirq+0x0/0xe2 @ 6202, parent: pci0000:00
+[ 3298.759037] i915 0000:00:02.0: calling pci_pm_resume_noirq+0x0/0xe2 @ 6201, parent: pci0000:00
+[ 3298.759039] proc_thermal 0000:00:04.0: calling pci_pm_resume_noirq+0x0/0xe2 @ 5949, parent: pci0000:00
+[ 3298.759041] ec PNP0C09:00: calling acpi_ec_resume_noirq+0x0/0x4a @ 6193, parent: device:01
+[ 3298.759042] ACPI: EC: interrupt unblocked
+[ 3298.759048] xhci_hcd 0000:00:14.0: calling pci_pm_resume_noirq+0x0/0xe2 @ 6196, parent: pci0000:00
+[ 3298.759051] ec PNP0C09:00: acpi_ec_resume_noirq+0x0/0x4a returned 0 after 7 usecs
+[ 3298.759070] proc_thermal 0000:00:04.0: pci_pm_resume_noirq+0x0/0xe2 returned 0 after 28 usecs
+[ 3298.759072] sunrisepoint-pinctrl INT344B:00: calling acpi_subsys_resume_noirq+0x0/0x3b @ 6193, parent: pci0000:00
+[ 3298.759074] pci 0000:00:08.0: pci_pm_resume_noirq+0x0/0xe2 returned 0 after 26 usecs
+[ 3298.759076] sunrisepoint-pinctrl INT344B:00: acpi_subsys_resume_noirq+0x0/0x3b returned 0 after 0 usecs
+[ 3298.759078] pci 0000:00:14.2: calling pci_pm_resume_noirq+0x0/0xe2 @ 6202, parent: pci0000:00
+[ 3298.759083] intel-lpss 0000:00:15.0: calling pci_pm_resume_noirq+0x0/0xe2 @ 5949, parent: pci0000:00
+[ 3298.759095] skl_uncore 0000:00:00.0: calling pci_pm_resume_noirq+0x0/0xe2 @ 6203, parent: pci0000:00
+[ 3298.759121] pci 0000:00:14.2: pci_pm_resume_noirq+0x0/0xe2 returned 0 after 40 usecs
+[ 3298.759123] skl_uncore 0000:00:00.0: pci_pm_resume_noirq+0x0/0xe2 returned 0 after 25 usecs
+[ 3298.759126] intel-lpss 0000:00:15.1: calling pci_pm_resume_noirq+0x0/0xe2 @ 6195, parent: pci0000:00
+[ 3298.759127] intel-lpss 0000:00:15.2: calling pci_pm_resume_noirq+0x0/0xe2 @ 6202, parent: pci0000:00
+[ 3298.759130] pci 0000:00:16.0: calling pci_pm_resume_noirq+0x0/0xe2 @ 4675, parent: pci0000:00
+[ 3298.759134] intel-lpss 0000:00:19.0: calling pci_pm_resume_noirq+0x0/0xe2 @ 6203, parent: pci0000:00
+[ 3298.759136] intel-lpss 0000:00:19.2: calling pci_pm_resume_noirq+0x0/0xe2 @ 6197, parent: pci0000:00
+[ 3298.759177] pci 0000:00:16.0: pci_pm_resume_noirq+0x0/0xe2 returned 0 after 44 usecs
+[ 3298.759180] pcieport 0000:00:1c.0: calling pci_pm_resume_noirq+0x0/0xe2 @ 4675, parent: pci0000:00
+[ 3298.759189] pcieport 0000:00:1c.4: calling pci_pm_resume_noirq+0x0/0xe2 @ 6198, parent: pci0000:00
+[ 3298.759192] intel-lpss 0000:00:1e.0: calling pci_pm_resume_noirq+0x0/0xe2 @ 5261, parent: pci0000:00
+[ 3298.759195] intel-lpss 0000:00:1e.2: calling pci_pm_resume_noirq+0x0/0xe2 @ 6206, parent: pci0000:00
+[ 3298.759198] sdhci-pci 0000:00:1e.4: calling pci_pm_resume_noirq+0x0/0xe2 @ 6205, parent: pci0000:00
+[ 3298.759249] pci 0000:00:1f.0: calling pci_pm_resume_noirq+0x0/0xe2 @ 6204, parent: pci0000:00
+[ 3298.759281] pci 0000:00:1f.0: pci_pm_resume_noirq+0x0/0xe2 returned 0 after 28 usecs
+[ 3298.759285] pci 0000:00:1f.2: calling pci_pm_resume_noirq+0x0/0xe2 @ 6204, parent: pci0000:00
+[ 3298.759289] cros_ec_lpcs GOOG0004:00: calling acpi_subsys_resume_noirq+0x0/0x3b @ 6193, parent: PNP0C09:00
+[ 3298.759292] cros_ec_lpcs GOOG0004:00: acpi_subsys_resume_noirq+0x0/0x3b returned 0 after 0 usecs
+[ 3298.759295] cros-usbpd-notify-acpi GOOG0003:00: calling acpi_subsys_resume_noirq+0x0/0x3b @ 6193, parent: PNP0C09:00
+[ 3298.759297] cros-usbpd-notify-acpi GOOG0003:00: acpi_subsys_resume_noirq+0x0/0x3b returned 0 after 0 usecs
+[ 3298.759301] chromeos_pstore GOOG9999:00: calling acpi_subsys_resume_noirq+0x0/0x3b @ 6193, parent: platform
+[ 3298.759303] chromeos_pstore GOOG9999:00: acpi_subsys_resume_noirq+0x0/0x3b returned 0 after 0 usecs
+[ 3298.759306] chromeos-keyboard-leds GOOG0002:00: calling acpi_subsys_resume_noirq+0x0/0x3b @ 6193, parent: platform
+[ 3298.759308] pci 0000:00:1f.3: calling pci_pm_resume_noirq+0x0/0xe2 @ 6207, parent: pci0000:00
+[ 3298.759310] pci 0000:00:1f.2: pci_pm_resume_noirq+0x0/0xe2 returned 0 after 20 usecs
+[ 3298.759313] i801_smbus 0000:00:1f.4: calling pci_pm_resume_noirq+0x0/0xe2 @ 6204, parent: pci0000:00
+[ 3298.759315] chromeos-keyboard-leds GOOG0002:00: acpi_subsys_resume_noirq+0x0/0x3b returned 0 after 0 usecs
+[ 3298.759318] int3400 thermal INT3400:00: calling acpi_subsys_resume_noirq+0x0/0x3b @ 6193, parent: platform
+[ 3298.759321] int3400 thermal INT3400:00: acpi_subsys_resume_noirq+0x0/0x3b returned 0 after 0 usecs
+[ 3298.759323] int3403 thermal INT3403:00: calling acpi_subsys_resume_noirq+0x0/0x3b @ 6193, parent: INT3400:00
+[ 3298.759326] int3403 thermal INT3403:00: acpi_subsys_resume_noirq+0x0/0x3b returned 0 after 0 usecs
+[ 3298.759329] int3403 thermal INT3403:01: calling acpi_subsys_resume_noirq+0x0/0x3b @ 6193, parent: INT3400:00
+[ 3298.759331] int3403 thermal INT3403:01: acpi_subsys_resume_noirq+0x0/0x3b returned 0 after 0 usecs
+[ 3298.759333] int3403 thermal INT3403:02: calling acpi_subsys_resume_noirq+0x0/0x3b @ 6193, parent: INT3400:00
+[ 3298.759336] int3403 thermal INT3403:02: acpi_subsys_resume_noirq+0x0/0x3b returned 0 after 0 usecs
+[ 3298.759339] int3403 thermal INT3403:03: calling acpi_subsys_resume_noirq+0x0/0x3b @ 6193, parent: INT3400:00
+[ 3298.759341] int3403 thermal INT3403:03: acpi_subsys_resume_noirq+0x0/0x3b returned 0 after 0 usecs
+[ 3298.759344] int3403 thermal INT3403:04: calling acpi_subsys_resume_noirq+0x0/0x3b @ 6193, parent: INT3400:00
+[ 3298.759346] int3403 thermal INT3403:04: acpi_subsys_resume_noirq+0x0/0x3b returned 0 after 0 usecs
+[ 3298.759349] coreboot_table_acpi BOOT0000:00: calling acpi_subsys_resume_noirq+0x0/0x3b @ 6193, parent: platform
+[ 3298.759352] coreboot_table_acpi BOOT0000:00: acpi_subsys_resume_noirq+0x0/0x3b returned 0 after 0 usecs
+[ 3298.759393] i801_smbus 0000:00:1f.4: pci_pm_resume_noirq+0x0/0xe2 returned 0 after 76 usecs
+[ 3298.759396] pci 0000:00:1f.5: calling pci_pm_resume_noirq+0x0/0xe2 @ 6204, parent: pci0000:00
+[ 3298.759402] pci 0000:00:1f.3: pci_pm_resume_noirq+0x0/0xe2 returned 0 after 90 usecs
+[ 3298.759429] pci 0000:00:1f.5: pci_pm_resume_noirq+0x0/0xe2 returned 0 after 30 usecs
+[ 3298.767533] sdhci-pci 0000:00:1e.4: pci_pm_resume_noirq+0x0/0xe2 returned 0 after 8139 usecs
+[ 3298.770606] intel-lpss 0000:00:19.2: pci_pm_resume_noirq+0x0/0xe2 returned 0 after 11204 usecs
+[ 3298.770614] intel-lpss 0000:00:1e.2: pci_pm_resume_noirq+0x0/0xe2 returned 0 after 11153 usecs
+[ 3298.770619] intel-lpss 0000:00:1e.0: pci_pm_resume_noirq+0x0/0xe2 returned 0 after 11161 usecs
+[ 3298.770720] intel-lpss 0000:00:15.1: pci_pm_resume_noirq+0x0/0xe2 returned 0 after 11326 usecs
+[ 3298.770726] pcieport 0000:00:1c.4: pci_pm_resume_noirq+0x0/0xe2 returned 0 after 11269 usecs
+[ 3298.770733] nvme 0000:02:00.0: calling pci_pm_resume_noirq+0x0/0xe2 @ 6204, parent: 0000:00:1c.4
+[ 3298.770779] xhci_hcd 0000:00:14.0: pci_pm_resume_noirq+0x0/0xe2 returned 0 after 11460 usecs
+[ 3298.770805] intel-lpss 0000:00:15.2: pci_pm_resume_noirq+0x0/0xe2 returned 0 after 11407 usecs
+[ 3298.770835] pcieport 0000:00:1c.0: pci_pm_resume_noirq+0x0/0xe2 returned 0 after 11384 usecs
+[ 3298.770863] iwlwifi 0000:01:00.0: calling pci_pm_resume_noirq+0x0/0xe2 @ 6207, parent: 0000:00:1c.0
+[ 3298.771089] intel-lpss 0000:00:15.0: pci_pm_resume_noirq+0x0/0xe2 returned 0 after 11727 usecs
+[ 3298.771091] i915 0000:00:02.0: pci_pm_resume_noirq+0x0/0xe2 returned 0 after 11776 usecs
+[ 3298.771102] intel-lpss 0000:00:19.0: pci_pm_resume_noirq+0x0/0xe2 returned 0 after 11688 usecs
+[ 3298.771113] i2c_hid i2c-WCOM50C1:00: calling acpi_subsys_resume_noirq+0x0/0x3b @ 6208, parent: i2c-6
+[ 3298.771115] cr50_i2c i2c-GOOG0005:00: calling acpi_subsys_resume_noirq+0x0/0x3b @ 6209, parent: i2c-7
+[ 3298.771117] i2c_hid i2c-ACPI0C50:00: calling acpi_subsys_resume_noirq+0x0/0x3b @ 6210, parent: i2c-8
+[ 3298.771119] cr50_i2c i2c-GOOG0005:00: acpi_subsys_resume_noirq+0x0/0x3b returned 0 after 0 usecs
+[ 3298.771121] i2c_hid i2c-ACPI0C50:00: acpi_subsys_resume_noirq+0x0/0x3b returned 0 after 0 usecs
+[ 3298.771123] cros-ec-i2c i2c-GOOG0008:00: calling acpi_subsys_resume_noirq+0x0/0x3b @ 6211, parent: i2c-8
+[ 3298.771124] cros-ec-i2c i2c-GOOG0008:00: acpi_subsys_resume_noirq+0x0/0x3b returned 0 after 0 usecs
+[ 3298.771127] i8042 i8042: calling i8042_pm_resume_noirq+0x0/0x1f @ 6193, parent: platform
+[ 3298.771129] i8042 i8042: i8042_pm_resume_noirq+0x0/0x1f returned 0 after 0 usecs
+[ 3298.771132] i2c_hid i2c-WCOM50C1:00: acpi_subsys_resume_noirq+0x0/0x3b returned 0 after 0 usecs
+[ 3298.771134] iTCO_wdt iTCO_wdt: calling iTCO_wdt_resume_noirq+0x0/0x22 @ 6193, parent: 0000:00:1f.4
+[ 3298.771135] iTCO_wdt iTCO_wdt: iTCO_wdt_resume_noirq+0x0/0x22 returned 0 after 0 usecs
+[ 3298.771143] gsmi gsmi: calling gsmi_log_s0ix_resume+0x0/0x20 @ 6193, parent: platform
+[ 3298.771145] gsmi gsmi: gsmi_log_s0ix_resume+0x0/0x20 returned 0 after 0 usecs
+[ 3298.784208] nvme 0000:02:00.0: pci_pm_resume_noirq+0x0/0xe2 returned 0 after 13159 usecs
+[ 3298.784277] iwlwifi 0000:01:00.0: pci_pm_resume_noirq+0x0/0xe2 returned 0 after 13098 usecs
+[ 3298.784553] intel-lpss 0000:00:15.0: calling intel_lpss_resume+0x0/0x3a @ 6211, parent: pci0000:00
+[ 3298.784560] intel-lpss 0000:00:15.1: calling intel_lpss_resume+0x0/0x3a @ 6235, parent: pci0000:00
+[ 3298.784566] intel-lpss 0000:00:15.2: calling intel_lpss_resume+0x0/0x3a @ 6234, parent: pci0000:00
+[ 3298.784583] intel-lpss 0000:00:15.1: intel_lpss_resume+0x0/0x3a returned 0 after 12 usecs
+[ 3298.784587] intel-lpss 0000:00:15.2: intel_lpss_resume+0x0/0x3a returned 0 after 12 usecs
+[ 3298.784600] intel-lpss 0000:00:15.0: intel_lpss_resume+0x0/0x3a returned 0 after 12 usecs
+[ 3298.784605] intel-lpss 0000:00:19.0: calling intel_lpss_resume+0x0/0x3a @ 6235, parent: pci0000:00
+[ 3298.784609] intel-lpss 0000:00:19.2: calling intel_lpss_resume+0x0/0x3a @ 6234, parent: pci0000:00
+[ 3298.784617] sunrisepoint-pinctrl INT344B:00: calling acpi_subsys_resume_early+0x0/0x23 @ 6193, parent: pci0000:00
+[ 3298.784627] intel-lpss 0000:00:19.0: intel_lpss_resume+0x0/0x3a returned 0 after 12 usecs
+[ 3298.784634] intel-lpss 0000:00:19.2: intel_lpss_resume+0x0/0x3a returned 0 after 12 usecs
+[ 3298.784640] intel-lpss 0000:00:1e.0: calling intel_lpss_resume+0x0/0x3a @ 6235, parent: pci0000:00
+[ 3298.784646] intel-lpss 0000:00:1e.2: calling intel_lpss_resume+0x0/0x3a @ 6234, parent: pci0000:00
+[ 3298.784661] intel-lpss 0000:00:1e.0: intel_lpss_resume+0x0/0x3a returned 0 after 11 usecs
+[ 3298.784668] intel-lpss 0000:00:1e.2: intel_lpss_resume+0x0/0x3a returned 0 after 11 usecs
+[ 3298.784695] i915 0000:00:02.0: calling i915_pm_resume_early+0x0/0x23 @ 6204, parent: pci0000:00
+[ 3298.787417] i915 0000:00:02.0: i915_pm_resume_early+0x0/0x23 returned 0 after 2646 usecs
+[ 3298.787720] sunrisepoint-pinctrl INT344B:00: acpi_subsys_resume_early+0x0/0x23 returned 0 after 3024 usecs
+[ 3298.787736] cros_ec_lpcs GOOG0004:00: calling acpi_subsys_resume_early+0x0/0x23 @ 6193, parent: PNP0C09:00
+[ 3298.789826] cros_ec_lpcs GOOG0004:00: acpi_subsys_resume_early+0x0/0x23 returned 0 after 2034 usecs
+[ 3298.789835] cros-usbpd-notify-acpi GOOG0003:00: calling acpi_subsys_resume_early+0x0/0x23 @ 6193, parent: PNP0C09:00
+[ 3298.789843] cros-usbpd-notify-acpi GOOG0003:00: acpi_subsys_resume_early+0x0/0x23 returned 0 after 0 usecs
+[ 3298.789852] chromeos_pstore GOOG9999:00: calling acpi_subsys_resume_early+0x0/0x23 @ 6193, parent: platform
+[ 3298.789859] chromeos_pstore GOOG9999:00: acpi_subsys_resume_early+0x0/0x23 returned 0 after 0 usecs
+[ 3298.789868] chromeos-keyboard-leds GOOG0002:00: calling acpi_subsys_resume_early+0x0/0x23 @ 6193, parent: platform
+[ 3298.789875] chromeos-keyboard-leds GOOG0002:00: acpi_subsys_resume_early+0x0/0x23 returned 0 after 0 usecs
+[ 3298.789883] int3400 thermal INT3400:00: calling acpi_subsys_resume_early+0x0/0x23 @ 6193, parent: platform
+[ 3298.789890] int3400 thermal INT3400:00: acpi_subsys_resume_early+0x0/0x23 returned 0 after 0 usecs
+[ 3298.789898] int3403 thermal INT3403:00: calling acpi_subsys_resume_early+0x0/0x23 @ 6193, parent: INT3400:00
+[ 3298.789905] int3403 thermal INT3403:00: acpi_subsys_resume_early+0x0/0x23 returned 0 after 0 usecs
+[ 3298.789913] int3403 thermal INT3403:01: calling acpi_subsys_resume_early+0x0/0x23 @ 6193, parent: INT3400:00
+[ 3298.789920] int3403 thermal INT3403:01: acpi_subsys_resume_early+0x0/0x23 returned 0 after 0 usecs
+[ 3298.789928] int3403 thermal INT3403:02: calling acpi_subsys_resume_early+0x0/0x23 @ 6193, parent: INT3400:00
+[ 3298.789935] int3403 thermal INT3403:02: acpi_subsys_resume_early+0x0/0x23 returned 0 after 0 usecs
+[ 3298.789943] int3403 thermal INT3403:03: calling acpi_subsys_resume_early+0x0/0x23 @ 6193, parent: INT3400:00
+[ 3298.789950] int3403 thermal INT3403:03: acpi_subsys_resume_early+0x0/0x23 returned 0 after 0 usecs
+[ 3298.789958] int3403 thermal INT3403:04: calling acpi_subsys_resume_early+0x0/0x23 @ 6193, parent: INT3400:00
+[ 3298.789965] int3403 thermal INT3403:04: acpi_subsys_resume_early+0x0/0x23 returned 0 after 0 usecs
+[ 3298.789973] coreboot_table_acpi BOOT0000:00: calling acpi_subsys_resume_early+0x0/0x23 @ 6193, parent: platform
+[ 3298.789981] coreboot_table_acpi BOOT0000:00: acpi_subsys_resume_early+0x0/0x23 returned 0 after 0 usecs
+[ 3298.790037] i2c_designware i2c_designware.0: calling dw_i2c_plat_resume+0x0/0x3b @ 6193, parent: 0000:00:15.0
+[ 3298.790052] i2c_designware i2c_designware.0: dw_i2c_plat_resume+0x0/0x3b returned 0 after 5 usecs
+[ 3298.790065] i2c_designware i2c_designware.1: calling dw_i2c_plat_resume+0x0/0x3b @ 6193, parent: 0000:00:15.1
+[ 3298.790076] i2c_designware i2c_designware.1: dw_i2c_plat_resume+0x0/0x3b returned 0 after 2 usecs
+[ 3298.790088] i2c_designware i2c_designware.2: calling dw_i2c_plat_resume+0x0/0x3b @ 6193, parent: 0000:00:15.2
+[ 3298.790099] i2c_designware i2c_designware.2: dw_i2c_plat_resume+0x0/0x3b returned 0 after 4 usecs
+[ 3298.790120] i2c_hid i2c-ACPI0C50:00: calling acpi_subsys_resume_early+0x0/0x23 @ 6211, parent: i2c-8
+[ 3298.790131] i2c_hid i2c-ACPI0C50:00: acpi_subsys_resume_early+0x0/0x23 returned 0 after 0 usecs
+[ 3298.790142] cr50_i2c i2c-GOOG0005:00: calling acpi_subsys_resume_early+0x0/0x23 @ 6235, parent: i2c-7
+[ 3298.790149] cros-ec-i2c i2c-GOOG0008:00: calling acpi_subsys_resume_early+0x0/0x23 @ 6210, parent: i2c-8
+[ 3298.790158] cr50_i2c i2c-GOOG0005:00: acpi_subsys_resume_early+0x0/0x23 returned 0 after 1 usecs
+[ 3298.790180] i2c_hid i2c-WCOM50C1:00: calling acpi_subsys_resume_early+0x0/0x23 @ 6234, parent: i2c-6
+[ 3298.790188] i2c_hid i2c-WCOM50C1:00: acpi_subsys_resume_early+0x0/0x23 returned 0 after 0 usecs
+[ 3298.790241] intel_pmc_core intel_pmc_core.0: calling pmc_core_resume+0x0/0x14a @ 6193, parent: platform
+[ 3298.790254] intel_pmc_core intel_pmc_core.0: pmc_core_resume+0x0/0x14a returned 0 after 0 usecs
+[ 3298.790919] cros-ec-i2c i2c-GOOG0008:00: acpi_subsys_resume_early+0x0/0x23 returned 0 after 736 usecs
+[ 3298.791290] proc_thermal 0000:00:04.0: calling pci_pm_resume+0x0/0xc2 @ 6211, parent: pci0000:00
+[ 3298.791301] pci 0000:00:08.0: calling pci_pm_resume+0x0/0xc2 @ 6210, parent: pci0000:00
+[ 3298.791309] skl_uncore 0000:00:00.0: calling pci_pm_resume+0x0/0xc2 @ 6208, parent: pci0000:00
+[ 3298.791317] button PNP0C0C:00: calling acpi_button_resume+0x0/0xb2 @ 6193, parent: LNXSYBUS:00
+[ 3298.791328] pci 0000:00:08.0: pci_pm_resume+0x0/0xc2 returned 0 after 2 usecs
+[ 3298.791334] skl_uncore 0000:00:00.0: pci_pm_resume+0x0/0xc2 returned 0 after 1 usecs
+[ 3298.791340] button PNP0C0C:00: acpi_button_resume+0x0/0xb2 returned 0 after 0 usecs
+[ 3298.791348] xhci_hcd 0000:00:14.0: calling pci_pm_resume+0x0/0xc2 @ 6210, parent: pci0000:00
+[ 3298.791353] pci 0000:00:14.2: calling pci_pm_resume+0x0/0xc2 @ 6208, parent: pci0000:00
+[ 3298.791361] pci 0000:00:14.2: pci_pm_resume+0x0/0xc2 returned 0 after 0 usecs
+[ 3298.791368] ec PNP0C09:00: calling acpi_ec_resume+0x0/0x16 @ 6193, parent: device:01
+[ 3298.791376] intel-lpss 0000:00:15.0: calling pci_pm_resume+0x0/0xc2 @ 6208, parent: pci0000:00
+[ 3298.791378] ACPI: EC: event unblocked
+[ 3298.791386] intel-lpss 0000:00:15.0: pci_pm_resume+0x0/0xc2 returned 0 after 1 usecs
+[ 3298.791395] ec PNP0C09:00: acpi_ec_resume+0x0/0x16 returned 0 after 19 usecs
+[ 3298.791402] intel-lpss 0000:00:15.1: calling pci_pm_resume+0x0/0xc2 @ 6208, parent: pci0000:00
+[ 3298.791412] button PNP0C0D:00: calling acpi_button_resume+0x0/0xb2 @ 6193, parent: PNP0C09:00
+[ 3298.791437] intel-lpss 0000:00:15.1: pci_pm_resume+0x0/0xc2 returned 0 after 0 usecs
+[ 3298.791449] proc_thermal 0000:00:04.0: pci_pm_resume+0x0/0xc2 returned 0 after 9 usecs
+[ 3298.791456] intel-lpss 0000:00:15.2: calling pci_pm_resume+0x0/0xc2 @ 6208, parent: pci0000:00
+[ 3298.791464] pci 0000:00:16.0: calling pci_pm_resume+0x0/0xc2 @ 6211, parent: pci0000:00
+[ 3298.791470] intel-lpss 0000:00:15.2: pci_pm_resume+0x0/0xc2 returned 0 after 0 usecs
+[ 3298.791477] pci 0000:00:16.0: pci_pm_resume+0x0/0xc2 returned 0 after 1 usecs
+[ 3298.791485] intel-lpss 0000:00:19.0: calling pci_pm_resume+0x0/0xc2 @ 6208, parent: pci0000:00
+[ 3298.791492] intel-lpss 0000:00:19.2: calling pci_pm_resume+0x0/0xc2 @ 6211, parent: pci0000:00
+[ 3298.791499] intel-lpss 0000:00:19.0: pci_pm_resume+0x0/0xc2 returned 0 after 0 usecs
+[ 3298.791505] intel-lpss 0000:00:19.2: pci_pm_resume+0x0/0xc2 returned 0 after 1 usecs
+[ 3298.791514] pcieport 0000:00:1c.0: calling pci_pm_resume+0x0/0xc2 @ 6208, parent: pci0000:00
+[ 3298.791521] pcieport 0000:00:1c.4: calling pci_pm_resume+0x0/0xc2 @ 6211, parent: pci0000:00
+[ 3298.791542] pcieport 0000:00:1c.0: pci_pm_resume+0x0/0xc2 returned 0 after 17 usecs
+[ 3298.791548] pcieport 0000:00:1c.4: pci_pm_resume+0x0/0xc2 returned 0 after 14 usecs
+[ 3298.791556] intel-lpss 0000:00:1e.0: calling pci_pm_resume+0x0/0xc2 @ 6208, parent: pci0000:00
+[ 3298.791563] intel-lpss 0000:00:1e.2: calling pci_pm_resume+0x0/0xc2 @ 6211, parent: pci0000:00
+[ 3298.791569] intel-lpss 0000:00:1e.0: pci_pm_resume+0x0/0xc2 returned 0 after 0 usecs
+[ 3298.791576] intel-lpss 0000:00:1e.2: pci_pm_resume+0x0/0xc2 returned 0 after 0 usecs
+[ 3298.791584] sdhci-pci 0000:00:1e.4: calling pci_pm_resume+0x0/0xc2 @ 6208, parent: pci0000:00
+[ 3298.791591] pci 0000:00:1f.0: calling pci_pm_resume+0x0/0xc2 @ 6211, parent: pci0000:00
+[ 3298.791598] pci 0000:00:1f.0: pci_pm_resume+0x0/0xc2 returned 0 after 0 usecs
+[ 3298.791610] pci 0000:00:1f.2: calling pci_pm_resume+0x0/0xc2 @ 6211, parent: pci0000:00
+[ 3298.791617] pci 0000:00:1f.2: pci_pm_resume+0x0/0xc2 returned 0 after 0 usecs
+[ 3298.791625] pci 0000:00:1f.3: calling pci_pm_resume+0x0/0xc2 @ 6211, parent: pci0000:00
+[ 3298.791635] pci 0000:00:1f.3: pci_pm_resume+0x0/0xc2 returned 0 after 0 usecs
+[ 3298.791647] i801_smbus 0000:00:1f.4: calling pci_pm_resume+0x0/0xc2 @ 6211, parent: pci0000:00
+[ 3298.791672] i801_smbus 0000:00:1f.4: pci_pm_resume+0x0/0xc2 returned 0 after 16 usecs
+[ 3298.791688] pci 0000:00:1f.5: calling pci_pm_resume+0x0/0xc2 @ 6211, parent: pci0000:00
+[ 3298.791700] pci 0000:00:1f.5: pci_pm_resume+0x0/0xc2 returned 0 after 0 usecs
+[ 3298.791715] iwlwifi 0000:01:00.0: calling pci_pm_resume+0x0/0xc2 @ 6211, parent: 0000:00:1c.0
+[ 3298.791952] iwlwifi 0000:01:00.0: pci_pm_resume+0x0/0xc2 returned 0 after 218 usecs
+[ 3298.791965] nvme 0000:02:00.0: calling pci_pm_resume+0x0/0xc2 @ 6211, parent: 0000:00:1c.4
+[ 3298.791979] nvme 0000:02:00.0: pci_pm_resume+0x0/0xc2 returned 0 after 3 usecs
+[ 3298.791987] button PNP0C0D:00: acpi_button_resume+0x0/0xb2 returned 0 after 311 usecs
+[ 3298.791997] battery PNP0C0A:00: calling acpi_battery_resume+0x0/0x35 @ 6193, parent: PNP0C09:00
+[ 3298.792006] xhci_hcd 0000:00:14.0: pci_pm_resume+0x0/0xc2 returned 0 after 625 usecs
+[ 3298.792014] i915 0000:00:02.0: calling pci_pm_resume+0x0/0xc2 @ 6239, parent: pci0000:00
+[ 3298.792062] battery PNP0C0A:00: acpi_battery_resume+0x0/0x35 returned 0 after 35 usecs
+[ 3298.792083] sdhci-pci 0000:00:1e.4: pci_pm_resume+0x0/0xc2 returned 0 after 477 usecs
+[ 3298.792101] chromeos_tbmc GOOG0006:00: calling chromeos_tbmc_resume+0x0/0x1a @ 6193, parent: PNP0C09:00
+[ 3298.792111] usb usb1: calling usb_dev_resume+0x0/0x14 @ 6208, parent: 0000:00:14.0
+[ 3298.792265] usb usb2: calling usb_dev_resume+0x0/0x14 @ 5949, parent: 0000:00:14.0
+[ 3298.792419] ieee80211 phy0: calling wiphy_resume+0x0/0x153 [cfg80211] @ 4675, parent: 0000:01:00.0
+[ 3298.792697] usb usb2: usb_dev_resume+0x0/0x14 returned 0 after 409 usecs
+[ 3298.792968] chromeos_tbmc GOOG0006:00: chromeos_tbmc_resume+0x0/0x1a returned 0 after 823 usecs
+[ 3298.793028] platform PNP0C0C:00: calling platform_pm_resume+0x0/0x40 @ 6193, parent: platform
+[ 3298.793036] platform PNP0C0C:00: platform_pm_resume+0x0/0x40 returned 0 after 0 usecs
+[ 3298.793054] platform INT0800:00: calling platform_pm_resume+0x0/0x40 @ 6193, parent: 0000:00:1f.0
+[ 3298.793064] platform INT0800:00: platform_pm_resume+0x0/0x40 returned 0 after 0 usecs
+[ 3298.793072] platform PNP0103:00: calling platform_pm_resume+0x0/0x40 @ 6193, parent: 0000:00:1f.0
+[ 3298.793079] platform PNP0103:00: platform_pm_resume+0x0/0x40 returned 0 after 0 usecs
+[ 3298.793090] platform PNP0C04:00: calling platform_pm_resume+0x0/0x40 @ 6193, parent: 0000:00:1f.0
+[ 3298.793097] platform PNP0C04:00: platform_pm_resume+0x0/0x40 returned 0 after 0 usecs
+[ 3298.793104] platform PNP0C09:00: calling platform_pm_resume+0x0/0x40 @ 6193, parent: 0000:00:1f.0
+[ 3298.793111] platform PNP0C09:00: platform_pm_resume+0x0/0x40 returned 0 after 0 usecs
+[ 3298.793121] platform PNP0C0D:00: calling platform_pm_resume+0x0/0x40 @ 6193, parent: PNP0C09:00
+[ 3298.793128] platform PNP0C0D:00: platform_pm_resume+0x0/0x40 returned 0 after 0 usecs
+[ 3298.793138] platform ACPI0003:00: calling platform_pm_resume+0x0/0x40 @ 6193, parent: PNP0C09:00
+[ 3298.793145] platform ACPI0003:00: platform_pm_resume+0x0/0x40 returned 0 after 0 usecs
+[ 3298.793154] platform PNP0C0A:00: calling platform_pm_resume+0x0/0x40 @ 6193, parent: PNP0C09:00
+[ 3298.793162] platform PNP0C0A:00: platform_pm_resume+0x0/0x40 returned 0 after 0 usecs
+[ 3298.793175] platform GOOG0006:00: calling platform_pm_resume+0x0/0x40 @ 6193, parent: PNP0C09:00
+[ 3298.793183] platform GOOG0006:00: platform_pm_resume+0x0/0x40 returned 0 after 0 usecs
+[ 3298.793200] platform GGL0001:00: calling platform_pm_resume+0x0/0x40 @ 6193, parent: platform
+[ 3298.793209] platform GGL0001:00: platform_pm_resume+0x0/0x40 returned 0 after 0 usecs
+[ 3298.793223] button LNXPWRBN:00: calling acpi_button_resume+0x0/0xb2 @ 6193, parent: LNXSYSTM:00
+[ 3298.793234] button LNXPWRBN:00: acpi_button_resume+0x0/0xb2 returned 0 after 0 usecs
+[ 3298.793244] platform chromeos_acpi: calling platform_pm_resume+0x0/0x40 @ 6193, parent: platform
+[ 3298.793253] platform chromeos_acpi: platform_pm_resume+0x0/0x40 returned 0 after 0 usecs
+[ 3298.793267] system 00:00: calling pnp_bus_resume+0x0/0x99 @ 6193, parent: pnp0
+[ 3298.793277] system 00:00: pnp_bus_resume+0x0/0x99 returned 0 after 0 usecs
+[ 3298.793287] system 00:01: calling pnp_bus_resume+0x0/0x99 @ 6193, parent: pnp0
+[ 3298.793296] system 00:01: pnp_bus_resume+0x0/0x99 returned 0 after 0 usecs
+[ 3298.793304] rtc_cmos 00:02: calling pnp_bus_resume+0x0/0x99 @ 6193, parent: pnp0
+[ 3298.793313] rtc_cmos 00:02: pnp_bus_resume+0x0/0x99 returned 0 after 1 usecs
+[ 3298.793321] system 00:03: calling pnp_bus_resume+0x0/0x99 @ 6193, parent: pnp0
+[ 3298.793329] system 00:03: pnp_bus_resume+0x0/0x99 returned 0 after 0 usecs
+[ 3298.793337] system 00:04: calling pnp_bus_resume+0x0/0x99 @ 6193, parent: pnp0
+[ 3298.793345] system 00:04: pnp_bus_resume+0x0/0x99 returned 0 after 0 usecs
+[ 3298.793353] i8042 kbd 00:05: calling pnp_bus_resume+0x0/0x99 @ 6193, parent: pnp0
+[ 3298.793361] i8042 kbd 00:05: pnp_bus_resume+0x0/0x99 returned 0 after 0 usecs
+[ 3298.793382] platform platform-framebuffer.0: calling platform_pm_resume+0x0/0x40 @ 6193, parent: platform
+[ 3298.793391] platform platform-framebuffer.0: platform_pm_resume+0x0/0x40 returned 0 after 0 usecs
+[ 3298.793421] alarmtimer alarmtimer: calling platform_pm_resume+0x0/0x40 @ 6193, parent: platform
+[ 3298.793431] alarmtimer alarmtimer: platform_pm_resume+0x0/0x40 returned 0 after 1 usecs
+[ 3298.793456] input input0: calling input_dev_resume+0x0/0x3e @ 6193, parent: PNP0C0C:00
+[ 3298.793468] input input0: input_dev_resume+0x0/0x3e returned 0 after 0 usecs
+[ 3298.793479] input input1: calling input_dev_resume+0x0/0x3e @ 6193, parent: PNP0C0D:00
+[ 3298.793487] input input1: input_dev_resume+0x0/0x3e returned 0 after 0 usecs
+[ 3298.793497] input input2: calling input_dev_resume+0x0/0x3e @ 6193, parent: LNXPWRBN:00
+[ 3298.793506] input input2: input_dev_resume+0x0/0x3e returned 0 after 0 usecs
+[ 3298.845347] usb usb1: usb_dev_resume+0x0/0x14 returned 0 after 52004 usecs
+[ 3298.845398] usb 1-3: calling usb_dev_resume+0x0/0x14 @ 6229, parent: usb1
+[ 3298.845402] usb 1-2: calling usb_dev_resume+0x0/0x14 @ 6233, parent: usb1
+[ 3298.845651] usb 1-3: usb_dev_resume+0x0/0x14 returned 0 after 227 usecs
+[ 3298.904432] ieee80211 phy0: wiphy_resume+0x0/0x153 [cfg80211] returned 0 after 109395 usecs
+[ 3298.904920] nvme nvme0: Shutdown timeout set to 10 seconds
+[ 3298.921201] i915 0000:00:02.0: pci_pm_resume+0x0/0xc2 returned 0 after 126212 usecs
+[ 3298.921235] backlight intel_backlight: calling backlight_resume+0x0/0x78 @ 6193, parent: card0-eDP-1
+[ 3298.921248] backlight intel_backlight: backlight_resume+0x0/0x78 returned 0 after 0 usecs
+[ 3298.921262] platform vgem: calling platform_pm_resume+0x0/0x40 @ 6193, parent: platform
+[ 3298.921269] platform vgem: platform_pm_resume+0x0/0x40 returned 0 after 0 usecs
+[ 3298.921288] idma64 idma64.0: calling platform_pm_resume+0x0/0x40 @ 6193, parent: 0000:00:15.0
+[ 3298.921296] idma64 idma64.0: platform_pm_resume+0x0/0x40 returned 0 after 0 usecs
+[ 3298.921307] i2c_designware i2c_designware.0: calling platform_pm_resume+0x0/0x40 @ 6193, parent: 0000:00:15.0
+[ 3298.921316] i2c_designware i2c_designware.0: platform_pm_resume+0x0/0x40 returned 0 after 0 usecs
+[ 3298.921332] idma64 idma64.1: calling platform_pm_resume+0x0/0x40 @ 6193, parent: 0000:00:15.1
+[ 3298.921340] i2c_hid i2c-WCOM50C1:00: calling i2c_hid_resume+0x0/0x10c @ 6211, parent: i2c-6
+[ 3298.921363] idma64 idma64.1: platform_pm_resume+0x0/0x40 returned 0 after 0 usecs
+[ 3298.921372] i2c_designware i2c_designware.1: calling platform_pm_resume+0x0/0x40 @ 6193, parent: 0000:00:15.1
+[ 3298.921408] i2c_designware i2c_designware.1: platform_pm_resume+0x0/0x40 returned 0 after 0 usecs
+[ 3298.921423] idma64 idma64.2: calling platform_pm_resume+0x0/0x40 @ 6193, parent: 0000:00:15.2
+[ 3298.921430] cr50_i2c i2c-GOOG0005:00: calling cr50_resume+0x0/0x2b @ 6210, parent: i2c-7
+[ 3298.921436] cr50_i2c i2c-GOOG0005:00: cr50_resume+0x0/0x2b returned 0 after 0 usecs
+[ 3298.921445] idma64 idma64.2: platform_pm_resume+0x0/0x40 returned 0 after 0 usecs
+[ 3298.921454] i2c_designware i2c_designware.2: calling platform_pm_resume+0x0/0x40 @ 6193, parent: 0000:00:15.2
+[ 3298.921461] i2c_designware i2c_designware.2: platform_pm_resume+0x0/0x40 returned 0 after 0 usecs
+[ 3298.921481] i2c_hid i2c-ACPI0C50:00: calling i2c_hid_resume+0x0/0x10c @ 6234, parent: i2c-8
+[ 3298.921485] platform dw-apb-uart.3: calling platform_pm_resume+0x0/0x40 @ 6193, parent: 0000:00:19.0
+[ 3298.921490] platform dw-apb-uart.3: platform_pm_resume+0x0/0x40 returned 0 after 0 usecs
+[ 3298.921498] idma64 idma64.5: calling platform_pm_resume+0x0/0x40 @ 6193, parent: 0000:00:1e.0
+[ 3298.921503] idma64 idma64.5: platform_pm_resume+0x0/0x40 returned 0 after 0 usecs
+[ 3298.921509] platform dw-apb-uart.5: calling platform_pm_resume+0x0/0x40 @ 6193, parent: 0000:00:1e.0
+[ 3298.921516] platform dw-apb-uart.5: platform_pm_resume+0x0/0x40 returned 0 after 0 usecs
+[ 3298.921524] idma64 idma64.6: calling platform_pm_resume+0x0/0x40 @ 6193, parent: 0000:00:1e.2
+[ 3298.921532] idma64 idma64.6: platform_pm_resume+0x0/0x40 returned 0 after 0 usecs
+[ 3298.921541] pxa2xx-spi pxa2xx-spi.6: calling platform_pm_resume+0x0/0x40 @ 6193, parent: 0000:00:1e.2
+[ 3298.921566] pxa2xx-spi pxa2xx-spi.6: platform_pm_resume+0x0/0x40 returned 0 after 16 usecs
+[ 3298.921579] platform Fixed MDIO bus.0: calling platform_pm_resume+0x0/0x40 @ 6193, parent: platform
+[ 3298.921587] platform Fixed MDIO bus.0: platform_pm_resume+0x0/0x40 returned 0 after 0 usecs
+[ 3298.921600] platform intel_xhci_usb_sw: calling platform_pm_resume+0x0/0x40 @ 6193, parent: 0000:00:14.0
+[ 3298.921607] platform intel_xhci_usb_sw: platform_pm_resume+0x0/0x40 returned 0 after 0 usecs
+[ 3298.921617] i8042 i8042: calling platform_pm_resume+0x0/0x40 @ 6193, parent: platform
+[ 3298.921704] i2c_hid i2c-ACPI0C50:00: i2c_hid_resume+0x0/0x10c returned 0 after 187 usecs
+[ 3298.923055] i2c_hid i2c-WCOM50C1:00: i2c_hid_resume+0x0/0x10c returned 0 after 1653 usecs
+[ 3298.941570] usb 1-2: usb_dev_resume+0x0/0x14 returned 0 after 93938 usecs
+[ 3298.973750] i8042 i8042: platform_pm_resume+0x0/0x40 returned 0 after 50929 usecs
+[ 3298.973757] atkbd serio0: calling serio_resume+0x0/0x92 @ 6193, parent: i8042
+[ 3298.973781] atkbd serio0: serio_resume+0x0/0x92 returned 0 after 20 usecs
+[ 3298.973790] iTCO_wdt iTCO_wdt: calling platform_pm_resume+0x0/0x40 @ 6193, parent: 0000:00:1f.4
+[ 3298.973794] iTCO_wdt iTCO_wdt: platform_pm_resume+0x0/0x40 returned 0 after 0 usecs
+[ 3298.973799] coretemp coretemp.0: calling platform_pm_resume+0x0/0x40 @ 6193, parent: platform
+[ 3298.973802] coretemp coretemp.0: platform_pm_resume+0x0/0x40 returned 0 after 0 usecs
+[ 3298.973810] input input3: calling input_dev_resume+0x0/0x3e @ 6193, parent: serio0
+[ 3298.973822] input input3: input_dev_resume+0x0/0x3e returned 0 after 8 usecs
+[ 3298.973827] leds input3::numlock: calling led_resume+0x0/0x1f @ 6193, parent: input3
+[ 3298.973830] leds input3::numlock: led_resume+0x0/0x1f returned 0 after 0 usecs
+[ 3298.973834] leds input3::capslock: calling led_resume+0x0/0x1f @ 6193, parent: input3
+[ 3298.973837] leds input3::capslock: led_resume+0x0/0x1f returned 0 after 0 usecs
+[ 3298.973840] leds input3::scrolllock: calling led_resume+0x0/0x1f @ 6193, parent: input3
+[ 3298.973844] leds input3::scrolllock: led_resume+0x0/0x1f returned 0 after 0 usecs
+[ 3298.973848] leds mmc0::: calling led_resume+0x0/0x1f @ 6193, parent: 0000:00:1e.4
+[ 3298.973851] leds mmc0::: led_resume+0x0/0x1f returned 0 after 0 usecs
+[ 3298.973855] gsmi gsmi: calling platform_pm_resume+0x0/0x40 @ 6193, parent: platform
+[ 3298.973858] gsmi gsmi: platform_pm_resume+0x0/0x40 returned 0 after 0 usecs
+[ 3298.973878] input input4: calling input_dev_resume+0x0/0x3e @ 6193, parent: 0018:2D1F:5143.0001
+[ 3298.973882] input input4: input_dev_resume+0x0/0x3e returned 0 after 0 usecs
+[ 3298.973887] input input6: calling input_dev_resume+0x0/0x3e @ 6193, parent: 0018:2D1F:5143.0001
+[ 3298.973890] input input6: input_dev_resume+0x0/0x3e returned 0 after 0 usecs
+[ 3298.973894] input input9: calling input_dev_resume+0x0/0x3e @ 6193, parent: 0018:18D1:5028.0002
+[ 3298.973898] input input9: input_dev_resume+0x0/0x3e returned 0 after 0 usecs
+[ 3298.973903] intel_pmc_core intel_pmc_core.0: calling platform_pm_resume+0x0/0x40 @ 6193, parent: platform
+[ 3298.973905] intel_pmc_core intel_pmc_core.0: platform_pm_resume+0x0/0x40 returned 0 after 0 usecs
+[ 3298.973909] ramoops ramoops.0: calling platform_pm_resume+0x0/0x40 @ 6193, parent: platform
+[ 3298.973912] ramoops ramoops.0: platform_pm_resume+0x0/0x40 returned 0 after 0 usecs
+[ 3298.973916] input input10: calling input_dev_resume+0x0/0x3e @ 6193, parent: GOOG0006:00
+[ 3298.973920] input input10: input_dev_resume+0x0/0x3e returned 0 after 0 usecs
+[ 3298.973924] cros-ec-dev cros-ec-dev.0.auto: calling platform_pm_resume+0x0/0x40 @ 6193, parent: i2c-GOOG0008:00
+[ 3298.973927] cros-ec-dev cros-ec-dev.0.auto: platform_pm_resume+0x0/0x40 returned 0 after 0 usecs
+[ 3298.973931] cros-ec-chardev cros-ec-chardev.1.auto: calling platform_pm_resume+0x0/0x40 @ 6193, parent: cros-ec-dev.0.auto
+[ 3298.973935] cros-ec-chardev cros-ec-chardev.1.auto: platform_pm_resume+0x0/0x40 returned 0 after 0 usecs
+[ 3298.973938] cros-ec-debugfs cros-ec-debugfs.2.auto: calling platform_pm_resume+0x0/0x40 @ 6193, parent: cros-ec-dev.0.auto
+[ 3298.973942] cros-ec-debugfs cros-ec-debugfs.2.auto: platform_pm_resume+0x0/0x40 returned 0 after 0 usecs
+[ 3298.973945] platform cros-ec-lightbar.3.auto: calling platform_pm_resume+0x0/0x40 @ 6193, parent: cros-ec-dev.0.auto
+[ 3298.973948] platform cros-ec-lightbar.3.auto: platform_pm_resume+0x0/0x40 returned 0 after 0 usecs
+[ 3298.973952] cros-ec-pd-sysfs cros-ec-pd-sysfs.4.auto: calling platform_pm_resume+0x0/0x40 @ 6193, parent: cros-ec-dev.0.auto
+[ 3298.973955] cros-ec-pd-sysfs cros-ec-pd-sysfs.4.auto: platform_pm_resume+0x0/0x40 returned 0 after 0 usecs
+[ 3298.973958] cros-ec-sysfs cros-ec-sysfs.5.auto: calling platform_pm_resume+0x0/0x40 @ 6193, parent: cros-ec-dev.0.auto
+[ 3298.973961] cros-ec-sysfs cros-ec-sysfs.5.auto: platform_pm_resume+0x0/0x40 returned 0 after 0 usecs
+[ 3298.973965] cros-ec-dev cros-ec-dev.7.auto: calling platform_pm_resume+0x0/0x40 @ 6193, parent: GOOG0004:00
+[ 3298.973968] cros-ec-dev cros-ec-dev.7.auto: platform_pm_resume+0x0/0x40 returned 0 after 0 usecs
+[ 3298.973972] cros-ec-sensors cros-ec-accel.8.auto: calling platform_pm_resume+0x0/0x40 @ 6193, parent: cros-ec-dev.7.auto
+[ 3298.973975] cros-ec-sensors cros-ec-accel.8.auto: platform_pm_resume+0x0/0x40 returned 0 after 0 usecs
+[ 3298.973979] cros-ec-sensors cros-ec-accel.9.auto: calling platform_pm_resume+0x0/0x40 @ 6193, parent: cros-ec-dev.7.auto
+[ 3298.973981] cros-ec-sensors cros-ec-accel.9.auto: platform_pm_resume+0x0/0x40 returned 0 after 0 usecs
+[ 3298.973985] cros-ec-sensors cros-ec-gyro.10.auto: calling platform_pm_resume+0x0/0x40 @ 6193, parent: cros-ec-dev.7.auto
+[ 3298.973988] cros-ec-sensors cros-ec-gyro.10.auto: platform_pm_resume+0x0/0x40 returned 0 after 0 usecs
+[ 3298.973991] cros-ec-sensors cros-ec-mag.11.auto: calling platform_pm_resume+0x0/0x40 @ 6193, parent: cros-ec-dev.7.auto
+[ 3298.973994] cros-ec-sensors cros-ec-mag.11.auto: platform_pm_resume+0x0/0x40 returned 0 after 0 usecs
+[ 3298.973998] cros-ec-light-prox cros-ec-light.12.auto: calling platform_pm_resume+0x0/0x40 @ 6193, parent: cros-ec-dev.7.auto
+[ 3298.974001] cros-ec-light-prox cros-ec-light.12.auto: platform_pm_resume+0x0/0x40 returned 0 after 0 usecs
+[ 3298.974005] cros-ec-activity cros-ec-activity.13.auto: calling platform_pm_resume+0x0/0x40 @ 6193, parent: cros-ec-dev.7.auto
+[ 3298.974008] cros-ec-activity cros-ec-activity.13.auto: platform_pm_resume+0x0/0x40 returned 0 after 0 usecs
+[ 3298.974012] cros-ec-ring cros-ec-ring.14.auto: calling platform_pm_resume+0x0/0x40 @ 6193, parent: cros-ec-dev.7.auto
+[ 3298.974015] cros-ec-ring cros-ec-ring.14.auto: platform_pm_resume+0x0/0x40 returned 0 after 0 usecs
+[ 3298.974018] cros-usbpd-charger cros-usbpd-charger.15.auto: calling platform_pm_resume+0x0/0x40 @ 6193, parent: cros-ec-dev.7.auto
+[ 3298.974083] cros-usbpd-charger cros-usbpd-charger.15.auto: platform_pm_resume+0x0/0x40 returned 0 after 59 usecs
+[ 3298.974096] cros-usbpd-logger cros-usbpd-logger.16.auto: calling platform_pm_resume+0x0/0x40 @ 6193, parent: cros-ec-dev.7.auto
+[ 3298.974100] cros-usbpd-logger cros-usbpd-logger.16.auto: platform_pm_resume+0x0/0x40 returned 0 after 0 usecs
+[ 3298.974105] cros-ec-chardev cros-ec-chardev.17.auto: calling platform_pm_resume+0x0/0x40 @ 6193, parent: cros-ec-dev.7.auto
+[ 3298.974108] cros-ec-chardev cros-ec-chardev.17.auto: platform_pm_resume+0x0/0x40 returned 0 after 0 usecs
+[ 3298.974111] cros-ec-debugfs cros-ec-debugfs.18.auto: calling platform_pm_resume+0x0/0x40 @ 6193, parent: cros-ec-dev.7.auto
+[ 3298.974115] cros-ec-debugfs cros-ec-debugfs.18.auto: platform_pm_resume+0x0/0x40 returned 0 after 0 usecs
+[ 3298.974118] platform cros-ec-lightbar.19.auto: calling platform_pm_resume+0x0/0x40 @ 6193, parent: cros-ec-dev.7.auto
+[ 3298.974122] platform cros-ec-lightbar.19.auto: platform_pm_resume+0x0/0x40 returned 0 after 0 usecs
+[ 3298.974126] cros-ec-pd-sysfs cros-ec-pd-sysfs.20.auto: calling platform_pm_resume+0x0/0x40 @ 6193, parent: cros-ec-dev.7.auto
+[ 3298.974128] cros-ec-pd-sysfs cros-ec-pd-sysfs.20.auto: platform_pm_resume+0x0/0x40 returned 0 after 0 usecs
+[ 3298.974132] cros-ec-sysfs cros-ec-sysfs.21.auto: calling platform_pm_resume+0x0/0x40 @ 6193, parent: cros-ec-dev.7.auto
+[ 3298.974135] cros-ec-sysfs cros-ec-sysfs.21.auto: platform_pm_resume+0x0/0x40 returned 0 after 0 usecs
+[ 3298.974145] leds chromeos::kbd_backlight: calling led_resume+0x0/0x1f @ 6193, parent: GOOG0002:00
+[ 3298.974668] leds chromeos::kbd_backlight: led_resume+0x0/0x1f returned 0 after 506 usecs
+[ 3298.974675] snd-soc-dummy snd-soc-dummy: calling platform_pm_resume+0x0/0x40 @ 6193, parent: platform
+[ 3298.974679] snd-soc-dummy snd-soc-dummy: platform_pm_resume+0x0/0x40 returned 0 after 0 usecs
+[ 3298.974684] platform microcode: calling platform_pm_resume+0x0/0x40 @ 6193, parent: platform
+[ 3298.974686] platform microcode: platform_pm_resume+0x0/0x40 returned 0 after 0 usecs
+[ 3298.974692] cros-ec-pd-update cros-ec-pd-update.6.auto: calling platform_pm_resume+0x0/0x40 @ 6193, parent: cros-ec-dev.0.auto
+[ 3298.974696] cros-ec-pd-update cros-ec-pd-update.6.auto: platform_pm_resume+0x0/0x40 returned 0 after 0 usecs
+[ 3298.974699] cros-ec-pd-update cros-ec-pd-update.22.auto: calling platform_pm_resume+0x0/0x40 @ 6193, parent: cros-ec-dev.7.auto
+[ 3298.974702] cros-ec-pd-update cros-ec-pd-update.22.auto: platform_pm_resume+0x0/0x40 returned 0 after 0 usecs
+[ 3298.974709] platform regulatory.0: calling platform_pm_resume+0x0/0x40 @ 6193, parent: platform
+[ 3298.974712] platform regulatory.0: platform_pm_resume+0x0/0x40 returned 0 after 0 usecs
+[ 3298.974720] leds phy0-led: calling led_resume+0x0/0x1f @ 6193, parent: 0000:01:00.0
+[ 3298.974723] leds phy0-led: led_resume+0x0/0x1f returned 0 after 0 usecs
+[ 3298.974730] rfkill rfkill0: calling rfkill_resume+0x0/0x5f @ 6193, parent: phy0
+[ 3298.974734] rfkill rfkill0: rfkill_resume+0x0/0x5f returned 0 after 1 usecs
+[ 3298.974740] rfkill rfkill1: calling rfkill_resume+0x0/0x5f @ 6193, parent: hci0
+[ 3298.974744] rfkill rfkill1: rfkill_resume+0x0/0x5f returned 0 after 1 usecs
+[ 3298.980344] OOM killer enabled.
+[ 3298.980347] Restarting tasks ... done.
+[ 3298.989037] PM: suspend exit
+[ 3299.274585] frecon[314]: Frecon using drm driver i915, version 1.6, date(20180921), desc(Intel Graphics) using atomic
+[ 3300.269867] prctl success: chrome/6395 ffff9e392cef8000 (fork: 0)
+[ 3300.271717] prctl success: chrome/6395 ffff9e392c018000 (fork: 1)
+[ 3300.271771] prctl success: chrome/6395 ffff9e38f77d1e80 (fork: 1)
+[ 3300.271830] prctl success: chrome/6395 ffff9e38f77e2dc0 (fork: 1)
+[ 3300.272871] prctl success: chrome/6395 ffff9e38f77e0000 (fork: 1)
+[ 3300.276107] prctl success: ThreadPoolForeg/6397 ffff9e392cefeac0 (fork: 1)
+[ 3300.278048] prctl success: chrome/6395 ffff9e392af4bd00 (fork: 1)
+[ 3300.278471] prctl success: chrome/6395 ffff9e392af4db80 (fork: 1)
+[ 3300.278577] prctl success: chrome/6395 ffff9e392af4adc0 (fork: 1)
+[ 3300.278610] prctl success: chrome/6395 ffff9e392af49e80 (fork: 1)
+[ 3300.278668] prctl success: chrome/6395 ffff9e38f7755b80 (fork: 1)
+[ 3302.242731] wlan0: authenticate with b0:7f:b9:fd:4e:75
+[ 3302.248070] wlan0: send auth to b0:7f:b9:fd:4e:75 (try 1/3)
+[ 3302.251126] wlan0: authenticated
+[ 3302.251686] wlan0: associate with b0:7f:b9:fd:4e:75 (try 1/3)
+[ 3302.259704] wlan0: RX AssocResp from b0:7f:b9:fd:4e:75 (capab=0x31 status=0 aid=13)
+[ 3302.262040] wlan0: associated
+[ 3304.318621] prctl success: chrome/6395 ffff9e38fa806ac0 (fork: 1)
+[ 3318.678370] prctl success: chrome/2210 ffff9e38f0815b80 (fork: 1)
+[ 3318.678599] prctl success: chrome/2210 ffff9e38f0812dc0 (fork: 1)
+[ 3329.996165] prctl success: chrome/6472 ffff9e38faa24c40 (fork: 0)
+[ 3329.997830] prctl success: chrome/6472 ffff9e38f7755b80 (fork: 1)
+[ 3329.997889] prctl success: chrome/6472 ffff9e38f7751e80 (fork: 1)
+[ 3329.997950] prctl success: chrome/6472 ffff9e38f7750f40 (fork: 1)
+[ 3329.998767] prctl success: chrome/6472 ffff9e38f77d1e80 (fork: 1)
+[ 3330.003119] prctl success: chrome/6472 ffff9e392c018000 (fork: 1)
+[ 3330.003216] prctl success: ThreadPoolForeg/6474 ffff9e392a5d2dc0 (fork: 1)
+[ 3330.003703] prctl success: chrome/6472 ffff9e38f0810000 (fork: 1)
+[ 3330.003778] prctl success: chrome/6472 ffff9e38f0810f40 (fork: 1)
+[ 3330.003807] prctl success: chrome/6472 ffff9e392af4db80 (fork: 1)
+[ 3330.003839] prctl success: chrome/6472 ffff9e392af4adc0 (fork: 1)
+[ 3334.059762] prctl success: chrome/6472 ffff9e38f77e0000 (fork: 1)
+[ 3554.256304] prctl success: ThreadPoolForeg/2376 ffff9e38f0801e80 (fork: 1)
+[ 3556.036247] prctl success: ThreadPoolForeg/2367 ffff9e3902a54c40 (fork: 1)
+[ 3576.494411] prctl success: ThreadPoolForeg/5674 ffff9e392b3b4c40 (fork: 1)
+[ 3578.699601] prctl success: ThreadPoolForeg/5675 ffff9e3902a53d00 (fork: 1)
+[ 3578.902589] prctl success: ThreadPoolForeg/2933 ffff9e392cef8000 (fork: 1)
+[ 3603.519441] Bluetooth: mgmt.c:set_blocked_keys() hci0: expected 7601 bytes, got 128 bytes
+[ 3618.963625] prctl success: ThreadPoolForeg/2376 ffff9e392af4db80 (fork: 1)
+[ 3639.777976] prctl success: ThreadPoolForeg/5675 ffff9e38f7750f40 (fork: 1)
+[ 3639.787280] prctl success: ThreadPoolForeg/5675 ffff9e38fa94cc40 (fork: 1)
+[ 3639.834715] prctl success: ThreadPoolForeg/5674 ffff9e38f7750000 (fork: 1)
+[ 3639.835264] prctl success: ThreadPoolForeg/5674 ffff9e38f7755b80 (fork: 1)
+[ 3639.859190] prctl success: chrome/2541 ffff9e38f77e2dc0 (fork: 1)
+[ 3710.563909] prctl success: ThreadPoolForeg/5675 ffff9e392a5c3d00 (fork: 1)
+[ 3710.564021] prctl success: ThreadPoolForeg/7740 ffff9e392a5c5b80 (fork: 1)
+[ 3760.619506] CPU3: Core temperature above threshold, cpu clock throttled (total events = 8)
+[ 3760.619507] CPU2: Core temperature above threshold, cpu clock throttled (total events = 8)
+[ 3760.619509] CPU0: Package temperature above threshold, cpu clock throttled (total events = 171)
+[ 3760.619509] CPU1: Package temperature above threshold, cpu clock throttled (total events = 171)
+[ 3760.619512] CPU2: Package temperature above threshold, cpu clock throttled (total events = 175)
+[ 3760.619514] CPU3: Package temperature above threshold, cpu clock throttled (total events = 175)
+[ 3760.620480] CPU3: Core temperature/speed normal
+[ 3760.620481] CPU2: Core temperature/speed normal
+[ 3760.620482] CPU1: Package temperature/speed normal
+[ 3760.620483] CPU2: Package temperature/speed normal
+[ 3760.620484] CPU0: Package temperature/speed normal
+[ 3760.620489] CPU3: Package temperature/speed normal
+[ 3773.470465] prctl success: chrome/2541 ffff9e38f76e8000 (fork: 1)
+[ 3837.268963] prctl success: ThreadPoolForeg/7531 ffff9e38f76ecc40 (fork: 1)
+[ 3837.269270] prctl success: ThreadPoolForeg/7531 ffff9e38f76ebd00 (fork: 1)
+[ 3895.117297] prctl success: ThreadPoolForeg/7531 ffff9e38f76e9e80 (fork: 1)
+[ 3895.120886] prctl success: ThreadPoolForeg/7531 ffff9e38f0814c40 (fork: 1)
+[ 3895.128027] prctl success: ThreadPoolForeg/7740 ffff9e392a5c5b80 (fork: 1)
+[ 3895.128913] prctl success: chrome/2541 ffff9e38f76ecc40 (fork: 1)
+[ 3906.029650] prctl success: chrome/8355 ffff9e392a5c4c40 (fork: 0)
+[ 3906.034864] prctl success: chrome/8355 ffff9e3922010000 (fork: 1)
+[ 3906.034963] prctl success: chrome/8355 ffff9e3922012dc0 (fork: 1)
+[ 3906.035431] prctl success: chrome/8355 ffff9e38fcc60f40 (fork: 1)
+[ 3906.037031] prctl success: chrome/8355 ffff9e38fcc66ac0 (fork: 1)
+[ 3906.038249] prctl success: ThreadPoolForeg/8357 ffff9e38f0810f40 (fork: 1)
+[ 3906.045952] prctl success: chrome/8355 ffff9e392a5c6ac0 (fork: 1)
+[ 3906.046876] prctl success: chrome/8355 ffff9e38fcc61e80 (fork: 1)
+[ 3906.047225] prctl success: chrome/8355 ffff9e392a5c2dc0 (fork: 1)
+[ 3906.047280] prctl success: chrome/8355 ffff9e392af4bd00 (fork: 1)
+[ 3906.047322] prctl success: chrome/8355 ffff9e38f77e5b80 (fork: 1)
+[ 3910.091957] prctl success: ThreadPoolForeg/8357 ffff9e392bd6bd00 (fork: 1)
+[ 3919.257847] prctl success: ThreadPoolForeg/2376 ffff9e392bd6cc40 (fork: 1)
+[ 3948.562612] prctl success: ThreadPoolForeg/8319 ffff9e392bd69e80 (fork: 1)
+[ 3948.562643] prctl success: chrome/2513 ffff9e3902bbadc0 (fork: 1)
+[ 4010.809766] prctl success: ThreadPoolForeg/8319 ffff9e38f76ebd00 (fork: 1)
+[ 4010.809863] prctl success: chrome/2513 ffff9e38f77dbd00 (fork: 1)
+[ 4010.812656] prctl success: chrome/2541 ffff9e38fa87adc0 (fork: 1)
+[ 4010.812693] prctl success: chrome/2541 ffff9e38fa878f40 (fork: 1)
+[ 4053.792884] prctl success: ThreadPoolForeg/8681 ffff9e38f77eadc0 (fork: 1)
+[ 4075.155432] prctl success: ThreadPoolForeg/8816 ffff9e3902bbadc0 (fork: 1)
+[ 4185.842035] prctl success: ThreadPoolForeg/8681 ffff9e392bd69e80 (fork: 1)
+[ 4185.842123] prctl success: chrome/2513 ffff9e38faa04c40 (fork: 1)
+[ 4185.851559] prctl success: ThreadPoolForeg/8682 ffff9e38faa05b80 (fork: 1)
+[ 4219.547901] prctl success: ThreadPoolForeg/2376 ffff9e38faa01e80 (fork: 1)
+[ 4280.138956] prctl success: ThreadPoolForeg/8682 ffff9e392b352dc0 (fork: 1)
+[ 4280.145676] prctl success: ThreadPoolForeg/8681 ffff9e392b350f40 (fork: 1)
+[ 4280.145830] prctl success: chrome/2513 ffff9e38f77ecc40 (fork: 1)
+[ 4380.788871] prctl success: chrome/2513 ffff9e3923adadc0 (fork: 1)
+[ 4380.788918] prctl success: chrome/2513 ffff9e3923ad9e80 (fork: 1)
+[ 4380.797511] prctl success: ThreadPoolForeg/8682 ffff9e38fa9d6ac0 (fork: 1)
+[ 4380.797668] prctl success: ThreadPoolForeg/8682 ffff9e38fa9d1e80 (fork: 1)
+[ 4458.483917] prctl success: chrome/2513 ffff9e38faa28000 (fork: 1)
+[ 4458.483964] prctl success: chrome/2513 ffff9e38faa28f40 (fork: 1)
+[ 4519.809508] prctl success: ThreadPoolForeg/2376 ffff9e38f0801e80 (fork: 1)
+[ 4574.964855] prctl success: ThreadPoolForeg/9493 ffff9e38fa9ecc40 (fork: 1)
+[ 4574.964949] prctl success: ThreadPoolForeg/9493 ffff9e38fa9e8000 (fork: 1)
+[ 4704.505256] prctl success: chrome/2541 ffff9e38f7755b80 (fork: 1)
+[ 4704.505277] prctl success: ThreadPoolForeg/9806 ffff9e38fa9e8000 (fork: 1)
+[ 4704.509482] prctl success: ThreadPoolForeg/9493 ffff9e38f77c4c40 (fork: 1)
+[ 4704.509655] prctl success: ThreadPoolForeg/10790 ffff9e38fa81db80 (fork: 1)
+[ 4820.074850] prctl success: ThreadPoolForeg/2376 ffff9e38f77e8000 (fork: 1)
+[ 4825.531239] prctl success: ThreadPoolForeg/10790 ffff9e38f77e4c40 (fork: 1)
+[ 4825.531342] prctl success: ThreadPoolForeg/10790 ffff9e38f77e5b80 (fork: 1)
+[ 4825.540092] prctl success: chrome/2541 ffff9e38f77d8f40 (fork: 1)
+[ 4825.540104] prctl success: ThreadPoolForeg/10788 ffff9e38f77d9e80 (fork: 1)
+[ 4899.082761] prctl success: ThreadPoolForeg/2367 ffff9e38f77d8f40 (fork: 1)
+[ 4993.407489] prctl success: ThreadPoolForeg/10790 ffff9e390ae54c40 (fork: 1)
+[ 4993.410382] prctl success: ThreadPoolForeg/10790 ffff9e390ae51e80 (fork: 1)
+[ 4993.416333] prctl success: ThreadPoolForeg/11151 ffff9e38fcc61e80 (fork: 1)
+[ 5017.846492] CPU2: Core temperature above threshold, cpu clock throttled (total events = 10)
+[ 5017.846492] CPU3: Core temperature above threshold, cpu clock throttled (total events = 10)
+[ 5017.846494] CPU1: Package temperature above threshold, cpu clock throttled (total events = 173)
+[ 5017.846494] CPU0: Package temperature above threshold, cpu clock throttled (total events = 173)
+[ 5017.846497] CPU3: Package temperature above threshold, cpu clock throttled (total events = 177)
+[ 5017.846499] CPU2: Package temperature above threshold, cpu clock throttled (total events = 177)
+[ 5017.848609] CPU3: Core temperature/speed normal
+[ 5017.848610] CPU1: Package temperature/speed normal
+[ 5017.848611] CPU0: Package temperature/speed normal
+[ 5017.848611] CPU2: Core temperature/speed normal
+[ 5017.848613] CPU2: Package temperature/speed normal
+[ 5017.848615] CPU3: Package temperature/speed normal
+[ 5074.332458] perf: interrupt took too long (3157 > 3133), lowering kernel.perf_event_max_sample_rate to 63000
+[ 5120.337710] prctl success: ThreadPoolForeg/2376 ffff9e38f77adb80 (fork: 1)
+[ 5180.977567] prctl success: ThreadPoolForeg/10790 ffff9e38f7785b80 (fork: 1)
+[ 5321.318905] usb 1-1: new high-speed USB device number 4 using xhci_hcd
+[ 5321.454978] usb 1-1: New USB device found, idVendor=13fe, idProduct=5500, bcdDevice= 1.00
+[ 5321.454990] usb 1-1: New USB device strings: Mfr=1, Product=2, SerialNumber=3
+[ 5321.454992] usb 1-1: Product: Patriot Memory
+[ 5321.454994] usb 1-1: Manufacturer:         
+[ 5321.454996] usb 1-1: SerialNumber: 0701894B90279337
+[ 5321.456324] usb-storage 1-1:1.0: USB Mass Storage device detected
+[ 5321.457441] scsi host0: usb-storage 1-1:1.0
+[ 5322.876971] scsi 0:0:0:0: Direct-Access              Patriot Memory   PMAP PQ: 0 ANSI: 6
+[ 5322.877493] sd 0:0:0:0: [sda] 61865984 512-byte logical blocks: (31.7 GB/29.5 GiB)
+[ 5322.878331] sd 0:0:0:0: [sda] Write Protect is off
+[ 5322.879665] sd 0:0:0:0: [sda] No Caching mode page found
+[ 5322.879669] sd 0:0:0:0: [sda] Assuming drive cache: write through
+[ 5322.885631] GPT:Primary header thinks Alt. header is not at the end of the disk.
+[ 5322.885634] GPT:13623452 != 61865983
+[ 5322.885636] GPT:Alternate GPT header not at the end of the disk.
+[ 5322.885637] GPT:13623452 != 61865983
+[ 5322.885638] GPT: Use GNU Parted to correct GPT errors.
+[ 5322.885646]  sda: sda1 sda2 sda3 sda4 sda5 sda6 sda7 sda8 sda9 sda10 sda11 sda12
+[ 5322.888232] sd 0:0:0:0: [sda] Attached SCSI removable disk
+[ 5324.078087] EXT4-fs (sda1): recovery complete
+[ 5324.078094] EXT4-fs (sda1): mounted filesystem with ordered data mode. Opts: 
+[ 5324.083208] prctl success: chrome/12717 ffff9e38faa2adc0 (fork: 0)
+[ 5324.085143] prctl success: chrome/12717 ffff9e392b3b6ac0 (fork: 1)
+[ 5324.087572] prctl success: chrome/12717 ffff9e38f77a9e80 (fork: 1)
+[ 5324.087639] prctl success: chrome/12717 ffff9e38f77a8f40 (fork: 1)
+[ 5324.088348] prctl success: chrome/12717 ffff9e38f77a8000 (fork: 1)
+[ 5324.092050] prctl success: chrome/12717 ffff9e38f77abd00 (fork: 1)
+[ 5324.092637] prctl success: ThreadPoolForeg/12719 ffff9e38f77aadc0 (fork: 1)
+[ 5324.093043] prctl success: chrome/12717 ffff9e38fccb3d00 (fork: 1)
+[ 5324.093123] prctl success: chrome/12717 ffff9e38fccb1e80 (fork: 1)
+[ 5324.093155] prctl success: chrome/12717 ffff9e38fccb2dc0 (fork: 1)
+[ 5324.093187] prctl success: chrome/12717 ffff9e38fccb0f40 (fork: 1)
+[ 5324.095054] prctl success: chrome/12729 ffff9e3922010000 (fork: 0)
+[ 5324.107573] prctl success: chrome/12729 ffff9e392a663d00 (fork: 1)
+[ 5324.107636] prctl success: chrome/12729 ffff9e392a664c40 (fork: 1)
+[ 5324.107694] prctl success: chrome/12729 ffff9e392a5d2dc0 (fork: 1)
+[ 5324.114377] prctl success: chrome/12729 ffff9e38fa9d6ac0 (fork: 1)
+[ 5324.121479] prctl success: chrome/12729 ffff9e38fa9d2dc0 (fork: 1)
+[ 5324.121504] prctl success: ThreadPoolForeg/12732 ffff9e38fa9d1e80 (fork: 1)
+[ 5324.122114] prctl success: chrome/12729 ffff9e38faa2eac0 (fork: 1)
+[ 5324.122200] prctl success: chrome/12729 ffff9e38faa2cc40 (fork: 1)
+[ 5324.122232] prctl success: chrome/12729 ffff9e392b350f40 (fork: 1)
+[ 5324.122269] prctl success: chrome/12729 ffff9e392b351e80 (fork: 1)
+[ 5324.295570] EXT4-fs (sda8): recovery complete
+[ 5324.295578] EXT4-fs (sda8): mounted filesystem with ordered data mode. Opts: 
+[ 5324.317633] prctl success: chrome/12729 ffff9e392bd69e80 (fork: 1)
+[ 5328.158182] prctl success: chrome/12717 ffff9e38f0800f40 (fork: 1)
+[ 5333.885820] CPU1: Core temperature above threshold, cpu clock throttled (total events = 201)
+[ 5333.885820] CPU0: Core temperature above threshold, cpu clock throttled (total events = 201)
+[ 5333.885822] CPU0: Package temperature above threshold, cpu clock throttled (total events = 281)
+[ 5333.885841] CPU1: Package temperature above threshold, cpu clock throttled (total events = 281)
+[ 5333.885846] CPU3: Package temperature above threshold, cpu clock throttled (total events = 285)
+[ 5333.885847] CPU2: Package temperature above threshold, cpu clock throttled (total events = 285)
+[ 5333.886809] CPU1: Core temperature/speed normal
+[ 5333.886809] CPU0: Core temperature/speed normal
+[ 5333.886810] CPU0: Package temperature/speed normal
+[ 5333.886812] CPU1: Package temperature/speed normal
+[ 5333.886853] CPU3: Package temperature/speed normal
+[ 5333.886854] CPU2: Package temperature/speed normal
+[ 5364.372963] prctl success: ThreadPoolForeg/11151 ffff9e38f7782dc0 (fork: 1)
+[ 5364.372995] prctl success: chrome/2541 ffff9e38f77a8000 (fork: 1)
+[ 5364.376638] prctl success: ThreadPoolForeg/10790 ffff9e38f7783d00 (fork: 1)
+[ 5364.388277] prctl success: ThreadPoolForeg/10790 ffff9e38f7785b80 (fork: 1)
+[ 5369.927619] usb 1-1: USB disconnect, device number 4
+[ 5369.937872] prctl success: chrome/12929 ffff9e38f77abd00 (fork: 0)
+[ 5369.939023] Buffer I/O error on dev sda8, logical block 0, lost sync page write
+[ 5369.939027] EXT4-fs (sda8): I/O error while writing superblock
+[ 5369.940485] prctl success: chrome/12929 ffff9e38f77a9e80 (fork: 1)
+[ 5369.940545] prctl success: chrome/12929 ffff9e38f77a8f40 (fork: 1)
+[ 5369.940598] prctl success: chrome/12929 ffff9e38f77aadc0 (fork: 1)
+[ 5369.946914] prctl success: chrome/12929 ffff9e38faa04c40 (fork: 1)
+[ 5369.947139] prctl success: ThreadPoolForeg/12932 ffff9e38f0800f40 (fork: 1)
+[ 5369.951871] prctl success: chrome/12938 ffff9e38faa06ac0 (fork: 0)
+[ 5369.951883] prctl success: chrome/12929 ffff9e38f0806ac0 (fork: 1)
+[ 5369.952426] prctl success: chrome/12929 ffff9e3902a53d00 (fork: 1)
+[ 5369.952544] prctl success: chrome/12929 ffff9e3902a51e80 (fork: 1)
+[ 5369.952585] prctl success: chrome/12929 ffff9e3902a50f40 (fork: 1)
+[ 5369.952616] prctl success: chrome/12929 ffff9e3902a56ac0 (fork: 1)
+[ 5369.973353] prctl success: chrome/12938 ffff9e38faa05b80 (fork: 1)
+[ 5369.973421] prctl success: chrome/12938 ffff9e38faa02dc0 (fork: 1)
+[ 5369.973483] prctl success: chrome/12938 ffff9e38faa03d00 (fork: 1)
+[ 5369.975540] prctl success: chrome/12938 ffff9e392b3abd00 (fork: 1)
+[ 5369.986206] prctl success: ThreadPoolForeg/12952 ffff9e392b3a8000 (fork: 1)
+[ 5369.989018] prctl success: chrome/12938 ffff9e392a5d2dc0 (fork: 1)
+[ 5369.996999] prctl success: chrome/12938 ffff9e38fa9d1e80 (fork: 1)
+[ 5369.997232] prctl success: chrome/12938 ffff9e392b35bd00 (fork: 1)
+[ 5369.997300] prctl success: chrome/12938 ffff9e392b358000 (fork: 1)
+[ 5369.997369] prctl success: chrome/12938 ffff9e392c469e80 (fork: 1)
+[ 5370.167561] prctl success: ThreadPoolForeg/12952 ffff9e3911dc0f40 (fork: 1)
+[ 5374.032325] prctl success: chrome/12929 ffff9e392c018000 (fork: 1)
+[ 5375.582907] usb 1-1: new high-speed USB device number 5 using xhci_hcd
+[ 5375.718860] usb 1-1: New USB device found, idVendor=13fe, idProduct=5500, bcdDevice= 1.00
+[ 5375.718864] usb 1-1: New USB device strings: Mfr=1, Product=2, SerialNumber=3
+[ 5375.718866] usb 1-1: Product: Patriot Memory
+[ 5375.718867] usb 1-1: Manufacturer:         
+[ 5375.718878] usb 1-1: SerialNumber: 0701894B90279337
+[ 5375.719977] usb-storage 1-1:1.0: USB Mass Storage device detected
+[ 5375.721131] scsi host0: usb-storage 1-1:1.0
+[ 5377.147817] scsi 0:0:0:0: Direct-Access              Patriot Memory   PMAP PQ: 0 ANSI: 6
+[ 5377.148366] sd 0:0:0:0: [sda] 61865984 512-byte logical blocks: (31.7 GB/29.5 GiB)
+[ 5377.149228] sd 0:0:0:0: [sda] Write Protect is off
+[ 5377.150287] sd 0:0:0:0: [sda] No Caching mode page found
+[ 5377.150300] sd 0:0:0:0: [sda] Assuming drive cache: write through
+[ 5377.156284] GPT:Primary header thinks Alt. header is not at the end of the disk.
+[ 5377.156287] GPT:13623452 != 61865983
+[ 5377.156289] GPT:Alternate GPT header not at the end of the disk.
+[ 5377.156290] GPT:13623452 != 61865983
+[ 5377.156291] GPT: Use GNU Parted to correct GPT errors.
+[ 5377.156299]  sda: sda1 sda2 sda3 sda4 sda5 sda6 sda7 sda8 sda9 sda10 sda11 sda12
+[ 5377.158928] sd 0:0:0:0: [sda] Attached SCSI removable disk
+[ 5378.300923] EXT4-fs (sda1): recovery complete
+[ 5378.300929] EXT4-fs (sda1): mounted filesystem with ordered data mode. Opts: 
+[ 5378.462772] EXT4-fs (sda8): recovery complete
+[ 5378.462786] EXT4-fs (sda8): mounted filesystem with ordered data mode. Opts: 
+[ 5421.139532] prctl success: ThreadPoolForeg/2376 ffff9e38f76e8000 (fork: 1)
+[ 5421.252384] prctl success: ThreadPoolForeg/2376 ffff9e38f76eeac0 (fork: 1)
+[ 5557.041625] prctl success: ThreadPoolForeg/12896 ffff9e38f776adc0 (fork: 1)
+[ 5557.049051] prctl success: ThreadPoolForeg/13556 ffff9e38faa2adc0 (fork: 1)
+[ 5710.740825] prctl success: ThreadPoolForeg/12896 ffff9e38f7768f40 (fork: 1)
+[ 5710.741077] prctl success: chrome/2541 ffff9e392af49e80 (fork: 1)
+[ 5710.741195] prctl success: ThreadPoolForeg/12895 ffff9e392af4db80 (fork: 1)
+[ 5710.741517] prctl success: ThreadPoolForeg/12896 ffff9e38f776adc0 (fork: 1)
+[ 5721.264896] prctl success: ThreadPoolForeg/2376 ffff9e38f0806ac0 (fork: 1)
+[ 5771.932904] INFO: task udevd:167 blocked for more than 122 seconds.
+[ 5771.932909]       Tainted: G        W         4.19.116-TREE_EXTRA_VERSION #4
+[ 5771.932910] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+[ 5771.932913] udevd           D    0   167      1 0x00000000 last_sleep: 5565920385669.  last_runnable: 5565920380853
+[ 5771.932916] Call Trace:
+[ 5771.932925]  ? __schedule+0x689/0x11aa
+[ 5771.932928]  ? __flush_work+0x19e/0x1f6
+[ 5771.932931]  schedule+0x62/0x76
+[ 5771.932933]  schedule_preempt_disabled+0x16/0x20
+[ 5771.932936]  __mutex_lock_common+0x3b7/0x622
+[ 5771.932938]  __mutex_lock_slowpath+0x20/0x26
+[ 5771.932942]  __blkdev_get+0x7e/0x470
+[ 5771.932945]  blkdev_get+0x9c/0x339
+[ 5771.932947]  ? _raw_spin_unlock+0xe/0x20
+[ 5771.932949]  ? bd_acquire+0xad/0xb9
+[ 5771.932951]  do_dentry_open+0x1e0/0x351
+[ 5771.932954]  path_openat+0x595/0x104e
+[ 5771.932957]  ? __do_page_fault+0x251/0x449
+[ 5771.932959]  do_filp_open+0x9b/0x10a
+[ 5771.932963]  do_sys_open+0x158/0x2ea
+[ 5771.932965]  do_syscall_64+0x54/0xde
+[ 5771.932968]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+[ 5771.932971] RIP: 0033:0x7b47be2d3dcf
+[ 5771.932976] Code: Bad RIP value.
+[ 5771.932978] RSP: 002b:00007ffd9ce45f50 EFLAGS: 00000246 ORIG_RAX: 0000000000000101
+[ 5771.932980] RAX: ffffffffffffffda RBX: 0000570b94fef290 RCX: 00007b47be2d3dcf
+[ 5771.932981] RDX: 00000000000a0800 RSI: 0000570b950007e0 RDI: 00000000ffffff9c
+[ 5771.932983] RBP: 00007ffd9ce46530 R08: 000000000000000d R09: 0000570b93cf59a0
+[ 5771.932984] R10: 0000000000000000 R11: 0000000000000246 R12: 0000570b95000d20
+[ 5771.932986] R13: 0000570b94fef1c0 R14: 00007ffd9ce45ff0 R15: 00007ffd9ce46000
+[ 5771.933021]   task                        PC stack   pid father
+[ 5771.933032] irq/31-WCOM50C1 D    0   111      2 0x80000000 last_sleep: 5771940808236.  last_runnable: 5771940799311
+[ 5771.933035] Call Trace:
+[ 5771.933038]  ? __schedule+0x689/0x11aa
+[ 5771.933041]  ? lock_timer_base+0x52/0x78
+[ 5771.933044]  schedule+0x62/0x76
+[ 5771.933046]  schedule_timeout+0x98/0xfe
+[ 5771.933048]  ? run_local_timers+0x4a/0x4a
+[ 5771.933050]  do_wait_for_common+0xde/0x152
+[ 5771.933052]  ? console_conditional_schedule+0x28/0x28
+[ 5771.933055]  ? do_task_dead+0x53/0x53
+[ 5771.933057]  wait_for_completion_timeout+0x4a/0x5f
+[ 5771.933060]  i2c_dw_xfer+0x145/0x211
+[ 5771.933063]  __i2c_transfer+0x195/0x2c7
+[ 5771.933065]  i2c_transfer+0xa4/0xde
+[ 5771.933067]  i2c_transfer_buffer_flags+0x5a/0x7b
+[ 5771.933070]  i2c_hid_irq+0x3e/0x1a2
+[ 5771.933073]  ? irq_forced_thread_fn+0x59/0x59
+[ 5771.933074]  irq_thread_fn+0x24/0x49
+[ 5771.933077]  ? irq_forced_thread_fn+0x59/0x59
+[ 5771.933079]  irq_thread+0xfc/0x15d
+[ 5771.933081]  ? irq_thread_fn+0x49/0x49
+[ 5771.933083]  kthread+0x138/0x140
+[ 5771.933085]  ? irq_forced_secondary_handler+0x1f/0x1f
+[ 5771.933088]  ? kthread_blkcg+0x2e/0x2e
+[ 5771.933090]  ret_from_fork+0x35/0x40
+[ 5771.933093] kstaled         D    0   133      2 0x80000000 last_sleep: 5771941145679.  last_runnable: 5771941097220
+[ 5771.933094] Call Trace:
+[ 5771.933097]  ? __schedule+0x689/0x11aa
+[ 5771.933099]  schedule+0x62/0x76
+[ 5771.933101]  schedule_timeout+0x53/0xfe
+[ 5771.933103]  do_wait_for_common+0xde/0x152
+[ 5771.933105]  ? console_conditional_schedule+0x28/0x28
+[ 5771.933107]  ? do_task_dead+0x53/0x53
+[ 5771.933110]  wait_for_completion+0x4c/0x58
+[ 5771.933112]  __flush_work+0x19e/0x1f6
+[ 5771.933114]  ? put_pwq+0x3d/0x3d
+[ 5771.933117]  lru_add_drain_all+0x121/0x15c
+[ 5771.933120]  kstaled_node_worker+0x165/0x10a9
+[ 5771.933122]  ? __switch_to_asm+0x41/0x70
+[ 5771.933125]  ? init_wait_entry+0x2e/0x2e
+[ 5771.933127]  ? kstaled_walk_pmd+0xff/0xff
+[ 5771.933130]  kthread+0x138/0x140
+[ 5771.933131]  ? kstaled_reclaim_lru+0x758/0x758
+[ 5771.933133]  ? kthread_blkcg+0x2e/0x2e
+[ 5771.933135]  ret_from_fork+0x35/0x40
+[ 5771.933139] udevd           D    0   167      1 0x00000000 last_sleep: 5565920385669.  last_runnable: 5565920380853
+[ 5771.933141] Call Trace:
+[ 5771.933143]  ? __schedule+0x689/0x11aa
+[ 5771.933145]  ? __flush_work+0x19e/0x1f6
+[ 5771.933148]  schedule+0x62/0x76
+[ 5771.933150]  schedule_preempt_disabled+0x16/0x20
+[ 5771.933152]  __mutex_lock_common+0x3b7/0x622
+[ 5771.933154]  __mutex_lock_slowpath+0x20/0x26
+[ 5771.933156]  __blkdev_get+0x7e/0x470
+[ 5771.933159]  blkdev_get+0x9c/0x339
+[ 5771.933161]  ? _raw_spin_unlock+0xe/0x20
+[ 5771.933163]  ? bd_acquire+0xad/0xb9
+[ 5771.933165]  do_dentry_open+0x1e0/0x351
+[ 5771.933167]  path_openat+0x595/0x104e
+[ 5771.933170]  ? __do_page_fault+0x251/0x449
+[ 5771.933172]  do_filp_open+0x9b/0x10a
+[ 5771.933175]  do_sys_open+0x158/0x2ea
+[ 5771.933177]  do_syscall_64+0x54/0xde
+[ 5771.933179]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+[ 5771.933181] RIP: 0033:0x7b47be2d3dcf
+[ 5771.933183] Code: Bad RIP value.
+[ 5771.933185] RSP: 002b:00007ffd9ce45f50 EFLAGS: 00000246 ORIG_RAX: 0000000000000101
+[ 5771.933187] RAX: ffffffffffffffda RBX: 0000570b94fef290 RCX: 00007b47be2d3dcf
+[ 5771.933188] RDX: 00000000000a0800 RSI: 0000570b950007e0 RDI: 00000000ffffff9c
+[ 5771.933190] RBP: 00007ffd9ce46530 R08: 000000000000000d R09: 0000570b93cf59a0
+[ 5771.933191] R10: 0000000000000000 R11: 0000000000000246 R12: 0000570b95000d20
+[ 5771.933192] R13: 0000570b94fef1c0 R14: 00007ffd9ce45ff0 R15: 00007ffd9ce46000
+[ 5771.933223] kworker/u8:1    D    0 11986      2 0x80000000 last_sleep: 5771924654221.  last_runnable: 5771924627707
+[ 5771.933227] Workqueue: writeback wb_workfn (flush-8:0)
+[ 5771.933228] Call Trace:
+[ 5771.933231]  ? __schedule+0x689/0x11aa
+[ 5771.933233]  schedule+0x62/0x76
+[ 5771.933236]  io_schedule+0x16/0x38
+[ 5771.933239]  blk_mq_get_tag+0x157/0x2ac
+[ 5771.933241]  ? init_wait_entry+0x2e/0x2e
+[ 5771.933244]  blk_mq_get_request+0x10d/0x374
+[ 5771.933246]  blk_mq_make_request+0x17d/0x54c
+[ 5771.933249]  generic_make_request+0x183/0x364
+[ 5771.933252]  submit_bio+0xcf/0x17b
+[ 5771.933254]  ? guard_bio_eod+0x5a/0xd2
+[ 5771.933256]  ? submit_bh_wbc+0x10e/0x150
+[ 5771.933258]  __block_write_full_page+0x216/0x35a
+[ 5771.933260]  ? blkdev_direct_IO+0x62/0x62
+[ 5771.933263]  ? mark_buffer_write_io_error+0x68/0x68
+[ 5771.933265]  __writepage+0x1e/0x50
+[ 5771.933267]  write_cache_pages+0x311/0x448
+[ 5771.933270]  ? generic_writepages+0xa4/0xa4
+[ 5771.933273]  generic_writepages+0x75/0xa4
+[ 5771.933275]  do_writepages+0x33/0x74
+[ 5771.933277]  __writeback_single_inode+0x98/0x3ab
+[ 5771.933280]  writeback_sb_inodes+0x294/0x49f
+[ 5771.933282]  __writeback_inodes_wb+0x63/0xc7
+[ 5771.933284]  wb_writeback+0x19b/0x30b
+[ 5771.933287]  wb_workfn+0x3b3/0x4ba
+[ 5771.933290]  process_one_work+0x1db/0x3a2
+[ 5771.933292]  worker_thread+0x216/0x375
+[ 5771.933295]  kthread+0x138/0x140
+[ 5771.933296]  ? pr_cont_work+0x58/0x58
+[ 5771.933298]  ? kthread_blkcg+0x2e/0x2e
+[ 5771.933300]  ret_from_fork+0x35/0x40
+[ 5771.933303] usb-storage     D    0 12982      2 0x80000000 last_sleep: 5771938366027.  last_runnable: 5771938353590
+[ 5771.933305] Call Trace:
+[ 5771.933308]  ? __schedule+0x689/0x11aa
+[ 5771.933311]  schedule+0x62/0x76
+[ 5771.933312]  schedule_timeout+0x53/0xfe
+[ 5771.933315]  do_wait_for_common+0xde/0x152
+[ 5771.933317]  ? console_conditional_schedule+0x28/0x28
+[ 5771.933319]  ? do_task_dead+0x53/0x53
+[ 5771.933321]  wait_for_completion+0x4c/0x58
+[ 5771.933324]  usb_sg_wait+0xe9/0xff
+[ 5771.933327]  usb_stor_bulk_transfer_sglist+0x92/0xca
+[ 5771.933330]  usb_stor_Bulk_transport+0x14a/0x38d
+[ 5771.933332]  usb_stor_invoke_transport+0x42/0x4ba
+[ 5771.933335]  ? preempt_schedule_common+0x16/0x32
+[ 5771.933337]  ? preempt_schedule+0x56/0x5d
+[ 5771.933339]  ? ___preempt_schedule+0x16/0x18
+[ 5771.933342]  usb_stor_control_thread+0x103/0x260
+[ 5771.933344]  kthread+0x138/0x140
+[ 5771.933346]  ? usb_stor_disconnect+0xa9/0xa9
+[ 5771.933348]  ? kthread_blkcg+0x2e/0x2e
+[ 5771.933350]  ret_from_fork+0x35/0x40
+[ 5771.933352] dd              D    0 13260  13259 0x00000000 last_sleep: 5771938389081.  last_runnable: 5771938323353
+[ 5771.933354] Call Trace:
+[ 5771.933357]  ? __schedule+0x689/0x11aa
+[ 5771.933360]  schedule+0x62/0x76
+[ 5771.933362]  io_schedule+0x16/0x38
+[ 5771.933365]  blk_mq_get_tag+0x157/0x2ac
+[ 5771.933367]  ? init_wait_entry+0x2e/0x2e
+[ 5771.933369]  blk_mq_get_request+0x10d/0x374
+[ 5771.933371]  blk_mq_make_request+0x17d/0x54c
+[ 5771.933374]  generic_make_request+0x183/0x364
+[ 5771.933376]  submit_bio+0xcf/0x17b
+[ 5771.933378]  ? guard_bio_eod+0x5a/0xd2
+[ 5771.933380]  ? submit_bh_wbc+0x10e/0x150
+[ 5771.933382]  __block_write_full_page+0x216/0x35a
+[ 5771.933384]  ? blkdev_direct_IO+0x62/0x62
+[ 5771.933386]  ? mark_buffer_write_io_error+0x68/0x68
+[ 5771.933388]  __writepage+0x1e/0x50
+[ 5771.933391]  write_cache_pages+0x311/0x448
+[ 5771.933393]  ? generic_writepages+0xa4/0xa4
+[ 5771.933396]  generic_writepages+0x75/0xa4
+[ 5771.933399]  do_writepages+0x33/0x74
+[ 5771.933401]  __filemap_fdatawrite_range+0xaa/0xcb
+[ 5771.933404]  filemap_write_and_wait+0x37/0x7f
+[ 5771.933406]  __blkdev_put+0xc2/0x218
+[ 5771.933409]  blkdev_close+0x22/0x26
+[ 5771.933411]  __fput+0xfa/0x1e6
+[ 5771.933414]  task_work_run+0x7d/0xa5
+[ 5771.933416]  exit_to_usermode_loop+0x96/0x9f
+[ 5771.933418]  do_syscall_64+0xbd/0xde
+[ 5771.933420]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+[ 5771.933422] RIP: 0033:0x7cd36f5534f1
+[ 5771.933424] Code: Bad RIP value.
+[ 5771.933426] RSP: 002b:00007ffd86687538 EFLAGS: 00000246 ORIG_RAX: 0000000000000003
+[ 5771.933428] RAX: 0000000000000000 RBX: 0000000000000000 RCX: 00007cd36f5534f1
+[ 5771.933429] RDX: 0000000000100000 RSI: 0000000000000000 RDI: 0000000000000001
+[ 5771.933430] RBP: 00007ffd86687550 R08: 00000000ffffffff R09: 0000000000013a00
+[ 5771.933431] R10: 0000000000000022 R11: 0000000000000246 R12: 0000000000000000
+[ 5771.933433] R13: ffffffffffffffff R14: 00007cd36fb76af8 R15: 0000000000000000
+[ 5771.933436] NMI backtrace for cpu 1
+[ 5771.933438] CPU: 1 PID: 38 Comm: khungtaskd Tainted: G        W         4.19.116-TREE_EXTRA_VERSION #4
+[ 5771.933440] Hardware name: Google Eve/Eve, BIOS Google_Eve.9584.174.0 05/29/2018
+[ 5771.933441] Call Trace:
+[ 5771.933444]  dump_stack+0x97/0xdb
+[ 5771.933447]  nmi_cpu_backtrace+0x3e/0x8e
+[ 5771.933450]  ? arch_trigger_cpumask_backtrace+0x16/0x16
+[ 5771.933453]  nmi_trigger_cpumask_backtrace+0x50/0xe3
+[ 5771.933456]  watchdog+0x3d4/0x3e2
+[ 5771.933459]  kthread+0x138/0x140
+[ 5771.933461]  ? hungtask_pm_notify+0x24/0x24
+[ 5771.933463]  ? kthread_blkcg+0x2e/0x2e
+[ 5771.933465]  ret_from_fork+0x35/0x40
+[ 5771.933467] Sending NMI from CPU 1 to CPUs 0,2-3:
+[ 5771.933475] NMI backtrace for cpu 0 skipped: idling at intel_idle+0xd1/0x118
+[ 5771.933510] NMI backtrace for cpu 2 skipped: idling at intel_idle+0xd1/0x118
+[ 5771.933512] NMI backtrace for cpu 3 skipped: idling at intel_idle+0xd1/0x118
+[ 5771.934465] Kernel panic - not syncing: hung_task: blocked tasks
+[ 5771.934469] CPU: 1 PID: 38 Comm: khungtaskd Tainted: G        W         4.19.116-TREE_EXTRA_VERSION #4
+[ 5771.934470] Hardware name: Google Eve/Eve, BIOS Google_Eve.9584.174.0 05/29/2018
+[ 5771.934472] Call Trace:
+[ 5771.934475]  dump_stack+0x97/0xdb
+[ 5771.934479]  panic+0x100/0x282
+[ 5771.934482]  ? arch_trigger_cpumask_backtrace+0x16/0x16
+[ 5771.934485]  watchdog+0x3e2/0x3e2
+[ 5771.934488]  kthread+0x138/0x140
+[ 5771.934490]  ? hungtask_pm_notify+0x24/0x24
+[ 5771.934492]  ? kthread_blkcg+0x2e/0x2e
+[ 5771.934495]  ret_from_fork+0x35/0x40
+[ 5771.934507] Kernel Offset: 0x9200000 from 0xffffffff81000000 (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
+[ 5771.936439] gsmi: Log Shutdown Reason 0x02
+[ 5771.941746] ACPI MEMORY or I/O RESET_REG.
