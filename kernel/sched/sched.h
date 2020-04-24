@@ -2601,3 +2601,6 @@ static inline bool is_per_cpu_kthread(struct task_struct *p)
 	return true;
 }
 #endif
+
+bool cfs_prio_less(struct task_struct *a, struct task_struct *b);
+void sched_core_adjust_sibling_vruntime(int cpu, bool coresched_enabled);
