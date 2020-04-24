@@ -1,0 +1,1339 @@
+[    0.000000] Linux version 4.19.116-TREE_EXTRA_VERSION (joelaf@joelaf.cam.corp.google.com) (Chromium OS 11.0_pre383902_p20200312-r12 clang version 11.0.0 (/var/cache/chromeos-cache/distfiles/host/egit-src/llvm-project e21b39a86dd6e8d1a5a5fe7e0286f8570732834d)) #33 SMP PREEMPT Tue Apr 28 11:48:36 EDT 2020
+[    0.000000] Command line: cros_secure console= loglevel=7 init=/sbin/init cros_secure root=PARTUUID=0cb9883a-9147-b848-83b6-fc9d9c094fc7/PARTNROFF=1 rootwait ro dm_verity.error_behavior=3 dm_verity.max_bios=-1 dm_verity.dev_wait=0 dm="1 vroot none ro 1,0 4710400 verity payload=ROOT_DEV hashtree=HASH_DEV hashstart=4710400 alg=sha256 root_hexdigest=0b62e9d1099b70b87ee30e8217ab7eaa7968391f9de6097646f327d28a028bf6 salt=a7be1616f0c9e25cf0f4a93260cc55b527e806db6b7779ad57b34b457e0a9e20" noinitrd cros_debug vt.global_cursor_default=0 kern_guid=0cb9883a-9147-b848-83b6-fc9d9c094fc7 add_efi_memmap boot=local noresume noswap i915.modeset=1 nmi_watchdog=panic,lapic disablevmx=off 
+[    0.000000] x86/fpu: Supporting XSAVE feature 0x001: 'x87 floating point registers'
+[    0.000000] x86/fpu: Supporting XSAVE feature 0x002: 'SSE registers'
+[    0.000000] x86/fpu: Supporting XSAVE feature 0x004: 'AVX registers'
+[    0.000000] x86/fpu: Supporting XSAVE feature 0x008: 'MPX bounds registers'
+[    0.000000] x86/fpu: Supporting XSAVE feature 0x010: 'MPX CSR'
+[    0.000000] x86/fpu: xstate_offset[2]:  576, xstate_sizes[2]:  256
+[    0.000000] x86/fpu: xstate_offset[3]:  832, xstate_sizes[3]:   64
+[    0.000000] x86/fpu: xstate_offset[4]:  896, xstate_sizes[4]:   64
+[    0.000000] x86/fpu: Enabled xstate features 0x1f, context size is 960 bytes, using 'compacted' format.
+[    0.000000] BIOS-provided physical RAM map:
+[    0.000000] BIOS-e820: [mem 0x0000000000000000-0x0000000000000fff] type 16
+[    0.000000] BIOS-e820: [mem 0x0000000000001000-0x000000000009ffff] usable
+[    0.000000] BIOS-e820: [mem 0x00000000000a0000-0x00000000000fffff] reserved
+[    0.000000] BIOS-e820: [mem 0x0000000000100000-0x000000007a989fff] usable
+[    0.000000] BIOS-e820: [mem 0x000000007a98a000-0x000000007affffff] type 16
+[    0.000000] BIOS-e820: [mem 0x000000007b000000-0x000000007fffffff] reserved
+[    0.000000] BIOS-e820: [mem 0x00000000e0000000-0x00000000e3ffffff] reserved
+[    0.000000] BIOS-e820: [mem 0x00000000fd000000-0x00000000ffffffff] reserved
+[    0.000000] BIOS-e820: [mem 0x0000000100000000-0x000000047effffff] usable
+[    0.000000] NX (Execute Disable) protection: active
+[    0.000000] SMBIOS 2.7 present.
+[    0.000000] DMI: Google Eve/Eve, BIOS Google_Eve.9584.174.0 05/29/2018
+[    0.000000] tsc: Initial usec timer 5328195
+[    0.000000] tsc: Detected 1600.000 MHz processor
+[    0.000013] tsc: Detected 1599.960 MHz TSC
+[    0.000025] last_pfn = 0x47f000 max_arch_pfn = 0x400000000
+[    0.002049] x86/PAT: Configuration [0-7]: WB  WC  UC- UC  WB  WP  UC- WT  
+[    0.003244] last_pfn = 0x7a98a max_arch_pfn = 0x400000000
+[    0.018570] Scanning 1 areas for low memory corruption
+[    0.018584] Using GB pages for direct mapping
+[    0.018847] ACPI: Early table checksum verification disabled
+[    0.018936] ACPI: RSDP 0x00000000000F0000 000024 (v02 CORE  )
+[    0.018943] ACPI: XSDT 0x000000007AA9B0E0 000064 (v01 CORE   COREBOOT 00000000 CORE 00000000)
+[    0.018952] ACPI: FACP 0x000000007AA9F560 0000F4 (v04 CORE   COREBOOT 00000000 CORE 00000000)
+[    0.018961] ACPI: DSDT 0x000000007AA9B280 0042D2 (v05 COREv4 COREBOOT 20110725 INTL 20150717)
+[    0.018967] ACPI: FACS 0x000000007AA9B240 000040
+[    0.018971] ACPI: FACS 0x000000007AA9B240 000040
+[    0.018975] ACPI: SSDT 0x000000007AA9F660 000D2A (v02 CORE   COREBOOT 0000002A CORE 0000002A)
+[    0.018981] ACPI: MCFG 0x000000007AAA0390 00003C (v01 CORE   COREBOOT 00000000 CORE 00000000)
+[    0.018986] ACPI: TCPA 0x000000007AAA03D0 000032 (v02 CORE   COREBOOT 00000000 CORE 00000000)
+[    0.018990] ACPI: APIC 0x000000007AAA0410 00006C (v01 CORE   COREBOOT 00000000 CORE 00000000)
+[    0.018995] ACPI: NHLT 0x000000007AAA0480 000404 (v05 GOOGLE EVEMAX   00000000 CORE 00000000)
+[    0.019000] ACPI: DBG2 0x000000007AAA2890 000061 (v00 CORE   COREBOOT 00000000 CORE 00000000)
+[    0.019005] ACPI: HPET 0x000000007AAA2900 000038 (v01 CORE   COREBOOT 00000000 CORE 00000000)
+[    0.019052] Zone ranges:
+[    0.019055]   DMA      [mem 0x0000000000001000-0x0000000000ffffff]
+[    0.019058]   DMA32    [mem 0x0000000001000000-0x00000000ffffffff]
+[    0.019061]   Normal   [mem 0x0000000100000000-0x000000047effffff]
+[    0.019063] Movable zone start for each node
+[    0.019065] Early memory node ranges
+[    0.019067]   node   0: [mem 0x0000000000001000-0x000000000009ffff]
+[    0.019069]   node   0: [mem 0x0000000000100000-0x000000007a989fff]
+[    0.019071]   node   0: [mem 0x0000000100000000-0x000000047effffff]
+[    0.019328] Zeroed struct page in unavailable ranges: 26327 pages
+[    0.019331] Initmem setup node 0 [mem 0x0000000000001000-0x000000047effffff]
+[    0.072706] Reserving Intel graphics memory at [mem 0x7c000000-0x7fffffff]
+[    0.073069] ACPI: PM-Timer IO Port: 0x1808
+[    0.073114] IOAPIC[0]: apic_id 2, version 32, address 0xfec00000, GSI 0-119
+[    0.073118] ACPI: INT_SRC_OVR (bus 0 bus_irq 0 global_irq 2 dfl dfl)
+[    0.073121] ACPI: INT_SRC_OVR (bus 0 bus_irq 9 global_irq 9 high level)
+[    0.073129] Using ACPI (MADT) for SMP configuration information
+[    0.073132] ACPI: HPET id: 0x8086a701 base: 0xfed00000
+[    0.073137] smpboot: Allowing 4 CPUs, 0 hotplug CPUs
+[    0.073158] [mem 0x80000000-0xdfffffff] available for PCI devices
+[    0.073170] clocksource: refined-jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 1910969940391419 ns
+[    0.186962] setup_percpu: NR_CPUS:12 nr_cpumask_bits:12 nr_cpu_ids:4 nr_node_ids:1
+[    0.187384] percpu: Embedded 43 pages/cpu s139240 r8192 d28696 u524288
+[    0.187417] Built 1 zonelists, mobility grouping on.  Total pages: 4102827
+[    0.187422] Kernel command line: cros_secure console= loglevel=7 init=/sbin/init cros_secure root=PARTUUID=0cb9883a-9147-b848-83b6-fc9d9c094fc7/PARTNROFF=1 rootwait ro dm_verity.error_behavior=3 dm_verity.max_bios=-1 dm_verity.dev_wait=0 dm="1 vroot none ro 1,0 4710400 verity payload=ROOT_DEV hashtree=HASH_DEV hashstart=4710400 alg=sha256 root_hexdigest=0b62e9d1099b70b87ee30e8217ab7eaa7968391f9de6097646f327d28a028bf6 salt=a7be1616f0c9e25cf0f4a93260cc55b527e806db6b7779ad57b34b457e0a9e20" noinitrd cros_debug vt.global_cursor_default=0 kern_guid=0cb9883a-9147-b848-83b6-fc9d9c094fc7 add_efi_memmap boot=local noresume noswap i915.modeset=1 nmi_watchdog=panic,lapic disablevmx=off 
+[    0.187635] device-mapper: init: will configure 1 devices
+[    0.190305] Dentry cache hash table entries: 2097152 (order: 12, 16777216 bytes)
+[    0.191562] Inode-cache hash table entries: 1048576 (order: 11, 8388608 bytes)
+[    0.258653] Memory: 16293736K/16671908K available (12312K kernel code, 1276K rwdata, 3384K rodata, 1544K init, 1008K bss, 378172K reserved, 0K cma-reserved)
+[    0.258663] random: get_random_u64 called from __kmem_cache_create+0x2b/0x408 with crng_init=0
+[    0.258788] SLUB: HWalign=64, Order=0-3, MinObjects=0, CPUs=4, Nodes=1
+[    0.258802] Kernel/User page tables isolation: enabled
+[    0.258876] ftrace: allocating 42578 entries in 167 pages
+[    0.289459] 
+[    0.289463] **********************************************************
+[    0.289464] **   NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE   **
+[    0.289466] **                                                      **
+[    0.289467] ** trace_printk() being used. Allocating extra memory.  **
+[    0.289469] **                                                      **
+[    0.289470] ** This means that this is a DEBUG kernel and it is     **
+[    0.289472] ** unsafe for production use.                           **
+[    0.289473] **                                                      **
+[    0.289475] ** If you see this message and you are not debugging    **
+[    0.289476] ** the kernel, report this immediately to your vendor!  **
+[    0.289478] **                                                      **
+[    0.289479] **   NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE   **
+[    0.289481] **********************************************************
+[    0.289707] rcu: Preemptible hierarchical RCU implementation.
+[    0.289710] rcu: 	RCU restricting CPUs from NR_CPUS=12 to nr_cpu_ids=4.
+[    0.289712] 	Tasks RCU enabled.
+[    0.289714] rcu: Adjusting geometry for rcu_fanout_leaf=16, nr_cpu_ids=4
+[    0.292505] NR_IRQS: 4352, nr_irqs: 1024, preallocated irqs: 16
+[    0.292983] ACPI: Core revision 20180810
+[    0.293301] clocksource: hpet: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 79635855245 ns
+[    0.293354] APIC: Switch to symmetric I/O mode setup
+[    0.297447] ..TIMER: vector=0x30 apic1=0 pin1=2 apic2=-1 pin2=-1
+[    0.302414] clocksource: tsc-early: mask: 0xffffffffffffffff max_cycles: 0x170fff30cc4, max_idle_ns: 440795237869 ns
+[    0.302418] Calibrating delay loop (skipped), value calculated using timer frequency.. 3199.92 BogoMIPS (lpj=1599960)
+[    0.302422] pid_max: default: 32768 minimum: 301
+[    0.302465] Security Framework initialized
+[    0.302467] Yama: becoming mindful.
+[    0.302474] LoadPin: ready to pin (currently enabled)
+[    0.302477] Chromium OS LSM: enabled
+[    0.302479] SELinux:  Initializing.
+[    0.302566] Mount-cache hash table entries: 32768 (order: 6, 262144 bytes)
+[    0.302608] Mountpoint-cache hash table entries: 32768 (order: 6, 262144 bytes)
+[    0.302933] CPU0: Thermal monitoring enabled (TM1)
+[    0.302962] process: using mwait in idle threads
+[    0.302966] Last level iTLB entries: 4KB 64, 2MB 8, 4MB 8
+[    0.302969] Last level dTLB entries: 4KB 64, 2MB 0, 4MB 0, 1GB 4
+[    0.302972] Spectre V1 : Mitigation: usercopy/swapgs barriers and __user pointer sanitization
+[    0.302981] Spectre V2 : Mitigation: Full generic retpoline
+[    0.302983] Spectre V2 : Spectre v2 / SpectreRSB mitigation: Filling RSB on context switch
+[    0.302984] Spectre V2 : Enabling Restricted Speculation for firmware calls
+[    0.302994] Spectre V2 : mitigation: Enabling conditional Indirect Branch Prediction Barrier
+[    0.302996] Spectre V2 : User space: Mitigation: STIBP via seccomp and prctl
+[    0.303006] Speculative Store Bypass: Mitigation: Speculative Store Bypass disabled via prctl and seccomp
+[    0.303008] TAA: Vulnerable: Clear CPU buffers attempted, no microcode
+[    0.303010] MDS: Vulnerable: Clear CPU buffers attempted, no microcode
+[    0.303658] Freeing SMP alternatives memory: 36K
+[    0.304417] smpboot: CPU0: Intel(R) Core(TM) i7-7Y75 CPU @ 1.30GHz (family: 0x6, model: 0x8e, stepping: 0x9)
+[    0.309465] Performance Events: PEBS fmt3+, Skylake events, 32-deep LBR, full-width counters, Intel PMU driver.
+[    0.309527] ... version:                4
+[    0.309529] ... bit width:              48
+[    0.309531] ... generic registers:      4
+[    0.309533] ... value mask:             0000ffffffffffff
+[    0.309535] ... max period:             00007fffffffffff
+[    0.309537] ... fixed-purpose events:   3
+[    0.309539] ... event mask:             000000070000000f
+[    0.311434] rcu: Hierarchical SRCU implementation.
+[    0.314612] NMI watchdog: Enabled. Permanently consumes one hw-PMU counter.
+[    0.316446] smp: Bringing up secondary CPUs ...
+[    0.324586] x86: Booting SMP configuration:
+[    0.324588] .... node  #0, CPUs:      #1
+[    0.005559] core: 1 -> 1
+[    0.325524] MDS CPU bug present and SMT on, data leak possible. See https://www.kernel.org/doc/html/latest/admin-guide/hw-vuln/mds.html for more details.
+[    0.325524] TAA CPU bug present and SMT on, data leak possible. See https://www.kernel.org/doc/html/latest/admin-guide/hw-vuln/tsx_async_abort.html for more details.
+[    0.333575]  #2
+[    0.005559] core: 2 -> 2
+[    0.342575]  #3
+[    0.005559] core: 3 -> 2
+[    0.343539] smp: Brought up 1 node, 4 CPUs
+[    0.343539] smpboot: Max logical packages: 1
+[    0.343539] smpboot: Total of 4 processors activated (12799.68 BogoMIPS)
+[    0.344782] devtmpfs: initialized
+[    0.345682] clocksource: jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 1911260446275000 ns
+[    0.345682] futex hash table entries: 1024 (order: 4, 65536 bytes)
+[    0.345682] pinctrl core: initialized pinctrl subsystem
+[    0.345682] RTC time: 12:30:52, date: 04/29/20
+[    0.345865] NET: Registered protocol family 16
+[    0.346451] audit: initializing netlink subsys (disabled)
+[    0.346462] audit: type=2000 audit(1588163452.049:1): state=initialized audit_enabled=0 res=1
+[    0.346533] cpuidle: using governor ladder
+[    0.346540] cpuidle: using governor menu
+[    0.346733] ACPI: bus type PCI registered
+[    0.346733] PCI: MMCONFIG for domain 0000 [bus 00-ff] at [mem 0xe0000000-0xefffffff] (base 0xe0000000)
+[    0.346733] PCI: MMCONFIG at [mem 0xe0000000-0xefffffff] reserved in E820
+[    0.346733] PCI: MMCONFIG for 0000 [bus00-3f] at [mem 0xe0000000-0xe3ffffff] (base 0xe0000000) (size reduced!)
+[    0.346733] PCI: Using configuration type 1 for base access
+[    0.350668] cryptd: max_cpu_qlen set to 1000
+[    0.350668] ACPI: Added _OSI(Module Device)
+[    0.350668] ACPI: Added _OSI(Processor Device)
+[    0.350668] ACPI: Added _OSI(3.0 _SCP Extensions)
+[    0.350668] ACPI: Added _OSI(Processor Aggregator Device)
+[    0.350668] ACPI: Added _OSI(Linux-Dell-Video)
+[    0.350668] ACPI: Added _OSI(Linux-Lenovo-NV-HDMI-Audio)
+[    0.354408] ACPI: 2 ACPI AML tables successfully acquired and loaded
+[    0.356663] ACPI: EC: EC started
+[    0.356666] ACPI: EC: interrupt blocked
+[    0.356835] ACPI: \_SB_.PCI0.LPCB.EC0_: Used as first EC
+[    0.356839] ACPI: \_SB_.PCI0.LPCB.EC0_: GPE=0x6e, EC_CMD/EC_SC=0x66, EC_DATA=0x62
+[    0.356842] ACPI: \_SB_.PCI0.LPCB.EC0_: Used as boot DSDT EC to handle transactions
+[    0.356844] ACPI: Interpreter enabled
+[    0.356864] ACPI: (supports S0 S3 S5)
+[    0.356870] ACPI: Using IOAPIC for interrupt routing
+[    0.356903] PCI: Using host bridge windows from ACPI; if necessary, use "pci=nocrs" and report a bug
+[    0.364558] ACPI: PCI Root Bridge [PCI0] (domain 0000 [bus 00-ff])
+[    0.364568] acpi PNP0A08:00: _OSC: OS supports [ExtendedConfig ASPM ClockPM Segments MSI]
+[    0.364629] acpi PNP0A08:00: _OSC: OS now controls [PCIeHotplug PME AER PCIeCapability LTR]
+[    0.364634] acpi PNP0A08:00: [Firmware Info]: MMCONFIG for domain 0000 [bus 00-3f] only partially covers this bridge
+[    0.364794] PCI host bridge to bus 0000:00
+[    0.364799] pci_bus 0000:00: root bus resource [io  0x0000-0x0cf7 window]
+[    0.364802] pci_bus 0000:00: root bus resource [io  0x0d00-0xffff window]
+[    0.364805] pci_bus 0000:00: root bus resource [mem 0x000a0000-0x000bffff window]
+[    0.364808] pci_bus 0000:00: root bus resource [mem 0x000c0000-0x000c3fff window]
+[    0.364811] pci_bus 0000:00: root bus resource [mem 0x000c4000-0x000c7fff window]
+[    0.364814] pci_bus 0000:00: root bus resource [mem 0x000c8000-0x000cbfff window]
+[    0.364816] pci_bus 0000:00: root bus resource [mem 0x000cc000-0x000cffff window]
+[    0.364819] pci_bus 0000:00: root bus resource [mem 0x000d0000-0x000d3fff window]
+[    0.364822] pci_bus 0000:00: root bus resource [mem 0x000d4000-0x000d7fff window]
+[    0.364824] pci_bus 0000:00: root bus resource [mem 0x000d8000-0x000dbfff window]
+[    0.364827] pci_bus 0000:00: root bus resource [mem 0x000dc000-0x000dffff window]
+[    0.364829] pci_bus 0000:00: root bus resource [mem 0x000e0000-0x000e3fff window]
+[    0.364832] pci_bus 0000:00: root bus resource [mem 0x000e4000-0x000e7fff window]
+[    0.364835] pci_bus 0000:00: root bus resource [mem 0x000e8000-0x000ebfff window]
+[    0.364837] pci_bus 0000:00: root bus resource [mem 0x000ec000-0x000effff window]
+[    0.364840] pci_bus 0000:00: root bus resource [mem 0x000f0000-0x000fffff window]
+[    0.364843] pci_bus 0000:00: root bus resource [mem 0x80000001-0xdfffffff window]
+[    0.364845] pci_bus 0000:00: root bus resource [mem 0x800000000-0xbffffffff window]
+[    0.364848] pci_bus 0000:00: root bus resource [mem 0xfd000000-0xfe7fffff window]
+[    0.364851] pci_bus 0000:00: root bus resource [mem 0xfed40000-0xfed44fff window]
+[    0.364854] pci_bus 0000:00: root bus resource [bus 00-ff]
+[    0.373288] pci 0000:00:1c.0: PCI bridge to [bus 01]
+[    0.373867] pci 0000:00:1c.4: PCI bridge to [bus 02]
+[    0.374548] ACPI: PCI Interrupt Link [LNKA] (IRQs 3 4 5 6 10 12 14 15) *11
+[    0.374638] ACPI: PCI Interrupt Link [LNKB] (IRQs 3 4 5 6 *10 12 14 15)
+[    0.374723] ACPI: PCI Interrupt Link [LNKC] (IRQs 3 4 5 6 10 12 14 15) *11
+[    0.374807] ACPI: PCI Interrupt Link [LNKD] (IRQs 3 4 5 6 10 12 14 15) *11
+[    0.374903] ACPI: PCI Interrupt Link [LNKE] (IRQs 3 4 5 6 10 12 14 15) *11
+[    0.374994] ACPI: PCI Interrupt Link [LNKF] (IRQs 3 4 5 6 10 12 14 15) *11
+[    0.375087] ACPI: PCI Interrupt Link [LNKG] (IRQs 3 4 5 6 10 12 14 15) *11
+[    0.375176] ACPI: PCI Interrupt Link [LNKH] (IRQs 3 4 5 6 10 12 14 15) *11
+[    0.376538] ACPI: EC: interrupt unblocked
+[    0.376561] ACPI: EC: event unblocked
+[    0.376574] ACPI: \_SB_.PCI0.LPCB.EC0_: GPE=0x6e, EC_CMD/EC_SC=0x66, EC_DATA=0x62
+[    0.376578] ACPI: \_SB_.PCI0.LPCB.EC0_: Used as boot DSDT EC to handle transactions and events
+[    0.376791] SCSI subsystem initialized
+[    0.376837] ACPI: bus type USB registered
+[    0.376837] usbcore: registered new interface driver usbfs
+[    0.376837] usbcore: registered new interface driver hub
+[    0.376837] usbcore: registered new device driver usb
+[    0.376837] media: Linux media interface: v0.10
+[    0.376837] videodev: Linux video capture interface: v2.00
+[    0.376837] pps_core: LinuxPPS API ver. 1 registered
+[    0.376837] pps_core: Software ver. 5.3.6 - Copyright 2005-2007 Rodolfo Giometti <giometti@linux.it>
+[    0.376837] PTP clock support registered
+[    0.376837] chromeos_acpi: registering CHSW 0
+[    0.376978] chromeos_acpi: registering VBNV 0
+[    0.376981] chromeos_acpi: registering VBNV 1
+[    0.377790] chromeos_acpi: truncating buffer from 3072 to 1336
+[    0.378038] chromeos_acpi: installed
+[    0.378065] Advanced Linux Sound Architecture Driver Initialized.
+[    0.378067] PCI: Using ACPI for IRQ routing
+[    0.385757] hpet0: at MMIO 0xfed00000, IRQs 2, 8, 0, 0, 0, 0, 0, 0
+[    0.385757] hpet0: 8 comparators, 64-bit 24.000000 MHz counter
+[    0.387447] clocksource: Switched to clocksource tsc-early
+[    0.410062] VFS: Disk quotas dquot_6.6.0
+[    0.410087] VFS: Dquot-cache hash table entries: 512 (order 0, 4096 bytes)
+[    0.410148] pnp: PnP ACPI init
+[    0.410397] system 00:00: [mem 0xfed10000-0xfed17fff] has been reserved
+[    0.410401] system 00:00: [mem 0xfed18000-0xfed18fff] has been reserved
+[    0.410404] system 00:00: [mem 0xfed19000-0xfed19fff] has been reserved
+[    0.410408] system 00:00: [mem 0xe0000000-0xe3ffffff] has been reserved
+[    0.410411] system 00:00: [mem 0xfed20000-0xfed3ffff] has been reserved
+[    0.410414] system 00:00: [mem 0xfed90000-0xfed93fff] has been reserved
+[    0.410417] system 00:00: [mem 0xfed45000-0xfed8ffff] has been reserved
+[    0.410431] system 00:00: [mem 0xff000000-0xffffffff] has been reserved
+[    0.410434] system 00:00: [mem 0xfee00000-0xfeefffff] has been reserved
+[    0.410438] system 00:00: [mem 0xfed00000-0xfed003ff] has been reserved
+[    0.410782] system 00:01: [io  0x1800-0x18fe] has been reserved
+[    0.410889] system 00:03: [io  0x0900-0x09fe] has been reserved
+[    0.410960] system 00:04: [io  0x0200] has been reserved
+[    0.410963] system 00:04: [io  0x0204] has been reserved
+[    0.410966] system 00:04: [io  0x0800-0x087f] has been reserved
+[    0.410969] system 00:04: [io  0x0880-0x08ff] has been reserved
+[    0.411337] pnp: PnP ACPI: found 6 devices
+[    0.416246] clocksource: acpi_pm: mask: 0xffffff max_cycles: 0xffffff, max_idle_ns: 2085701024 ns
+[    0.416352] pci 0000:00:1c.0: PCI bridge to [bus 01]
+[    0.416372] pci 0000:00:1c.0:   bridge window [mem 0xd1000000-0xd10fffff]
+[    0.416383] pci 0000:00:1c.4: PCI bridge to [bus 02]
+[    0.416398] pci 0000:00:1c.4:   bridge window [mem 0xd1100000-0xd11fffff]
+[    0.416601] NET: Registered protocol family 2
+[    0.416810] tcp_listen_portaddr_hash hash table entries: 8192 (order: 6, 327680 bytes)
+[    0.416888] TCP established hash table entries: 131072 (order: 8, 1048576 bytes)
+[    0.417146] TCP bind hash table entries: 65536 (order: 9, 2097152 bytes)
+[    0.417708] TCP: Hash tables configured (established 131072 bind 65536)
+[    0.417753] UDP hash table entries: 8192 (order: 7, 786432 bytes)
+[    0.417928] UDP-Lite hash table entries: 8192 (order: 7, 786432 bytes)
+[    0.418158] NET: Registered protocol family 1
+[    0.418183] pci 0000:00:02.0: Video device with shadowed ROM at [mem 0x000c0000-0x000dffff]
+[    0.418993] PCI-DMA: Using software bounce buffering for IO (SWIOTLB)
+[    0.418996] software IO TLB: mapped [mem 0x7698a000-0x7a98a000] (64MB)
+[    0.419239] RAPL PMU: API unit is 2^-32 Joules, 5 fixed counters, 655360 ms ovfl timer
+[    0.419242] RAPL PMU: hw unit of domain pp0-core 2^-14 Joules
+[    0.419244] RAPL PMU: hw unit of domain package 2^-14 Joules
+[    0.419246] RAPL PMU: hw unit of domain dram 2^-14 Joules
+[    0.419248] RAPL PMU: hw unit of domain pp1-gpu 2^-14 Joules
+[    0.419249] RAPL PMU: hw unit of domain psys 2^-14 Joules
+[    0.419717] kvm: already loaded the other module
+[    0.458214] Scanning for low memory corruption every 60 seconds
+[    0.459138] workingset: timestamp_bits=61 max_order=22 bucket_order=0
+[    0.461775] squashfs: version 4.0 (2009/01/31) Phillip Lougher
+[    0.461898] Registering esdfs 0.2
+[    0.461965] alt_syscall: table 'read_write_test' available.
+[    0.461982] alt_syscall: table 'android' available.
+[    0.461997] alt_syscall: table 'android_permissive' available.
+[    0.462010] alt_syscall: table 'third_party' available.
+[    0.462022] alt_syscall: table 'third_party_permissive' available.
+[    0.462033] alt_syscall: table 'complete' available.
+[    0.462043] alt_syscall: table 'complete_permissive' available.
+[    0.463610] Block layer SCSI generic (bsg) driver version 0.4 loaded (major 245)
+[    0.463613] io scheduler noop registered
+[    0.463616] io scheduler deadline registered
+[    0.463685] io scheduler cfq registered (default)
+[    0.463687] io scheduler mq-deadline registered
+[    0.463689] io scheduler kyber registered
+[    0.463702] io scheduler bfq registered
+[    0.464186] pcieport 0000:00:1c.0: Signaling PME with IRQ 120
+[    0.464259] pcieport 0000:00:1c.0: AER enabled with IRQ 120
+[    0.464635] pcieport 0000:00:1c.4: Signaling PME with IRQ 121
+[    0.464727] pcieport 0000:00:1c.4: AER enabled with IRQ 121
+[    0.465287] input: Power Button as /devices/LNXSYSTM:00/LNXSYBUS:00/PNP0C0C:00/input/input0
+[    0.465316] ACPI: Power Button [PWRB]
+[    0.465383] input: Lid Switch as /devices/LNXSYSTM:00/LNXSYBUS:00/PNP0A08:00/device:01/PNP0C09:00/PNP0C0D:00/input/input1
+[    0.465441] ACPI: Lid Switch [LID0]
+[    0.465517] input: Power Button as /devices/LNXSYSTM:00/LNXPWRBN:00/input/input2
+[    0.465559] ACPI: Power Button [PWRF]
+[    0.466721] Non-volatile memory driver v1.3
+[    0.466889] Linux agpgart interface v0.103
+[    0.466949] battery: ACPI: Battery Slot [BAT0] (battery present)
+[    0.518620] [drm] Supports vblank timestamp caching Rev 2 (21.10.2013).
+[    0.518624] [drm] Driver supports precise vblank timestamp query.
+[    0.527269] i915 0000:00:02.0: [drm:intel_acpi_device_id_update] Checking connector ACPI node at _ADR=80010400
+[    0.878946] random: fast init done
+[    1.072436] [drm] Initialized i915 1.6.0 20180921 for 0000:00:02.0 on minor 0
+[    1.072600] i915 0000:00:02.0: [drm:intel_acpi_device_id_update] Checking connector ACPI node at _ADR=80010400
+[    1.072609] i915 0000:00:02.0: [drm:intel_acpi_device_id_update] Checking connector ACPI node at _ADR=80010300
+[    1.072615] i915 0000:00:02.0: [drm:intel_acpi_device_id_update] Checking connector ACPI node at _ADR=80010301
+[    1.072861] [drm] Initialized vgem 1.0.0 20120112 for vgem on minor 1
+[    1.072878] usbcore: registered new interface driver udl
+[    1.074961] loop: module loaded
+[    1.075003] lkdtm: No crash points registered, enable through debugfs
+[    1.075690] idma64 idma64.0: Found Intel integrated DMA 64-bit
+[    1.077825] idma64 idma64.1: Found Intel integrated DMA 64-bit
+[    1.080284] cr50_i2c i2c-GOOG0005:00: cr50 TPM 2.0 (i2c 0x50 irq 24 id 0x28)
+[    1.168788] idma64 idma64.2: Found Intel integrated DMA 64-bit
+[    1.173091] idma64 idma64.5: Found Intel integrated DMA 64-bit
+[    1.173478] idma64 idma64.6: Found Intel integrated DMA 64-bit
+[    1.174578] nvme nvme0: pci function 0000:02:00.0
+[    1.174804] libphy: Fixed MDIO Bus: probed
+[    1.174823] PPP generic driver version 2.4.2
+[    1.174886] PPP MPPE Compression module registered
+[    1.174943] ehci_hcd: USB 2.0 'Enhanced' Host Controller (EHCI) Driver
+[    1.174945] ehci-pci: EHCI PCI platform driver
+[    1.174963] ohci_hcd: USB 1.1 'Open' Host Controller (OHCI) Driver
+[    1.174967] ohci-pci: OHCI PCI platform driver
+[    1.174983] uhci_hcd: USB Universal Host Controller Interface driver
+[    1.175394] xhci_hcd 0000:00:14.0: xHCI Host Controller
+[    1.175760] xhci_hcd 0000:00:14.0: new USB bus registered, assigned bus number 1
+[    1.176908] xhci_hcd 0000:00:14.0: hcc params 0x200077c1 hci version 0x100 quirks 0x0000000081109810
+[    1.177247] usb usb1: New USB device found, idVendor=1d6b, idProduct=0002, bcdDevice= 4.19
+[    1.177250] usb usb1: New USB device strings: Mfr=3, Product=2, SerialNumber=1
+[    1.177253] usb usb1: Product: xHCI Host Controller
+[    1.177255] usb usb1: Manufacturer: Linux 4.19.116-TREE_EXTRA_VERSION xhci-hcd
+[    1.177258] usb usb1: SerialNumber: 0000:00:14.0
+[    1.177434] hub 1-0:1.0: USB hub found
+[    1.177467] hub 1-0:1.0: 12 ports detected
+[    1.178073] xhci_hcd 0000:00:14.0: xHCI Host Controller
+[    1.178136] xhci_hcd 0000:00:14.0: new USB bus registered, assigned bus number 2
+[    1.178141] xhci_hcd 0000:00:14.0: Host supports USB 3.0 SuperSpeed
+[    1.178212] usb usb2: New USB device found, idVendor=1d6b, idProduct=0003, bcdDevice= 4.19
+[    1.178215] usb usb2: New USB device strings: Mfr=3, Product=2, SerialNumber=1
+[    1.178218] usb usb2: Product: xHCI Host Controller
+[    1.178220] usb usb2: Manufacturer: Linux 4.19.116-TREE_EXTRA_VERSION xhci-hcd
+[    1.178223] usb usb2: SerialNumber: 0000:00:14.0
+[    1.178362] hub 2-0:1.0: USB hub found
+[    1.178388] hub 2-0:1.0: 6 ports detected
+[    1.178722] usbcore: registered new interface driver cdc_acm
+[    1.178724] cdc_acm: USB Abstract Control Model driver for USB modems and ISDN adapters
+[    1.178736] usbcore: registered new interface driver uas
+[    1.178759] usbcore: registered new interface driver usb-storage
+[    1.178771] usbcore: registered new interface driver ums-realtek
+[    1.178794] usbcore: registered new interface driver usbserial_generic
+[    1.178800] usbserial: USB Serial support registered for generic
+[    1.178834] i8042: PNP: PS/2 Controller [PNP0303:PS2K] at 0x60,0x64 irq 1
+[    1.178836] i8042: PNP: PS/2 appears to have AUX port disabled, if this is incorrect please boot with i8042.nopnp
+[    1.179510] i8042: Warning: Keylock active
+[    1.179690] serio: i8042 KBD port at 0x60,0x64 irq 1
+[    1.180153] rtc_cmos 00:02: RTC can wake from S4
+[    1.180699] rtc_cmos 00:02: registered as rtc0
+[    1.180722] rtc_cmos 00:02: alarms up to one month, 242 bytes nvram, hpet irqs
+[    1.180747] i2c /dev entries driver
+[    1.181373] i801_smbus 0000:00:1f.4: SPD Write Disable is set
+[    1.181410] i801_smbus 0000:00:1f.4: SMBus using PCI interrupt
+[    1.182374] IR NEC protocol handler initialized
+[    1.182377] IR RC5(x/sz) protocol handler initialized
+[    1.182380] IR RC6 protocol handler initialized
+[    1.182382] IR JVC protocol handler initialized
+[    1.182384] IR Sony protocol handler initialized
+[    1.182410] IR SANYO protocol handler initialized
+[    1.182412] IR Sharp protocol handler initialized
+[    1.182414] IR MCE Keyboard/mouse protocol handler initialized
+[    1.182415] IR XMP protocol handler initialized
+[    1.184761] proc_thermal 0000:00:04.0: Creating sysfs group for PROC_THERMAL_PCI
+[    1.184804] iTCO_wdt: Intel TCO WatchDog Timer Driver v1.11
+[    1.184976] iTCO_wdt: Found a Intel PCH TCO device (Version=4, TCOBASE=0x0400)
+[    1.185144] iTCO_wdt: initialized. heartbeat=30 sec (nowayout=0)
+[    1.185171] iTCO_vendor_support: vendor-support=0
+[    1.185349] device-mapper: ioctl: 4.39.0-ioctl (2018-04-03) initialised: dm-devel@redhat.com
+[    1.185350] random: crng init done
+[    1.185429] device-mapper: verity-chromeos: dm-verity-chromeos registered
+[    1.185436] intel_pstate: Intel P-state driver initializing
+[    1.185536] input: AT Translated Set 2 keyboard as /devices/platform/i8042/serio0/input/input3
+[    1.185683] intel_pstate: HWP enabled
+[    1.185691] sdhci: Secure Digital Host Controller Interface driver
+[    1.185692] sdhci: Copyright(c) Pierre Ossman
+[    1.185701] sdhci-pci 0000:00:1e.4: SDHCI controller found [8086:9d2b] (rev 21)
+[    1.185959] mmc0: SDHCI controller on PCI [0000:00:1e.4] using ADMA 64-bit
+[    1.186122] Registered efivars operations
+[    1.186124] gsmi version 1.0 loaded
+[    1.186470] hidraw: raw HID events driver (C) Jiri Kosina
+[    1.186558] usbcore: registered new interface driver usbhid
+[    1.186559] usbhid: USB HID core driver
+[    1.240828] input: WCOM50C1:00 2D1F:5143 as /devices/pci0000:00/0000:00:15.0/i2c_designware.0/i2c-6/i2c-WCOM50C1:00/0018:2D1F:5143.0001/input/input4
+[    1.240876] input: WCOM50C1:00 2D1F:5143 Pen as /devices/pci0000:00/0000:00:15.0/i2c_designware.0/i2c-6/i2c-WCOM50C1:00/0018:2D1F:5143.0001/input/input6
+[    1.240915] hid-multitouch 0018:2D1F:5143.0001: input,hidraw0: I2C HID v1.00 Mouse [WCOM50C1:00 2D1F:5143] on i2c-WCOM50C1:00
+[    1.275303] input: ACPI0C50:00 18D1:5028 as /devices/pci0000:00/0000:00:15.2/i2c_designware.2/i2c-8/i2c-ACPI0C50:00/0018:18D1:5028.0002/input/input9
+[    1.275339] hid-multitouch 0018:18D1:5028.0002: input,hidraw1: I2C HID v1.00 Device [ACPI0C50:00 18D1:5028] on i2c-ACPI0C50:00
+[    1.275408] ashmem: initialized
+[    1.275409] intel_telemetry_core Init
+[    1.275492] intel_pmc_core intel_pmc_core.0:  initialized
+[    1.275529] chromeos ramoops using acpi device.
+[    1.275890] console [pstore-1] enabled
+[    1.275912] pstore: Registered ramoops as persistent store backend
+[    1.275914] ramoops: attached 0x100000@0x7a99b000, ecc: 0/0
+[    1.275944] input: Tablet Mode Switch as /devices/LNXSYSTM:00/LNXSYBUS:00/PNP0A08:00/device:01/PNP0C09:00/GOOG0006:00/input/input10
+[    1.280845] cros-ec-i2c i2c-GOOG0008:00: MKBP not supported
+[    1.281824] nvme nvme0: Shutdown timeout set to 10 seconds
+[    1.282971] cros-ec-dev cros-ec-dev.0.auto: CrOS Touchpad MCU detected
+[    1.284934] cros-ec-i2c i2c-GOOG0008:00: Chrome EC device registered
+[    1.287566] cros_ec_lpcs GOOG0004:00: MKBP support version 0
+[    1.301535] cros_ec_lpcs GOOG0004:00: Chrome EC device registered
+[    1.337615] cros-usbpd-notify-acpi GOOG0003:00: Couldn't get Chrome EC device pointer.
+[    1.337767] intel_rapl: Found RAPL domain package
+[    1.337777] intel_rapl: Found RAPL domain core
+[    1.337783] intel_rapl: Found RAPL domain uncore
+[    1.337788] intel_rapl: Found RAPL domain dram
+[    1.338696] GACT probability NOT on
+[    1.339290] xt_time: kernel timezone is -0000
+[    1.339520] Initializing XFRM netlink socket
+[    1.339739] NET: Registered protocol family 10
+[    1.340680] Segment Routing with IPv6
+[    1.340813] NET: Registered protocol family 17
+[    1.340824] NET: Registered protocol family 15
+[    1.341739] mce: Using 8 MCE banks
+[    1.341821] microcode: sig=0x806e9, pf=0x80, revision=0x8e
+[    1.341979] microcode: Microcode Update Driver: v2.2.
+[    1.342005] AVX2 version of gcm_enc/dec engaged.
+[    1.342012] AES CTR mode by8 optimization enabled
+[    1.342848] sched_clock: Marking stable (1338278778, 4559479)->(1352204031, -9365774)
+[    1.343092] registered taskstats version 1
+[    1.343252] pstore: Using compression: deflate
+[    1.343610] Key type encrypted registered
+[    1.351166]   Magic number: 0:916:532
+[    1.351200] coreboot coreboot39: hash matches
+[    1.351493] ALSA device list:
+[    1.351499]   No soundcards found.
+[    1.351530] Warning: unable to open an initial console.
+[    1.459621] usb 1-2: new high-speed USB device number 2 using xhci_hcd
+[    1.481622] tsc: Refined TSC clocksource calibration: 1607.993 MHz
+[    1.481643] clocksource: tsc: mask: 0xffffffffffffffff max_cycles: 0x172da3ab3cc, max_idle_ns: 440795208113 ns
+[    1.481720] clocksource: Switched to clocksource tsc
+[    1.603528]  nvme0n1: p1 p2 p3 p4 p5 p6 p7 p8 p9 p10 p11 p12
+[    1.603740] usb 1-2: New USB device found, idVendor=0bda, idProduct=564b, bcdDevice= 0.06
+[    1.603751] usb 1-2: New USB device strings: Mfr=3, Product=1, SerialNumber=2
+[    1.603758] usb 1-2: Product: WebCamera
+[    1.603764] usb 1-2: Manufacturer: Generic
+[    1.603770] usb 1-2: SerialNumber: LOE65001063010A77500DF0AI06BF12000
+[    1.605117] device-mapper: init: attempting early device configuration.
+[    1.605503] device-mapper: init: adding target '0 4710400 verity payload=ROOT_DEV hashtree=HASH_DEV hashstart=4710400 alg=sha256 root_hexdigest=0b62e9d1099b70b87ee30e8217ab7eaa7968391f9de6097646f327d28a028bf6 salt=a7be1616f0c9e25cf0f4a93260cc55b527e806db6b7779ad57b34b457e0a9e20'
+[    1.605535] device-mapper: table: 254:0: verity: Data device lookup failed
+[    1.605540] device-mapper: init: starting dm-0 (vroot) failed
+[    1.605925] EXT4-fs (nvme0n1p3): mounting ext2 file system using the ext4 subsystem
+[    1.606866] EXT4-fs (nvme0n1p3): mounted filesystem without journal. Opts: (null)
+[    1.606888] VFS: Mounted root (ext2 filesystem) readonly on device 259:3.
+[    1.607479] devtmpfs: mounted
+[    1.611119] Freeing unused kernel image memory: 1544K
+[    1.611225] Write protecting the kernel read-only data: 18432k
+[    1.612643] Freeing unused kernel image memory: 1984K
+[    1.613105] Freeing unused kernel image memory: 712K
+[    1.613294] Run /sbin/init as init process
+[    1.720448] usb 1-3: new full-speed USB device number 3 using xhci_hcd
+[    1.754787] LoadPin: dev(259,3): writable
+[    1.754810] LoadPin: load pinning can be disabled.
+[    1.754825] LoadPin: firmware pinned obj="/lib/firmware/i915/kbl_dmc_ver1_04.bin" pid=52 cmdline=""
+[    1.755801] [drm] Finished loading DMC firmware i915/kbl_dmc_ver1_04.bin (v1.4)
+[    1.847552] usb 1-3: New USB device found, idVendor=8087, idProduct=0a2a, bcdDevice= 0.03
+[    1.847564] usb 1-3: New USB device strings: Mfr=0, Product=0, SerialNumber=0
+[    1.905662] init: early-failure main process (154) terminated with status 124
+[    1.927082] udevd[163]: starting version 225
+[    1.938454] NMI watchdog: Enabled. Permanently consumes one hw-PMU counter.
+[    1.963099] SafeSetID: insecure policy detected: uid 213 is constrained but transitively unconstrained through uid 307
+[    1.963105] SafeSetID: insecure policy detected: uid 213 is constrained but transitively unconstrained through uid 300
+[    1.963108] SafeSetID: insecure policy detected: uid 213 is constrained but transitively unconstrained through uid 305
+[    1.963111] SafeSetID: insecure policy detected: uid 213 is constrained but transitively unconstrained through uid 308
+[    1.963113] SafeSetID: insecure policy detected: uid 213 is constrained but transitively unconstrained through uid 302
+[    1.963116] SafeSetID: insecure policy detected: uid 213 is constrained but transitively unconstrained through uid 1000
+[    1.963118] SafeSetID: insecure policy detected: uid 213 is constrained but transitively unconstrained through uid 301
+[    1.998509] EXT4-fs (nvme0n1p1): mounted filesystem with ordered data mode. Opts: commit=600
+[    2.005471] EXT4-fs (nvme0n1p8): mounted filesystem with ordered data mode. Opts: (null)
+[    2.061727] frecon[313]: Frecon using drm driver i915, version 1.6, date(20180921), desc(Intel Graphics) using atomic
+[    2.293784] EXT4-fs (dm-1): mounted filesystem with ordered data mode. Opts: discard,commit=600
+[    2.548596] EXT4-fs (nvme0n1p1): re-mounted. Opts: resgid=20119,commit=600
+[    2.598852] low_mem: threshold[0] 827 MB
+[    2.598857] low_mem: threshold[1] 6366 MB
+[    2.612181] Intel(R) Wireless WiFi driver for Linux
+[    2.612185] Copyright(c) 2003- 2015 Intel Corporation
+[    2.613692] iwlwifi 0000:01:00.0: Direct firmware load for iwl-dbg-cfg.ini failed with error -2
+[    2.618896] systemd-journald[516]: Running without systemd.
+[    2.619152] iwlwifi 0000:01:00.0: loaded firmware version 29.b82af6fb.0 op_mode iwlmvm
+[    2.622354] zram: Added device: zram0
+[    2.634938] systemd-journald[516]: Received request to flush runtime journal from PID 587
+[    2.657139] zram0: detected capacity change from 0 to 24447021056
+[    2.660284] Adding 23874040k swap on /dev/zram0.  Priority:-2 extents:1 across:23874040k SS
+[    2.676225] iwlwifi 0000:01:00.0: Detected Intel(R) Dual Band Wireless AC 7265, REV=0x210
+[    2.698749] iwlwifi 0000:01:00.0: base HW address: f4:96:34:f1:16:66
+[    2.760254] thermal thermal_zone7: failed to read out thermal zone (-61)
+[    3.071337] IPv6: ADDRCONF(NETDEV_UP): wlan0: link is not ready
+[    3.178191] kstaled: set ratio to 4
+[    3.596694] frecon[313]: Frecon using drm driver i915, version 1.6, date(20180921), desc(Intel Graphics) using atomic
+[    3.624897] netlink: 'set_wifi_transm': attribute type 58 has an invalid length.
+[    3.624903] netlink: 'set_wifi_transm': attribute type 59 has an invalid length.
+[    4.156627] core sched enabled
+[    4.158064] prctl success: chrome/1248 ffff9b4aeb359e80 (fork: 0)
+[    4.166269] prctl success: chrome/1249 ffff9b4ae2d08000 (fork: 0)
+[    4.166280] prctl success: chrome/1250 ffff9b4aea590000 (fork: 0)
+[    4.171070] prctl success: chrome/1250 ffff9b4abf11bd00 (fork: 1)
+[    4.171110] prctl success: chrome/1250 ffff9b4abf11cc40 (fork: 1)
+[    4.171157] prctl success: chrome/1250 ffff9b4abf11db80 (fork: 1)
+[    4.173559] prctl success: chrome/1250 ffff9b4abf119e80 (fork: 1)
+[    4.175748] prctl success: chrome/1248 ffff9b4ac8fd0000 (fork: 1)
+[    4.175790] prctl success: chrome/1248 ffff9b4ac8fd6ac0 (fork: 1)
+[    4.175843] prctl success: chrome/1248 ffff9b4ac8fd0f40 (fork: 1)
+[    4.177263] prctl success: chrome/1248 ffff9b4ac8fd2dc0 (fork: 1)
+[    4.178313] prctl success: ThreadPoolForeg/1253 ffff9b4abf118000 (fork: 1)
+[    4.180279] prctl success: ThreadPoolForeg/1257 ffff9b4ac8fd3d00 (fork: 1)
+[    4.183235] prctl success: chrome/1249 ffff9b4abf1a2dc0 (fork: 1)
+[    4.183275] prctl success: chrome/1249 ffff9b4abf1a3d00 (fork: 1)
+[    4.183369] prctl success: chrome/1249 ffff9b4abf1a4c40 (fork: 1)
+[    4.184922] prctl success: chrome/1249 ffff9b4abf1a5b80 (fork: 1)
+[    4.199973] prctl success: ThreadPoolForeg/1263 ffff9b4abf1a0000 (fork: 1)
+[    4.202329] prctl success: chrome/1249 ffff9b4abf11eac0 (fork: 1)
+[    4.205434] prctl success: chrome/1248 ffff9b4abf118f40 (fork: 1)
+[    4.205473] prctl success: chrome/1250 ffff9b4abf11adc0 (fork: 1)
+[    4.209051] prctl success: chrome/1249 ffff9b4abf278000 (fork: 1)
+[    4.213528] prctl success: chrome/1250 ffff9b4abf27eac0 (fork: 1)
+[    4.213841] prctl success: chrome/1249 ffff9b4abf278f40 (fork: 1)
+[    4.214115] prctl success: chrome/1249 ffff9b4abf27bd00 (fork: 1)
+[    4.214230] prctl success: chrome/1248 ffff9b4abf27adc0 (fork: 1)
+[    4.214799] prctl success: chrome/1248 ffff9b4abf27db80 (fork: 1)
+[    4.215240] prctl success: chrome/1248 ffff9b4abf279e80 (fork: 1)
+[    4.215339] prctl success: chrome/1248 ffff9b4abf291e80 (fork: 1)
+[    4.216176] prctl success: chrome/1249 ffff9b4abf27cc40 (fork: 1)
+[    4.217019] prctl success: chrome/1250 ffff9b4abf295b80 (fork: 1)
+[    4.217126] prctl success: chrome/1250 ffff9b4abf290000 (fork: 1)
+[    4.217167] prctl success: chrome/1250 ffff9b4ae2d10f40 (fork: 1)
+[    4.372075] prctl success: chrome/1323 ffff9b4aba248f40 (fork: 0)
+[    4.381133] init: failsafe-delay main process (683) killed by TERM signal
+[    4.395354] prctl success: chrome/1323 ffff9b4ae2db8f40 (fork: 1)
+[    4.395762] prctl success: chrome/1323 ffff9b4ae2dbcc40 (fork: 1)
+[    4.396699] prctl success: chrome/1323 ffff9b4ae2dbadc0 (fork: 1)
+[    4.405073] prctl success: chrome/1323 ffff9b4aba284c40 (fork: 1)
+[    4.405537] prctl success: ThreadPoolForeg/1358 ffff9b4aba281e80 (fork: 1)
+[    4.417194] fuse init (API version 7.27)
+[    4.457911] prctl success: chrome/1323 ffff9b4ab9198f40 (fork: 1)
+[    4.459622] prctl success: chrome/1323 ffff9b4aba339e80 (fork: 1)
+[    4.461181] prctl success: chrome/1323 ffff9b4aba33eac0 (fork: 1)
+[    4.461280] prctl success: chrome/1323 ffff9b4aba33cc40 (fork: 1)
+[    4.461405] prctl success: chrome/1323 ffff9b4aba33db80 (fork: 1)
+[    4.619197] udevd[1449]: error opening ATTR{/sys/devices/pci0000:00/0000:00:1e.4/power/wakeup} for writing: Permission denied
+[    4.707326] netlink: 'set_wifi_transm': attribute type 58 has an invalid length.
+[    4.707331] netlink: 'set_wifi_transm': attribute type 59 has an invalid length.
+[    4.783094] Bluetooth: af_bluetooth.c:bt_init() Core ver 2.22
+[    4.783117] NET: Registered protocol family 31
+[    4.783120] Bluetooth: af_bluetooth.c:bt_init() HCI device and connection manager initialized
+[    4.783124] Bluetooth: hci_sock.c:hci_sock_init() HCI socket layer initialized
+[    4.783128] Bluetooth: l2cap_sock.c:l2cap_init_sockets() L2CAP socket layer initialized
+[    4.783136] Bluetooth: sco.c:sco_init() SCO socket layer initialized
+[    4.889485] uvcvideo: Found UVC 1.00 device WebCamera (0bda:564b)
+[    4.898068] uvcvideo 1-2:1.0: Entity type for entity Extension 4 was not initialized!
+[    4.898074] uvcvideo 1-2:1.0: Entity type for entity Processing 2 was not initialized!
+[    4.898079] uvcvideo 1-2:1.0: Entity type for entity Camera 1 was not initialized!
+[    4.898157] usbcore: registered new interface driver uvcvideo
+[    4.898159] USB Video Class driver (1.1.1)
+[    4.944731] usbcore: registered new interface driver btusb
+[    4.987875] Bluetooth: btusb.c:btusb_setup_intel() hci0: read Intel version: 370810225019140f00
+[    4.988551] Bluetooth: btusb.c:btusb_setup_intel_get_fw() hci0: Intel Bluetooth firmware file: intel/ibt-hw-37.8.10-fw-22.50.19.14.f.bseq
+[    5.198901] Bluetooth: btusb.c:btusb_setup_intel() hci0: Intel BT fw patch 0x3f completed & activated
+[    5.267043] Bluetooth: sock.c:rfcomm_init_sockets() RFCOMM socket layer initialized
+[    5.267053] Bluetooth: core.c:rfcomm_init() RFCOMM ver 1.11
+[    5.538530] prctl success: ThreadPoolForeg/1261 ffff9b4ab53dbd00 (fork: 1)
+[    6.462814] wlan0: authenticate with b0:7f:b9:fd:4e:75
+[    6.470345] wlan0: send auth to b0:7f:b9:fd:4e:75 (try 1/3)
+[    6.473397] wlan0: authenticated
+[    6.475440] wlan0: associate with b0:7f:b9:fd:4e:75 (try 1/3)
+[    6.483376] wlan0: RX AssocResp from b0:7f:b9:fd:4e:75 (capab=0x31 status=0 aid=14)
+[    6.485210] wlan0: associated
+[    6.639371] IPv6: ADDRCONF(NETDEV_CHANGE): wlan0: link becomes ready
+[    7.209483] prctl success: chrome/1248 ffff9b4aba280f40 (fork: 1)
+[    7.212569] prctl success: chrome/1248 ffff9b4ab53deac0 (fork: 1)
+[    7.214814] prctl success: chrome/1248 ffff9b4ab53d9e80 (fork: 1)
+[    7.241517] prctl success: chrome/1248 ffff9b4ab53d8f40 (fork: 1)
+[    7.272367] prctl success: chrome/1248 ffff9b4ab53ddb80 (fork: 1)
+[    7.293258] prctl success: chrome/1248 ffff9b4ab53d8000 (fork: 1)
+[    7.308094] prctl success: chrome/1248 ffff9b4ab53dcc40 (fork: 1)
+[   62.729966] PDLOG 2020/04/29 12:24:56.386 P1 Disconnected
+[   62.730471] PDLOG 2020/04/29 12:30:22.639 P1 SNK (not charging) Charger ??? 5000mV max 5000mV / 500mA
+[   62.732009] PDLOG 2020/04/29 12:30:22.666 P1 SNK (not charging) Charger ??? 5000mV max 5000mV / 3000mA
+[   62.732519] PDLOG 2020/04/29 12:30:22.771 P1 SNK Charger ??? 5017mV max 15000mV / 3000mA
+[   62.733608] PDLOG 2020/04/29 12:30:22.882 P1 SNK Charger ??? 5061mV max 5000mV / 3000mA
+[   62.734239] PDLOG 2020/04/29 12:30:23.055 P1 SNK Charger ??? 14983mV max 15000mV / 3000mA
+[   62.735899] PDLOG 2020/04/29 12:30:25.769 P1 SNK Charger PD 14918mV max 15000mV / 3000mA
+[   63.246444] NOHZ: local_softirq_pending 80
+[   63.246488] NOHZ: local_softirq_pending 80
+[   94.261503] frecon[313]: Frecon using drm driver i915, version 1.6, date(20180921), desc(Intel Graphics) using atomic
+[  109.032431] NOHZ: local_softirq_pending 202
+[  109.032452] NOHZ: local_softirq_pending 202
+[  109.032484] NOHZ: local_softirq_pending 202
+[  109.032517] NOHZ: local_softirq_pending 202
+[  109.032551] NOHZ: local_softirq_pending 202
+[  109.032564] NOHZ: local_softirq_pending 202
+[  109.032576] NOHZ: local_softirq_pending 202
+[  109.032598] NOHZ: local_softirq_pending 202
+[  325.174223] prctl success: chrome/1250 ffff9b4ab93ddb80 (fork: 1)
+[  325.178422] prctl success: chrome/1249 ffff9b4ae2dbbd00 (fork: 1)
+[  325.178589] prctl success: chrome/1248 ffff9b4ae2dbeac0 (fork: 1)
+[ 1202.555523] usb 1-1: new high-speed USB device number 4 using xhci_hcd
+[ 1202.692818] usb 1-1: New USB device found, idVendor=13fe, idProduct=5500, bcdDevice= 1.00
+[ 1202.692823] usb 1-1: New USB device strings: Mfr=1, Product=2, SerialNumber=3
+[ 1202.692825] usb 1-1: Product: Patriot Memory
+[ 1202.692827] usb 1-1: Manufacturer:         
+[ 1202.692828] usb 1-1: SerialNumber: 0701894B90279337
+[ 1202.693751] usb-storage 1-1:1.0: USB Mass Storage device detected
+[ 1202.695315] scsi host0: usb-storage 1-1:1.0
+[ 1204.569365] scsi 0:0:0:0: Direct-Access              Patriot Memory   PMAP PQ: 0 ANSI: 6
+[ 1204.570001] sd 0:0:0:0: [sda] 61865984 512-byte logical blocks: (31.7 GB/29.5 GiB)
+[ 1204.570836] sd 0:0:0:0: [sda] Write Protect is off
+[ 1204.571706] sd 0:0:0:0: [sda] No Caching mode page found
+[ 1204.571710] sd 0:0:0:0: [sda] Assuming drive cache: write through
+[ 1204.581894] GPT:disk_guids don't match.
+[ 1204.581899] GPT:partition_entry_array_crc32 values don't match: 0x9a2bb316 != 0xf3ab6fb5
+[ 1204.581901] GPT:Primary header thinks Alt. header is not at the end of the disk.
+[ 1204.581903] GPT:13623452 != 61865983
+[ 1204.581904] GPT:Alternate GPT header not at the end of the disk.
+[ 1204.581905] GPT:13623452 != 61865983
+[ 1204.581907] GPT: Use GNU Parted to correct GPT errors.
+[ 1204.581916]  sda: sda1 sda2 sda3 sda4 sda5 sda6 sda7 sda8 sda9 sda10 sda11 sda12
+[ 1204.584459] sd 0:0:0:0: [sda] Attached SCSI removable disk
+[ 1235.913863] CPU0: Core temperature above threshold, cpu clock throttled (total events = 1)
+[ 1235.913863] CPU1: Core temperature above threshold, cpu clock throttled (total events = 1)
+[ 1235.913865] CPU3: Package temperature above threshold, cpu clock throttled (total events = 1)
+[ 1235.913867] CPU1: Package temperature above threshold, cpu clock throttled (total events = 1)
+[ 1235.913868] CPU2: Package temperature above threshold, cpu clock throttled (total events = 1)
+[ 1235.913869] CPU0: Package temperature above threshold, cpu clock throttled (total events = 1)
+[ 1235.915781] CPU0: Core temperature/speed normal
+[ 1235.915782] CPU1: Core temperature/speed normal
+[ 1235.915783] CPU1: Package temperature/speed normal
+[ 1235.915784] CPU2: Package temperature/speed normal
+[ 1235.915785] CPU3: Package temperature/speed normal
+[ 1235.915786] CPU0: Package temperature/speed normal
+[ 1276.882748] prctl success: chrome/5573 ffff9b4ad4e9eac0 (fork: 0)
+[ 1276.893618] prctl success: chrome/5573 ffff9b4aeaee8000 (fork: 1)
+[ 1276.893721] prctl success: chrome/5573 ffff9b4ab4130f40 (fork: 1)
+[ 1276.893788] prctl success: chrome/5573 ffff9b4ab4133d00 (fork: 1)
+[ 1276.894737] prctl success: chrome/5573 ffff9b4ab919db80 (fork: 1)
+[ 1276.908260] prctl success: ThreadPoolForeg/5575 ffff9b4ab919bd00 (fork: 1)
+[ 1276.908281] prctl success: chrome/5578 ffff9b4ad9689e80 (fork: 0)
+[ 1276.912732] prctl success: chrome/5578 ffff9b4ae81b9e80 (fork: 1)
+[ 1276.912936] prctl success: chrome/5578 ffff9b4ae81bbd00 (fork: 1)
+[ 1276.913020] prctl success: chrome/5578 ffff9b4ae81b8000 (fork: 1)
+[ 1276.914039] prctl success: chrome/5578 ffff9b4aba098000 (fork: 1)
+[ 1276.919000] prctl success: chrome/5578 ffff9b4aba09bd00 (fork: 1)
+[ 1276.919035] prctl success: ThreadPoolForeg/5580 ffff9b4aba098f40 (fork: 1)
+[ 1276.920966] prctl success: chrome/5578 ffff9b4aba09eac0 (fork: 1)
+[ 1276.921064] prctl success: chrome/5578 ffff9b4aba099e80 (fork: 1)
+[ 1276.921100] prctl success: chrome/5578 ffff9b4aba09db80 (fork: 1)
+[ 1276.921134] prctl success: chrome/5578 ffff9b4ab935bd00 (fork: 1)
+[ 1276.922228] prctl success: chrome/5573 ffff9b4ab919eac0 (fork: 1)
+[ 1276.936033] prctl success: chrome/5573 ffff9b4abf1a0000 (fork: 1)
+[ 1276.936335] prctl success: chrome/5573 ffff9b4abf1a6ac0 (fork: 1)
+[ 1276.936385] prctl success: chrome/5573 ffff9b4aeb3adb80 (fork: 1)
+[ 1276.936671] prctl success: chrome/5573 ffff9b4aeb3aeac0 (fork: 1)
+[ 1277.845203] prctl success: ThreadPoolForeg/5584 ffff9b4ab935db80 (fork: 1)
+[ 1277.971649] prctl success: ThreadPoolForeg/5589 ffff9b4ab935adc0 (fork: 1)
+[ 1291.439432] fscrypt: AES-256-CTS-CBC using implementation "cts(cbc-aes-aesni)"
+[ 1291.519510] fscrypt: AES-256-XTS using implementation "xts-aes-aesni"
+[ 1291.916476] prctl success: chrome/5711 ffff9b4aba3cbd00 (fork: 0)
+[ 1292.044233] prctl success: chrome/5713 ffff9b4abf340f40 (fork: 0)
+[ 1292.052097] prctl success: chrome/5716 ffff9b4aea803d00 (fork: 0)
+[ 1292.068463] prctl success: chrome/5711 ffff9b4abf343d00 (fork: 1)
+[ 1292.069112] prctl success: chrome/5711 ffff9b4abf344c40 (fork: 1)
+[ 1292.069301] prctl success: chrome/5711 ffff9b4abf341e80 (fork: 1)
+[ 1292.086465] prctl success: chrome/5711 ffff9b4aea778000 (fork: 1)
+[ 1292.096868] prctl success: chrome/5716 ffff9b4ab5389e80 (fork: 1)
+[ 1292.097128] prctl success: chrome/5716 ffff9b4ab71a3d00 (fork: 1)
+[ 1292.097365] prctl success: chrome/5716 ffff9b4ab71a0000 (fork: 1)
+[ 1292.139551] prctl success: chrome/5713 ffff9b4aea804c40 (fork: 1)
+[ 1292.143218] prctl success: chrome/5713 ffff9b4ab93dbd00 (fork: 1)
+[ 1292.145333] prctl success: chrome/5713 ffff9b4ab93d9e80 (fork: 1)
+[ 1292.161340] prctl success: chrome/5713 ffff9b4ab93d8000 (fork: 1)
+[ 1292.168708] prctl success: ThreadPoolForeg/5720 ffff9b4ae2d08000 (fork: 1)
+[ 1292.169223] prctl success: ThreadPoolForeg/5728 ffff9b4ab93dadc0 (fork: 1)
+[ 1292.173219] prctl success: chrome/5718 ffff9b4ab538eac0 (fork: 0)
+[ 1292.186680] prctl success: chrome/5716 ffff9b4aba24db80 (fork: 1)
+[ 1292.189807] prctl success: ThreadPoolForeg/5724 ffff9b4aba248f40 (fork: 1)
+[ 1292.191255] prctl success: chrome/5713 ffff9b4ab93deac0 (fork: 1)
+[ 1292.193462] prctl success: chrome/5713 ffff9b4ab93dcc40 (fork: 1)
+[ 1292.194520] prctl success: chrome/5713 ffff9b4ab71a4c40 (fork: 1)
+[ 1292.194990] prctl success: chrome/5713 ffff9b4ab538cc40 (fork: 1)
+[ 1292.195062] prctl success: chrome/5713 ffff9b4aec469e80 (fork: 1)
+[ 1292.199605] prctl success: chrome/5726 ffff9b4ae2dbbd00 (fork: 0)
+[ 1292.250880] prctl success: chrome/5726 ffff9b4ae2d08000 (fork: 1)
+[ 1292.250997] prctl success: chrome/5726 ffff9b4aea778000 (fork: 1)
+[ 1292.251918] prctl success: chrome/5726 ffff9b4abf343d00 (fork: 1)
+[ 1292.259766] prctl success: chrome/5726 ffff9b4abf344c40 (fork: 1)
+[ 1292.282932] prctl success: ThreadPoolForeg/5741 ffff9b4abf341e80 (fork: 1)
+[ 1292.327773] prctl success: chrome/5726 ffff9b4abf342dc0 (fork: 1)
+[ 1292.333810] prctl success: chrome/5726 ffff9b4abf1a2dc0 (fork: 1)
+[ 1292.335566] prctl success: chrome/5726 ffff9b4abf1a3d00 (fork: 1)
+[ 1292.335930] prctl success: chrome/5726 ffff9b4abf1a5b80 (fork: 1)
+[ 1292.336072] prctl success: chrome/5726 ffff9b4abf1a4c40 (fork: 1)
+[ 1292.337382] prctl success: chrome/5716 ffff9b4ac8fd5b80 (fork: 1)
+[ 1292.343682] prctl success: chrome/5716 ffff9b4aeb355b80 (fork: 1)
+[ 1292.347912] prctl success: chrome/5716 ffff9b4aeb350000 (fork: 1)
+[ 1292.348490] prctl success: chrome/5716 ffff9b4aeb350f40 (fork: 1)
+[ 1292.348740] prctl success: chrome/5716 ffff9b4aecf98000 (fork: 1)
+[ 1292.556493] prctl success: chrome/5756 ffff9b4abf388f40 (fork: 0)
+[ 1292.579228] prctl success: chrome/5756 ffff9b4abf290f40 (fork: 1)
+[ 1292.579607] prctl success: chrome/5756 ffff9b4abf296ac0 (fork: 1)
+[ 1292.580409] prctl success: chrome/5756 ffff9b4abf292dc0 (fork: 1)
+[ 1292.588725] prctl success: chrome/5756 ffff9b4ad95ddb80 (fork: 1)
+[ 1292.592689] prctl success: ThreadPoolForeg/5758 ffff9b4ad95dcc40 (fork: 1)
+[ 1292.636099] prctl success: chrome/5756 ffff9b4ab935eac0 (fork: 1)
+[ 1292.644643] prctl success: chrome/5762 ffff9b4aba3cadc0 (fork: 0)
+[ 1292.645108] prctl success: chrome/5756 ffff9b4ab9358000 (fork: 1)
+[ 1292.647217] prctl success: chrome/5756 ffff9b4ab935cc40 (fork: 1)
+[ 1292.647371] prctl success: chrome/5756 ffff9b4ab408cc40 (fork: 1)
+[ 1292.647938] prctl success: chrome/5756 ffff9b4ab4088f40 (fork: 1)
+[ 1292.704522] prctl success: chrome/5762 ffff9b4aba338000 (fork: 1)
+[ 1292.705169] prctl success: chrome/5762 ffff9b4aba33cc40 (fork: 1)
+[ 1292.705708] prctl success: chrome/5762 ffff9b4aba33db80 (fork: 1)
+[ 1292.764910] prctl success: chrome/5762 ffff9b4aba33eac0 (fork: 1)
+[ 1292.769341] prctl success: ThreadPoolForeg/5769 ffff9b4ae81f6ac0 (fork: 1)
+[ 1292.897209] prctl success: chrome/5762 ffff9b4aec29bd00 (fork: 1)
+[ 1292.913193] prctl success: chrome/5762 ffff9b4ab9060000 (fork: 1)
+[ 1292.914930] prctl success: chrome/5762 ffff9b4aecef8000 (fork: 1)
+[ 1292.915381] prctl success: chrome/5762 ffff9b4aecefdb80 (fork: 1)
+[ 1292.915806] prctl success: chrome/5762 ffff9b4aeb3b0000 (fork: 1)
+[ 1292.937082] EXT4-fs (sda1): mounted filesystem with ordered data mode. Opts: 
+[ 1293.018419] EXT4-fs (sda8): mounted filesystem with ordered data mode. Opts: 
+[ 1293.024272] prctl success: chrome/5780 ffff9b4aeb3b6ac0 (fork: 0)
+[ 1293.085863] prctl success: chrome/5780 ffff9b4a8d131e80 (fork: 1)
+[ 1293.089099] prctl success: chrome/5780 ffff9b4a8d130000 (fork: 1)
+[ 1293.100459] prctl success: chrome/5780 ffff9b4a8d136ac0 (fork: 1)
+[ 1293.167138] prctl success: chrome/5780 ffff9b4a8d130f40 (fork: 1)
+[ 1293.170768] prctl success: ThreadPoolForeg/5784 ffff9b4a8d132dc0 (fork: 1)
+[ 1293.316077] prctl success: chrome/5780 ffff9b4a8d133d00 (fork: 1)
+[ 1293.364768] prctl success: chrome/5718 ffff9b4ae9db2dc0 (fork: 1)
+[ 1293.439476] prctl success: chrome/5718 ffff9b4ae9db1e80 (fork: 1)
+[ 1293.443964] prctl success: chrome/5780 ffff9b4a8d134c40 (fork: 1)
+[ 1293.445831] prctl success: chrome/5780 ffff9b4a8d26bd00 (fork: 1)
+[ 1293.446793] prctl success: chrome/5780 ffff9b4a8d26cc40 (fork: 1)
+[ 1293.447166] prctl success: chrome/5780 ffff9b4a8d26db80 (fork: 1)
+[ 1293.499687] prctl success: chrome/5718 ffff9b4ae9db4c40 (fork: 1)
+[ 1293.693925] prctl success: chrome/5718 ffff9b4ad95deac0 (fork: 1)
+[ 1293.699972] prctl success: ThreadPoolForeg/5805 ffff9b4a8d2feac0 (fork: 1)
+[ 1293.904346] prctl success: chrome/5726 ffff9b4a8d2fadc0 (fork: 1)
+[ 1293.930194] prctl success: chrome/5718 ffff9b4a8d2fbd00 (fork: 1)
+[ 1293.942034] prctl success: chrome/5718 ffff9b4a8d2fcc40 (fork: 1)
+[ 1293.947967] prctl success: chrome/5718 ffff9b4a8d2fdb80 (fork: 1)
+[ 1293.948518] prctl success: chrome/5718 ffff9b4a8d2f9e80 (fork: 1)
+[ 1293.948581] prctl success: chrome/5718 ffff9b4a8d2f8000 (fork: 1)
+[ 1294.213250] prctl success: chrome/5817 ffff9b4a8d26adc0 (fork: 0)
+[ 1294.469041] prctl success: chrome/5817 ffff9b4a8d31cc40 (fork: 1)
+[ 1294.469318] prctl success: chrome/5817 ffff9b4aba3ccc40 (fork: 1)
+[ 1294.469670] prctl success: chrome/5822 ffff9b4a8d135b80 (fork: 0)
+[ 1294.473118] prctl success: chrome/5817 ffff9b4aba3c8000 (fork: 1)
+[ 1294.480666] prctl success: chrome/5817 ffff9b4a8d318000 (fork: 1)
+[ 1294.492242] prctl success: ThreadPoolForeg/5826 ffff9b4aba282dc0 (fork: 1)
+[ 1294.508107] prctl success: chrome/5817 ffff9b4a8d31eac0 (fork: 1)
+[ 1294.510917] prctl success: chrome/5817 ffff9b4a8d318f40 (fork: 1)
+[ 1294.511337] prctl success: chrome/5817 ffff9b4a8d31adc0 (fork: 1)
+[ 1294.511869] prctl success: chrome/5817 ffff9b4a85dd1e80 (fork: 1)
+[ 1294.515466] prctl success: chrome/5817 ffff9b4a85dd0000 (fork: 1)
+[ 1294.517205] prctl success: chrome/5822 ffff9b4a85dd6ac0 (fork: 1)
+[ 1294.517390] prctl success: chrome/5822 ffff9b4a85dd0f40 (fork: 1)
+[ 1294.517947] prctl success: chrome/5822 ffff9b4a85dd2dc0 (fork: 1)
+[ 1294.520273] prctl success: chrome/5822 ffff9b4a85dd3d00 (fork: 1)
+[ 1294.524222] prctl success: ThreadPoolForeg/5843 ffff9b4a85dd4c40 (fork: 1)
+[ 1294.533619] prctl success: chrome/5822 ffff9b4a85dd5b80 (fork: 1)
+[ 1294.592624] prctl success: chrome/5822 ffff9b4a85d4eac0 (fork: 1)
+[ 1294.593377] prctl success: chrome/5822 ffff9b4a85f20f40 (fork: 1)
+[ 1294.593460] prctl success: chrome/5822 ffff9b4a85f22dc0 (fork: 1)
+[ 1294.594013] prctl success: chrome/5822 ffff9b4a85f23d00 (fork: 1)
+[ 1294.866712] prctl success: ThreadPoolForeg/5787 ffff9b4aba248f40 (fork: 1)
+[ 1296.952512] prctl success: chrome/5947 ffff9b4a8d3c9e80 (fork: 0)
+[ 1296.973728] prctl success: chrome/5947 ffff9b4a85e9bd00 (fork: 1)
+[ 1296.975765] prctl success: chrome/5947 ffff9b4a85d4db80 (fork: 1)
+[ 1296.975882] prctl success: chrome/5947 ffff9b4a85d4adc0 (fork: 1)
+[ 1296.986998] prctl success: chrome/5947 ffff9b4a85d48f40 (fork: 1)
+[ 1296.989347] prctl success: ThreadPoolForeg/5949 ffff9b4a85d49e80 (fork: 1)
+[ 1297.020297] prctl success: chrome/5947 ffff9b4a85d48000 (fork: 1)
+[ 1297.023009] prctl success: chrome/5947 ffff9b4a85d4cc40 (fork: 1)
+[ 1297.024263] prctl success: chrome/5947 ffff9b4a85d4bd00 (fork: 1)
+[ 1297.024359] prctl success: chrome/5947 ffff9b4a84068f40 (fork: 1)
+[ 1297.024432] prctl success: chrome/5947 ffff9b4a8406bd00 (fork: 1)
+[ 1297.158931] prctl success: chrome/5726 ffff9b4a84069e80 (fork: 1)
+[ 1297.223363] prctl success: chrome/5756 ffff9b4a8406adc0 (fork: 1)
+[ 1297.954535] prctl success: chrome/5985 ffff9b4aba285b80 (fork: 0)
+[ 1298.064597] prctl success: chrome/5985 ffff9b4ab71a3d00 (fork: 1)
+[ 1298.065004] prctl success: chrome/5985 ffff9b4aea803d00 (fork: 1)
+[ 1298.067254] prctl success: chrome/5985 ffff9b4a8d31eac0 (fork: 1)
+[ 1298.079726] prctl success: chrome/5985 ffff9b4a8d31adc0 (fork: 1)
+[ 1298.081525] prctl success: ThreadPoolForeg/5987 ffff9b4a8d318000 (fork: 1)
+[ 1298.138796] prctl success: chrome/5989 ffff9b4a8d318f40 (fork: 0)
+[ 1298.161710] prctl success: chrome/5985 ffff9b4a8d31cc40 (fork: 1)
+[ 1298.167650] prctl success: chrome/5985 ffff9b4a8d319e80 (fork: 1)
+[ 1298.171431] prctl success: chrome/5985 ffff9b4a8d31db80 (fork: 1)
+[ 1298.171915] prctl success: chrome/5985 ffff9b4a841d5b80 (fork: 1)
+[ 1298.172183] prctl success: chrome/5985 ffff9b4a841d4c40 (fork: 1)
+[ 1298.225546] prctl success: chrome/5989 ffff9b4a841d2dc0 (fork: 1)
+[ 1298.225963] prctl success: chrome/5989 ffff9b4a841d6ac0 (fork: 1)
+[ 1298.226386] prctl success: chrome/5989 ffff9b4a841d0000 (fork: 1)
+[ 1298.230439] prctl success: chrome/5989 ffff9b4a841d3d00 (fork: 1)
+[ 1298.239658] prctl success: ThreadPoolForeg/5998 ffff9b4ac8fd0f40 (fork: 1)
+[ 1298.274927] prctl success: chrome/5989 ffff9b4ac8fd6ac0 (fork: 1)
+[ 1298.277138] prctl success: chrome/5989 ffff9b4ac8fd0000 (fork: 1)
+[ 1298.279842] prctl success: chrome/5989 ffff9b4ac8fd2dc0 (fork: 1)
+[ 1298.280156] prctl success: chrome/5989 ffff9b4ac8fd3d00 (fork: 1)
+[ 1298.280391] prctl success: chrome/5989 ffff9b4ac8fd5b80 (fork: 1)
+[ 1300.031507] prctl success: chrome/6044 ffff9b4a8d2fdb80 (fork: 0)
+[ 1300.037787] prctl success: chrome/6044 ffff9b4aecf98000 (fork: 1)
+[ 1300.038073] prctl success: chrome/6044 ffff9b4aba280f40 (fork: 1)
+[ 1300.038353] prctl success: chrome/6044 ffff9b4aba282dc0 (fork: 1)
+[ 1300.040991] prctl success: chrome/6044 ffff9b4a8d135b80 (fork: 1)
+[ 1300.054094] prctl success: ThreadPoolForeg/6046 ffff9b4aea590000 (fork: 1)
+[ 1300.079730] prctl success: chrome/6044 ffff9b4aeb359e80 (fork: 1)
+[ 1300.082252] prctl success: chrome/6044 ffff9b4abf295b80 (fork: 1)
+[ 1300.084508] prctl success: chrome/6044 ffff9b4abf290000 (fork: 1)
+[ 1300.084867] prctl success: chrome/6044 ffff9b4abf291e80 (fork: 1)
+[ 1300.085135] prctl success: chrome/6044 ffff9b4aeaee8000 (fork: 1)
+[ 1303.395339] prctl success: chrome/5726 ffff9b4a8d2f8000 (fork: 1)
+[ 1304.481288] prctl success: ThreadPoolForeg/5769 ffff9b4a841d6ac0 (fork: 1)
+[ 1305.368393] prctl success: chrome/5756 ffff9b4ac8fd0000 (fork: 1)
+[ 1305.406927] prctl success: SharedWorker th/6103 ffff9b4ac8fd6ac0 (fork: 1)
+[ 1306.317370] prctl success: chrome/6044 ffff9b4a8d2feac0 (fork: 1)
+[ 1324.394043] perf: interrupt took too long (2515 > 2500), lowering kernel.perf_event_max_sample_rate to 79000
+[ 1324.535790] perf: interrupt took too long (3196 > 3143), lowering kernel.perf_event_max_sample_rate to 62000
+[ 1324.627328] perf: interrupt took too long (4006 > 3995), lowering kernel.perf_event_max_sample_rate to 49000
+[ 1324.699365] perf: interrupt took too long (5105 > 5007), lowering kernel.perf_event_max_sample_rate to 39000
+[ 1325.095055] perf: interrupt took too long (6428 > 6381), lowering kernel.perf_event_max_sample_rate to 31000
+[ 1326.345079] perf: interrupt took too long (8039 > 8035), lowering kernel.perf_event_max_sample_rate to 24000
+[ 1361.635700] prctl success: ThreadPoolForeg/6046 ffff9b4a8d134c40 (fork: 1)
+[ 1385.084144] prctl success: ThreadPoolForeg/5758 ffff9b4a8d131e80 (fork: 1)
+[ 1385.160379] prctl success: chrome/6349 ffff9b4abf1a2dc0 (fork: 0)
+[ 1385.167080] prctl success: chrome/6349 ffff9b4abf1a5b80 (fork: 1)
+[ 1385.167261] prctl success: chrome/6349 ffff9b4abf1a4c40 (fork: 1)
+[ 1385.167462] prctl success: chrome/6349 ffff9b4abf1a0000 (fork: 1)
+[ 1385.176172] prctl success: chrome/6349 ffff9b4abf1a6ac0 (fork: 1)
+[ 1385.181685] prctl success: ThreadPoolForeg/6351 ffff9b4a85e9bd00 (fork: 1)
+[ 1385.194435] prctl success: chrome/6349 ffff9b4a85e9adc0 (fork: 1)
+[ 1385.196828] prctl success: chrome/6349 ffff9b4a8d133d00 (fork: 1)
+[ 1385.198200] prctl success: chrome/6349 ffff9b4a8d130f40 (fork: 1)
+[ 1385.198305] prctl success: chrome/6349 ffff9b4a8d130000 (fork: 1)
+[ 1385.198348] prctl success: chrome/6349 ffff9b4a8d132dc0 (fork: 1)
+[ 1385.311634] prctl success: chrome/6349 ffff9b4a85e99e80 (fork: 1)
+[ 1408.666818] prctl success: ThreadPoolForeg/6348 ffff9b4ab93ddb80 (fork: 1)
+[ 1408.710730] prctl success: chrome/6432 ffff9b4ab93dcc40 (fork: 0)
+[ 1408.712724] prctl success: chrome/6432 ffff9b4a8d2fbd00 (fork: 1)
+[ 1408.712790] prctl success: chrome/6432 ffff9b4a8d2f8000 (fork: 1)
+[ 1408.712995] prctl success: chrome/6432 ffff9b4a8d2f9e80 (fork: 1)
+[ 1408.714039] prctl success: chrome/6432 ffff9b4a8d2feac0 (fork: 1)
+[ 1408.719982] prctl success: chrome/6432 ffff9b4aec29bd00 (fork: 1)
+[ 1408.720062] prctl success: ThreadPoolForeg/6435 ffff9b4aeac4adc0 (fork: 1)
+[ 1408.721020] prctl success: chrome/6432 ffff9b4ae2d15b80 (fork: 1)
+[ 1408.721118] prctl success: chrome/6432 ffff9b4ae2d10000 (fork: 1)
+[ 1408.721152] prctl success: chrome/6432 ffff9b4ae2d10f40 (fork: 1)
+[ 1408.721185] prctl success: chrome/6432 ffff9b4ab935adc0 (fork: 1)
+[ 1411.263107] prctl success: ThreadPoolForeg/6439 ffff9b4aba09bd00 (fork: 1)
+[ 1446.585643] EXT4-fs (nvme0n1p3): warning: mounting unchecked fs, running e2fsck is recommended
+[ 1446.593192] EXT4-fs (nvme0n1p3): re-mounted. Opts: (null)
+[ 1586.091818] prctl success: ThreadPoolForeg/5758 ffff9b4ac8fd5b80 (fork: 1)
+[ 1602.969774] prctl success: ThreadPoolForeg/6046 ffff9b4aba098f40 (fork: 1)
+[ 1633.454908] CPU2: Core temperature above threshold, cpu clock throttled (total events = 176)
+[ 1633.454909] CPU3: Core temperature above threshold, cpu clock throttled (total events = 176)
+[ 1633.454911] CPU3: Package temperature above threshold, cpu clock throttled (total events = 382)
+[ 1633.454913] CPU2: Package temperature above threshold, cpu clock throttled (total events = 382)
+[ 1633.454952] CPU1: Package temperature above threshold, cpu clock throttled (total events = 386)
+[ 1633.454953] CPU0: Package temperature above threshold, cpu clock throttled (total events = 386)
+[ 1633.512924] CPU3: Core temperature/speed normal
+[ 1633.512925] CPU1: Package temperature/speed normal
+[ 1633.512926] CPU0: Package temperature/speed normal
+[ 1633.512928] CPU2: Core temperature/speed normal
+[ 1633.512931] CPU3: Package temperature/speed normal
+[ 1633.512935] CPU2: Package temperature/speed normal
+[ 1844.489516] INFO: task kworker/u8:4:108 blocked for more than 122 seconds.
+[ 1844.489522]       Not tainted 4.19.116-TREE_EXTRA_VERSION #33
+[ 1844.489524] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+[ 1844.489526] kworker/u8:4    D    0   108      2 0x80000000 last_sleep: 1646274196867.  last_runnable: 1646274173657
+[ 1844.489532] Workqueue: writeback wb_workfn (flush-8:0)
+[ 1844.489535] Call Trace:
+[ 1844.489541]  ? __schedule+0x604/0x862
+[ 1844.489544]  schedule+0x62/0x76
+[ 1844.489546]  io_schedule+0x16/0x38
+[ 1844.489549]  blk_mq_get_tag+0x157/0x2ac
+[ 1844.489553]  ? init_wait_entry+0x2e/0x2e
+[ 1844.489555]  blk_mq_get_request+0x10d/0x374
+[ 1844.489558]  blk_mq_make_request+0x17d/0x54c
+[ 1844.489561]  generic_make_request+0x183/0x364
+[ 1844.489563]  submit_bio+0xcf/0x17b
+[ 1844.489566]  ? guard_bio_eod+0x5a/0xd2
+[ 1844.489568]  ? submit_bh_wbc+0x10e/0x150
+[ 1844.489570]  __block_write_full_page+0x216/0x35a
+[ 1844.489572]  ? blkdev_direct_IO+0x62/0x62
+[ 1844.489574]  ? mark_buffer_write_io_error+0x68/0x68
+[ 1844.489577]  __writepage+0x1e/0x50
+[ 1844.489579]  write_cache_pages+0x311/0x448
+[ 1844.489582]  ? generic_writepages+0xa4/0xa4
+[ 1844.489585]  generic_writepages+0x75/0xa4
+[ 1844.489587]  do_writepages+0x33/0x74
+[ 1844.489590]  __writeback_single_inode+0x98/0x3ab
+[ 1844.489592]  writeback_sb_inodes+0x294/0x49f
+[ 1844.489595]  __writeback_inodes_wb+0x63/0xc7
+[ 1844.489597]  wb_writeback+0x19b/0x30b
+[ 1844.489599]  wb_workfn+0x3b3/0x4ba
+[ 1844.489603]  process_one_work+0x1db/0x3a2
+[ 1844.489605]  worker_thread+0x216/0x375
+[ 1844.489607]  kthread+0x138/0x140
+[ 1844.489609]  ? pr_cont_work+0x58/0x58
+[ 1844.489611]  ? kthread_blkcg+0x2e/0x2e
+[ 1844.489613]  ret_from_fork+0x35/0x40
+[ 1844.489617] INFO: task kstaled:134 blocked for more than 122 seconds.
+[ 1844.489619]       Not tainted 4.19.116-TREE_EXTRA_VERSION #33
+[ 1844.489620] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+[ 1844.489621] kstaled         D    0   134      2 0x80000000 last_sleep: 1646274166671.  last_runnable: 1646274151107
+[ 1844.489624] Call Trace:
+[ 1844.489627]  ? __schedule+0x604/0x862
+[ 1844.489629]  schedule+0x62/0x76
+[ 1844.489632]  io_schedule+0x16/0x38
+[ 1844.489634]  blk_mq_get_tag+0x157/0x2ac
+[ 1844.489636]  ? init_wait_entry+0x2e/0x2e
+[ 1844.489639]  blk_mq_get_request+0x10d/0x374
+[ 1844.489641]  blk_mq_make_request+0x17d/0x54c
+[ 1844.489643]  generic_make_request+0x183/0x364
+[ 1844.489646]  submit_bio+0xcf/0x17b
+[ 1844.489648]  ? guard_bio_eod+0x5a/0xd2
+[ 1844.489650]  ? submit_bh_wbc+0x10e/0x150
+[ 1844.489651]  __block_write_full_page+0x216/0x35a
+[ 1844.489653]  ? blkdev_direct_IO+0x62/0x62
+[ 1844.489655]  ? mark_buffer_write_io_error+0x68/0x68
+[ 1844.489658]  shrink_page_list+0xd4b/0x10a5
+[ 1844.489660]  node_shrink_list+0xc8/0x176
+[ 1844.489663]  kstaled_reclaim_lru+0x608/0x758
+[ 1844.489666]  kstaled_node_worker+0xee2/0x10a9
+[ 1844.489669]  ? __switch_to_asm+0x41/0x70
+[ 1844.489671]  ? init_wait_entry+0x2e/0x2e
+[ 1844.489673]  ? ratio_store+0xef/0xef
+[ 1844.489675]  ? kstaled_walk_pud+0x2c2/0x2c2
+[ 1844.489677]  ? kstaled_walk_pmd+0xff/0xff
+[ 1844.489680]  kthread+0x138/0x140
+[ 1844.489681]  ? kstaled_reclaim_lru+0x758/0x758
+[ 1844.489684]  ? kthread_blkcg+0x2e/0x2e
+[ 1844.489686]  ret_from_fork+0x35/0x40
+[ 1844.489689] INFO: task udevd:167 blocked for more than 122 seconds.
+[ 1844.489690]       Not tainted 4.19.116-TREE_EXTRA_VERSION #33
+[ 1844.489691] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+[ 1844.489693] udevd           D    0   167      1 0x00000000 last_sleep: 1644332728483.  last_runnable: 1644332695929
+[ 1844.489695] Call Trace:
+[ 1844.489698]  ? __schedule+0x604/0x862
+[ 1844.489700]  ? put_pwq+0x3d/0x3d
+[ 1844.489703]  schedule+0x62/0x76
+[ 1844.489705]  schedule_preempt_disabled+0x16/0x20
+[ 1844.489707]  __mutex_lock_common+0x3b7/0x622
+[ 1844.489710]  __mutex_lock_slowpath+0x20/0x26
+[ 1844.489712]  __blkdev_get+0x7e/0x470
+[ 1844.489714]  blkdev_get+0x9c/0x339
+[ 1844.489716]  ? _raw_spin_unlock+0xe/0x20
+[ 1844.489718]  ? bd_acquire+0xad/0xb9
+[ 1844.489720]  do_dentry_open+0x1e0/0x351
+[ 1844.489722]  path_openat+0x595/0x104e
+[ 1844.489726]  ? alloc_set_pte+0x146/0x50d
+[ 1844.489728]  do_filp_open+0x9b/0x10a
+[ 1844.489731]  do_sys_open+0x158/0x2ea
+[ 1844.489734]  do_syscall_64+0x54/0xde
+[ 1844.489737]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+[ 1844.489740] RIP: 0033:0x7e4c4ddcfdcf
+[ 1844.489745] Code: Bad RIP value.
+[ 1844.489746] RSP: 002b:00007fff4fe79970 EFLAGS: 00000246 ORIG_RAX: 0000000000000101
+[ 1844.489748] RAX: ffffffffffffffda RBX: 000056565954d290 RCX: 00007e4c4ddcfdcf
+[ 1844.489750] RDX: 00000000000a0800 RSI: 0000565659553f30 RDI: 00000000ffffff9c
+[ 1844.489752] RBP: 00007fff4fe79f50 R08: 0000000000000007 R09: 000056565876d920
+[ 1844.489753] R10: 0000000000000000 R11: 0000000000000246 R12: 00005656595bb4d0
+[ 1844.489754] R13: 000056565954d1c0 R14: 00007fff4fe79a10 R15: 00007fff4fe79a20
+[ 1844.489786] INFO: task dd:7178 blocked for more than 122 seconds.
+[ 1844.489787]       Not tainted 4.19.116-TREE_EXTRA_VERSION #33
+[ 1844.489788] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+[ 1844.489790] dd              D    0  7178   6408 0x00000004 last_sleep: 1646274189785.  last_runnable: 1646274168907
+[ 1844.489792] Call Trace:
+[ 1844.489795]  ? __schedule+0x604/0x862
+[ 1844.489798]  schedule+0x62/0x76
+[ 1844.489800]  io_schedule+0x16/0x38
+[ 1844.489802]  blk_mq_get_tag+0x157/0x2ac
+[ 1844.489805]  ? init_wait_entry+0x2e/0x2e
+[ 1844.489807]  blk_mq_get_request+0x10d/0x374
+[ 1844.489810]  blk_mq_make_request+0x17d/0x54c
+[ 1844.489812]  generic_make_request+0x183/0x364
+[ 1844.489815]  submit_bio+0xcf/0x17b
+[ 1844.489816]  ? guard_bio_eod+0x5a/0xd2
+[ 1844.489818]  ? submit_bh_wbc+0x10e/0x150
+[ 1844.489820]  __block_write_full_page+0x216/0x35a
+[ 1844.489823]  ? blkdev_direct_IO+0x62/0x62
+[ 1844.489825]  ? mark_buffer_write_io_error+0x68/0x68
+[ 1844.489827]  __writepage+0x1e/0x50
+[ 1844.489829]  write_cache_pages+0x311/0x448
+[ 1844.489831]  ? generic_writepages+0xa4/0xa4
+[ 1844.489834]  generic_writepages+0x75/0xa4
+[ 1844.489837]  do_writepages+0x33/0x74
+[ 1844.489839]  __filemap_fdatawrite_range+0xaa/0xcb
+[ 1844.489842]  filemap_write_and_wait+0x37/0x7f
+[ 1844.489845]  __blkdev_put+0xc2/0x218
+[ 1844.489847]  blkdev_close+0x22/0x26
+[ 1844.489849]  __fput+0xfa/0x1e6
+[ 1844.489852]  task_work_run+0x7d/0xa5
+[ 1844.489854]  exit_to_usermode_loop+0x96/0x9f
+[ 1844.489856]  do_syscall_64+0xbd/0xde
+[ 1844.489859]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+[ 1844.489860] RIP: 0033:0x7b68d8a404f1
+[ 1844.489863] Code: Bad RIP value.
+[ 1844.489864] RSP: 002b:00007ffdb32728a8 EFLAGS: 00000246 ORIG_RAX: 0000000000000003
+[ 1844.489866] RAX: 0000000000000000 RBX: 0000000000000000 RCX: 00007b68d8a404f1
+[ 1844.489867] RDX: 0000000000100000 RSI: 0000000000000000 RDI: 0000000000000001
+[ 1844.489869] RBP: 00007ffdb32728c0 R08: 0000000000013a00 R09: 0000000000000000
+[ 1844.489870] R10: 0000000000000022 R11: 0000000000000246 R12: 0000000000000000
+[ 1844.489872] R13: 0000000000000000 R14: 00007b68d9063af8 R15: 0000000000100000
+[ 1844.489874]   task                        PC stack   pid father
+[ 1844.489888] kworker/u8:2    D    0   105      2 0x80000000 last_sleep: 1844498920859.  last_runnable: 1844498867459
+[ 1844.489892] Workqueue: cros_usbpd_log cros_usbpd_log_check
+[ 1844.489893] Call Trace:
+[ 1844.489896]  ? __schedule+0x604/0x862
+[ 1844.489899]  ? try_to_wake_up+0x453/0x4d4
+[ 1844.489901]  ? mutex_spin_on_owner+0x23/0x98
+[ 1844.489903]  ? mutex_optimistic_spin+0x6f/0x11f
+[ 1844.489905]  ? __mutex_lock_common+0x489/0x622
+[ 1844.489908]  ? __mutex_lock_slowpath+0x20/0x26
+[ 1844.489910]  ? cros_ec_cmd_xfer+0x22/0xc1
+[ 1844.489912]  ? cros_ec_cmd_xfer_status+0x19/0x4c
+[ 1844.489914]  ? cros_usbpd_log_check+0x6a/0x45d
+[ 1844.489916]  ? __switch_to_asm+0x41/0x70
+[ 1844.489917]  ? __switch_to_asm+0x35/0x70
+[ 1844.489919]  ? __switch_to_asm+0x41/0x70
+[ 1844.489921]  ? __switch_to_asm+0x35/0x70
+[ 1844.489923]  ? __switch_to_asm+0x41/0x70
+[ 1844.489924]  ? __switch_to_asm+0x35/0x70
+[ 1844.489926]  ? __switch_to_asm+0x41/0x70
+[ 1844.489928]  ? __switch_to_asm+0x35/0x70
+[ 1844.489929]  ? __switch_to_asm+0x41/0x70
+[ 1844.489931]  ? __switch_to_asm+0x35/0x70
+[ 1844.489933]  ? __switch_to_asm+0x41/0x70
+[ 1844.489935]  ? __switch_to_asm+0x35/0x70
+[ 1844.489937]  ? _raw_spin_unlock_irq+0xe/0x21
+[ 1844.489939]  ? finish_task_switch+0xff/0x272
+[ 1844.489942]  ? __schedule+0x60c/0x862
+[ 1844.489944]  ? process_one_work+0x1db/0x3a2
+[ 1844.489946]  ? worker_thread+0x216/0x375
+[ 1844.489949]  ? kthread+0x138/0x140
+[ 1844.489951]  ? pr_cont_work+0x58/0x58
+[ 1844.489953]  ? kthread_blkcg+0x2e/0x2e
+[ 1844.489955]  ? ret_from_fork+0x35/0x40
+[ 1844.489957] kworker/u8:4    D    0   108      2 0x80000000 last_sleep: 1646274196867.  last_runnable: 1646274173657
+[ 1844.489960] Workqueue: writeback wb_workfn (flush-8:0)
+[ 1844.489961] Call Trace:
+[ 1844.489964]  ? __schedule+0x604/0x862
+[ 1844.489966]  schedule+0x62/0x76
+[ 1844.489969]  io_schedule+0x16/0x38
+[ 1844.489971]  blk_mq_get_tag+0x157/0x2ac
+[ 1844.489973]  ? init_wait_entry+0x2e/0x2e
+[ 1844.489975]  blk_mq_get_request+0x10d/0x374
+[ 1844.489977]  blk_mq_make_request+0x17d/0x54c
+[ 1844.489980]  generic_make_request+0x183/0x364
+[ 1844.489982]  submit_bio+0xcf/0x17b
+[ 1844.489983]  ? guard_bio_eod+0x5a/0xd2
+[ 1844.489985]  ? submit_bh_wbc+0x10e/0x150
+[ 1844.489987]  __block_write_full_page+0x216/0x35a
+[ 1844.489989]  ? blkdev_direct_IO+0x62/0x62
+[ 1844.489991]  ? mark_buffer_write_io_error+0x68/0x68
+[ 1844.489994]  __writepage+0x1e/0x50
+[ 1844.489996]  write_cache_pages+0x311/0x448
+[ 1844.489998]  ? generic_writepages+0xa4/0xa4
+[ 1844.490001]  generic_writepages+0x75/0xa4
+[ 1844.490004]  do_writepages+0x33/0x74
+[ 1844.490006]  __writeback_single_inode+0x98/0x3ab
+[ 1844.490008]  writeback_sb_inodes+0x294/0x49f
+[ 1844.490011]  __writeback_inodes_wb+0x63/0xc7
+[ 1844.490013]  wb_writeback+0x19b/0x30b
+[ 1844.490015]  wb_workfn+0x3b3/0x4ba
+[ 1844.490017]  process_one_work+0x1db/0x3a2
+[ 1844.490019]  worker_thread+0x216/0x375
+[ 1844.490021]  kthread+0x138/0x140
+[ 1844.490023]  ? pr_cont_work+0x58/0x58
+[ 1844.490025]  ? kthread_blkcg+0x2e/0x2e
+[ 1844.490027]  ret_from_fork+0x35/0x40
+[ 1844.490030] irq/31-WCOM50C1 D    0   113      2 0x80000000 last_sleep: 1844498869175.  last_runnable: 1844498856041
+[ 1844.490032] Call Trace:
+[ 1844.490035]  ? __schedule+0x604/0x862
+[ 1844.490038]  schedule+0x62/0x76
+[ 1844.490040]  schedule_timeout+0x98/0xfe
+[ 1844.490043]  ? run_local_timers+0x4a/0x4a
+[ 1844.490045]  do_wait_for_common+0xde/0x152
+[ 1844.490047]  ? console_conditional_schedule+0x28/0x28
+[ 1844.490049]  ? do_task_dead+0x53/0x53
+[ 1844.490052]  wait_for_completion_timeout+0x4a/0x5f
+[ 1844.490054]  i2c_dw_xfer+0x145/0x211
+[ 1844.490057]  __i2c_transfer+0x195/0x2c7
+[ 1844.490060]  i2c_transfer+0xa4/0xde
+[ 1844.490062]  i2c_transfer_buffer_flags+0x5a/0x7b
+[ 1844.490064]  i2c_hid_irq+0x3e/0x1a2
+[ 1844.490067]  ? irq_forced_thread_fn+0x59/0x59
+[ 1844.490068]  irq_thread_fn+0x24/0x49
+[ 1844.490070]  ? irq_forced_thread_fn+0x59/0x59
+[ 1844.490072]  irq_thread+0xfc/0x15d
+[ 1844.490074]  ? irq_thread_fn+0x49/0x49
+[ 1844.490076]  kthread+0x138/0x140
+[ 1844.490078]  ? irq_forced_secondary_handler+0x1f/0x1f
+[ 1844.490081]  ? kthread_blkcg+0x2e/0x2e
+[ 1844.490083]  ret_from_fork+0x35/0x40
+[ 1844.490086] kworker/0:2     D    0   119      2 0x80000000 last_sleep: 1844499301076.  last_runnable: 1844499219065
+[ 1844.490089] Workqueue: events cros_ec_console_log_work
+[ 1844.490091] Call Trace:
+[ 1844.490093]  ? __schedule+0x604/0x862
+[ 1844.490096]  schedule+0x62/0x76
+[ 1844.490097]  schedule_hrtimeout_range_clock+0xcb/0x142
+[ 1844.490100]  ? hrtimer_init_sleeper+0x17/0x17
+[ 1844.490102]  usleep_range+0x6e/0x91
+[ 1844.490103]  ? cros_ec_cmd_xfer_lpc+0x1fa/0x1fa
+[ 1844.490105]  ec_response_timed_out+0x42/0xa0
+[ 1844.490107]  cros_ec_pkt_xfer_lpc+0x71/0x173
+[ 1844.490109]  ? cros_ec_cmd_xfer_lpc+0x1fa/0x1fa
+[ 1844.490111]  send_command+0x9c/0x189
+[ 1844.490113]  cros_ec_cmd_xfer+0xaa/0xc1
+[ 1844.490115]  cros_ec_cmd_xfer_status+0x19/0x4c
+[ 1844.490118]  cros_ec_console_log_work+0xb2/0x1ac
+[ 1844.490120]  process_one_work+0x1db/0x3a2
+[ 1844.490122]  worker_thread+0x216/0x375
+[ 1844.490124]  kthread+0x138/0x140
+[ 1844.490126]  ? pr_cont_work+0x58/0x58
+[ 1844.490129]  ? kthread_blkcg+0x2e/0x2e
+[ 1844.490131]  ret_from_fork+0x35/0x40
+[ 1844.490133] kstaled         D    0   134      2 0x80000000 last_sleep: 1646274166671.  last_runnable: 1646274151107
+[ 1844.490135] Call Trace:
+[ 1844.490138]  ? __schedule+0x604/0x862
+[ 1844.490140]  schedule+0x62/0x76
+[ 1844.490143]  io_schedule+0x16/0x38
+[ 1844.490145]  blk_mq_get_tag+0x157/0x2ac
+[ 1844.490147]  ? init_wait_entry+0x2e/0x2e
+[ 1844.490149]  blk_mq_get_request+0x10d/0x374
+[ 1844.490151]  blk_mq_make_request+0x17d/0x54c
+[ 1844.490153]  generic_make_request+0x183/0x364
+[ 1844.490155]  submit_bio+0xcf/0x17b
+[ 1844.490157]  ? guard_bio_eod+0x5a/0xd2
+[ 1844.490159]  ? submit_bh_wbc+0x10e/0x150
+[ 1844.490161]  __block_write_full_page+0x216/0x35a
+[ 1844.490163]  ? blkdev_direct_IO+0x62/0x62
+[ 1844.490166]  ? mark_buffer_write_io_error+0x68/0x68
+[ 1844.490168]  shrink_page_list+0xd4b/0x10a5
+[ 1844.490171]  node_shrink_list+0xc8/0x176
+[ 1844.490174]  kstaled_reclaim_lru+0x608/0x758
+[ 1844.490177]  kstaled_node_worker+0xee2/0x10a9
+[ 1844.490179]  ? __switch_to_asm+0x41/0x70
+[ 1844.490181]  ? init_wait_entry+0x2e/0x2e
+[ 1844.490183]  ? ratio_store+0xef/0xef
+[ 1844.490185]  ? kstaled_walk_pud+0x2c2/0x2c2
+[ 1844.490186]  ? kstaled_walk_pmd+0xff/0xff
+[ 1844.490189]  kthread+0x138/0x140
+[ 1844.490191]  ? kstaled_reclaim_lru+0x758/0x758
+[ 1844.490193]  ? kthread_blkcg+0x2e/0x2e
+[ 1844.490195]  ret_from_fork+0x35/0x40
+[ 1844.490199] udevd           D    0   167      1 0x00000000 last_sleep: 1644332728483.  last_runnable: 1644332695929
+[ 1844.490200] Call Trace:
+[ 1844.490203]  ? __schedule+0x604/0x862
+[ 1844.490205]  ? put_pwq+0x3d/0x3d
+[ 1844.490207]  schedule+0x62/0x76
+[ 1844.490210]  schedule_preempt_disabled+0x16/0x20
+[ 1844.490212]  __mutex_lock_common+0x3b7/0x622
+[ 1844.490214]  __mutex_lock_slowpath+0x20/0x26
+[ 1844.490216]  __blkdev_get+0x7e/0x470
+[ 1844.490218]  blkdev_get+0x9c/0x339
+[ 1844.490220]  ? _raw_spin_unlock+0xe/0x20
+[ 1844.490222]  ? bd_acquire+0xad/0xb9
+[ 1844.490224]  do_dentry_open+0x1e0/0x351
+[ 1844.490226]  path_openat+0x595/0x104e
+[ 1844.490229]  ? alloc_set_pte+0x146/0x50d
+[ 1844.490231]  do_filp_open+0x9b/0x10a
+[ 1844.490235]  do_sys_open+0x158/0x2ea
+[ 1844.490237]  do_syscall_64+0x54/0xde
+[ 1844.490239]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+[ 1844.490241] RIP: 0033:0x7e4c4ddcfdcf
+[ 1844.490244] Code: Bad RIP value.
+[ 1844.490245] RSP: 002b:00007fff4fe79970 EFLAGS: 00000246 ORIG_RAX: 0000000000000101
+[ 1844.490247] RAX: ffffffffffffffda RBX: 000056565954d290 RCX: 00007e4c4ddcfdcf
+[ 1844.490249] RDX: 00000000000a0800 RSI: 0000565659553f30 RDI: 00000000ffffff9c
+[ 1844.490250] RBP: 00007fff4fe79f50 R08: 0000000000000007 R09: 000056565876d920
+[ 1844.490252] R10: 0000000000000000 R11: 0000000000000246 R12: 00005656595bb4d0
+[ 1844.490253] R13: 000056565954d1c0 R14: 00007fff4fe79a10 R15: 00007fff4fe79a20
+[ 1844.490282] dd              D    0  7178   6408 0x00000004 last_sleep: 1646274189785.  last_runnable: 1646274168907
+[ 1844.490284] Call Trace:
+[ 1844.490291]  ? __schedule+0x604/0x862
+[ 1844.490293]  schedule+0x62/0x76
+[ 1844.490295]  io_schedule+0x16/0x38
+[ 1844.490297]  blk_mq_get_tag+0x157/0x2ac
+[ 1844.490299]  ? init_wait_entry+0x2e/0x2e
+[ 1844.490302]  blk_mq_get_request+0x10d/0x374
+[ 1844.490305]  blk_mq_make_request+0x17d/0x54c
+[ 1844.490307]  generic_make_request+0x183/0x364
+[ 1844.490309]  submit_bio+0xcf/0x17b
+[ 1844.490311]  ? guard_bio_eod+0x5a/0xd2
+[ 1844.490313]  ? submit_bh_wbc+0x10e/0x150
+[ 1844.490315]  __block_write_full_page+0x216/0x35a
+[ 1844.490317]  ? blkdev_direct_IO+0x62/0x62
+[ 1844.490319]  ? mark_buffer_write_io_error+0x68/0x68
+[ 1844.490321]  __writepage+0x1e/0x50
+[ 1844.490324]  write_cache_pages+0x311/0x448
+[ 1844.490326]  ? generic_writepages+0xa4/0xa4
+[ 1844.490328]  generic_writepages+0x75/0xa4
+[ 1844.490331]  do_writepages+0x33/0x74
+[ 1844.490333]  __filemap_fdatawrite_range+0xaa/0xcb
+[ 1844.490336]  filemap_write_and_wait+0x37/0x7f
+[ 1844.490338]  __blkdev_put+0xc2/0x218
+[ 1844.490340]  blkdev_close+0x22/0x26
+[ 1844.490342]  __fput+0xfa/0x1e6
+[ 1844.490344]  task_work_run+0x7d/0xa5
+[ 1844.490346]  exit_to_usermode_loop+0x96/0x9f
+[ 1844.490348]  do_syscall_64+0xbd/0xde
+[ 1844.490351]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+[ 1844.490352] RIP: 0033:0x7b68d8a404f1
+[ 1844.490355] Code: Bad RIP value.
+[ 1844.490356] RSP: 002b:00007ffdb32728a8 EFLAGS: 00000246 ORIG_RAX: 0000000000000003
+[ 1844.490358] RAX: 0000000000000000 RBX: 0000000000000000 RCX: 00007b68d8a404f1
+[ 1844.490359] RDX: 0000000000100000 RSI: 0000000000000000 RDI: 0000000000000001
+[ 1844.490361] RBP: 00007ffdb32728c0 R08: 0000000000013a00 R09: 0000000000000000
+[ 1844.490362] R10: 0000000000000022 R11: 0000000000000246 R12: 0000000000000000
+[ 1844.490364] R13: 0000000000000000 R14: 00007b68d9063af8 R15: 0000000000100000
+[ 1844.490366] NMI backtrace for cpu 3
+[ 1844.490368] CPU: 3 PID: 38 Comm: khungtaskd Not tainted 4.19.116-TREE_EXTRA_VERSION #33
+[ 1844.490370] Hardware name: Google Eve/Eve, BIOS Google_Eve.9584.174.0 05/29/2018
+[ 1844.490371] Call Trace:
+[ 1844.490378]  dump_stack+0x97/0xdb
+[ 1844.490380]  nmi_cpu_backtrace+0x3e/0x8e
+[ 1844.490383]  ? arch_trigger_cpumask_backtrace+0x16/0x16
+[ 1844.490385]  nmi_trigger_cpumask_backtrace+0x50/0xe3
+[ 1844.490388]  watchdog+0x3d4/0x3e2
+[ 1844.490391]  kthread+0x138/0x140
+[ 1844.490393]  ? hungtask_pm_notify+0x24/0x24
+[ 1844.490396]  ? kthread_blkcg+0x2e/0x2e
+[ 1844.490398]  ret_from_fork+0x35/0x40
+[ 1844.490404] Sending NMI from CPU 3 to CPUs 0-2:
+[ 1844.490415] NMI backtrace for cpu 1 skipped: idling at intel_idle+0xd1/0x118
+[ 1844.490444] NMI backtrace for cpu 0
+[ 1844.490445] CPU: 0 PID: 119 Comm: kworker/0:2 Not tainted 4.19.116-TREE_EXTRA_VERSION #33
+[ 1844.490445] Hardware name: Google Eve/Eve, BIOS Google_Eve.9584.174.0 05/29/2018
+[ 1844.490445] Workqueue: events cros_ec_console_log_work
+[ 1844.490446] RIP: 0010:cros_ec_lpc_read_bytes+0x19/0x33
+[ 1844.490447] Code: 8d 46 01 41 39 c6 75 e7 89 c8 5b 41 5e 41 5f 5d c3 0f 1f 44 00 00 31 c9 85 f6 74 25 55 48 89 e5 49 89 d0 45 31 c9 8d 14 0f ec <48> 63 c9 41 88 04 08 0f b6 c0 41 01 c1 ff c1 39 ce 75 e9 44 89 c9
+[ 1844.490448] RSP: 0018:ffffacb041067d28 EFLAGS: 00000212
+[ 1844.490448] RAX: 000000000000005d RBX: ffff9b4aeaee5028 RCX: 000000000000001d
+[ 1844.490449] RDX: 0000000000000825 RSI: 0000000000000021 RDI: 0000000000000808
+[ 1844.490449] RBP: ffffacb041067d28 R08: ffff9b4aea98d03c R09: 00000000000006bd
+[ 1844.490450] R10: 0000000000000000 R11: ffffffff83bf5c4a R12: ffff9b4aea98d028
+[ 1844.490450] R13: ffff9b4aea98d028 R14: ffff9b4aea98d03c R15: ffffacb041067d40
+[ 1844.490451] FS:  0000000000000000(0000) GS:ffff9b4aeea00000(0000) knlGS:0000000000000000
+[ 1844.490451] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[ 1844.490452] CR2: 00007cc63c6327b0 CR3: 0000000063412002 CR4: 00000000003606f0
+[ 1844.490452] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[ 1844.490452] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[ 1844.490453] Call Trace:
+[ 1844.490453]  cros_ec_pkt_xfer_lpc+0x12e/0x173
+[ 1844.490453]  ? cros_ec_cmd_xfer_lpc+0x1fa/0x1fa
+[ 1844.490454]  send_command+0x9c/0x189
+[ 1844.490454]  cros_ec_cmd_xfer+0xaa/0xc1
+[ 1844.490454]  cros_ec_cmd_xfer_status+0x19/0x4c
+[ 1844.490455]  cros_ec_console_log_work+0xb2/0x1ac
+[ 1844.490455]  process_one_work+0x1db/0x3a2
+[ 1844.490455]  worker_thread+0x216/0x375
+[ 1844.490456]  kthread+0x138/0x140
+[ 1844.490456]  ? pr_cont_work+0x58/0x58
+[ 1844.490456]  ? kthread_blkcg+0x2e/0x2e
+[ 1844.490457]  ret_from_fork+0x35/0x40
+[ 1844.490466] NMI backtrace for cpu 2
+[ 1844.490467] CPU: 2 PID: 0 Comm: swapper/2 Not tainted 4.19.116-TREE_EXTRA_VERSION #33
+[ 1844.490468] Hardware name: Google Eve/Eve, BIOS Google_Eve.9584.174.0 05/29/2018
+[ 1844.490468] RIP: 0010:dw_readl+0x1c/0x40
+[ 1844.490469] Code: bf b0 00 00 00 e8 a5 ec ff ff 31 c0 5d c3 0f 1f 44 00 00 55 48 89 e5 f6 87 b0 00 00 00 02 48 8b 4f 08 48 63 c6 75 05 8b 04 01 <eb> 15 66 8b 0c 01 0f b7 c9 48 8b 57 08 66 8b 44 02 02 c1 e0 10 09
+[ 1844.490470] RSP: 0018:ffff9b4aeeb03e48 EFLAGS: 00000046
+[ 1844.490471] RAX: 0000000000000514 RBX: 0000000000000001 RCX: ffffacb040061000
+[ 1844.490472] RDX: ffffacb04008c000 RSI: 0000000000000034 RDI: ffff9b4aeae14828
+[ 1844.490472] RBP: ffff9b4aeeb03e48 R08: 0000000000000000 R09: 0000000000000000
+[ 1844.490473] R10: ffffacb04008fdb8 R11: ffffffff83b39a22 R12: ffff9b4aeb371780
+[ 1844.490474] R13: 0000000000000010 R14: 0000000000000000 R15: ffff9b4aeae14828
+[ 1844.490474] FS:  0000000000000000(0000) GS:ffff9b4aeeb00000(0000) knlGS:0000000000000000
+[ 1844.490475] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[ 1844.490476] CR2: 000056d772075240 CR3: 0000000063412002 CR4: 00000000003606e0
+[ 1844.490476] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[ 1844.490477] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[ 1844.490478] Call Trace:
+[ 1844.490478]  <IRQ>
+[ 1844.490479]  i2c_dw_isr+0x35/0x5c6
+[ 1844.490479]  ? i801_isr+0x3f/0x24f
+[ 1844.490480]  __handle_irq_event_percpu+0xb1/0x1e4
+[ 1844.490480]  handle_irq_event_percpu+0x35/0x79
+[ 1844.490481]  handle_irq_event+0x36/0x55
+[ 1844.490481]  handle_fasteoi_irq+0xaa/0x16b
+[ 1844.490482]  handle_irq+0xd1/0x115
+[ 1844.490483]  do_IRQ+0x51/0xdb
+[ 1844.490483]  common_interrupt+0xf/0xf
+[ 1844.490484]  </IRQ>
+[ 1844.490484] RIP: 0010:cpuidle_enter_state+0x12f/0x27a
+[ 1844.490485] Code: 74 24 48 b8 aa aa aa aa aa aa aa aa 48 89 45 c8 9c 8f 45 c8 0f ba 65 c8 09 0f 82 49 01 00 00 31 ff e8 28 d2 9c ff fb 45 85 ff <0f> 88 94 00 00 00 44 89 ff 48 8d 34 7f 48 c1 e6 05 45 8b 44 34 4c
+[ 1844.490486] RSP: 0018:ffffacb04008fe68 EFLAGS: 00000202 ORIG_RAX: ffffffffffffffdd
+[ 1844.490487] RAX: ffff9b4aeeb20a80 RBX: 000001ad7431e15f RCX: ffff9b4aeeb20a80
+[ 1844.490488] RDX: 00000000000000d7 RSI: 00000000ffffffff RDI: 0000000000000000
+[ 1844.490489] RBP: ffffacb04008feb0 R08: 000001ad74c0ca6d R09: 0000000000000002
+[ 1844.490489] R10: 071c71c71c71c71d R11: ffffffff83dcc962 R12: ffffffff846ae598
+[ 1844.490490] R13: 0000000000000000 R14: ffff9b4aeeb295c0 R15: 0000000000000001
+[ 1844.490490]  ? cpu_idle_poll+0x5e/0x5e
+[ 1844.490491]  ? cpuidle_enter_state+0x102/0x27a
+[ 1844.490491]  do_idle+0x147/0x204
+[ 1844.490492]  cpu_startup_entry+0x77/0x79
+[ 1844.490492]  start_secondary+0x198/0x1b3
+[ 1844.490493]  secondary_startup_64+0xa4/0xb0
+[ 1844.491402] Kernel panic - not syncing: hung_task: blocked tasks
+[ 1844.491405] CPU: 3 PID: 38 Comm: khungtaskd Not tainted 4.19.116-TREE_EXTRA_VERSION #33
+[ 1844.491407] Hardware name: Google Eve/Eve, BIOS Google_Eve.9584.174.0 05/29/2018
+[ 1844.491408] Call Trace:
+[ 1844.491415]  dump_stack+0x97/0xdb
+[ 1844.491418]  panic+0x100/0x282
+[ 1844.491421]  ? arch_trigger_cpumask_backtrace+0x16/0x16
+[ 1844.491423]  watchdog+0x3e2/0x3e2
+[ 1844.491426]  kthread+0x138/0x140
+[ 1844.491428]  ? hungtask_pm_notify+0x24/0x24
+[ 1844.491430]  ? kthread_blkcg+0x2e/0x2e
+[ 1844.491432]  ret_from_fork+0x35/0x40
+[ 1844.491440] Kernel Offset: 0x2400000 from 0xffffffff81000000 (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
+[ 1844.493386] gsmi: Log Shutdown Reason 0x02
+[ 1844.496867] ACPI MEMORY or I/O RESET_REG.
