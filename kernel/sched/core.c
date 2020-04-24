@@ -3789,7 +3789,7 @@ static inline void schedule_debug(struct task_struct *prev)
 /*
  * Pick up the highest-prio task:
  */
-static inline struct task_struct *
+noinline struct task_struct *
 __pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
 {
 	const struct sched_class *class;
@@ -3870,7 +3870,7 @@ static inline bool cookie_match(struct task_struct *a, struct task_struct *b)
  * guest attackers. For L1TF, only guests.
  */
 
-static void sched_core_sibling_pause(void)
+noinline void sched_core_sibling_pause(void)
 {
 	int cpu = smp_processor_id();
 	struct rq *rq = cpu_rq(cpu);
@@ -3886,7 +3886,7 @@ static void sched_core_sibling_pause(void)
 	trace_printk("[unpriv]: EXIT sibling pause\n");
 }
 
-static void sched_core_sibling_pause_ipi(void *info)
+noinline void sched_core_sibling_pause_ipi(void *info)
 {
 	int cpu = smp_processor_id();
 	struct rq *rq = cpu_rq(cpu);
@@ -3947,7 +3947,7 @@ redo_pause:
  * needed for protecting interrupts/softirqs in the face of running untrusted
  * usermode code in the other.
  */
-void sched_core_priv_enter(void)
+noinline void sched_core_priv_enter(void)
 {
 	int i, cpu = smp_processor_id();
 	struct rq *rq = cpu_rq(cpu);
@@ -4031,7 +4031,7 @@ unlock:
  * This function should be called only if a privileged state was previously
  * entered in the same context (by calling sched_core_priv_enter()).
  */
-void sched_core_priv_exit(void)
+noinline void sched_core_priv_exit(void)
 {
 	int cpu = smp_processor_id();
 	struct rq *rq = cpu_rq(cpu);
@@ -4064,7 +4064,7 @@ void sched_core_priv_exit(void)
  *   rq->core->core_cookie or its priority is greater than max.
  * - Else returns idle_task.
  */
-static struct task_struct *
+noinline struct task_struct *
 pick_task(struct rq *rq, const struct sched_class *class, struct task_struct *max)
 {
 	struct task_struct *class_pick, *cookie_pick;
@@ -4106,7 +4106,7 @@ pick_task(struct rq *rq, const struct sched_class *class, struct task_struct *ma
 	return cookie_pick;
 }
 
-static struct task_struct *
+noinline struct task_struct *
 pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
 {
 	struct task_struct *next, *max = NULL;
@@ -4330,7 +4330,7 @@ done:
 	return next;
 }
 
-static bool try_steal_cookie(int this, int that)
+noinline bool try_steal_cookie(int this, int that)
 {
 	struct rq *dst = cpu_rq(this), *src = cpu_rq(that);
 	struct task_struct *p;
@@ -4491,7 +4491,7 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
  *
  * WARNING: must be called with preemption disabled!
  */
-static void __sched notrace __schedule(bool preempt)
+noinline void __sched notrace __schedule(bool preempt)
 {
 	struct task_struct *prev, *next;
 	unsigned long *switch_count;
