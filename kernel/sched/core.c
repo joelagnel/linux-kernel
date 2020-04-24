@@ -4429,7 +4429,7 @@ static void sched_core_sibling_pause_ipi(void *info)
 	 * Can happen if IPI received during softirq, no need to do anything
 	 * since the softirq is trusted, and also pausing here cause deadlock.
 	 */
-	if (this_cpu_read(sched_core_priv)) {
+	if (this_cpu_read(sched_core_priv) || !sched_feat(CORE_IRQ_PAUSE_BUSY)) {
 		raw_spin_lock(rq_lockp(rq));
 		rq->core_pause_pending = false;
 		raw_spin_unlock(rq_lockp(rq));
@@ -4483,6 +4483,9 @@ void sched_core_priv_enter(void)
 	const struct cpumask *smt_mask;
 	int nesting; /* Only a debug variable, can be removed */
 
+	if (!sched_feat(CORE_IRQ_PAUSE))
+		return;
+
 	if (!sched_core_enabled(rq))
 		return;
 
@@ -4527,7 +4530,8 @@ void sched_core_priv_enter(void)
 		// This should prevent any issues resending IPI if
 		// previous one was pending.
 
-		if (!READ_ONCE(srq->core_pause_pending)) {
+		if (!READ_ONCE(srq->core_pause_pending)
+				&& sched_feat(CORE_IRQ_PAUSE_IPI)) {
 
 			srq->core_pause_pending = true;
 			smp_wmb(); /* Order store to _pending with IPI handler start */
@@ -5118,7 +5122,8 @@ static void __sched notrace __schedule(bool preempt)
 	 * make schedule() pause it.
 	 */
 	if (sched_core_enabled(rq) && READ_ONCE(rq->core->core_priv) &&
-	    !is_idle_task(next) && !next->mm && next->core_cookie)
+	    !is_idle_task(next) && !next->mm && next->core_cookie &&
+	    sched_feat(CORE_IRQ_PAUSE_SCHED))
 		sched_core_sibling_pause();
 #endif
 
@@ -7922,6 +7927,11 @@ int task_set_core_sched(int set, struct task_struct *tsk)
 
 	if (!static_branch_likely(&sched_smt_present))
 		return -EINVAL;
+
+	if (!sched_feat(CORE_PRCTL)) {
+		pr_err("Skipping prctl for: %s/%d\n", tsk->comm, tsk->pid);
+		return 0;
+	}
 
 	/*
 	 * If cookie was set previously, do nothing.  If we have to take care
