@@ -102,6 +102,7 @@ int __weak arch_asym_cpu_priority(int cpu)
  */
 #define fits_capacity(cap, max)	((cap) * 1280 < (max) * 1024)
 
+static int newidle_balance(struct rq *this_rq, struct rq_flags *rf);
 #endif
 
 #ifdef CONFIG_CFS_BANDWIDTH
@@ -6945,6 +6946,7 @@ idle:
 	if (!rf)
 		return NULL;
 
+#ifdef CONFIG_SMP
 	new_tasks = newidle_balance(rq, rf);
 
 	/*
@@ -6957,6 +6959,7 @@ idle:
 
 	if (new_tasks > 0)
 		goto again;
+#endif
 
 	/*
 	 * rq is about to be idle, check if we need to update the
@@ -8439,10 +8442,8 @@ static int idle_cpu_without(int cpu, struct task_struct *p)
 	 * be computed and tested before calling idle_cpu_without().
 	 */
 
-#ifdef CONFIG_SMP
 	if (!llist_empty(&rq->wake_list))
 		return 0;
-#endif
 
 	return 1;
 }
@@ -10308,7 +10309,7 @@ static inline void nohz_newidle_balance(struct rq *this_rq) { }
  *     0 - failed, no new tasks
  *   > 0 - success, new (fair) tasks present
  */
-int newidle_balance(struct rq *this_rq, struct rq_flags *rf)
+static int newidle_balance(struct rq *this_rq, struct rq_flags *rf)
 {
 	unsigned long next_balance = jiffies + HZ;
 	int this_cpu = this_rq->cpu;
