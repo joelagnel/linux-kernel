@@ -22,6 +22,9 @@
 #define CREATE_TRACE_POINTS
 #include <trace/events/sched.h>
 
+#undef trace_printk
+#define trace_printk(...)
+
 DEFINE_PER_CPU_SHARED_ALIGNED(struct rq, runqueues);
 
 #if defined(CONFIG_SCHED_DEBUG) && defined(HAVE_JUMP_LABEL)
@@ -3870,11 +3873,9 @@ void sched_core_sibling_pause_rq(struct rq *rq)
 	/* Trying to pause from a hard IRQ should never happen */
 	WARN_ON_ONCE(rq->core_this_irq_nest);
 
-	trace_printk("[unpriv]: ENTER sibling pause\n");
 	while (READ_ONCE(rq->core->core_irq_nest))
 		cpu_relax();
 	// smp_cond_load_acquire(&rq->core->core_irq_nest, !VAL);
-	trace_printk("[unpriv]: EXIT sibling pause\n");
 }
 
 void sched_core_sibling_pause(void)
@@ -3889,8 +3890,6 @@ void sched_core_sibling_pause_ipi(void *info)
 {
 	int cpu = smp_processor_id();
 	struct rq *rq = cpu_rq(cpu);
-
-	trace_printk("[unpriv] enter IPI\n");
 
 	/* Pair with smp_store_release() in sched_core_irq_enter(). */
 	if (WARN_ON_ONCE(!smp_load_acquire(&rq->core_pause_pending)))
@@ -3924,8 +3923,6 @@ redo_pause:
 
 	rq->core_pause_pending = false;
 	raw_spin_unlock(rq_lockp(rq));
-
-	trace_printk("[unpriv] exit IPI\n");
 }
 
 /*
@@ -3948,8 +3945,6 @@ void sched_core_irq_enter(void)
 
 	raw_spin_lock(rq_lockp(rq));
 	smt_mask = cpu_smt_mask(cpu);
-
-	trace_printk("enter: core_irq_nest is core_irq_nest=%d\n", rq->core->core_irq_nest);
 
 	if ((WARN_ON_ONCE(rq->core->core_irq_nest > (ULONG_MAX / 2))) ||
 	    (WARN_ON_ONCE(rq->core_this_irq_nest > (ULONG_MAX / 2))))
@@ -3995,7 +3990,6 @@ void sched_core_irq_enter(void)
 			 */
 			smp_store_release(&srq->core_pause_pending, true);
 
-			trace_printk("[priv] sending IPI\n");
 			csd = this_cpu_ptr(&htpause_csd);
 			csd->func = sched_core_sibling_pause_ipi;
 			csd->flags = 0;
@@ -4010,7 +4004,6 @@ void sched_core_irq_enter(void)
 		csd_lock_wait(csd);
 	}
 
-	trace_printk("[priv] ENTER priv state, dump stack\n");
 unlock:
 	raw_spin_unlock(rq_lockp(rq));
 }
@@ -4036,9 +4029,6 @@ void sched_core_irq_exit(void)
 	/* An irq_enter() should always be paired with an irq_exit() */
 	if (WARN_ON_ONCE(!rq->core->core_irq_nest) ||
 	    WARN_ON_ONCE(!rq->core_this_irq_nest)) {
-		trace_printk("Warning fired\n");
-		tracing_stop();
-		panic("bad");
 		goto unlock;
 	}
 
@@ -4063,13 +4053,8 @@ void sched_core_irq_exit(void)
 	rq->core_this_irq_nest--;
 	/* Pair with smp_cond_load_acquire() in sched_core_sibling_pause(). */
 	smp_store_release(&rq->core->core_irq_nest, rq->core->core_irq_nest - 1);
-
-	trace_printk("exit: core_irq_nest is core_irq_nest=%d per-cpu nest=%d\n",
-		     rq->core->core_irq_nest, rq->core_this_irq_nest);
 unlock:
 	raw_spin_unlock(rq_lockp(rq));
-
-	trace_printk("[priv] EXIT priv state, dump stack\n");
 }
 
 // XXX fairness/fwd progress conditions

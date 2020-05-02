@@ -24,6 +24,9 @@
 
 #include <trace/events/sched.h>
 
+#undef trace_printk
+#define trace_printk(...)
+
 /*
  * Targeted preemption latency for CPU-bound tasks:
  *
