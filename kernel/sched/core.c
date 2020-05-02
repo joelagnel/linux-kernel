@@ -3942,6 +3942,8 @@ redo_pause:
  * 'untrusted' code, until sched_core_irq_exit() is called. Every attempt to
  * avoid sending useless IPIs is made. Must be called only from hard IRQ
  * context.
+ *
+ * XXX: Add throttling during interrupt storms.
  */
 void sched_core_irq_enter(void)
 {
