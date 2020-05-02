@@ -4019,6 +4019,7 @@ void sched_core_irq_exit(void)
 {
 	int cpu = smp_processor_id();
 	struct rq *rq = cpu_rq(cpu);
+	bool wait = false;
 
 	/* Do nothing if core-sched disabled */
 	if (!sched_core_enabled(rq))
@@ -4041,13 +4042,17 @@ void sched_core_irq_exit(void)
 	/*
 	 * If we are the outermost IRQ on this CPU, but there are more IRQs
 	 * still running on other CPUs, then we have to wait for all those
-	 * other IRQs to exit before returning to user mode. This waiting can
-	 * be done in the schedule(), but we must be sure to enter the
-	 * scheduler.
+	 * other IRQs to exit before returning to user mode on this CPU. This
+	 * waiting can be done in the schedule(), but we must be sure to enter
+	 * the scheduler.
 	 */
 	if (rq->core_this_irq_nest == 1 && rq->core->core_irq_nest > 1) {
-		set_tsk_need_resched(current);
-		set_preempt_need_resched();
+		/*
+		 * If we are entering the scheduler anyway, we can just wait there for
+		 * ->core_irq_nest to reach 0. If not, just wait here.
+		 */
+		if (!tif_need_resched())
+			wait = true;
 	}
 
 	rq->core_this_irq_nest--;
@@ -4055,6 +4060,9 @@ void sched_core_irq_exit(void)
 	smp_store_release(&rq->core->core_irq_nest, rq->core->core_irq_nest - 1);
 unlock:
 	raw_spin_unlock(rq_lockp(rq));
+
+	if (wait)
+		sched_core_sibling_pause_rq(rq);
 }
 
 // XXX fairness/fwd progress conditions
