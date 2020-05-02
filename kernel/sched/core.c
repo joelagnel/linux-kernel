@@ -3846,7 +3846,12 @@ restart:
 
 #ifdef CONFIG_SCHED_CORE
 
-static DEFINE_PER_CPU_SHARED_ALIGNED(call_single_data_t, htpause_csd);
+struct htpause_csd_info {
+	call_single_data_t csd;
+	int in_use;
+};
+
+static DEFINE_PER_CPU_SHARED_ALIGNED(struct htpause_csd_info, htpause_csd);
 
 static inline bool cookie_equals(struct task_struct *a, unsigned long cookie)
 {
@@ -3886,10 +3891,17 @@ void sched_core_sibling_pause(void)
 	sched_core_sibling_pause_rq(rq);
 }
 
-void sched_core_sibling_pause_ipi(void *info)
+void sched_core_sibling_pause_ipi(void *data)
 {
+	struct htpause_csd_info *info = data;
 	int cpu = smp_processor_id();
 	struct rq *rq = cpu_rq(cpu);
+
+	/*
+	 * Allow reuse of the csd. Pair with smp_cond_load_acquire() in
+	 * sched_core_irq_enter().
+	 */
+	smp_store_release(&info->in_use, 0);
 
 	/* Pair with smp_store_release() in sched_core_irq_enter(). */
 	if (WARN_ON_ONCE(!smp_load_acquire(&rq->core_pause_pending)))
@@ -3910,7 +3922,7 @@ redo_pause:
 	/*
 	 * There could be a race here after exiting the
 	 * sched_core_sibling_pause(), where a new irq_enter() sets
-	 * ->core_irq to true, but does not send a new IPI because
+	 * ->core_irq_nest to true, but does not send a new IPI because
 	 * pause_pending is still true. So we need to recheck after setting
 	 * pause_pending to false below, if ->core_irq is still true and
 	 * retry the pause.
@@ -3962,7 +3974,6 @@ void sched_core_irq_enter(void)
 		goto unlock;
 
 	for_each_cpu(i, smt_mask) {
-		call_single_data_t *csd;
 		struct rq *srq = cpu_rq(i);
 
 		if (i == cpu || cpu_is_offline(i))
@@ -3978,30 +3989,35 @@ void sched_core_irq_enter(void)
 		WARN_ON_ONCE(!srq->curr->core_cookie && !srq->core_pick);
 
 		/*
-		 * IPI only if previous pause IPI was not pending
-		 * This should prevent any issues resending IPI if
-		 * previous one was pending.
+		 * IPI only if previous IPI was not pending. Pair with
+		 * smp_store_release() in sched_core_sibling_pause_ipi().
 		 */
-		if (!READ_ONCE(srq->core_pause_pending)
-				&& sched_feat(CORE_IRQ_PAUSE_IPI)) {
+		if (!smp_load_acquire(&srq->core_pause_pending)
+		   && sched_feat(CORE_IRQ_PAUSE_IPI)) {
+			call_single_data_t *csd;
+			struct htpause_csd_info *info;
+
 			/*
 			 * Pair with smp_load_acquire() in
 			 * sched_core_sibling_pause_ipi().
 			 */
 			smp_store_release(&srq->core_pause_pending, true);
 
-			csd = this_cpu_ptr(&htpause_csd);
+			info = this_cpu_ptr(&htpause_csd);
+			csd = &(info->csd);
+
+			/*
+			 * If previous IPI is waiting, wait for csd to become
+			 * available. Pair with smp_store_release() in
+			 * sched_core_sibling_pause_ipi().
+			 */
+			smp_cond_load_acquire(&info->in_use, !VAL);
+
 			csd->func = sched_core_sibling_pause_ipi;
 			csd->flags = 0;
-			csd->info = NULL;
+			csd->info = info;
 			smp_call_function_single_async(i, csd);
 		}
-
-		/*
-		 * Wait for IPI on receiver to start, needed since we need to
-		 * reuse csd for next sibling.
-		 */
-		csd_lock_wait(csd);
 	}
 
 unlock:
