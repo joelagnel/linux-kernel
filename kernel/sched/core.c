@@ -3875,10 +3875,15 @@ static inline bool cookie_match(struct task_struct *a, struct task_struct *b)
  */
 void sched_core_sibling_pause_rq(struct rq *rq)
 {
-	/* Trying to pause from a hard IRQ should never happen */
-	WARN_ON_ONCE(rq->core_this_irq_nest);
+	/*
+	 * Trying to pause when IPI is received during execution of
+	 * softirq during tail end of interrupt can deadlock. So
+	 * make sure it does not happen.
+	 */
+	if (WARN_ON_ONCE(rq->core_this_irq_nest != rq->core_this_irq_pause_nest))
+		return;
 
-	while (READ_ONCE(rq->core->core_irq_nest))
+	while (READ_ONCE(rq->core->core_irq_nest) - rq->core_this_irq_nest)
 		cpu_relax();
 	// smp_cond_load_acquire(&rq->core->core_irq_nest, !VAL);
 }
@@ -3896,11 +3901,13 @@ void sched_core_sibling_pause_ipi(void *data)
 	struct htpause_csd_info *info = data;
 	int cpu = smp_processor_id();
 	struct rq *rq = cpu_rq(cpu);
+	int warn_not_in_use;
 
 	/*
 	 * Allow reuse of the csd. Pair with smp_cond_load_acquire() in
 	 * sched_core_irq_enter().
 	 */
+	warn_not_in_use = WARN_ON_ONCE(!info->in_use);
 	smp_store_release(&info->in_use, 0);
 
 	/* Pair with smp_store_release() in sched_core_irq_enter(). */
@@ -3912,7 +3919,8 @@ void sched_core_sibling_pause_ipi(void *data)
 	 * of an interrupt. The outer most irq_exit() will handle entry into
 	 * the scheduler soon and wait there instead of deadlocking here.
 	 */
-	if (rq->core_this_irq_nest || !sched_feat(CORE_IRQ_PAUSE_BUSY)) {
+	if ((rq->core_this_irq_nest == rq->core_this_irq_pause_nest)
+		|| warn_not_in_use || !sched_feat(CORE_IRQ_PAUSE_BUSY)) {
 		smp_store_release(&rq->core_pause_pending, false);
 		return;
 	}
@@ -3920,15 +3928,14 @@ redo_pause:
 	sched_core_sibling_pause();
 
 	/*
-	 * There could be a race here after exiting the
-	 * sched_core_sibling_pause(), where a new irq_enter() sets
-	 * ->core_irq_nest to true, but does not send a new IPI because
-	 * pause_pending is still true. So we need to recheck after setting
-	 * pause_pending to false below, if ->core_irq is still true and
-	 * retry the pause.
+	 * Handle a race here after return from sched_core_sibling_pause(),
+	 * where a new irq_enter() on a sibling increments ->core_irq_nest, but
+	 * does not send a new IPI because pause_pending is still true. So we
+	 * need to recheck ->core_irq_nest and set ->core_pause_pending to
+	 * false, while doing so under the core-wide rq lock.
 	 */
 	raw_spin_lock(rq_lockp(rq));
-	if (rq->core->core_irq_nest) {
+	if (rq->core->core_irq_nest - rq->core_this_irq_nest) {
 		raw_spin_unlock(rq_lockp(rq));
 		goto redo_pause;
 	}
@@ -3960,16 +3967,31 @@ void sched_core_irq_enter(void)
 	raw_spin_lock(rq_lockp(rq));
 	smt_mask = cpu_smt_mask(cpu);
 
-	if ((WARN_ON_ONCE(rq->core->core_irq_nest > (ULONG_MAX / 2))) ||
-	    (WARN_ON_ONCE(rq->core_this_irq_nest > (ULONG_MAX / 2))))
+
+	if (WARN_ON_ONCE(rq->core->core_irq_nest > (ULONG_MAX / 2)) ||
+	    WARN_ON_ONCE(rq->core_this_irq_nest > (ULONG_MAX / 2))  ||
+	    WARN_ON_ONCE(rq->core_this_irq_pause_nest > (ULONG_MAX / 2))) {
 		goto unlock;
+	}
 
 	rq->core_this_irq_nest++;
 	WRITE_ONCE(rq->core->core_irq_nest, rq->core->core_irq_nest + 1);
 
-	/* Do nothing more if we are in an IPI sent from another sibling */
-	if (READ_ONCE(rq->core_pause_pending))
+	/* Do nothing more if we are in an IPI sent from another sibling. */
+	if (READ_ONCE(rq->core_pause_pending)) {
+		rq->core_this_irq_pause_nest++;
 		goto unlock;
+	}
+
+	/*
+	 * If irq_enter() happened after a pause IPI's irq_enter() already
+	 * happened, then do nothing more than increase the nesting level of
+	 * the pause IPI's nesting counter, since we are nesting within it.
+	 */
+	if (rq->core_this_irq_pause_nest) {
+		rq->core_this_irq_pause_nest++;
+		goto unlock;
+	}
 
 	/* Do nothing more if the core is not tagged */
 	if (!rq->core->core_cookie)
@@ -4018,6 +4040,7 @@ void sched_core_irq_enter(void)
 			csd->func = sched_core_sibling_pause_ipi;
 			csd->flags = 0;
 			csd->info = info;
+			info->in_use = 1;
 			smp_call_function_single_async(i, csd);
 		}
 	}
@@ -4051,9 +4074,10 @@ void sched_core_irq_exit(void)
 		goto unlock;
 	}
 
-	/* Cannot ever be called if were not in a core-wide IRQ state */
-	if (WARN_ON_ONCE(rq->core->core_irq_nest > (ULONG_MAX / 2)) || 
-	    (WARN_ON_ONCE(rq->core_this_irq_nest > (ULONG_MAX / 2)))) {
+	/* Detect overflow/underflow */
+	if (WARN_ON_ONCE(rq->core->core_irq_nest > (ULONG_MAX / 2)) ||
+	    WARN_ON_ONCE(rq->core_this_irq_nest > (ULONG_MAX / 2))  ||
+	    WARN_ON_ONCE(rq->core_this_irq_pause_nest > (ULONG_MAX / 2))) {
 		goto unlock;
 	}
 
@@ -4072,6 +4096,9 @@ void sched_core_irq_exit(void)
 		if (!tif_need_resched())
 			wait = true;
 	}
+
+	if (rq->core_this_irq_pause_nest)
+		rq->core_this_irq_pause_nest--;
 
 	rq->core_this_irq_nest--;
 	/* Pair with smp_cond_load_acquire() in sched_core_sibling_pause(). */

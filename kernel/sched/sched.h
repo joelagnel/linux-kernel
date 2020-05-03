@@ -976,6 +976,7 @@ struct rq {
 	bool			core_forceidle;
 	bool			core_pause_pending;
 	unsigned int		core_this_irq_nest;
+	unsigned int		core_this_irq_pause_nest;
 
 	/* shared state */
 	unsigned int		core_task_seq;
