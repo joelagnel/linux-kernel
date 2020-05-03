@@ -4075,7 +4075,7 @@ void sched_core_irq_exit(void)
 {
 	int cpu = smp_processor_id();
 	struct rq *rq = cpu_rq(cpu);
-	bool wait = false;
+	bool wait_here = false;
 
 	/* Do nothing if core-sched disabled */
 	if (!sched_core_enabled(rq))
@@ -4108,8 +4108,12 @@ void sched_core_irq_exit(void)
 		 * If we are entering the scheduler anyway, we can just wait there for
 		 * ->core_irq_nest to reach 0. If not, just wait here.
 		 */
-		if (!tif_need_resched())
-			wait = true;
+		if (!tif_need_resched()) {
+			wait_here = true;
+		} else {
+			set_tsk_need_resched(current);
+			set_preempt_need_resched();
+		}
 	}
 
 	if (rq->core_this_irq_pause_nest)
@@ -4121,7 +4125,7 @@ void sched_core_irq_exit(void)
 unlock:
 	raw_spin_unlock(rq_lockp(rq));
 
-	if (wait)
+	if (wait_here)
 		sched_core_sibling_pause_rq(rq);
 }
 
