@@ -4046,9 +4046,9 @@ void sched_core_irq_enter(void)
 			csd = &(info->csd);
 
 			/*
-			 * If previous IPI is waiting, wait for csd to become
-			 * available. Pair with smp_store_release() in
-			 * sched_core_sibling_pause_ipi().
+			 * If previous IPI is waiting to start executing, wait
+			 * for it to start before reusing csd. Pair with
+			 * smp_store_release() in sched_core_sibling_pause_ipi().
 			 */
 			smp_cond_load_acquire(&info->in_use, !VAL);
 
