@@ -3873,7 +3873,7 @@ static inline bool cookie_match(struct task_struct *a, struct task_struct *b)
  * IRQ/softirqs). For MDS, this issue is present for both host and
  * guest attackers. For L1TF, only guests.
  */
-void sched_core_sibling_pause_rq(struct rq *rq)
+static inline void sched_core_sibling_pause_rq(struct rq *rq)
 {
 	/*
 	 * Trying to pause when IPI is received during execution of
@@ -3883,12 +3883,18 @@ void sched_core_sibling_pause_rq(struct rq *rq)
 	if (WARN_ON_ONCE(rq->core_this_irq_nest != rq->core_this_irq_pause_nest))
 		return;
 
-	while (READ_ONCE(rq->core->core_irq_nest) - rq->core_this_irq_nest)
+	/*
+	 * Wait for core-wide IRQs to subside while discounting IRQs due to
+	 * this CPU. Such irq_enter() calls can be discounted, since they are
+	 * due to the current CPU receiving a pause IPI and ending up here.
+	 *
+	 * Pair with sched_core_irq_exit().
+	 */
+	while (smp_load_acquire(&rq->core->core_irq_nest) - rq->core_this_irq_nest)
 		cpu_relax();
-	// smp_cond_load_acquire(&rq->core->core_irq_nest, !VAL);
 }
 
-void sched_core_sibling_pause(void)
+static inline void sched_core_sibling_pause(void)
 {
 	int cpu = smp_processor_id();
 	struct rq *rq = cpu_rq(cpu);
@@ -3967,31 +3973,35 @@ void sched_core_irq_enter(void)
 	raw_spin_lock(rq_lockp(rq));
 	smt_mask = cpu_smt_mask(cpu);
 
-
 	if (WARN_ON_ONCE(rq->core->core_irq_nest > (ULONG_MAX / 2)) ||
 	    WARN_ON_ONCE(rq->core_this_irq_nest > (ULONG_MAX / 2))  ||
 	    WARN_ON_ONCE(rq->core_this_irq_pause_nest > (ULONG_MAX / 2))) {
 		goto unlock;
 	}
 
+	/* Track number of irq_enter() calls received without irq_exit() on this CPU */
 	rq->core_this_irq_nest++;
+
+	/* Track core-wide irq_enter() calls received without irq_exit()'s */
 	WRITE_ONCE(rq->core->core_irq_nest, rq->core->core_irq_nest + 1);
 
-	/* Do nothing more if we are in an IPI sent from another sibling. */
 	if (READ_ONCE(rq->core_pause_pending)) {
+		/* Track number of irq_enter() calls received due to the pause IPI */
 		rq->core_this_irq_pause_nest++;
+
+		/* Do nothing more if we are in an IPI sent from another sibling. */
 		goto unlock;
 	}
 
 	/*
-	 * If irq_enter() happened after a pause IPI's irq_enter() already
-	 * happened, then do nothing more than increase the nesting level of
-	 * the pause IPI's nesting counter, since we are nesting within it.
+	 * If a regular IRQ's irq_enter() happened after a pause IPI's
+	 * irq_enter() already happened, which can happen say if a softirq happen to be
+	 * running at the tail end of a pause IPI when a new IRQ was received,
+	 * then increase the nesting level of the pause IPI's nesting counter,
+	 * since we are nesting within it.
 	 */
-	if (rq->core_this_irq_pause_nest) {
+	if (rq->core_this_irq_pause_nest)
 		rq->core_this_irq_pause_nest++;
-		goto unlock;
-	}
 
 	/* Do nothing more if the core is not tagged */
 	if (!rq->core->core_cookie)
