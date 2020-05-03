@@ -3962,6 +3962,9 @@ redo_pause:
  *
  * XXX: smp_call is a single IRQ vector. What about protecting other callbacks
  *      that happened to be received during the pause IPI's smp_call?
+ *
+ * XXX: If irq_enter() is called in succession, and the first irq_enter() already
+ *	sent the sibling spinning, can the new irq_enter() deadlock on csd wait?
  */
 void sched_core_irq_enter(void)
 {
