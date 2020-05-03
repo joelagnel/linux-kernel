@@ -3957,6 +3957,11 @@ redo_pause:
  * context.
  *
  * XXX: Add throttling during interrupt storms.
+ *
+ * XXX: Call this to protect entry into softirq at the tail end of pause-IPI?
+ *
+ * XXX: smp_call is a single IRQ vector. What about protecting other callbacks
+ *      that happened to be received during the pause IPI's smp_call?
  */
 void sched_core_irq_enter(void)
 {
