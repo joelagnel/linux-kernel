@@ -3999,17 +3999,24 @@ void sched_core_irq_enter(void)
 
 		/* Do nothing more if we are in an IPI sent from another sibling. */
 		goto unlock;
+	} else if (rq->core_this_irq_pause_nest) {
+		/*
+		 * If a regular IRQ's irq_enter() happened after a pause IPI's
+		 * irq_enter() already happened, which can happen say if a softirq happen to be
+		 * running at the tail end of a pause IPI when a new IRQ was received,
+		 * then increase the nesting level of the pause IPI's nesting counter,
+		 * since we are nesting within it.
+		 */
+		rq->core_this_irq_pause_nest++;
 	}
 
 	/*
-	 * If a regular IRQ's irq_enter() happened after a pause IPI's
-	 * irq_enter() already happened, which can happen say if a softirq happen to be
-	 * running at the tail end of a pause IPI when a new IRQ was received,
-	 * then increase the nesting level of the pause IPI's nesting counter,
-	 * since we are nesting within it.
+	 * XXX: Send a new pause IPI to siblings only on this CPU's outer most
+	 * non-pause IRQ's irq_enter() discounting any prior irq_enter()'s
+	 * caused by the pause IPI's irq_enter()
 	 */
-	if (rq->core_this_irq_pause_nest)
-		rq->core_this_irq_pause_nest++;
+	if ((rq->core_this_irq_nest - rq->core_this_irq_pause_nest) != 1)
+		goto unlock;
 
 	/* Do nothing more if the core is not tagged */
 	if (!rq->core->core_cookie)

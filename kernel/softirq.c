@@ -365,6 +365,7 @@ static inline void invoke_softirq(void)
 		return;
 
 	if (!force_irqthreads) {
+		sched_core_irq_enter();
 #ifdef CONFIG_HAVE_IRQ_EXIT_ON_IRQ_STACK
 		/*
 		 * We can safely execute softirq on the current stack if
@@ -380,6 +381,7 @@ static inline void invoke_softirq(void)
 		 */
 		do_softirq_own_stack();
 #endif
+		sched_core_irq_exit();
 	} else {
 		wakeup_softirqd();
 	}
@@ -410,8 +412,9 @@ void irq_exit(void)
 #endif
 	account_irq_exit_time(current);
 	preempt_count_sub(HARDIRQ_OFFSET);
-	if (!in_interrupt() && local_softirq_pending())
+	if (!in_interrupt() && local_softirq_pending()) {
 		invoke_softirq();
+	}
 
 	tick_irq_exit();
 	sched_core_irq_exit();
