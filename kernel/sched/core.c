@@ -4113,7 +4113,8 @@ void sched_core_irq_exit(void)
 	 * waiting can be done in the schedule(), but we must be sure to enter
 	 * the scheduler.
 	 */
-	if (rq->core_this_irq_nest == 1 && rq->core->core_irq_nest > 1) {
+	if (rq->core->core_cookie &&
+	    rq->core_this_irq_nest == 1 && rq->core->core_irq_nest > 1) {
 		/*
 		 * If we are entering the scheduler anyway, we can just wait there for
 		 * ->core_irq_nest to reach 0. If not, just wait here.
