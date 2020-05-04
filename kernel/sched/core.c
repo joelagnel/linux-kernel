@@ -4011,6 +4011,13 @@ void sched_core_irq_enter(void)
 	if (rq->core_this_irq_pause_nest)
 		rq->core_this_irq_pause_nest++;
 
+	/*
+	 * Only send interrupts on the outer most irq_enter() discounting any
+	 * irq_enter()s that happened because of the pause IPI.
+	 */
+	if ((rq->core_this_irq_nest - rq->core_this_irq_pause_nest) != 1)
+		goto unlock;
+
 	/* Do nothing more if the core is not tagged */
 	if (!rq->core->core_cookie)
 		goto unlock;
