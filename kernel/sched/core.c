@@ -3923,7 +3923,8 @@ void sched_core_sibling_pause_ipi(void *data)
 	/*
 	 * Can happen if IPI received during softirq execution at the tail end
 	 * of an interrupt. The outer most irq_exit() will handle entry into
-	 * the scheduler soon and wait there instead of deadlocking here.
+	 * the scheduler if the core is tagged, so wait there instead of
+	 * deadlocking here.
 	 */
 	if ((rq->core_this_irq_nest == rq->core_this_irq_pause_nest)
 		|| warn_not_in_use || !sched_feat(CORE_IRQ_PAUSE_BUSY)) {
@@ -3937,8 +3938,8 @@ redo_pause:
 	 * Handle a race here after return from sched_core_sibling_pause(),
 	 * where a new irq_enter() on a sibling increments ->core_irq_nest, but
 	 * does not send a new IPI because pause_pending is still true. So we
-	 * need to recheck ->core_irq_nest and set ->core_pause_pending to
-	 * false, while doing so under the core-wide rq lock.
+	 * need to acquire lock and then re-check ->core_irq_nest and set
+	 * ->core_pause_pending under the same locked section.
 	 */
 	raw_spin_lock(rq_lockp(rq));
 	if (rq->core->core_irq_nest - rq->core_this_irq_nest) {
@@ -3997,23 +3998,26 @@ void sched_core_irq_enter(void)
 		/* Track number of irq_enter() calls received due to the pause IPI */
 		rq->core_this_irq_pause_nest++;
 
-		/* Do nothing more if we are in an IPI sent from another sibling. */
+		/* Do nothing more since we are in an IPI sent from another sibling. */
 		goto unlock;
+	} else if (rq->core_this_irq_pause_nest) {
+		/*
+		 * If a regular IRQ's irq_enter() happened after a pause IPI's
+		 * irq_enter() already happened, which can happen say if a
+		 * softirq happen to be running at the tail end of a pause IPI
+		 * when a new IRQ was received, then increase the nesting level
+		 * of the pause IPI's nesting counter, since we are nesting
+		 * within it.
+		 *
+		 * This is so that only on the outer-most pause IPI's
+		 * irq_exit(), this counter goes down to 0.
+		 */
+		rq->core_this_irq_pause_nest++;
 	}
 
 	/*
-	 * If a regular IRQ's irq_enter() happened after a pause IPI's
-	 * irq_enter() already happened, which can happen say if a softirq happen to be
-	 * running at the tail end of a pause IPI when a new IRQ was received,
-	 * then increase the nesting level of the pause IPI's nesting counter,
-	 * since we are nesting within it.
-	 */
-	if (rq->core_this_irq_pause_nest)
-		rq->core_this_irq_pause_nest++;
-
-	/*
-	 * Only send interrupts on the outer most irq_enter() discounting any
-	 * irq_enter()s that happened because of the pause IPI.
+	 * Only send pause IPI on the outer most irq_enter() discounting
+	 * any irq_enter()s that happened because of the pause IPI.
 	 */
 	if ((rq->core_this_irq_nest - rq->core_this_irq_pause_nest) != 1)
 		goto unlock;
