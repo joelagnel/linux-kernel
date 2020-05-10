@@ -4590,7 +4590,7 @@ static void __sched notrace __schedule(bool preempt)
 	 * of waiting to __schedule() so perform a wait if needed.
 	 */
 	if (sched_core_enabled(rq) &&
-	    !is_idle_task(next) && !next->mm && next->core_cookie)
+	    !is_idle_task(next) && next->mm && next->core_cookie)
 		sched_core_sibling_irq_pause(rq);
 #endif
 
