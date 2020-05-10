@@ -4391,6 +4391,153 @@ static inline bool cookie_match(struct task_struct *a, struct task_struct *b)
 	return a->core_cookie == b->core_cookie;
 }
 
+/*
+ * Helper function to pause the caller's hyperthread until the core exits the
+ * core-wide IRQ state. Obviously the CPU calling this function should not be
+ * responsible for the core being in the core-wide IRQ state otherwise it will
+ * deadlock. This function should be called from irq_exit() and from schedule().
+ * It is upto the callers to decide if calling here is necessary.
+ */
+static inline void sched_core_sibling_irq_pause(struct rq *rq)
+{
+	/*
+	 * Wait till the core of this HT is in a core-wide IRQ state.
+	 *
+	 * Pair with smp_store_release() in sched_core_irq_exit().
+	 */
+	while (smp_load_acquire(&rq->core->core_irq_nest) > 0)
+		cpu_relax();
+}
+
+/*
+ * Enter the core-wide IRQ state. Sibling will be paused if it is running
+ * 'untrusted' code, until sched_core_irq_exit() is called. Every attempt to
+ * avoid sending useless IPIs is made. Must be called only from hard IRQ
+ * context.
+ */
+void sched_core_irq_enter(void)
+{
+	int i, cpu = smp_processor_id();
+	struct rq *rq = cpu_rq(cpu);
+	const struct cpumask *smt_mask;
+
+	if (!sched_core_enabled(rq))
+		return;
+
+	/* Track number of irq_enter() calls received without irq_exit() on this CPU. */
+	rq->core_this_irq_nest++;
+
+	/* If not outermost irq_enter(), do nothing. */
+	if (rq->core_this_irq_nest != 1 ||
+	    WARN_ON_ONCE(rq->core->core_this_irq_nest == UINT_MAX))
+		return;
+
+	raw_spin_lock(rq_lockp(rq));
+	smt_mask = cpu_smt_mask(cpu);
+
+	/* Contribute this CPU's irq_enter() to the core-wide irq_enter() count. */
+	WRITE_ONCE(rq->core->core_irq_nest, rq->core->core_irq_nest + 1);
+	if (WARN_ON_ONCE(rq->core->core_irq_nest == UINT_MAX))
+		goto unlock;
+
+	if (rq->core_pause_pending) {
+		/*
+		 * Do nothing more since we are in a 'reschedule IPI' sent from
+		 * another sibling. That sibling would have sent IPIs to all of
+		 * the HTs.
+		 */
+		goto unlock;
+	}
+
+	/*
+	 * If we are not the first ones on the core to enter core-wide IRQ
+	 * state, do nothing.
+	 */
+	if (rq->core->core_irq_nest > 1)
+		goto unlock;
+
+	/* Do nothing more if the core is not tagged. */
+	if (!rq->core->core_cookie)
+		goto unlock;
+
+	for_each_cpu(i, smt_mask) {
+		struct rq *srq = cpu_rq(i);
+
+		if (i == cpu || cpu_is_offline(i))
+			continue;
+
+		if (!srq->curr->mm || is_idle_task(srq->curr))
+			continue;
+
+		/* Skip if HT is not running a tagged task. */
+		if (!srq->curr->core_cookie && !srq->core_pick)
+			continue;
+
+		/* IPI only if previous IPI was not pending. */
+		if (!srq->core_pause_pending) {
+			srq->core_pause_pending = 1;
+			smp_send_reschedule(i);
+		}
+	}
+unlock:
+	raw_spin_unlock(rq_lockp(rq));
+}
+
+/*
+ * Process any work need for either exiting the core-wide IRQ state, or for waiting
+ * on this hyperthread if the core is still in this state.
+ */
+void sched_core_irq_exit(void)
+{
+	int cpu = smp_processor_id();
+	struct rq *rq = cpu_rq(cpu);
+	bool wait_here = false;
+	unsigned int nest;
+
+	/* Do nothing if core-sched disabled. */
+	if (!sched_core_enabled(rq))
+		return;
+
+	rq->core_this_irq_nest--;
+
+	/* If not outermost on this CPU, do nothing. */
+	if (rq->core_this_irq_nest > 0 ||
+	    WARN_ON_ONCE(rq->core_this_irq_nest == UINT_MAX))
+		return;
+
+	raw_spin_lock(rq_lockp(rq));
+	/*
+	 * Core-wide nesting counter can never be 0 because we are
+	 * still in it on this CPU.
+	 */
+	nest = rq->core->core_irq_nest;
+	WARN_ON_ONCE(!nest);
+
+	/*
+	 * If we still have other CPUs in IRQs, we have to wait for them.
+	 * Either here, or in the scheduler.
+	 */
+	if (rq->core->core_cookie && nest > 1) {
+		/*
+		 * If we are entering the scheduler anyway, we can just wait there for
+		 * ->core_irq_nest to reach 0. If not, just wait here.
+		 */
+		if (!tif_need_resched()) {
+			wait_here = true;
+		}
+	}
+
+	if (rq->core_pause_pending)
+		rq->core_pause_pending = 0;
+
+	/* Pair with smp_load_acquire() in sched_core_sibling_irq_pause(). */
+	smp_store_release(&rq->core->core_irq_nest, nest - 1);
+	raw_spin_unlock(rq_lockp(rq));
+
+	if (wait_here)
+		sched_core_sibling_irq_pause(rq);
+}
+
 // XXX fairness/fwd progress conditions
 /*
  * Returns
@@ -4909,6 +5056,18 @@ static void __sched notrace __schedule(bool preempt)
 		rq->clock_update_flags &= ~(RQCF_ACT_SKIP|RQCF_REQ_SKIP);
 		rq_unlock_irq(rq, &rf);
 	}
+
+#ifdef CONFIG_SCHED_CORE
+	/*
+	 * If a CPU  that was running a trusted task entered the scheduler, and
+	 * the next task is untrusted, then check if waiting for core-wide IRQ
+	 * state to cease is needed since we would not have been able to get
+	 * the services of irq_exit() to do that waiting.
+	 */
+	if (sched_core_enabled(rq) &&
+	    !is_idle_task(next) && next->mm && next->core_cookie)
+		sched_core_sibling_irq_pause(rq);
+#endif
 
 	balance_callback(rq);
 }
