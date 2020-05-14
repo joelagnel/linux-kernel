@@ -3924,8 +3924,8 @@ void sched_core_irq_enter(void)
 	trace_printk("[priv] ENTER irq, this_irq_nest = %d\n", rq->core_this_irq_nest);
 
 	/* If not outermost irq_enter(), do nothing. */
-	if (rq->core_this_irq_nest != 1 ||
-	    WARN_ON_ONCE(rq->core->core_this_irq_nest == UINT_MAX))
+	if (WARN_ON_ONCE(rq->core->core_this_irq_nest == UINT_MAX) ||
+	    rq->core_this_irq_nest != 1)
 		return;
 
 	raw_spin_lock(rq_lockp(rq));
@@ -4010,8 +4010,8 @@ void sched_core_irq_exit(void)
 	trace_printk("[priv] EXIT irq , this_irq_nest = %d\n", rq->core_this_irq_nest);
 
 	/* If not outermost on this CPU, do nothing. */
-	if (rq->core_this_irq_nest > 0 ||
-	    WARN_ON_ONCE(rq->core_this_irq_nest == UINT_MAX))
+	if (WARN_ON_ONCE(rq->core_this_irq_nest == UINT_MAX) ||
+	    rq->core_this_irq_nest > 0)
 		return;
 
 	raw_spin_lock(rq_lockp(rq));

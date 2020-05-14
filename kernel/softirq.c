@@ -274,6 +274,13 @@ restart:
 	/* Reset the pending bitmask before enabling irqs */
 	set_softirq_pending(0);
 
+	/*
+	 * Core scheduling mitigations require entry into softirq to send stall
+	 * IPIs to sibling hyperthreads if needed (ex, sibling is running
+	 * untrusted task). If we are here from irq_exit(), no IPIs are sent.
+	 */
+	sched_core_irq_enter();
+
 	local_irq_enable();
 
 	h = softirq_vec;
@@ -304,6 +311,9 @@ restart:
 
 	rcu_bh_qs();
 	local_irq_disable();
+
+	/* Inform the scheduler about exit from softirq. */
+	sched_core_irq_exit();
 
 	pending = local_softirq_pending();
 	if (pending) {
