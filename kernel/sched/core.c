@@ -2172,6 +2172,7 @@ void scheduler_ipi(void)
 	 * TIF_NEED_RESCHED remotely (for the first time) will also send
 	 * this IPI.
 	 */
+	trace_printk("Enter scheduler_ipi()\n");
 	preempt_fold_need_resched();
 
 	if (llist_empty(&this_rq()->wake_list) && !got_nohz_idle_kick())
@@ -2190,6 +2191,7 @@ void scheduler_ipi(void)
 	 * however a fair share of IPIs are still resched only so this would
 	 * somewhat pessimize the simple resched case.
 	 */
+	trace_printk("Enter scheduler IPI : calling irq_enter()\n");
 	irq_enter();
 	sched_ttwu_pending();
 
@@ -2200,7 +2202,10 @@ void scheduler_ipi(void)
 		this_rq()->idle_balance = 1;
 		raise_softirq_irqoff(SCHED_SOFTIRQ);
 	}
+	trace_printk("Enter scheduler IPI : calling irq_exit()\n");
 	irq_exit();
+
+	trace_printk("Exit scheduler_ipi()\n");
 }
 
 static void ttwu_queue_remote(struct task_struct *p, int cpu, int wake_flags)
@@ -3879,8 +3884,10 @@ static inline void sched_core_sibling_irq_pause(struct rq *rq)
 	 *
 	 * Pair with smp_store_release() in sched_core_irq_exit().
 	 */
+	trace_printk("[pause] ENTER pause, core_irq_nest = %d\n", smp_load_acquire(&rq->core->core_irq_nest));
 	while (smp_load_acquire(&rq->core->core_irq_nest) > 0)
 		cpu_relax();
+	trace_printk("[pause] EXIT pause\n");
 }
 
 /*
@@ -3904,6 +3911,8 @@ void sched_core_irq_enter(void)
 	/* Track number of irq_enter() calls received without irq_exit() on this CPU. */
 	rq->core_this_irq_nest++;
 
+	trace_printk("[priv] ENTER irq, this_irq_nest = %d\n", rq->core_this_irq_nest);
+
 	/* If not outermost irq_enter(), do nothing. */
 	if (WARN_ON_ONCE(rq->core->core_this_irq_nest == UINT_MAX) ||
 	    rq->core_this_irq_nest != 1)
@@ -3916,6 +3925,7 @@ void sched_core_irq_enter(void)
 	WRITE_ONCE(rq->core->core_irq_nest, rq->core->core_irq_nest + 1);
 	if (WARN_ON_ONCE(rq->core->core_irq_nest == UINT_MAX))
 		goto unlock;
+	trace_printk("[priv] core priv, core_irq_nest = %d\n", rq->core->core_irq_nest);
 
 	if (rq->core_pause_pending) {
 		/*
@@ -3929,6 +3939,8 @@ void sched_core_irq_enter(void)
 	/* If we are not the first ones to enter IRQ on the core, do nothing. */
 	if (rq->core->core_irq_nest > 1)
 		goto unlock;
+
+	trace_printk("[priv] ENTER core priv, core_irq_nest = %d\n", rq->core->core_irq_nest);
 
 	/* Do nothing more if the core is not tagged */
 	if (!rq->core->core_cookie)
@@ -3954,6 +3966,7 @@ void sched_core_irq_enter(void)
 			 * sched_core_sibling_irq_pause().
 			 */
 			srq->core_pause_pending = 1;
+			trace_printk("[priv] sending resched to %d\n", i);
 			smp_send_reschedule(i);
 		}
 	}
@@ -3985,6 +3998,8 @@ void sched_core_irq_exit(void)
 		return;
 
 	rq->core_this_irq_nest--;
+
+	trace_printk("[priv] EXIT irq , this_irq_nest = %d\n", rq->core_this_irq_nest);
 
 	/* If not outermost on this CPU, do nothing. */
 	if (WARN_ON_ONCE(rq->core_this_irq_nest == UINT_MAX) ||
@@ -4018,6 +4033,7 @@ void sched_core_irq_exit(void)
 
 	/* Pair with smp_cond_load_acquire() in sched_core_sibling_irq_pause(). */
 	smp_store_release(&rq->core->core_irq_nest, nest - 1);
+	trace_printk("[priv] EXIT core priv, core_irq_nest = %d\n", rq->core->core_irq_nest);
 	raw_spin_unlock(rq_lockp(rq));
 
 	if (wait_here)
@@ -7278,6 +7294,7 @@ int task_set_core_sched(int set, struct task_struct *tsk)
 		return -EINVAL;
 
 	if (!sched_feat(CORE_PRCTL)) {
+		pr_err("Skipping prctl for: %s/%d\n", tsk->comm, tsk->pid);
 		return 0;
 	}
 
