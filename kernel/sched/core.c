@@ -169,9 +169,6 @@ static void sched_core_enqueue(struct rq *rq, struct task_struct *p)
 
 	rq->core->core_task_seq++;
 
-	if (!p->core_cookie)
-		return;
-
 	node = &rq->core_tree.rb_node;
 	parent = *node;
 
@@ -202,7 +199,7 @@ static void sched_core_dequeue(struct rq *rq, struct task_struct *p)
 
 void sched_core_add(struct rq *rq, struct task_struct *p)
 {
-	if (p->core_cookie && task_on_rq_queued(p))
+	if (task_on_rq_queued(p))
 		sched_core_enqueue(rq, p);
 }
 
@@ -4056,42 +4053,57 @@ void sched_core_irq_exit(void)
 static struct task_struct *
 pick_task(struct rq *rq, const struct sched_class *class, struct task_struct *max)
 {
-	struct task_struct *class_pick, *cookie_pick;
+	struct task_struct *class_pick, *cookie_pick, *rq_pick;
 	unsigned long cookie = rq->core->core_cookie;
 
 	class_pick = class->pick_task(rq);
 	if (!class_pick)
 		return NULL;
 
-	if (!cookie) {
-		/*
-		 * If class_pick is tagged, return it only if it has
-		 * higher priority than max.
-		 */
-		if (max && class_pick->core_cookie &&
-		    prio_less(class_pick, max))
-			return idle_sched_class.pick_task(rq);
-
+	if (!max)
 		return class_pick;
-	}
 
-	/*
-	 * If class_pick is idle or matches cookie, return early.
-	 */
+	/* Make sure the current max's cookie is core->core_cookie */
+	WARN_ON_ONCE(max->core_cookie != cookie);
+
+	/* Try to play really nice: see if the class's cookie works. */
 	if (cookie_equals(class_pick, cookie))
 		return class_pick;
 
+	/*
+	 * From here on, we select class_pick or cookie_pick.
+	 * cookie_pick could also be idle if nothing matched it.
+	 *
+	 * Following are the cases:
+	 * 1 - lowest prio.
+	 * 3 - highest prio.
+	 *
+	 * max	class	cookie	outcome
+	 * 1	2	3	cookie
+	 * 1	3	2	class
+	 * 2	1	3	cookie
+	 * 2	3	1	class
+	 * 3	1	2	cookie
+	 * 3	2	1	cookie
+	 * 3	2	-	return idle (when no cookie task).
+	 */
+	/* Find out highest prio of class and cookie. */
 	cookie_pick = sched_core_find(rq, cookie);
+	if (prio_less(class_pick, cookie_pick))
+		rq_pick = cookie_pick;
+	else
+		rq_pick = class_pick;
+
+	/* Do either of them trump max? If so select that.*/
+	if (prio_less(max, rq_pick))
+		return rq_pick;
 
 	/*
-	 * If class > max && class > cookie, it is the highest priority task on
-	 * the core (so far) and it must be selected, otherwise we must go with
-	 * the cookie pick in order to satisfy the constraint.
+	 * We get here with if class_pick was incompatible with max
+	 * and both class/cookie were lower prio than max. So do the
+	 * next best thing for the rq, which is return a matching task.
+	 * This could also be idle since that matches everything.
 	 */
-	if (prio_less(cookie_pick, class_pick) &&
-	    (!max || prio_less(max, class_pick)))
-		return class_pick;
-
 	return cookie_pick;
 }
 
@@ -7677,8 +7689,7 @@ static void cpu_cgroup_fork(struct task_struct *task)
 	if (sched_core_enqueued(task))
 		sched_core_dequeue(rq, task);
 	sched_change_group(task, TASK_SET_GROUP);
-	if (sched_core_enabled(rq) && task_on_rq_queued(task) &&
-	    task->core_cookie)
+	if (sched_core_enabled(rq) && task_on_rq_queued(task))
 		sched_core_enqueue(rq, task);
 
 	task_rq_unlock(rq, task, &rf);
@@ -8072,8 +8083,7 @@ static int __sched_write_tag(void *data)
 				continue;
 		}
 
-		if (sched_core_enabled(task_rq(p)) &&
-		    p->core_cookie && task_on_rq_queued(p))
+		if (sched_core_enabled(task_rq(p)) && task_on_rq_queued(p))
 			sched_core_enqueue(task_rq(p), p);
 
 	}
