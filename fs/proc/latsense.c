@@ -17,11 +17,6 @@
 
 #include "internal.h"
 
-// Replace with scheduler interface in later patch
-#define proc_sched_get_latency_sensitive(p) 1
-
-#define proc_sched_set_latency_sensitive(p, val) 0
-
 /*
  * Print out latsense related information:
  */
