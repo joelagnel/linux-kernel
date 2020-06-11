@@ -1,0 +1,27 @@
+// SPDX-License-Identifier: GPL-2.0
+#include "sched.h"
+
+#ifdef CONFIG_PROC_LATSENSE
+int proc_sched_set_latency_sensitive(struct task_struct *p, int val)
+{
+	/*
+	 * XXX security checks?
+	 */
+
+	if (val != 0 && val != 1)
+		return -EINVAL;
+
+	p->proc_latency_sensitive = val;
+
+	return 0;
+}
+
+int proc_sched_get_latency_sensitive(struct task_struct *p)
+{
+	/*
+	 * XXX security checks?
+	 */
+
+	return p->proc_latency_sensitive;
+}
+#endif

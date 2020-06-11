@@ -685,6 +685,8 @@ struct task_struct {
 	struct uclamp_se		uclamp_req[UCLAMP_CNT];
 	/* Effective clamp values used for a scheduling entity */
 	struct uclamp_se		uclamp[UCLAMP_CNT];
+
+	int proc_latency_sensitive;
 #endif
 
 #ifdef CONFIG_PREEMPT_NOTIFIERS

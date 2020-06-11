@@ -14,6 +14,7 @@
 #include <linux/tty.h>
 #include <linux/string.h>
 #include <linux/mman.h>
+#include <linux/sched/latsense.h>
 #include <linux/sched/mm.h>
 #include <linux/sched/numa_balancing.h>
 #include <linux/sched/task_stack.h>
@@ -48,11 +49,6 @@
 #include <asm/pgtable.h>
 #include <asm/processor.h>
 #include "internal.h"
-
-// Replace with scheduler interface in later patch
-#define proc_sched_get_latency_sensitive(p) 1
-
-#define proc_sched_set_latency_sensitive(p, val) 0
 
 /*
  * Print out latsense related information:
