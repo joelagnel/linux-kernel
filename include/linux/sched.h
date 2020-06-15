@@ -1934,9 +1934,9 @@ int task_set_core_sched(int set, struct task_struct *tsk);
 void sched_core_irq_enter(void);
 void sched_core_irq_exit(void);
 #else
-int task_set_core_sched(int set, struct task_struct *tsk) { return -ENOTSUPP; }
-static void sched_core_irq_enter(void) { }
-static void sched_core_irq_exit(void) { }
+#define task_set_core_sched(set, tsk) (-ENOTSUPP)
+#define sched_core_irq_enter(void) do { } while (0);
+#define sched_core_irq_exit(void) do { } while (0);
 #endif
 
 #endif
