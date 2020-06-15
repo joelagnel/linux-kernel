@@ -10921,6 +10921,7 @@ static void rq_offline_fair(struct rq *rq)
 	unthrottle_offline_cfs_rqs(rq);
 }
 
+#ifdef CONFIG_SCHED_CORE
 static void for_each_fair_task(struct rq *rq,
 			       void (*fn)(struct rq *rq, struct task_struct *p))
 {
@@ -10941,8 +10942,6 @@ static void for_each_fair_task(struct rq *rq,
 		}
 	}
 }
-
-#ifdef CONFIG_SCHED_CORE
 
 static void core_sched_activate_fair(struct rq *rq)
 {
