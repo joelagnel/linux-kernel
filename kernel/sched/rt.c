@@ -1571,6 +1571,8 @@ static struct task_struct *_pick_next_task_rt(struct rq *rq)
 	return rt_task_of(rt_se);
 }
 
+#ifdef CONFIG_SCHED_CORE
+
 static void for_each_rt_task(struct rq *rq,
 			     void (*fn)(struct rq *rq, struct task_struct *p))
 {
@@ -1595,8 +1597,6 @@ static void for_each_rt_task(struct rq *rq,
 		}
 	}
 }
-
-#ifdef CONFIG_SCHED_CORE
 
 static void core_sched_activate_rt(struct rq *rq)
 {

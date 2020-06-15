@@ -1774,6 +1774,8 @@ static struct sched_dl_entity *pick_next_dl_entity(struct rq *rq,
 	return rb_entry(left, struct sched_dl_entity, rb_node);
 }
 
+#ifdef CONFIG_SCHED_CORE
+
 static void for_each_dl_task(struct rq *rq,
                              void (*fn)(struct rq *rq, struct task_struct *p))
 {
@@ -1790,8 +1792,6 @@ static void for_each_dl_task(struct rq *rq,
 		rb_node = rb_next(rb_node);
 	}
 }
-
-#ifdef CONFIG_SCHED_CORE
 
 static void core_sched_activate_dl(struct rq *rq)
 {
