@@ -470,22 +470,26 @@ static inline bool is_root_cfs_rq(struct cfs_rq *cfs_rq)
 	return cfs_rq == root_cfs_rq(cfs_rq);
 }
 
+#ifdef CONFIG_SCHED_CORE
 static inline struct cfs_rq *core_cfs_rq(struct cfs_rq *cfs_rq)
 {
 	return &rq_of(cfs_rq)->core->cfs;
 }
+#endif
 
 static inline u64 cfs_rq_min_vruntime(struct cfs_rq *cfs_rq)
 {
 	if (!sched_core_enabled(rq_of(cfs_rq)))
 		return cfs_rq->min_vruntime;
 
+#ifdef CONFIG_SCHED_CORE
 	if (is_root_cfs_rq(cfs_rq))
 		return core_cfs_rq(cfs_rq)->min_vruntime;
-	else
-		return cfs_rq->min_vruntime;
+#endif
+	return cfs_rq->min_vruntime;
 }
 
+#ifdef CONFIG_SCHED_CORE
 static void coresched_adjust_vruntime(struct cfs_rq *cfs_rq, u64 delta)
 {
 	struct sched_entity *se, *next;
@@ -520,6 +524,7 @@ static void update_core_cfs_rq_min_vruntime(struct cfs_rq *cfs_rq)
 		coresched_adjust_vruntime(cfs_rq_core, delta);
 	}
 }
+#endif
 
 bool cfs_prio_less(struct task_struct *a, struct task_struct *b)
 {
@@ -618,7 +623,11 @@ static void update_min_vruntime(struct cfs_rq *cfs_rq)
 
 	/* ensure we never gain time by being placed backwards. */
 	cfs_rq->min_vruntime = max_vruntime(cfs_rq_min_vruntime(cfs_rq), vruntime);
+
+#ifdef CONFIG_SCHED_CORE
 	update_core_cfs_rq_min_vruntime(cfs_rq);
+#endif
+
 #ifndef CONFIG_64BIT
 	smp_wmb();
 	cfs_rq->min_vruntime_copy = cfs_rq->min_vruntime;
