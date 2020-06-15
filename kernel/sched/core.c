@@ -7640,9 +7640,11 @@ static void cpu_cgroup_fork(struct task_struct *task)
 	if (sched_core_enqueued(task))
 		sched_core_dequeue(rq, task);
 	sched_change_group(task, TASK_SET_GROUP);
+#ifdef CONFIG_SCHED_CORE
 	if (sched_core_enabled(rq) && task_on_rq_queued(task) &&
 	    task->core_cookie)
 		sched_core_enqueue(rq, task);
+#endif
 
 	task_rq_unlock(rq, task, &rf);
 }
