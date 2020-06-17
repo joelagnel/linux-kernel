@@ -317,6 +317,38 @@ void rcu_segcblist_extract_done_cbs(struct rcu_segcblist *rsclp,
 }
 
 /*
+ * Return how many CBs each segment along with their gp_seq values.
+ */
+void rcu_segcblist_countseq(struct rcu_segcblist *rsclp,
+			 int cbcount[RCU_CBLIST_NSEGS],
+			 unsigned long gpseq[RCU_CBLIST_NSEGS])
+{
+	struct rcu_head **cur_tail, *h;
+	int i, c;
+
+	for (i = 0; i < RCU_CBLIST_NSEGS; i++)
+		cbcount[i] = 0;
+
+	cur_tail = &(rsclp->head);
+
+	for (i = 0; i < RCU_CBLIST_NSEGS; i++) {
+		c = 0;
+		// List empty?
+		if (rsclp->tails[i] != cur_tail) {
+			// The loop skips the last node
+			c = 1;
+			for (h = *cur_tail; h->next != *(rsclp->tails[i]); h = h->next) {
+				c++;
+			}
+		}
+
+		cbcount[i] = c;
+		gpseq[i] = rsclp->gp_seq[i];
+		cur_tail = rsclp->tails[i];
+	}
+}
+
+/*
  * Extract only those callbacks still pending (not yet ready to be
  * invoked) from the specified rcu_segcblist structure and place them in
  * the specified rcu_cblist structure.  Note that this loses information
@@ -446,11 +478,12 @@ void rcu_segcblist_advance(struct rcu_segcblist *rsclp, unsigned long seq)
  */
 bool rcu_segcblist_accelerate(struct rcu_segcblist *rsclp, unsigned long seq)
 {
-	int i;
+	int i, oldest_seg;
+	bool ret = false;
 
 	WARN_ON_ONCE(!rcu_segcblist_is_enabled(rsclp));
 	if (rcu_segcblist_restempty(rsclp, RCU_DONE_TAIL))
-		return false;
+		goto ret_acc;
 
 	/*
 	 * Find the segment preceding the oldest segment of callbacks
@@ -464,6 +497,9 @@ bool rcu_segcblist_accelerate(struct rcu_segcblist *rsclp, unsigned long seq)
 		if (rsclp->tails[i] != rsclp->tails[i - 1] &&
 		    ULONG_CMP_LT(rsclp->gp_seq[i], seq))
 			break;
+
+	/* The oldest segment after which everything later is merged. */
+	oldest_seg = i;
 
 	/*
 	 * If all the segments contain callbacks that correspond to
@@ -479,7 +515,7 @@ bool rcu_segcblist_accelerate(struct rcu_segcblist *rsclp, unsigned long seq)
 	 * skipping any empty segments.
 	 */
 	if (++i >= RCU_NEXT_TAIL)
-		return false;
+		goto ret_acc;
 
 	/*
 	 * Merge all later callbacks, including newly arrived callbacks,
@@ -488,11 +524,28 @@ bool rcu_segcblist_accelerate(struct rcu_segcblist *rsclp, unsigned long seq)
 	 * where there were no pending callbacks in the rcu_segcblist
 	 * structure other than in the RCU_NEXT_TAIL segment.
 	 */
+
 	for (; i < RCU_NEXT_TAIL; i++) {
 		WRITE_ONCE(rsclp->tails[i], rsclp->tails[RCU_NEXT_TAIL]);
 		rsclp->gp_seq[i] = seq;
 	}
-	return true;
+
+	/*
+	 * If all segments after oldest_seg were empty, then new GP numbers
+	 * were assigned to empty segments. In this case, no need to start
+	 * those future GPs.
+	 */
+	if (rcu_segcblist_restempty(rsclp, oldest_seg))
+		ret = false;
+	else
+		ret = true;
+
+ret_acc:
+	/*
+	 * Make sure the NEXT list is always empty after an acceleration.
+	 */
+	WARN_ON_ONCE(!rcu_segcblist_restempty(rsclp, RCU_NEXT_READY_TAIL));
+	return ret;
 }
 
 /*
