@@ -478,12 +478,12 @@ void rcu_segcblist_advance(struct rcu_segcblist *rsclp, unsigned long seq)
  */
 bool rcu_segcblist_accelerate(struct rcu_segcblist *rsclp, unsigned long seq)
 {
-	int i, oldest_seg;
+	int i;
 	bool ret = false;
 
 	WARN_ON_ONCE(!rcu_segcblist_is_enabled(rsclp));
 	if (rcu_segcblist_restempty(rsclp, RCU_DONE_TAIL))
-		goto ret_acc;
+		return false;
 
 	/*
 	 * Find the segment preceding the oldest segment of callbacks
@@ -498,9 +498,6 @@ bool rcu_segcblist_accelerate(struct rcu_segcblist *rsclp, unsigned long seq)
 		    ULONG_CMP_LT(rsclp->gp_seq[i], seq))
 			break;
 
-	/* The oldest segment after which everything later is merged. */
-	oldest_seg = i;
-
 	/*
 	 * If all the segments contain callbacks that correspond to
 	 * earlier grace-period sequence numbers than "seq", leave.
@@ -513,9 +510,16 @@ bool rcu_segcblist_accelerate(struct rcu_segcblist *rsclp, unsigned long seq)
 	 * Also advance to the oldest segment of callbacks whose
 	 * ->gp_seq[] completion is at or after that passed in via "seq",
 	 * skipping any empty segments.
+	 *
+	 * Note that "i" is the youngest segment of the list after which
+	 * any older segments than "i" would not be mutated or assigned
+	 * GPs. For example, if i == WAIT_TAIL, then neither WAIT_TAIL,
+	 * nor DONE_TAIL will be touched. Only CBs in NEXT_TAIL will be
+	 * merged with NEXT_READY_TAIL and the GP numbers of both of
+	 * them would be updated.
 	 */
-	if (++i >= RCU_NEXT_TAIL)
-		goto ret_acc;
+	if (rcu_segcblist_restempty(rsclp, i) || ++i >= RCU_NEXT_TAIL)
+		return false;
 
 	/*
 	 * Merge all later callbacks, including newly arrived callbacks,
@@ -530,22 +534,7 @@ bool rcu_segcblist_accelerate(struct rcu_segcblist *rsclp, unsigned long seq)
 		rsclp->gp_seq[i] = seq;
 	}
 
-	/*
-	 * If all segments after oldest_seg were empty, then new GP numbers
-	 * were assigned to empty segments. In this case, no need to start
-	 * those future GPs.
-	 */
-	if (rcu_segcblist_restempty(rsclp, oldest_seg))
-		ret = false;
-	else
-		ret = true;
-
-ret_acc:
-	/*
-	 * Make sure the NEXT list is always empty after an acceleration.
-	 */
-	WARN_ON_ONCE(!rcu_segcblist_restempty(rsclp, RCU_NEXT_READY_TAIL));
-	return ret;
+	return true;
 }
 
 /*
