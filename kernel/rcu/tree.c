@@ -1476,6 +1476,8 @@ static bool rcu_accelerate_cbs(struct rcu_node *rnp, struct rcu_data *rdp)
 {
 	unsigned long gp_seq_req;
 	bool ret = false;
+	int cbs[RCU_CBLIST_NSEGS];
+	unsigned long gps[RCU_CBLIST_NSEGS];
 
 	rcu_lockdep_assert_cblist_protected(rdp);
 	raw_lockdep_assert_held_rcu_node(rnp);
@@ -1483,6 +1485,10 @@ static bool rcu_accelerate_cbs(struct rcu_node *rnp, struct rcu_data *rdp)
 	/* If no pending (not yet ready to invoke) callbacks, nothing to do. */
 	if (!rcu_segcblist_pend_cbs(&rdp->cblist))
 		return false;
+
+	/* Count CBs for tracing. */
+	rcu_segcblist_countseq(&rdp->cblist, cbs, gps);
+	trace_rcu_segcb("SegCbPreAcc", cbs, gps);
 
 	/*
 	 * Callbacks are often registered with incomplete grace-period
@@ -1503,6 +1509,10 @@ static bool rcu_accelerate_cbs(struct rcu_node *rnp, struct rcu_data *rdp)
 		trace_rcu_grace_period(rcu_state.name, gp_seq_req, TPS("AccWaitCB"));
 	else
 		trace_rcu_grace_period(rcu_state.name, gp_seq_req, TPS("AccReadyCB"));
+
+	/* Count CBs for tracing. */
+	rcu_segcblist_countseq(&rdp->cblist, cbs, gps);
+	trace_rcu_segcb("SegCbPostAcc", cbs, gps);
 
 	return ret;
 }
@@ -2421,6 +2431,8 @@ static void rcu_do_batch(struct rcu_data *rdp)
 	struct rcu_cblist rcl = RCU_CBLIST_INITIALIZER(rcl);
 	long bl, count = 0;
 	long pending, tlimit = 0;
+	int cbs[RCU_CBLIST_NSEGS];
+	unsigned long gps[RCU_CBLIST_NSEGS];
 
 	/* If no callbacks are ready, just return. */
 	if (!rcu_segcblist_ready_cbs(&rdp->cblist)) {
@@ -2461,6 +2473,11 @@ static void rcu_do_batch(struct rcu_data *rdp)
 	/* Invoke callbacks. */
 	tick_dep_set_task(current, TICK_DEP_BIT_RCU);
 	rhp = rcu_cblist_dequeue(&rcl);
+
+	/* Count CBs for tracing. */
+	rcu_segcblist_countseq(&rdp->cblist, cbs, gps);
+	trace_rcu_segcb("SegCbDequeued", cbs, gps);
+
 	for (; rhp; rhp = rcu_cblist_dequeue(&rcl)) {
 		rcu_callback_t f;
 
@@ -2929,6 +2946,8 @@ __call_rcu(struct rcu_head *head, rcu_callback_t func)
 	unsigned long flags;
 	struct rcu_data *rdp;
 	bool was_alldone;
+	int cbs[RCU_CBLIST_NSEGS];
+	unsigned long gps[RCU_CBLIST_NSEGS];
 
 	/* Misaligned rcu_head! */
 	WARN_ON_ONCE((unsigned long)head & (sizeof(void *) - 1));
@@ -2973,6 +2992,10 @@ __call_rcu(struct rcu_head *head, rcu_callback_t func)
 	else
 		trace_rcu_callback(rcu_state.name, head,
 				   rcu_segcblist_n_cbs(&rdp->cblist));
+
+	/* Count CBs for tracing. */
+	rcu_segcblist_countseq(&rdp->cblist, cbs, gps);
+	trace_rcu_segcb("SegCBQueued", cbs, gps);
 
 	/* Go handle any RCU core processing required. */
 	if (IS_ENABLED(CONFIG_RCU_NOCB_CPU) &&
