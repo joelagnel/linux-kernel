@@ -3409,6 +3409,25 @@ static void sched_core_fork(unsigned long clone_flags, struct task_struct *p)
 	}
 }
 
+/* Go through all TGIDs and print ones with @p's tag. */
+int sched_core_tasks(struct seq_file *m, struct pid_namespace *ns,
+				struct pid *pid, struct task_struct *tsk)
+{
+	struct task_struct *p, *t;
+
+	rcu_read_lock();
+	mutex_lock(&sched_core_mutex);
+	for_each_process_thread(p, t) {
+		if (t == tsk)
+			continue;
+		if (tsk->core_cookie == t->core_cookie)
+			seq_printf(m, "%d:%d\n", p->pid, t->pid);
+	}
+	mutex_unlock(&sched_core_mutex);
+	rcu_read_unlock();
+
+	return 0;
+}
 #endif /* CONFIG_SCHED_CORE */
 
 /*

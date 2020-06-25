@@ -1988,8 +1988,11 @@ static inline void rseq_execve(struct task_struct *t)
 
 #ifdef CONFIG_SCHED_CORE
 int sched_core_join_pid(pid_t pid);
+int sched_core_tasks(struct seq_file *m, struct pid_namespace *ns,
+			  struct pid *pid, struct task_struct *p);
 #else
 #define sched_core_join_pid(pid) (-ENOTSUPP)
+#define sched_core_tasks(...) (-ENOTSUPP)
 #endif
 
 void __exit_umh(struct task_struct *tsk);
