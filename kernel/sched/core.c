@@ -4423,9 +4423,7 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
 		return next;
 	}
 
-	prev->sched_class->put_prev_task(rq, prev);
-	if (!rq->nr_running)
-		newidle_balance(rq, rf);
+	put_prev_task_balance(rq, prev, rf);
 
 	cpu = cpu_of(rq);
 	smt_mask = cpu_smt_mask(cpu);
