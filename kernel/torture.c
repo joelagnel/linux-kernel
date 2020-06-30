@@ -789,6 +789,7 @@ void torture_kthread_stopping(char *title)
 }
 EXPORT_SYMBOL_GPL(torture_kthread_stopping);
 
+void sched_core_get(void);
 /*
  * Create a generic torture kthread that is immediately runnable.  If you
  * need the kthread to be stopped so that you can do something to it before
@@ -799,8 +800,10 @@ int _torture_create_kthread(int (*fn)(void *arg), void *arg, char *s, char *m,
 {
 	int ret = 0;
 
+	sched_core_get();
+
 	VERBOSE_TOROUT_STRING(m);
-	*tp = kthread_run(fn, arg, "%s", s);
+	*tp = kthread_run_cookie(fn, arg, "%s", s);
 	if (IS_ERR(*tp)) {
 		ret = PTR_ERR(*tp);
 		VERBOSE_TOROUT_ERRSTRING(f);

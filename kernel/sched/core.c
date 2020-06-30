@@ -4666,6 +4666,8 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
 	for_each_cpu(i, smt_mask) {
 		struct rq *rq_i = cpu_rq(i);
 
+		trace_printk("CPU %d is in smt_mask, resetting\n", i);
+
 		rq_i->core_pick = NULL;
 
 		if (rq_i->core_forceidle) {
