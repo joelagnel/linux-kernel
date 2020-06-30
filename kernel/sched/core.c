@@ -4352,6 +4352,150 @@ static inline bool cookie_match(struct task_struct *a, struct task_struct *b)
 	return a->core_cookie == b->core_cookie;
 }
 
+/*
+ * Helper function to pause the caller's hyperthread until the core exits the
+ * core-wide unsafe state. Obviously the CPU calling this function should not be
+ * responsible for the core being in the core-wide IRQ state otherwise it will
+ * deadlock. This function should be called before entering an unsafe context.
+ */
+void sched_core_wait_till_safe(void)
+{
+	struct rq *rq;
+	int cpu;
+	int loops = 0;
+
+	cpu = smp_processor_id();
+	rq = cpu_rq(cpu);
+
+	/*
+	 * Wait till the core of this HT is not in a core-wide IRQ state.
+	 *
+	 * Pair with smp_store_release() in sched_core_unsafe_exit().
+	 */
+	while (smp_load_acquire(&rq->core->core_unsafe_nest) > 0 && loops++ < 100000000)
+		cpu_relax();
+
+	if (WARN_ON_ONCE(loops >= 100000000))
+		panic("excessive spinning\n");
+}
+
+/*
+ * Enter the core-wide IRQ state. Sibling will be paused if it is running
+ * 'untrusted' code, until sched_core_unsafe_exit() is called. Every attempt to
+ * avoid sending useless IPIs is made. Must be called only from hard IRQ
+ * context.
+ */
+void sched_core_unsafe_enter(void)
+{
+	int i, cpu = smp_processor_id();
+	struct rq *rq = cpu_rq(cpu);
+	const struct cpumask *smt_mask;
+
+	if (!sched_core_enabled(rq))
+		return;
+
+	/* Count unsafe_enter() calls received without unsafe_exit() on this CPU. */
+	rq->core_this_unsafe_nest++;
+
+	/* If not outermost unsafe_enter(), do nothing. */
+	if (WARN_ON_ONCE(rq->core->core_this_unsafe_nest == UINT_MAX) ||
+	    rq->core_this_unsafe_nest != 1)
+		return;
+
+	raw_spin_lock(rq_lockp(rq));
+	smt_mask = cpu_smt_mask(cpu);
+
+	/* Contribute this CPU's unsafe_enter() to core-wide unsafe_enter() count. */
+	WRITE_ONCE(rq->core->core_unsafe_nest, rq->core->core_unsafe_nest + 1);
+
+	if (WARN_ON_ONCE(rq->core->core_unsafe_nest == UINT_MAX))
+		goto unlock;
+
+	if (rq->core_pause_pending) {
+		/*
+		 * Do nothing more since we are in a 'reschedule IPI' sent from
+		 * another sibling. That sibling would have sent IPIs to all of
+		 * the HTs.
+		 */
+		goto unlock;
+	}
+
+	/*
+	 * If we are not the first ones on the core to enter core-wide IRQ
+	 * state, do nothing.
+	 */
+	if (rq->core->core_unsafe_nest > 1)
+		goto unlock;
+
+	/* Do nothing more if the core is not tagged. */
+	if (!rq->core->core_cookie)
+		goto unlock;
+
+	for_each_cpu(i, smt_mask) {
+		struct rq *srq = cpu_rq(i);
+
+		if (i == cpu || cpu_is_offline(i))
+			continue;
+
+		if (!srq->curr->mm || is_idle_task(srq->curr))
+			continue;
+
+		/* Skip if HT is not running a tagged task. */
+		if (!srq->curr->core_cookie && !srq->core_pick)
+			continue;
+
+		/* IPI only if previous IPI was not pending. */
+		if (!srq->core_pause_pending) {
+			srq->core_pause_pending = 1;
+			smp_send_reschedule(i);
+		}
+	}
+unlock:
+	raw_spin_unlock(rq_lockp(rq));
+}
+
+/*
+ * Process any work need for either exiting the core-wide IRQ state, or for
+ * waiting on this hyperthread if the core is still in this state.
+ */
+void sched_core_unsafe_exit(void)
+{
+	int cpu = smp_processor_id();
+	struct rq *rq = cpu_rq(cpu);
+	bool wait_here = false;
+	unsigned int nest;
+
+	/* Do nothing if core-sched disabled. */
+	if (!sched_core_enabled(rq))
+		return;
+
+	/*
+	 * Can happen when a process is forked and the first return to user
+	 * mode is a syscall exit. Either way, there's nothing to do.
+	 */
+	if (rq->core_this_unsafe_nest == 0)
+		return;
+
+	rq->core_this_unsafe_nest--;
+
+	/* If not outermost on this CPU, do nothing. */
+	if (WARN_ON_ONCE(rq->core_this_unsafe_nest == UINT_MAX) ||
+	    rq->core_this_unsafe_nest > 0)
+		return;
+
+	raw_spin_lock(rq_lockp(rq));
+	/*
+	 * Core-wide nesting counter can never be 0 because we are
+	 * still in it on this CPU.
+	 */
+	nest = rq->core->core_unsafe_nest;
+	WARN_ON_ONCE(!nest);
+
+	/* Pair with smp_load_acquire() in sched_core_sibling_irq_pause(). */
+	smp_store_release(&rq->core->core_unsafe_nest, nest - 1);
+	raw_spin_unlock(rq_lockp(rq));
+}
+
 // XXX fairness/fwd progress conditions
 /*
  * Returns
@@ -7902,6 +8046,8 @@ static void sched_change_group(struct task_struct *tsk, int type)
 	if (tg->tagged /* && !tsk->core_cookie ? */) {
 		tsk->core_cookie = (unsigned long)tg;
 		set_tsk_thread_flag(tsk, TIF_CORE_TAGGED);
+		trace_printk("Setting tsk pid %d to cookie %lu  and setting TIF\n",
+				tsk->pid, tsk->core_cookie);
 	}
 #endif
 

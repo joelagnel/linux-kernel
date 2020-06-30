@@ -29,6 +29,8 @@ static __always_inline void enter_from_user_mode(struct pt_regs *regs)
 	instrumentation_begin();
 	trace_hardirqs_off_finish();
 	instrumentation_end();
+
+	sched_core_unsafe_enter();
 }
 
 static inline void syscall_enter_audit(struct pt_regs *regs, long syscall)
@@ -98,6 +100,12 @@ noinstr long syscall_enter_from_user_mode(struct pt_regs *regs, long syscall)
  */
 static __always_inline void exit_to_user_mode(void)
 {
+	sched_core_unsafe_exit();
+
+	/* XXX: Move the if () into the wait function. */
+	if (current->core_cookie)
+		sched_core_wait_till_safe();
+
 	instrumentation_begin();
 	trace_hardirqs_on_prepare();
 	lockdep_hardirqs_on_prepare(CALLER_ADDR0);
