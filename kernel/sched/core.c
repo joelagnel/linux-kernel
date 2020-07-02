@@ -4399,7 +4399,7 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
 {
 	struct task_struct *next, *max = NULL;
 	const struct sched_class *class;
-	const struct cpumask *smt_mask;
+	struct cpumask select_mask;
 	int i, j, cpu, occ = 0;
 	bool need_sync;
 
@@ -4428,7 +4428,14 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
 		newidle_balance(rq, rf);
 
 	cpu = cpu_of(rq);
-	smt_mask = cpu_smt_mask(cpu);
+	/* Make a copy of cpu_smt_mask as we should not set that. */
+	cpumask_copy(&select_mask, cpu_smt_mask(cpu));
+
+	/*
+	 * Always make sure current CPU is added to smt_mask so that below
+	 * selection logic runs on it.
+	 */
+	cpumask_set_cpu(cpu, &select_mask);
 
 	/*
 	 * core->core_task_seq, core->core_pick_seq, rq->core_sched_seq
@@ -4445,7 +4452,7 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
 
 	/* reset state */
 	rq->core->core_cookie = 0UL;
-	for_each_cpu(i, smt_mask) {
+	for_each_cpu(i, &select_mask) {
 		struct rq *rq_i = cpu_rq(i);
 
 		rq_i->core_pick = NULL;
@@ -4465,7 +4472,7 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
 	 */
 	for_each_class(class) {
 again:
-		for_each_cpu_wrap(i, smt_mask, cpu) {
+		for_each_cpu_wrap(i, &select_mask, cpu) {
 			struct rq *rq_i = cpu_rq(i);
 			struct task_struct *p;
 
@@ -4496,6 +4503,8 @@ again:
 			 */
 			if (i == cpu && !need_sync && !p->core_cookie) {
 				next = p;
+				rq_i->core_pick = next;
+				rq_i->core_sched_seq = rq_i->core->core_pick_seq;
 				goto done;
 			}
 
@@ -4521,7 +4530,7 @@ again:
 				max = p;
 
 				if (old_max) {
-					for_each_cpu(j, smt_mask) {
+					for_each_cpu(j, &select_mask) {
 						if (j == i)
 							continue;
 
@@ -4546,6 +4555,10 @@ next_class:;
 
 	rq->core->core_pick_seq = rq->core->core_task_seq;
 	next = rq->core_pick;
+
+	/* Something should have been selected for current CPU */
+	WARN_ON_ONCE(!next);
+
 	rq->core_sched_seq = rq->core->core_pick_seq;
 
 	/*
@@ -4556,7 +4569,7 @@ next_class:;
 	 * their task. This ensures there is no inter-sibling overlap between
 	 * non-matching user state.
 	 */
-	for_each_cpu(i, smt_mask) {
+	for_each_cpu(i, &select_mask) {
 		struct rq *rq_i = cpu_rq(i);
 
 		WARN_ON_ONCE(!rq_i->core_pick);
@@ -4577,6 +4590,16 @@ next_class:;
 	}
 
 done:
+	/*
+	 * If we reset a sibling's core_pick, make sure that we picked a task
+	 * for it, this is because we might have reset it though it was set to
+	 * something by another selector. In this case we cannot leave it as
+	 * NULL and should have found something for it.
+	 */
+	for_each_cpu(i, &select_mask) {
+		WARN_ON_ONCE(!cpu_rq(i)->core_pick);
+	}
+
 	set_next_task(rq, next);
 	return next;
 }
