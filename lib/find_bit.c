@@ -19,7 +19,14 @@
 
 #if !defined(find_next_bit) || !defined(find_next_zero_bit) ||			\
 	!defined(find_next_bit_le) || !defined(find_next_zero_bit_le) ||	\
-	!defined(find_next_and_bit)
+	!defined(find_next_and_bit) || !defined(find_next_or_bit)
+
+typedef enum {
+	FNB_AND = 0,
+	FNB_OR  = 1,
+	FNB_MAX = 2
+} fnb_bwops_t;
+
 /*
  * This is a common helper function for find_next_bit, find_next_zero_bit, and
  * find_next_and_bit. The differences are:
@@ -29,7 +36,8 @@
  */
 static unsigned long _find_next_bit(const unsigned long *addr1,
 		const unsigned long *addr2, unsigned long nbits,
-		unsigned long start, unsigned long invert, unsigned long le)
+		unsigned long start, unsigned long invert,
+		fnb_bwops_t type, unsigned long le)
 {
 	unsigned long tmp, mask;
 
@@ -37,8 +45,16 @@ static unsigned long _find_next_bit(const unsigned long *addr1,
 		return nbits;
 
 	tmp = addr1[start / BITS_PER_LONG];
-	if (addr2)
-		tmp &= addr2[start / BITS_PER_LONG];
+	if (addr2) {
+		switch (type) {
+			case FNB_AND:
+				tmp &= addr2[start / BITS_PER_LONG];
+				break;
+			case FNB_OR:
+				tmp |= addr2[start / BITS_PER_LONG];
+				break;
+		}
+	}
 	tmp ^= invert;
 
 	/* Handle 1st word. */
@@ -56,8 +72,16 @@ static unsigned long _find_next_bit(const unsigned long *addr1,
 			return nbits;
 
 		tmp = addr1[start / BITS_PER_LONG];
-		if (addr2)
-			tmp &= addr2[start / BITS_PER_LONG];
+		if (addr2) {
+			switch (type) {
+			case FNB_AND:
+				tmp &= addr2[start / BITS_PER_LONG];
+				break;
+			case FNB_OR:
+				tmp |= addr2[start / BITS_PER_LONG];
+				break;
+			}
+		}
 		tmp ^= invert;
 	}
 
@@ -75,7 +99,7 @@ static unsigned long _find_next_bit(const unsigned long *addr1,
 unsigned long find_next_bit(const unsigned long *addr, unsigned long size,
 			    unsigned long offset)
 {
-	return _find_next_bit(addr, NULL, size, offset, 0UL, 0);
+	return _find_next_bit(addr, NULL, size, offset, 0UL, FNB_AND, 0);
 }
 EXPORT_SYMBOL(find_next_bit);
 #endif
@@ -84,7 +108,7 @@ EXPORT_SYMBOL(find_next_bit);
 unsigned long find_next_zero_bit(const unsigned long *addr, unsigned long size,
 				 unsigned long offset)
 {
-	return _find_next_bit(addr, NULL, size, offset, ~0UL, 0);
+	return _find_next_bit(addr, NULL, size, offset, ~0UL, FNB_AND, 0);
 }
 EXPORT_SYMBOL(find_next_zero_bit);
 #endif
@@ -94,9 +118,19 @@ unsigned long find_next_and_bit(const unsigned long *addr1,
 		const unsigned long *addr2, unsigned long size,
 		unsigned long offset)
 {
-	return _find_next_bit(addr1, addr2, size, offset, 0UL, 0);
+	return _find_next_bit(addr1, addr2, size, offset, 0UL, FNB_AND, 0);
 }
 EXPORT_SYMBOL(find_next_and_bit);
+#endif
+
+#if !defined(find_next_or_bit)
+unsigned long find_next_or_bit(const unsigned long *addr1,
+		const unsigned long *addr2, unsigned long size,
+		unsigned long offset)
+{
+	return _find_next_bit(addr1, addr2, size, offset, 0UL, FNB_OR, 0);
+}
+EXPORT_SYMBOL(find_next_or_bit);
 #endif
 
 #ifndef find_first_bit
@@ -161,7 +195,7 @@ EXPORT_SYMBOL(find_last_bit);
 unsigned long find_next_zero_bit_le(const void *addr, unsigned
 		long size, unsigned long offset)
 {
-	return _find_next_bit(addr, NULL, size, offset, ~0UL, 1);
+	return _find_next_bit(addr, NULL, size, offset, ~0UL, FNB_AND, 1);
 }
 EXPORT_SYMBOL(find_next_zero_bit_le);
 #endif
@@ -170,7 +204,7 @@ EXPORT_SYMBOL(find_next_zero_bit_le);
 unsigned long find_next_bit_le(const void *addr, unsigned
 		long size, unsigned long offset)
 {
-	return _find_next_bit(addr, NULL, size, offset, 0UL, 1);
+	return _find_next_bit(addr, NULL, size, offset, 0UL, FNB_AND, 1);
 }
 EXPORT_SYMBOL(find_next_bit_le);
 #endif
