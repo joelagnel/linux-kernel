@@ -207,6 +207,10 @@ static inline int cpumask_any_and_distribute(const struct cpumask *src1p,
 	for ((cpu) = 0; (cpu) < 1; (cpu)++, (void)mask, (void)(start))
 #define for_each_cpu_and(cpu, mask1, mask2)	\
 	for ((cpu) = 0; (cpu) < 1; (cpu)++, (void)mask1, (void)mask2)
+#define for_each_cpu_or(cpu, mask1, mask2)	\
+	for ((cpu) = 0; (cpu) < 1; (cpu)++, (void)mask1, (void)mask2)
+#define for_each_cpu_wrap_or(cpu, mask1, mask2, start)	\
+	for ((cpu) = 0; (cpu) < 1; (cpu)++, (void)mask1, (void)mask2, (void)(start))
 #else
 /**
  * cpumask_first - get the first cpu in a cpumask
@@ -248,6 +252,7 @@ static inline unsigned int cpumask_next_zero(int n, const struct cpumask *srcp)
 }
 
 int cpumask_next_and(int n, const struct cpumask *, const struct cpumask *);
+int cpumask_next_or(int n, const struct cpumask *, const struct cpumask *);
 int cpumask_any_but(const struct cpumask *mask, unsigned int cpu);
 unsigned int cpumask_local_spread(unsigned int i, int node);
 int cpumask_any_and_distribute(const struct cpumask *src1p,
@@ -278,6 +283,8 @@ int cpumask_any_and_distribute(const struct cpumask *src1p,
 		(cpu) < nr_cpu_ids;)
 
 extern int cpumask_next_wrap(int n, const struct cpumask *mask, int start, bool wrap);
+extern int cpumask_next_wrap_or(int n, const struct cpumask *mask1,
+				 const struct cpumask *mask2, int start, bool wrap);
 
 /**
  * for_each_cpu_wrap - iterate over every cpu in a mask, starting at a specified location
@@ -293,6 +300,22 @@ extern int cpumask_next_wrap(int n, const struct cpumask *mask, int start, bool 
 	for ((cpu) = cpumask_next_wrap((start)-1, (mask), (start), false);	\
 	     (cpu) < nr_cpumask_bits;						\
 	     (cpu) = cpumask_next_wrap((cpu), (mask), (start), true))
+
+/**
+ * for_each_cpu_wrap_or - iterate over every cpu in both masks, starting at a specified location
+ * @cpu: the (optionally unsigned) integer iterator
+ * @mask1: the first cpumask pointer
+ * @mask2: the second cpumask pointer
+ * @start: the start location
+ *
+ * The implementation does not assume any bit both masks are set (including @start).
+ *
+ * After the loop, cpu is >= nr_cpu_ids.
+ */
+#define for_each_cpu_wrap_or(cpu, mask1, mask2, start)					\
+	for ((cpu) = cpumask_next_wrap_or((start)-1, (mask1), (mask2), (start), false);	\
+	     (cpu) < nr_cpumask_bits;						\
+	     (cpu) = cpumask_next_wrap_or((cpu), (mask1), (mask2), (start), true))
 
 /**
  * for_each_cpu_and - iterate over every cpu in both masks
@@ -311,6 +334,25 @@ extern int cpumask_next_wrap(int n, const struct cpumask *mask, int start, bool 
 #define for_each_cpu_and(cpu, mask1, mask2)				\
 	for ((cpu) = -1;						\
 		(cpu) = cpumask_next_and((cpu), (mask1), (mask2)),	\
+		(cpu) < nr_cpu_ids;)
+
+/**
+ * for_each_cpu_or - iterate over every cpu in both masks
+ * @cpu: the (optionally unsigned) integer iterator
+ * @mask1: the first cpumask pointer
+ * @mask2: the second cpumask pointer
+ *
+ * This saves a temporary CPU mask in many places.  It is equivalent to:
+ *	struct cpumask tmp;
+ *	cpumask_and(&tmp, &mask1, &mask2);
+ *	for_each_cpu(cpu, &tmp)
+ *		...
+ *
+ * After the loop, cpu is >= nr_cpu_ids.
+ */
+#define for_each_cpu_or(cpu, mask1, mask2)				\
+	for ((cpu) = -1;						\
+		(cpu) = cpumask_next_or((cpu), (mask1), (mask2)),	\
 		(cpu) < nr_cpu_ids;)
 #endif /* SMP */
 

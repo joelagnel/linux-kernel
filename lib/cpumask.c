@@ -43,6 +43,25 @@ int cpumask_next_and(int n, const struct cpumask *src1p,
 EXPORT_SYMBOL(cpumask_next_and);
 
 /**
+ * cpumask_next_or - get the next cpu in *src1p | *src2p
+ * @n: the cpu prior to the place to search (ie. return will be > @n)
+ * @src1p: the first cpumask pointer
+ * @src2p: the second cpumask pointer
+ *
+ * Returns >= nr_cpu_ids if no further cpus set in both.
+ */
+int cpumask_next_or(int n, const struct cpumask *src1p,
+		    const struct cpumask *src2p)
+{
+	/* -1 is a legal arg here. */
+	if (n != -1)
+		cpumask_check(n);
+	return find_next_or_bit(cpumask_bits(src1p), cpumask_bits(src2p),
+		nr_cpumask_bits, n + 1);
+}
+EXPORT_SYMBOL(cpumask_next_or);
+
+/**
  * cpumask_any_but - return a "random" in a cpumask, but not this one.
  * @mask: the cpumask to search
  * @cpu: the cpu to ignore.
@@ -93,6 +112,40 @@ again:
 	return next;
 }
 EXPORT_SYMBOL(cpumask_next_wrap);
+
+/**
+ * cpumask_next_wrap_or - helper to implement for_each_cpu_wrap_or
+ * @n: the cpu prior to the place to search
+ * @mask1: first cpumask pointer
+ * @mask2: second cpumask pointer
+ * @start: the start point of the iteration
+ * @wrap: assume @n crossing @start terminates the iteration
+ *
+ * Returns >= nr_cpu_ids on completion
+ *
+ * Note: the @wrap argument is required for the start condition when
+ * we cannot assume @start is set in @mask.
+ */
+int cpumask_next_wrap_or(int n, const struct cpumask *mask1, const struct cpumask *mask2,
+			   int start, bool wrap)
+{
+	int next;
+
+again:
+	next = cpumask_next_or(n, mask1, mask2);
+
+	if (wrap && n < start && next >= start) {
+		return nr_cpumask_bits;
+
+	} else if (next >= nr_cpumask_bits) {
+		wrap = true;
+		n = -1;
+		goto again;
+	}
+
+	return next;
+}
+EXPORT_SYMBOL(cpumask_next_wrap_or);
 
 /* These are not inline because of header tangles. */
 #ifdef CONFIG_CPUMASK_OFFSTACK
