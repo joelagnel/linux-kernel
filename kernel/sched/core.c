@@ -4663,7 +4663,7 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
 
 	/* reset state */
 	rq->core->core_cookie = 0UL;
-	for_each_cpu(i, smt_mask) {
+	for_each_cpu_or(i, smt_mask, cpumask_of(cpu)) {
 		struct rq *rq_i = cpu_rq(i);
 
 		trace_printk("CPU %d is in smt_mask, resetting\n", i);
@@ -4685,7 +4685,7 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
 	 */
 	for_each_class(class) {
 again:
-		for_each_cpu_wrap(i, smt_mask, cpu) {
+		for_each_cpu_wrap_or(i, smt_mask, cpumask_of(cpu), cpu) {
 			struct rq *rq_i = cpu_rq(i);
 			struct task_struct *p;
 
@@ -4774,6 +4774,9 @@ next_class:;
 	rq->core->core_pick_seq = rq->core->core_task_seq;
 	next = rq->core_pick;
 	rq->core_sched_seq = rq->core->core_pick_seq;
+
+	/* Something should have been selected for current CPU */
+	WARN_ON_ONCE(!next);
 	trace_printk("picked: %s/%d %lx\n", next->comm, next->pid, next->core_cookie);
 
 	/*
@@ -4784,7 +4787,7 @@ next_class:;
 	 * their task. This ensures there is no inter-sibling overlap between
 	 * non-matching user state.
 	 */
-	for_each_cpu(i, smt_mask) {
+	for_each_cpu_or(i, smt_mask, cpumask_of(cpu)) {
 		struct rq *rq_i = cpu_rq(i);
 
 		WARN_ON_ONCE(!rq_i->core_pick);
