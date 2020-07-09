@@ -4613,6 +4613,7 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
 	const struct sched_class *class;
 	const struct cpumask *smt_mask;
 	int i, j, cpu, occ = 0;
+	int smt_weight;
 	bool need_sync;
 
 	if (!sched_core_enabled(rq))
@@ -4647,6 +4648,9 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
 
 	cpu = cpu_of(rq);
 	smt_mask = cpu_smt_mask(cpu);
+
+retry_select:
+	smt_weight = cpumask_weight(smt_mask);
 
 	/*
 	 * core->core_task_seq, rq->core_pick_seq, rq->core_sched_seq
@@ -4690,6 +4694,14 @@ again:
 		for_each_cpu_wrap_or(i, smt_mask, cpumask_of(cpu), cpu) {
 			struct rq *rq_i = cpu_rq(i);
 			struct task_struct *p;
+
+			/*
+			 * During hotplug online a sibling can be added in
+			 * the smt_mask * while we are here. If so, we would
+			 * need to restart selection by resetting all over.
+			 */
+			if (unlikely(smt_weight != cpumask_weight(smt_mask)))
+				goto retry_select;
 
 			if (rq_i->core_pick)
 				continue;
@@ -4790,7 +4802,15 @@ next_class:;
 	for_each_cpu_or(i, smt_mask, cpumask_of(cpu)) {
 		struct rq *rq_i = cpu_rq(i);
 
-		WARN_ON_ONCE(!rq_i->core_pick);
+		WARN_ON_ONCE(smt_weight == cpumask_weight(smt_mask) && !rq->core_pick);
+
+		/*
+		 * During hotplug online a sibling can be added in the smt_mask
+		 * while we are here. We might have missed picking a task for it.
+		 * Ignore it now as a schedule on that sibling will correct itself.
+		 */
+		if (!rq_i->core_pick)
+			continue;
 
 		if (is_idle_task(rq_i->core_pick) && rq_i->nr_running)
 			rq_i->core_forceidle = true;
