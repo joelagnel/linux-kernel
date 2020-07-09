@@ -1036,6 +1036,7 @@ struct rq {
 	/* per rq */
 	struct rq		*core;
 	struct task_struct	*core_pick;
+	unsigned int		core_pick_seq;
 	unsigned int		core_enabled;
 	unsigned int		core_sched_seq;
 	struct rb_root		core_tree;
@@ -1045,7 +1046,6 @@ struct rq {
 
 	/* shared state */
 	unsigned int		core_task_seq;
-	unsigned int		core_pick_seq;
 	unsigned long		core_cookie;
 	unsigned int		core_unsafe_nest;
 #endif
