@@ -4678,6 +4678,13 @@
 
 	sbni=		[NET] Granch SBNI12 leased line adapter
 
+	sched_core_protect_kernel=
+			[SCHED_CORE] Pause SMT siblings of a core running in
+			user mode, if at least one of the siblings of the core
+			is running in kernel mode. This is to guarantee that
+			kernel data is not leaked to tasks which are not trusted
+			by the kernel.
+
 	sched_debug	[KNL] Enables verbose scheduler debug messages.
 
 	schedstats=	[KNL,X86] Enable or disable scheduled statistics.

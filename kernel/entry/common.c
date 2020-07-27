@@ -137,6 +137,26 @@ static __always_inline void exit_to_user_mode(void)
 /* Workaround to allow gradual conversion of architecture code */
 void __weak arch_do_signal(struct pt_regs *regs) { }
 
+unsigned long exit_to_user_get_work(void)
+{
+	unsigned long ti_work = READ_ONCE(current_thread_info()->flags);
+
+	if (IS_ENABLED(CONFIG_SCHED_CORE) && !sched_core_kernel_protected())
+		return ti_work;
+
+#ifdef CONFIG_SCHED_CORE
+	ti_work &= EXIT_TO_USER_MODE_WORK;
+	if ((ti_work & _TIF_UNSAFE_RET) == ti_work) {
+		sched_core_unsafe_exit();
+		if (sched_core_wait_till_safe(EXIT_TO_USER_MODE_WORK)) {
+			sched_core_unsafe_enter(); /* not exiting to user yet. */
+		}
+	}
+
+	return READ_ONCE(current_thread_info()->flags);
+#endif
+}
+
 static unsigned long exit_to_user_mode_loop(struct pt_regs *regs,
 					    unsigned long ti_work)
 {
@@ -175,7 +195,7 @@ static unsigned long exit_to_user_mode_loop(struct pt_regs *regs,
 		 * enabled above.
 		 */
 		local_irq_disable_exit_to_user();
-		ti_work = READ_ONCE(current_thread_info()->flags);
+		ti_work = exit_to_user_get_work();
 	}
 
 	/* Return the latest work state for arch_exit_to_user_mode() */
@@ -184,9 +204,10 @@ static unsigned long exit_to_user_mode_loop(struct pt_regs *regs,
 
 static void exit_to_user_mode_prepare(struct pt_regs *regs)
 {
-	unsigned long ti_work = READ_ONCE(current_thread_info()->flags);
+	unsigned long ti_work;
 
 	lockdep_assert_irqs_disabled();
+	ti_work = exit_to_user_get_work();
 
 	if (unlikely(ti_work & EXIT_TO_USER_MODE_WORK))
 		ti_work = exit_to_user_mode_loop(regs, ti_work);
