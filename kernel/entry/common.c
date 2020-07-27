@@ -28,6 +28,7 @@ static __always_inline void enter_from_user_mode(struct pt_regs *regs)
 
 	instrumentation_begin();
 	trace_hardirqs_off_finish();
+	sched_core_unsafe_enter();
 	instrumentation_end();
 }
 
@@ -111,59 +112,84 @@ static __always_inline void exit_to_user_mode(void)
 /* Workaround to allow gradual conversion of architecture code */
 void __weak arch_do_signal(struct pt_regs *regs) { }
 
-static unsigned long exit_to_user_mode_loop(struct pt_regs *regs,
-					    unsigned long ti_work)
+static inline bool exit_to_user_mode_work_pending(unsigned long ti_work)
 {
+	return (ti_work & EXIT_TO_USER_MODE_WORK);
+}
+
+static inline void exit_to_user_mode_work(struct pt_regs *regs,
+					  unsigned long ti_work)
+{
+
+	local_irq_enable_exit_to_user(ti_work);
+
+	if (ti_work & _TIF_NEED_RESCHED)
+		schedule();
+
+	if (ti_work & _TIF_UPROBE)
+		uprobe_notify_resume(regs);
+
+	if (ti_work & _TIF_PATCH_PENDING)
+		klp_update_patch_state(current);
+
+	if (ti_work & _TIF_SIGPENDING)
+		arch_do_signal(regs);
+
+	if (ti_work & _TIF_NOTIFY_RESUME) {
+		clear_thread_flag(TIF_NOTIFY_RESUME);
+		tracehook_notify_resume(regs);
+		rseq_handle_notify_resume(NULL, regs);
+	}
+
+	/* Architecture specific TIF work */
+	arch_exit_to_user_mode_work(regs, ti_work);
+
+	local_irq_disable_exit_to_user();
+}
+
+static unsigned long exit_to_user_mode_loop(struct pt_regs *regs)
+{
+	unsigned long ti_work = READ_ONCE(current_thread_info()->flags);
+
 	/*
 	 * Before returning to user space ensure that all pending work
 	 * items have been completed.
 	 */
-	while (ti_work & EXIT_TO_USER_MODE_WORK) {
+	while (1) {
+		/* Both interrupts and preemption could be enabled here. */
+		if (exit_to_user_mode_work_pending(ti_work))
+		    exit_to_user_mode_work(regs, ti_work);
 
-		local_irq_enable_exit_to_user(ti_work);
-
-		if (ti_work & _TIF_NEED_RESCHED)
-			schedule();
-
-		if (ti_work & _TIF_UPROBE)
-			uprobe_notify_resume(regs);
-
-		if (ti_work & _TIF_PATCH_PENDING)
-			klp_update_patch_state(current);
-
-		if (ti_work & _TIF_SIGPENDING)
-			arch_do_signal(regs);
-
-		if (ti_work & _TIF_NOTIFY_RESUME) {
-			clear_thread_flag(TIF_NOTIFY_RESUME);
-			tracehook_notify_resume(regs);
-			rseq_handle_notify_resume(NULL, regs);
-		}
-
-		/* Architecture specific TIF work */
-		arch_exit_to_user_mode_work(regs, ti_work);
+		/* Interrupts may be reenabled with preemption disabled. */
+		sched_core_unsafe_exit_wait(EXIT_TO_USER_MODE_WORK);
 
 		/*
-		 * Disable interrupts and reevaluate the work flags as they
-		 * might have changed while interrupts and preemption was
-		 * enabled above.
+		 * Reevaluate the work flags as they might have changed
+		 * while interrupts and preemption were enabled.
 		 */
-		local_irq_disable_exit_to_user();
 		ti_work = READ_ONCE(current_thread_info()->flags);
+
+		/*
+		 * We may be switching out to another task in kernel mode. That
+		 * process is responsible for exiting the "unsafe" kernel mode
+		 * when it returns to user or guest.
+		 */
+		if (exit_to_user_mode_work_pending(ti_work))
+			sched_core_unsafe_enter();
+		else
+			break;
 	}
 
-	/* Return the latest work state for arch_exit_to_user_mode() */
-	return ti_work;
+    return ti_work;
 }
 
 static void exit_to_user_mode_prepare(struct pt_regs *regs)
 {
-	unsigned long ti_work = READ_ONCE(current_thread_info()->flags);
+	unsigned long ti_work;
 
 	lockdep_assert_irqs_disabled();
 
-	if (unlikely(ti_work & EXIT_TO_USER_MODE_WORK))
-		ti_work = exit_to_user_mode_loop(regs, ti_work);
+	ti_work = exit_to_user_mode_loop(regs);
 
 	arch_exit_to_user_mode_prepare(regs, ti_work);
 
