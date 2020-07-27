@@ -2054,4 +2054,16 @@ int sched_trace_rq_cpu(struct rq *rq);
 
 const struct cpumask *sched_trace_rd_span(struct root_domain *rd);
 
+#ifdef CONFIG_SCHED_CORE
+void sched_core_unsafe_enter(void);
+void sched_core_unsafe_exit(void);
+void sched_core_unsafe_exit_wait(unsigned long ti_check);
+void sched_core_wait_till_safe(unsigned long ti_check);
+#else
+#define sched_core_unsafe_enter(ignore) do { } while (0)
+#define sched_core_unsafe_exit(ignore) do { } while (0)
+#define sched_core_wait_till_safe(ignore) do { } while (0)
+#define sched_core_unsafe_exit_wait(ignore) do { } while (0)
+#endif
+
 #endif
