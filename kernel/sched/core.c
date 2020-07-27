@@ -4695,9 +4695,6 @@ static void sched_core_balance(struct rq *rq)
 	rcu_read_lock_sched();
 	raw_spin_unlock_irq(rq_lockp(rq));
 	for_each_domain(cpu, sd) {
-		if (!(sd->flags & SD_LOAD_BALANCE))
-			break;
-
 		if (need_resched())
 			break;
 
