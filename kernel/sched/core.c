@@ -7894,11 +7894,15 @@ static void sched_change_group(struct task_struct *tsk, int type)
 	tg = autogroup_task_group(tsk, tg);
 
 #ifdef CONFIG_SCHED_CORE
-	if ((unsigned long)tsk->sched_task_group == tsk->core_cookie)
+	if ((unsigned long)tsk->sched_task_group == tsk->core_cookie) {
 		tsk->core_cookie = 0UL;
+		clear_tsk_thread_flag(tsk, TIF_CORE_TAGGED);
+	}
 
-	if (tg->tagged /* && !tsk->core_cookie ? */)
+	if (tg->tagged /* && !tsk->core_cookie ? */) {
 		tsk->core_cookie = (unsigned long)tg;
+		set_tsk_thread_flag(tsk, TIF_CORE_TAGGED);
+	}
 #endif
 
 	tsk->sched_task_group = tg;
@@ -8611,6 +8615,10 @@ static int __sched_write_tag(void *data)
 		    p->core_cookie && task_on_rq_queued(p))
 			sched_core_enqueue(task_rq(p), p);
 
+		if (p->core_cookie)
+			set_tsk_thread_flag(p, TIF_CORE_TAGGED);
+		else
+			clear_tsk_thread_flag(p, TIF_CORE_TAGGED);
 	}
 	css_task_iter_end(&it);
 
