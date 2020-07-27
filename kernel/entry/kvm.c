@@ -3,6 +3,15 @@
 #include <linux/entry-kvm.h>
 #include <linux/kvm_host.h>
 
+static bool vcpu_thread_tagged(unsigned long ti_work)
+{
+#ifndef _TIF_CORE_TAGGED
+	return false;
+#else
+	return (ti_work & _TIF_CORE_TAGGED);
+#endif
+}
+
 static int xfer_to_guest_mode_work(struct kvm_vcpu *vcpu, unsigned long ti_work)
 {
 	do {
@@ -20,6 +29,9 @@ static int xfer_to_guest_mode_work(struct kvm_vcpu *vcpu, unsigned long ti_work)
 			clear_thread_flag(TIF_NOTIFY_RESUME);
 			tracehook_notify_resume(NULL);
 		}
+
+		if (vcpu_thread_tagged(ti_work))
+			sched_core_wait_till_safe();
 
 		ret = arch_xfer_to_guest_mode_handle_work(vcpu, ti_work);
 		if (ret)
