@@ -24,6 +24,17 @@
 static DEFINE_PER_CPU(struct llist_head, raised_list);
 static DEFINE_PER_CPU(struct llist_head, lazy_list);
 
+bool irq_work_pending(struct irq_work *work)
+{
+	/*
+	 * Provide ordering to callers who may read other stuff
+	 * after the atomic read (MP-pattern).
+	 */
+	bool ret = atomic_read_acquire(&work->flags) & IRQ_WORK_PENDING;
+
+	return ret;
+}
+
 /*
  * Claim the entry so that no one else will poke at it.
  */
