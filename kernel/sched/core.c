@@ -4353,6 +4353,15 @@ static inline bool cookie_match(struct task_struct *a, struct task_struct *b)
 }
 
 /*
+ * Handler to attempt to enter kernel. It does nothing because the exit to
+ * usermode or guest mode will do the actual work (of waiting if needed).
+ */
+static void sched_core_irq_work(struct irq_work *work)
+{
+	return;
+}
+
+/*
  * Helper function to pause the caller's hyperthread until the core exits the
  * core-wide unsafe state. Obviously the CPU calling this function should not be
  * responsible for the core being in the core-wide IRQ state otherwise it will
@@ -4411,17 +4420,17 @@ void sched_core_unsafe_enter(void)
 	if (WARN_ON_ONCE(rq->core->core_unsafe_nest == UINT_MAX))
 		goto unlock;
 
-	if (rq->core_pause_pending) {
+	if (irq_work_pending(&rq->core_irq_work)) {
 		/*
-		 * Do nothing more since we are in a 'reschedule IPI' sent from
-		 * another sibling. That sibling would have sent IPIs to all of
-		 * the HTs.
+		 * Do nothing more since we are in an IPI sent from another
+		 * sibling to enforce safety. That sibling would have sent IPIs
+		 * to all of the HTs.
 		 */
 		goto unlock;
 	}
 
 	/*
-	 * If we are not the first ones on the core to enter core-wide IRQ
+	 * If we are not the first ones on the core to enter core-wide unsafe
 	 * state, do nothing.
 	 */
 	if (rq->core->core_unsafe_nest > 1)
@@ -4444,11 +4453,12 @@ void sched_core_unsafe_enter(void)
 		if (!srq->curr->core_cookie && !srq->core_pick)
 			continue;
 
-		/* IPI only if previous IPI was not pending. */
-		if (!srq->core_pause_pending) {
-			srq->core_pause_pending = 1;
-			smp_send_reschedule(i);
-		}
+		/*
+		 * Force sibling into the kernel by IPI. If work was already
+		 * pending, no new IPIs are sent. This is Ok since the receiver
+		 * would already be in the kernel, or on its way to it.
+		 */
+		irq_work_queue_on(&srq->core_irq_work, i);
 	}
 unlock:
 	raw_spin_unlock(rq_lockp(rq));
@@ -4462,7 +4472,6 @@ void sched_core_unsafe_exit(void)
 {
 	int cpu = smp_processor_id();
 	struct rq *rq = cpu_rq(cpu);
-	bool wait_here = false;
 	unsigned int nest;
 
 	/* Do nothing if core-sched disabled. */
@@ -7439,6 +7448,7 @@ int sched_cpu_starting(unsigned int cpu)
 		rq = cpu_rq(i);
 		if (rq->core && rq->core == rq)
 			core_rq = rq;
+		init_irq_work(&rq->core_irq_work, sched_core_irq_work);
 	}
 
 	if (!core_rq)

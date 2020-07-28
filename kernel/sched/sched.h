@@ -1040,7 +1040,7 @@ struct rq {
 	unsigned int		core_sched_seq;
 	struct rb_root		core_tree;
 	unsigned char		core_forceidle;
-	unsigned char		core_pause_pending;
+	struct irq_work		core_irq_work; /* To force HT into kernel */
 	unsigned int		core_this_unsafe_nest;
 
 	/* shared state */
