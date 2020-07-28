@@ -24,6 +24,15 @@
 static DEFINE_PER_CPU(struct llist_head, raised_list);
 static DEFINE_PER_CPU(struct llist_head, lazy_list);
 
+bool irq_work_pending(struct irq_work *work)
+{
+	bool ret = atomic_read(&work->flags) & IRQ_WORK_PENDING;
+
+	smp_mb__after_atomic();
+
+	return ret;
+}
+
 /*
  * Claim the entry so that no one else will poke at it.
  */
