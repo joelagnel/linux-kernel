@@ -4411,7 +4411,7 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
 	int i, j, cpu, occ = 0;
 	bool need_sync;
 
-	if (!sched_core_enabled(rq))
+	if (!sched_core_enabled(rq) || cpu_is_offline(cpu_of(rq)))
 		return __pick_next_task(rq, prev, rf);
 
 	/*
