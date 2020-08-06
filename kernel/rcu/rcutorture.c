@@ -1599,8 +1599,8 @@ rcu_torture_stats_print(void)
 			splatted = true;
 		}
 		show_rcu_gp_kthreads();
-		rcu_ftrace_dump(DUMP_ALL);
 	}
+	rcu_ftrace_dump(DUMP_ALL);
 	rtcv_snap = rcu_torture_current_version;
 }
 
