@@ -2305,6 +2305,13 @@ config TEST_HMM
 	  Say M here if you want to build the HMM test module.
 	  Doing so will allow you to run tools/testing/selftest/vm/hmm-tests.
 
+config TEST_CORESCHED
+	bool "Test core scheduling invariants"
+	depends on HAVE_CONTEXT_TRACKING && SCHED_CORE
+	select CONTEXT_TRACKING
+	help
+	  Test the core scheduling feature to make sure it is functioning
+	  properly.
 	  If unsure, say N.
 
 endif # RUNTIME_TESTING_MENU
