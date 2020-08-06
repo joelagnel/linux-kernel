@@ -30,7 +30,9 @@ static __always_inline void enter_from_user_mode(struct pt_regs *regs)
 	trace_hardirqs_off_finish();
 	instrumentation_end();
 
+	trace_printk("unsafe enter\n");
 	sched_core_unsafe_enter();
+	trace_printk("leaving unsafe enter\n");
 }
 
 static inline void syscall_enter_audit(struct pt_regs *regs, long syscall)
@@ -74,6 +76,7 @@ noinstr long syscall_enter_from_user_mode(struct pt_regs *regs, long syscall)
 {
 	unsigned long ti_work;
 
+	trace_printk("syscall: Enter from user\n");
 	enter_from_user_mode(regs);
 	instrumentation_begin();
 
@@ -102,9 +105,17 @@ static __always_inline void exit_to_user_mode(void)
 {
 	sched_core_unsafe_exit();
 
-	/* XXX: Move the if () into the wait function. */
-	if (current->core_cookie)
+	/*
+	 * TIF_CORE_SCHED needs to be made dynamic, but until then the while
+	 * loop does not like him...
+	 */
+	if (current->core_cookie) {
+		trace_printk("Thread tagged, waiting till safe.\n");
 		sched_core_wait_till_safe();
+		trace_printk("Exiting wait\n");
+	} else {
+		trace_printk("Return to user did not find thread tagged.\n");
+	}
 
 	instrumentation_begin();
 	trace_hardirqs_on_prepare();
@@ -126,6 +137,7 @@ static unsigned long exit_to_user_mode_loop(struct pt_regs *regs,
 	 * Before returning to user space ensure that all pending work
 	 * items have been completed.
 	 */
+	trace_printk("Entering while\n");
 	while (ti_work & EXIT_TO_USER_MODE_WORK) {
 
 		local_irq_enable_exit_to_user(ti_work);
@@ -159,6 +171,7 @@ static unsigned long exit_to_user_mode_loop(struct pt_regs *regs,
 		local_irq_disable_exit_to_user();
 		ti_work = READ_ONCE(current_thread_info()->flags);
 	}
+	trace_printk("Exit while\n");
 
 	/* Return the latest work state for arch_exit_to_user_mode() */
 	return ti_work;
@@ -248,11 +261,14 @@ __visible noinstr void syscall_exit_to_user_mode(struct pt_regs *regs)
 	local_irq_disable_exit_to_user();
 	exit_to_user_mode_prepare(regs);
 	instrumentation_end();
+	trace_printk("syscall: Entering exit_to_user_mode\n");
 	exit_to_user_mode();
+	trace_printk("syscall: Leaving exit_to_user_mode\n");
 }
 
 noinstr void irqentry_enter_from_user_mode(struct pt_regs *regs)
 {
+	trace_printk("irq: Enter from user\n");
 	enter_from_user_mode(regs);
 }
 
@@ -261,7 +277,9 @@ noinstr void irqentry_exit_to_user_mode(struct pt_regs *regs)
 	instrumentation_begin();
 	exit_to_user_mode_prepare(regs);
 	instrumentation_end();
+	trace_printk("syscall: Entering exit_to_user_mode\n");
 	exit_to_user_mode();
+	trace_printk("syscall: Leaving exit_to_user_mode\n");
 }
 
 irqentry_state_t noinstr irqentry_enter(struct pt_regs *regs)

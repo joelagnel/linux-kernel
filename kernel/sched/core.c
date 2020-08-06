@@ -4358,6 +4358,8 @@ static inline bool cookie_match(struct task_struct *a, struct task_struct *b)
  */
 static void sched_core_irq_work(struct irq_work *work)
 {
+	trace_printk("Entering irq work hnd\n");
+	trace_printk("Exit irq work hnd\n");
 	return;
 }
 
@@ -4376,6 +4378,7 @@ void sched_core_wait_till_safe(void)
 	cpu = smp_processor_id();
 	rq = cpu_rq(cpu);
 
+	trace_printk("Enter wait\n");
 	/*
 	 * Wait till the core of this HT is not in a core-wide IRQ state.
 	 *
@@ -4383,6 +4386,7 @@ void sched_core_wait_till_safe(void)
 	 */
 	while (smp_load_acquire(&rq->core->core_unsafe_nest) > 0 && loops++ < 100000000)
 		cpu_relax();
+	trace_printk("Exit wait\n");
 
 	if (WARN_ON_ONCE(loops >= 100000000))
 		panic("excessive spinning\n");
@@ -4405,6 +4409,11 @@ void sched_core_unsafe_enter(void)
 
 	/* Count unsafe_enter() calls received without unsafe_exit() on this CPU. */
 	rq->core_this_unsafe_nest++;
+	trace_printk("enter: unsafe this nest now: %d\n", rq->core_this_unsafe_nest);
+	if (rq->core_this_unsafe_nest < 0) {
+		trace_printk("issue stop\n");
+		tracing_stop();
+	}
 
 	/* If not outermost unsafe_enter(), do nothing. */
 	if (WARN_ON_ONCE(rq->core->core_this_unsafe_nest == UINT_MAX) ||
@@ -4416,6 +4425,11 @@ void sched_core_unsafe_enter(void)
 
 	/* Contribute this CPU's unsafe_enter() to core-wide unsafe_enter() count. */
 	WRITE_ONCE(rq->core->core_unsafe_nest, rq->core->core_unsafe_nest + 1);
+	trace_printk("enter: unsafe nest now: %d\n", rq->core->core_unsafe_nest);
+	if (rq->core->core_unsafe_nest < 0) {
+		trace_printk("issue stop core-wide\n");
+		tracing_stop();
+	}
 
 	if (WARN_ON_ONCE(rq->core->core_unsafe_nest == UINT_MAX))
 		goto unlock;
@@ -4458,6 +4472,7 @@ void sched_core_unsafe_enter(void)
 		 * pending, no new IPIs are sent. This is Ok since the receiver
 		 * would already be in the kernel, or on its way to it.
 		 */
+		trace_printk("Queuing irq_work on %d\n", i);
 		irq_work_queue_on(&srq->core_irq_work, i);
 	}
 unlock:
@@ -4486,6 +4501,11 @@ void sched_core_unsafe_exit(void)
 		return;
 
 	rq->core_this_unsafe_nest--;
+	trace_printk("exit: unsafe this nest now: %d\n", rq->core_this_unsafe_nest);
+	if (rq->core_this_unsafe_nest < 0) {
+		trace_printk("issue stop\n");
+		tracing_stop();
+	}
 
 	/* If not outermost on this CPU, do nothing. */
 	if (WARN_ON_ONCE(rq->core_this_unsafe_nest == UINT_MAX) ||
@@ -4502,6 +4522,7 @@ void sched_core_unsafe_exit(void)
 
 	/* Pair with smp_load_acquire() in sched_core_sibling_irq_pause(). */
 	smp_store_release(&rq->core->core_unsafe_nest, nest - 1);
+	trace_printk("exit: unsafe nest now: %d\n", rq->core->core_unsafe_nest);
 	raw_spin_unlock(rq_lockp(rq));
 }
 
