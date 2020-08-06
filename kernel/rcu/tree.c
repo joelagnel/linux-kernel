@@ -659,6 +659,9 @@ static noinstr void rcu_eqs_enter(bool user)
 void rcu_idle_enter(void)
 {
 	lockdep_assert_irqs_disabled();
+
+	sched_core_unsafe_exit();
+
 	rcu_eqs_enter(false);
 }
 
@@ -871,6 +874,9 @@ void rcu_idle_exit(void)
 	unsigned long flags;
 
 	local_irq_save(flags);
+
+	sched_core_unsafe_enter();
+
 	rcu_eqs_exit(false);
 	local_irq_restore(flags);
 }
