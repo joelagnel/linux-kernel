@@ -374,6 +374,9 @@ void noinstr irqentry_exit(struct pt_regs *regs, irqentry_state_t state);
  */
 static inline void generic_idle_enter(void)
 {
+	/* Entering idle ends the protected kernel region. */
+	sched_core_unsafe_exit();
+
 	rcu_idle_enter();
 }
 
@@ -383,6 +386,9 @@ static inline void generic_idle_enter(void)
 static inline void generic_idle_exit(void)
 {
 	rcu_idle_exit();
+
+	/* Exiting idle (re)starts the protected kernel region. */
+	sched_core_unsafe_enter();
 }
 
 #endif
