@@ -135,6 +135,8 @@ void nmi_panic(struct pt_regs *regs, const char *msg)
 {
 	int old_cpu, cpu;
 
+	tracing_stop();
+
 	cpu = raw_smp_processor_id();
 	old_cpu = atomic_cmpxchg(&panic_cpu, PANIC_CPU_INVALID, cpu);
 
@@ -182,6 +184,8 @@ void panic(const char *fmt, ...)
 	int state = 0;
 	int old_cpu, this_cpu;
 	bool _crash_kexec_post_notifiers = crash_kexec_post_notifiers;
+
+	tracing_stop();
 
 	/*
 	 * Disable local interrupts. This will prevent panic_smp_self_stop
