@@ -1929,8 +1929,10 @@ The Linux-kernel CPU-hotplug implementation has notifiers that are used
 to allow the various kernel subsystems (including RCU) to respond
 appropriately to a given CPU-hotplug operation. Most RCU operations may
 be invoked from CPU-hotplug notifiers, including even synchronous
-grace-period operations such as ``synchronize_rcu()`` and
-``synchronize_rcu_expedited()``.
+grace-period operations such as. However, the synchronous variants
+(``synchronize_rcu()`` and ``synchronize_rcu_expedited()``) should not
+from notifiers that execute via ``stop_machine()`` -- specifically those
+between the ``CPUHP_AP_OFFLINE`` and ``CPUHP_AP_ONLINE`` states.
 
 However, all-callback-wait operations such as ``rcu_barrier()`` are also
 not supported, due to the fact that there are phases of CPU-hotplug
@@ -1939,6 +1941,30 @@ after the CPU-hotplug operation ends, which could also result in
 deadlock. Furthermore, ``rcu_barrier()`` blocks CPU-hotplug operations
 during its execution, which results in another type of deadlock when
 invoked from a CPU-hotplug notifier.
+
+Also, RCU's implementation avoids serious deadlocks which could occur due to
+interaction between hotplug, timers and grace period processing. It does so by
+maintaining its own books of every CPU's hotplug state, independent of
+the existing general-purpose CPU masks and by reporting quiescent states
+explictly when an online CPU is going down. Due to this design, the force
+quiescent state loop (FQS) is not required to report quiescent states for
+offline CPUs, like it does for idle CPUs, but it does splat if offline CPUs are
+stalling the RCU grace period for too long.
+
+For an offline CPU, the quiescent state will be reported in either of:
+1. During CPU offlining, using RCU's hotplug notifier (``rcu_report_dead()``).
+2. During grace period initialization (``rcu_gp_init()``) if it detected a race
+   with CPU offlining, or a race with a task unblocking on a node which
+   previously had all of its CPUs offlined.
+
+The CPU onlining path (``rcu_cpu_starting()``) does not need to report a
+quiescent state for an offline CPU; in fact it would trigger a warning if a
+quiescent state was not already reported for that CPU.
+
+During the checking/modification of RCU's hotplug bookkeeping, the
+corresponding CPU's leaf node lock is held. This avoids race conditions between
+RCU's hotplug notifier hooks, grace period initialization code and the FQS loop
+which can concurrently refer to or modify the bookkeeping.
 
 Scheduler and RCU
 ~~~~~~~~~~~~~~~~~
