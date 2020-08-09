@@ -49,3 +49,15 @@ int xfer_to_guest_mode_handle_work(struct kvm_vcpu *vcpu)
 	return xfer_to_guest_mode_work(vcpu, ti_work);
 }
 EXPORT_SYMBOL_GPL(xfer_to_guest_mode_handle_work);
+
+void kvm_enter_from_guest_mode(struct kvm_vcpu *vcpu)
+{
+	sched_core_unsafe_enter();
+}
+EXPORT_SYMBOL_GPL(kvm_enter_from_guest_mode);
+
+void kvm_exit_to_guest_mode(struct kvm_vcpu *vcpu)
+{
+	sched_core_unsafe_exit_wait(XFER_TO_GUEST_MODE_WORK);
+}
+EXPORT_SYMBOL_GPL(kvm_exit_to_guest_mode);

@@ -77,4 +77,16 @@ static inline bool xfer_to_guest_mode_work_pending(void)
 }
 #endif /* CONFIG_KVM_XFER_TO_GUEST_WORK */
 
+/**
+ * kvm_enter_from_guest_mode - Hook called just after entering kernel from guest.
+ * @vcpu:   Pointer to the current VCPU data
+ */
+void kvm_enter_from_guest_mode(struct kvm_vcpu *vcpu);
+
+/**
+ * kvm_exit_to_guest_mode - Hook called just before entering guest from kernel.
+ * @vcpu:   Pointer to the current VCPU data
+ */
+void kvm_exit_to_guest_mode(struct kvm_vcpu *vcpu);
+
 #endif
