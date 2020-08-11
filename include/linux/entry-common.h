@@ -402,4 +402,22 @@ void irqentry_exit_cond_resched(void);
  */
 void noinstr irqentry_exit(struct pt_regs *regs, irqentry_state_t state);
 
+/**
+ * generic_idle_enter - Called during entry into idle for housekeeping.
+ */
+static inline void generic_idle_enter(void)
+{
+	/* Entering idle ends the protected kernel region. */
+	sched_core_unsafe_exit();
+}
+
+/**
+ * generic_idle_enter - Called when exiting idle for housekeeping.
+ */
+static inline void generic_idle_exit(void)
+{
+	/* Exiting idle (re)starts the protected kernel region. */
+	sched_core_unsafe_enter();
+}
+
 #endif
