@@ -113,8 +113,10 @@ bool irq_work_queue_on(struct irq_work *work, int cpu)
 	if (cpu != smp_processor_id()) {
 		/* Arch remote IPI send/receive backend aren't NMI safe */
 		WARN_ON_ONCE(in_nmi());
+		trace_printk("Queuing on cpu %d\n", cpu);
 		__smp_call_single_queue(cpu, &work->llnode);
 	} else {
+		trace_printk("Queuing local\n");
 		__irq_work_queue_local(work);
 	}
 	preempt_enable();
