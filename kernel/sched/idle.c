@@ -8,6 +8,7 @@
  */
 #include "sched.h"
 
+#include <linux/entry-common.h>
 #include <trace/events/power.h>
 
 /* Linker adds these: start and end of __cpuidle functions */
@@ -54,6 +55,7 @@ __setup("hlt", cpu_idle_nopoll_setup);
 
 static noinline int __cpuidle cpu_idle_poll(void)
 {
+	generic_idle_enter();
 	trace_cpu_idle(0, smp_processor_id());
 	stop_critical_timings();
 	rcu_idle_enter();
@@ -66,6 +68,7 @@ static noinline int __cpuidle cpu_idle_poll(void)
 	rcu_idle_exit();
 	start_critical_timings();
 	trace_cpu_idle(PWR_EVENT_EXIT, smp_processor_id());
+	generic_idle_exit();
 
 	return 1;
 }
@@ -156,11 +159,7 @@ static void cpuidle_idle_call(void)
 		return;
 	}
 
-	/*
-	 * The RCU framework needs to be told that we are entering an idle
-	 * section, so no more rcu read side critical sections and one more
-	 * step to the grace period
-	 */
+	generic_idle_enter();
 
 	if (cpuidle_not_available(drv, dev)) {
 		tick_nohz_idle_stop_tick();
@@ -225,6 +224,8 @@ exit_idle:
 	 */
 	if (WARN_ON_ONCE(irqs_disabled()))
 		local_irq_enable();
+
+	generic_idle_exit();
 }
 
 /*

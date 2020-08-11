@@ -454,4 +454,22 @@ static inline bool entry_kernel_protected(void)
 	return IS_ENABLED(CONFIG_SCHED_CORE) && sched_core_kernel_protected()
 		&& _TIF_UNSAFE_RET != 0;
 }
+
+/**
+ * generic_idle_enter - General tasks to perform during idle entry.
+ */
+static inline void generic_idle_enter(void)
+{
+	/* Entering idle ends the protected kernel region. */
+	sched_core_unsafe_exit();
+}
+
+/**
+ * generic_idle_exit  - General tasks to perform during idle exit.
+ */
+static inline void generic_idle_exit(void)
+{
+	/* Exiting idle (re)starts the protected kernel region. */
+	sched_core_unsafe_enter();
+}
 #endif
