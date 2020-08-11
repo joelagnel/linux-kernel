@@ -151,6 +151,7 @@ static unsigned long exit_to_user_mode_loop(struct pt_regs *regs)
 {
 	unsigned long ti_work = READ_ONCE(current_thread_info()->flags);
 
+	trace_printk("Entering while\n");
 	/*
 	 * Before returning to user space ensure that all pending work
 	 * items have been completed.
@@ -179,6 +180,7 @@ static unsigned long exit_to_user_mode_loop(struct pt_regs *regs)
 		else
 			break;
 	}
+	trace_printk("Exit while\n");
 
     return ti_work;
 }
@@ -266,11 +268,14 @@ __visible noinstr void syscall_exit_to_user_mode(struct pt_regs *regs)
 	local_irq_disable_exit_to_user();
 	exit_to_user_mode_prepare(regs);
 	instrumentation_end();
+	trace_printk("syscall: Entering exit_to_user_mode\n");
 	exit_to_user_mode();
+	trace_printk("syscall: Leaving exit_to_user_mode\n");
 }
 
 noinstr void irqentry_enter_from_user_mode(struct pt_regs *regs)
 {
+	trace_printk("irq: Enter from user\n");
 	enter_from_user_mode(regs);
 }
 
@@ -279,7 +284,9 @@ noinstr void irqentry_exit_to_user_mode(struct pt_regs *regs)
 	instrumentation_begin();
 	exit_to_user_mode_prepare(regs);
 	instrumentation_end();
+	trace_printk("syscall: Entering exit_to_user_mode\n");
 	exit_to_user_mode();
+	trace_printk("syscall: Leaving exit_to_user_mode\n");
 }
 
 irqentry_state_t noinstr irqentry_enter(struct pt_regs *regs)
