@@ -369,4 +369,20 @@ void irqentry_exit_cond_resched(void);
  */
 void noinstr irqentry_exit(struct pt_regs *regs, irqentry_state_t state);
 
+/**
+ * generic_idle_enter - Called during entry into idle for housekeeping.
+ */
+static inline void generic_idle_enter(void)
+{
+	rcu_idle_enter();
+}
+
+/**
+ * generic_idle_enter - Called when exiting idle for housekeeping.
+ */
+static inline void generic_idle_exit(void)
+{
+	rcu_idle_exit();
+}
+
 #endif
