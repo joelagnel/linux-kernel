@@ -8,6 +8,7 @@
  */
 #include "sched.h"
 
+#include <linux/entry-common.h>
 #include <trace/events/power.h>
 
 /* Linker adds these: start and end of __cpuidle functions */
@@ -54,7 +55,7 @@ __setup("hlt", cpu_idle_nopoll_setup);
 
 static noinline int __cpuidle cpu_idle_poll(void)
 {
-	rcu_idle_enter();
+	generic_idle_enter();
 	trace_cpu_idle_rcuidle(0, smp_processor_id());
 	local_irq_enable();
 	stop_critical_timings();
@@ -64,7 +65,7 @@ static noinline int __cpuidle cpu_idle_poll(void)
 		cpu_relax();
 	start_critical_timings();
 	trace_cpu_idle_rcuidle(PWR_EVENT_EXIT, smp_processor_id());
-	rcu_idle_exit();
+	generic_idle_exit();
 
 	return 1;
 }
@@ -158,7 +159,7 @@ static void cpuidle_idle_call(void)
 
 	if (cpuidle_not_available(drv, dev)) {
 		tick_nohz_idle_stop_tick();
-		rcu_idle_enter();
+		generic_idle_enter();
 
 		default_idle_call();
 		goto exit_idle;
@@ -178,13 +179,13 @@ static void cpuidle_idle_call(void)
 		u64 max_latency_ns;
 
 		if (idle_should_enter_s2idle()) {
-			rcu_idle_enter();
+			generic_idle_enter();
 
 			entered_state = call_cpuidle_s2idle(drv, dev);
 			if (entered_state > 0)
 				goto exit_idle;
 
-			rcu_idle_exit();
+			generic_idle_exit();
 
 			max_latency_ns = U64_MAX;
 		} else {
@@ -192,7 +193,7 @@ static void cpuidle_idle_call(void)
 		}
 
 		tick_nohz_idle_stop_tick();
-		rcu_idle_enter();
+		generic_idle_enter();
 
 		next_state = cpuidle_find_deepest_state(drv, dev, max_latency_ns);
 		call_cpuidle(drv, dev, next_state);
@@ -209,7 +210,7 @@ static void cpuidle_idle_call(void)
 		else
 			tick_nohz_idle_retain_tick();
 
-		rcu_idle_enter();
+		generic_idle_enter();
 
 		entered_state = call_cpuidle(drv, dev, next_state);
 		/*
@@ -227,7 +228,7 @@ exit_idle:
 	if (WARN_ON_ONCE(irqs_disabled()))
 		local_irq_enable();
 
-	rcu_idle_exit();
+	generic_idle_exit();
 }
 
 /*
