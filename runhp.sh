@@ -1,7 +1,7 @@
 #!/bin/bash
 	
 run-qemu \
-    --boot-args "trace_event=sched:* ftrace_dump_on_oops trace_buf_size=3k rcutorture.onoff_interval=200 rcutorture.onoff_holdoff=2 rcutorture.shutdown_secs=10 rcutree.gp_preinit_delay=12 rcutree.gp_init_delay=3 rcutree.gp_cleanup_delay=3 rcutree.kthread_prio=2 threadirqs"
+    --boot-args "trace_event=sched:* trace_buf_size=200k rcutorture.onoff_interval=200 rcutorture.onoff_holdoff=2 rcutorture.shutdown_secs=10 rcutree.gp_preinit_delay=12 rcutree.gp_init_delay=3 rcutree.gp_cleanup_delay=3 rcutree.kthread_prio=2 threadirqs ftrace_dump_on_oops" --cpus 4 | tee /tmp/o
 
 exit
 

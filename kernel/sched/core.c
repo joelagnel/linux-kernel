@@ -4450,6 +4450,7 @@ void sched_core_unsafe_enter(void)
 		goto ret;
 
 	/* Count unsafe_enter() calls received without unsafe_exit() on this CPU. */
+	trace_printk("enter: unsafe this nest now before: %d\n", rq->core_this_unsafe_nest);
 	rq->core_this_unsafe_nest++;
 	trace_printk("enter: unsafe this nest now: %d\n", rq->core_this_unsafe_nest);
 	if (rq->core_this_unsafe_nest < 0) {
@@ -4464,12 +4465,14 @@ void sched_core_unsafe_enter(void)
 	raw_spin_lock(rq_lockp(rq));
 	smt_mask = cpu_smt_mask(cpu);
 
+	trace_printk("enter: unsafe nest now before: %d\n", rq->core->core_unsafe_nest);
 	/* Contribute this CPU's unsafe_enter() to core-wide unsafe_enter() count. */
 	WRITE_ONCE(rq->core->core_unsafe_nest, rq->core->core_unsafe_nest + 1);
 	trace_printk("enter: unsafe nest now: %d\n", rq->core->core_unsafe_nest);
 	if (rq->core->core_unsafe_nest < 0) {
 		trace_printk("issue stop core-wide\n");
 		tracing_stop();
+		panic("wa1\n");
 	}
 
 	if (WARN_ON_ONCE(rq->core->core_unsafe_nest == UINT_MAX))
@@ -4550,11 +4553,13 @@ void sched_core_unsafe_exit(void)
 	if (rq->core_this_unsafe_nest == 0)
 		goto ret;
 
+	trace_printk("exit: unsafe this nest now before: %d\n", rq->core_this_unsafe_nest);
 	rq->core_this_unsafe_nest--;
 	trace_printk("exit: unsafe this nest now: %d\n", rq->core_this_unsafe_nest);
 	if (rq->core_this_unsafe_nest < 0) {
 		trace_printk("issue stop\n");
 		tracing_stop();
+		panic("wa2\n");
 	}
 
 	/* enter() should be paired with exit() only. */
@@ -4569,6 +4574,7 @@ void sched_core_unsafe_exit(void)
 	nest = rq->core->core_unsafe_nest;
 	WARN_ON_ONCE(!nest);
 
+	trace_printk("exit: unsafe nest now before: %d\n", rq->core->core_unsafe_nest);
 	/* Pair with smp_load_acquire() in sched_core_wait_till_safe(). */
 	smp_store_release(&rq->core->core_unsafe_nest, nest - 1);
 	trace_printk("exit: unsafe nest now: %d\n", rq->core->core_unsafe_nest);
