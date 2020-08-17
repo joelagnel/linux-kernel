@@ -1058,8 +1058,10 @@ struct rq {
 	unsigned int		core_sched_seq;
 	struct rb_root		core_tree;
 	unsigned char		core_forceidle;
+#ifdef CONFIG_SCHED_CORE_KERNEL_PROTECTION
 	struct irq_work		core_irq_work; /* To force HT into kernel */
 	unsigned int		core_this_unsafe_nest;
+#endif
 
 	/* shared state */
 	unsigned int		core_task_seq;

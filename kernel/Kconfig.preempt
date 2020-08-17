@@ -86,3 +86,16 @@ config SCHED_CORE
 	default y
 	depends on SCHED_SMT
 
+config SCHED_CORE_KERNEL_PROTECTION
+	bool "Core Scheduling for SMT"
+	default y
+	depends on SCHED_CORE
+	help
+	  This option enables pausing all SMT siblings of a core running in
+	  user mode when atleast one of the siblings in the core is in kernel.
+	  This is to enforce security such that information from kernel is not
+	  leaked to non-trusted tasks running on siblings. This option is valid
+	  only if Core Scheduling(CONFIG_SCHED_CORE) is enabled.
+
+	  If in doubt, select 'Y' when CONFIG_SCHED_CORE=y
+

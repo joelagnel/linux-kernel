@@ -2055,7 +2055,7 @@ int sched_trace_rq_nr_running(struct rq *rq);
 
 const struct cpumask *sched_trace_rd_span(struct root_domain *rd);
 
-#ifdef CONFIG_SCHED_CORE
+#ifdef CONFIG_SCHED_CORE_KERNEL_PROTECTION
 void sched_core_unsafe_enter(void);
 void sched_core_unsafe_exit(void);
 void sched_core_unsafe_exit_wait(unsigned long ti_check);

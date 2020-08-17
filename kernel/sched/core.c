@@ -75,6 +75,24 @@ __read_mostly int scheduler_running;
 
 #ifdef CONFIG_SCHED_CORE
 
+#ifdef CONFIG_SCHED_CORE_KERNEL_PROTECTION
+
+DEFINE_STATIC_KEY_TRUE(sched_core_kernel_protection);
+static int __init set_sched_core_kernel_protection(char *str)
+{
+	unsigned long val = 0;
+
+	if (!str)
+		return 0;
+
+	if (!kstrtoul(str, 0, &val) && !val)
+		static_branch_disable(&sched_core_kernel_protection);
+
+	return 1;
+}
+__setup("sched_core_kernel_protection=", set_sched_core_kernel_protection);
+#endif
+
 DEFINE_STATIC_KEY_FALSE(__sched_core_enabled);
 
 /* kernel prio, less is more */
@@ -4600,6 +4618,8 @@ static inline bool cookie_match(struct task_struct *a, struct task_struct *b)
 	return a->core_cookie == b->core_cookie;
 }
 
+#ifdef CONFIG_SCHED_CORE_KERNEL_PROTECTION
+
 /*
  * Handler to attempt to enter kernel. It does nothing because the exit to
  * usermode or guest mode will do the actual work (of waiting if needed).
@@ -4607,6 +4627,11 @@ static inline bool cookie_match(struct task_struct *a, struct task_struct *b)
 static void sched_core_irq_work(struct irq_work *work)
 {
 	return;
+}
+
+static inline void init_sched_core_irq_work(struct rq *rq)
+{
+	init_irq_work(&rq->core_irq_work, sched_core_irq_work);
 }
 
 /*
@@ -4683,6 +4708,9 @@ void sched_core_unsafe_enter(void)
 	unsigned long flags;
 	struct rq *rq;
 	int i, cpu;
+
+	if (!static_branch_likely(&sched_core_kernel_protection))
+		return;
 
 	/* Ensure that on return to user/guest, we check whether to wait. */
 	if (current->core_cookie)
@@ -4769,6 +4797,9 @@ void sched_core_unsafe_exit(void)
 	struct rq *rq;
 	int cpu;
 
+	if (!static_branch_likely(&sched_core_kernel_protection))
+		return;
+
 	local_irq_save(flags);
 	cpu = smp_processor_id();
 	rq = cpu_rq(cpu);
@@ -4807,9 +4838,15 @@ ret:
 
 void sched_core_unsafe_exit_wait(unsigned long ti_check)
 {
+	if (!static_branch_likely(&sched_core_kernel_protection))
+		return;
+
 	sched_core_unsafe_exit();
 	sched_core_wait_till_safe(ti_check);
 }
+#else
+static inline void init_sched_core_irq_work(struct rq *rq) {}
+#endif /* CONFIG_SCHED_CORE_KERNEL_PROTECTION */
 
 // XXX fairness/fwd progress conditions
 /*
@@ -7795,7 +7832,7 @@ int sched_cpu_starting(unsigned int cpu)
 			rq = cpu_rq(i);
 			if (rq->core && rq->core == rq)
 				core_rq = rq;
-			init_irq_work(&rq->core_irq_work, sched_core_irq_work);
+			init_sched_core_irq_work(rq);
 		}
 
 		if (!core_rq)
