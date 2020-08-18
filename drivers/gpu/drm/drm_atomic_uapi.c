@@ -1422,6 +1422,12 @@ retry:
 	} else if (arg->flags & DRM_MODE_ATOMIC_NONBLOCK) {
 		ret = drm_atomic_nonblocking_commit(state);
 	} else {
+		if (drm_debug_enabled(DRM_UT_STATE)) {
+			struct drm_printer p;
+			p = drm_debug_category_printer(DRM_UT_STATE, "commit_state");
+			drm_atomic_print_new_state(state, &p);
+		}
+
 		ret = drm_atomic_commit(state);
 	}
 
