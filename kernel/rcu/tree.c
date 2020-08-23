@@ -2399,6 +2399,7 @@ static void rcu_do_batch(struct rcu_data *rdp)
 
 	/* Count CBs for tracing. */
 	rcu_segcblist_countseq(&rdp->cblist, cbs, gps);
+
 	trace_rcu_segcb("SegCbDequeued", cbs, gps);
 
 	for (; rhp; rhp = rcu_cblist_dequeue(&rcl)) {
@@ -2466,9 +2467,18 @@ static void rcu_do_batch(struct rcu_data *rdp)
 	 * The following usually indicates a double call_rcu().  To track
 	 * this down, try building with CONFIG_DEBUG_OBJECTS_RCU_HEAD=y.
 	 */
-	WARN_ON_ONCE(count == 0 && !rcu_segcblist_empty(&rdp->cblist));
-	WARN_ON_ONCE(!IS_ENABLED(CONFIG_RCU_NOCB_CPU) &&
-		     count != 0 && rcu_segcblist_empty(&rdp->cblist));
+	if (WARN_ON_ONCE(count == 0 && !rcu_segcblist_empty(&rdp->cblist))) {
+		trace_printk("w1\n");
+		tracing_off();
+		panic("w1\n");
+	}
+
+	if (WARN_ON_ONCE(!IS_ENABLED(CONFIG_RCU_NOCB_CPU) &&
+		     count != 0 && rcu_segcblist_empty(&rdp->cblist))) {
+		trace_printk("w2\n");
+		tracing_off();
+		panic("w2\n");
+	}
 
 	rcu_nocb_unlock_irqrestore(rdp, flags);
 
