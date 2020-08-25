@@ -301,6 +301,43 @@ void rcu_segcblist_enqueue(struct rcu_segcblist *rsclp,
 }
 
 /*
+ * Return how many CBs each segment along with their gp_seq values.
+ *
+ * This function is O(N) where N is the number of callbacks. Only used from
+ * tracing code which is usually disabled in production.
+ */
+#ifdef CONFIG_RCU_TRACE
+void rcu_segcblist_countseq_old(struct rcu_segcblist *rsclp,
+			 int cbcount[RCU_CBLIST_NSEGS],
+			 unsigned long gpseq[RCU_CBLIST_NSEGS])
+{
+	struct rcu_head **cur_tail, *h;
+	int i, c;
+
+	for (i = 0; i < RCU_CBLIST_NSEGS; i++)
+		cbcount[i] = 0;
+
+	cur_tail = &(rsclp->head);
+
+	for (i = 0; i < RCU_CBLIST_NSEGS; i++) {
+		c = 0;
+		// List empty?
+		if (rsclp->tails[i] != cur_tail) {
+			// The loop skips the last node
+			c = 1;
+			for (h = *cur_tail; h->next != *(rsclp->tails[i]); h = h->next) {
+				c++;
+			}
+		}
+
+		cbcount[i] = c;
+		gpseq[i] = rsclp->gp_seq[i];
+		cur_tail = rsclp->tails[i];
+	}
+}
+#endif
+
+/*
  * Entrain the specified callback onto the specified rcu_segcblist at
  * the end of the last non-empty segment.  If the entire rcu_segcblist
  * is empty, make no change, but return false.
