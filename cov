@@ -1,0 +1,34 @@
+option-prefix PATCH v5 -rcu
+option-subject Maintain the length of each segment in the segcblist
+
+This is required for several usecases identified. One of them being tracing how
+the segmented callback list changes. Tracing this has identified issues in RCU
+code in the past.
+
+From Paul:
+Another use case is of course more accurately
+determining whether a given CPU's large pile of callbacks can be best
+served by making grace periods go faster, invoking callbacks more
+vigorously, or both.  It should also be possible to simplify some of
+the callback handling a bit, given that some of the unnatural acts are
+due to there having been no per-batch counts.
+
+Passes 30 minutes of TREE01, TREE03, TREE07.  Testing of other TREE configs is
+in progress.
+
+Patches are based on -rcu commit:
+4f43de2a419a ("Merge branch 'lkmm-dev.2020.08.24a' into HEAD")
+
+Revision history:
+v5: ?
+
+v4: Restructured rcu_do_batch() and segcblist merging to avoid issues.
+    Fixed minor nit from Davidlohr.
+v1->v3: minor nits.
+(https://lore.kernel.org/lkml/20200719034210.2382053-1-joel@joelfernandes.org/)
+
+Cc: vineethrp@gmail.com
+Cc: urezki@gmail.com
+Cc: dave@stgolabs.net
+Cc: boqun.feng@gmail.com
+Cc: neeraj.iitr10@gmail.com
