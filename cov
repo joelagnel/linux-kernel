@@ -1,0 +1,31 @@
+option-prefix RFC v5
+option-subject Add support length of each segment in the segcblist (breaks TREE04)
+
+NOTE: I marked as RFC since TREE 04 fails even though TREE03 passes. I don't
+see any RCU errors in the counters, however when shutdown thread tries to
+shutdown the system, it hangs when trying to shutdown the rcu_barrier thread.
+My suspicion is this is becaues I broke rcu_barrier() however I can't figure
+out how/where.  I added a patch in this series that could fix it, but it still
+does not alleviate TREE04's issues.  I also have a feeling this issue is
+related to nocb mode.
+
+This is required for several usecases identified. One of them being tracing how
+the segmented callback list changes. Tracing this has identified issues in RCU
+code in the past.
+
+From Paul:
+Another use case is of course more accurately determining whether a given CPU's
+large pile of callbacks can be best served by making grace periods go faster,
+invoking callbacks more vigorously, or both.  It should also be possible to
+simplify some of the callback handling a bit, given that some of the unnatural
+acts are due to there having been no per-batch counts.
+
+Revision history:
+v5: Various changes, bug fixes. Discovery of rcu_barrier issue.
+
+v4: Restructured rcu_do_batch() and segcblist merging to avoid issues.
+    Fixed minor nit from Davidlohr.
+v1->v3: minor nits.
+(https://lore.kernel.org/lkml/20200719034210.2382053-1-joel@joelfernandes.org/)
+
+Cc: neeraj.iitr10@gmail.com
