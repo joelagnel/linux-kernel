@@ -32,6 +32,22 @@ extern unsigned long find_next_and_bit(const unsigned long *addr1,
 		unsigned long offset);
 #endif
 
+#ifndef find_next_or_bit
+/**
+ * find_next_or_bit - find the next set bit in any memory regions
+ * @addr1: The first address to base the search on
+ * @addr2: The second address to base the search on
+ * @offset: The bitnumber to start searching at
+ * @size: The bitmap size in bits
+ *
+ * Returns the bit number for the next set bit
+ * If no bits are set, returns @size.
+ */
+extern unsigned long find_next_or_bit(const unsigned long *addr1,
+		const unsigned long *addr2, unsigned long size,
+		unsigned long offset);
+#endif
+
 #ifndef find_next_zero_bit
 /**
  * find_next_zero_bit - find the next cleared bit in a memory region
