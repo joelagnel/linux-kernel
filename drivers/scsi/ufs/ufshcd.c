@@ -2792,6 +2792,13 @@ static int ufshcd_queuecommand(struct Scsi_Host *host, struct scsi_cmnd *cmd)
 
 	ufshcd_prepare_lrbp_crypto(cmd->request, lrbp);
 
+	trace_android_vh_ufs_prepare_command(hba, cmd->request, lrbp, &err);
+	if (err) {
+		lrbp->cmd = NULL;
+		ufshcd_release(hba);
+		goto out;
+	}
+
 	lrbp->req_abort_skip = false;
 
 	ufshcd_comp_scsi_upiu(hba, lrbp);
