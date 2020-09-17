@@ -336,11 +336,20 @@ void sched_core_put(void)
 	mutex_unlock(&sched_core_mutex);
 }
 
+void sched_core_put_locked(void)
+{
+	if (!--sched_core_count)
+		__sched_core_disable();
+}
+
+static int sched_core_share_tasks(struct task_struct *t1, struct task_struct *t2);
+
 #else /* !CONFIG_SCHED_CORE */
 
 static inline void sched_core_enqueue(struct rq *rq, struct task_struct *p) { }
 static inline void sched_core_dequeue(struct rq *rq, struct task_struct *p) { }
 static bool sched_core_enqueued(struct task_struct *task) { return false; }
+static int sched_core_share_tasks(struct task_struct *t1, struct task_struct *t2) { }
 
 #endif /* CONFIG_SCHED_CORE */
 
@@ -3264,6 +3273,20 @@ int sched_fork(unsigned long clone_flags, struct task_struct *p)
 #endif
 #ifdef CONFIG_SCHED_CORE
 	RB_CLEAR_NODE(&p->core_node);
+
+	/*
+	 * Tag child via per-task cookie only if parent is tagged via per-task
+	 * cookie. This is independent of, but can be additive to the CGroup tagging.
+	 */
+	if (current->core_task_cookie) {
+
+		/* If it is not CLONE_THREAD fork, assign a unique per-task tag. */
+		if (!(clone_flags & CLONE_THREAD)) {
+			return sched_core_share_tasks(p, p);
+               }
+		/* Otherwise share the parent's per-task tag. */
+		return sched_core_share_tasks(p, current);
+	}
 #endif
 	return 0;
 }
@@ -8729,6 +8752,192 @@ static u64 cpu_rt_period_read_uint(struct cgroup_subsys_state *css,
 #endif /* CONFIG_RT_GROUP_SCHED */
 
 #ifdef CONFIG_SCHED_CORE
+/*
+ * A simple wrapper around refcount. An allocated sched_core_cookie's
+ * address is used to compute the cookie of the task.
+ */
+struct sched_core_cookie {
+	refcount_t refcnt;
+};
+
+/*
+ * sched_core_tag_requeue - Common helper for all interfaces to set a cookie.
+ * @p: The task to assign a cookie to.
+ * @cookie: The cookie to assign.
+ * @group: is it a group interface or a per-task interface.
+ *
+ * This function is typically called from a stop-machine handler.
+ */
+void sched_core_tag_requeue(struct task_struct *p, unsigned long cookie, bool group)
+{
+	if (!p)
+		return;
+
+	if (group)
+		p->core_group_cookie = cookie;
+	else
+		p->core_task_cookie = cookie;
+
+	/* Use up half of the cookie's bits for task cookie and remaining for group cookie. */
+	p->core_cookie = p->core_task_cookie <<
+				((sizeof(unsigned long) * 4) + p->core_group_cookie);
+
+	if (sched_core_enqueued(p)) {
+		sched_core_dequeue(task_rq(p), p);
+		if (!p->core_task_cookie)
+			return;
+	}
+
+	if (sched_core_enabled(task_rq(p)) &&
+			p->core_task_cookie && task_on_rq_queued(p))
+		sched_core_enqueue(task_rq(p), p);
+
+	if (p->core_task_cookie)
+		set_tsk_thread_flag(p, TIF_CORE_TAGGED);
+	else
+		clear_tsk_thread_flag(p, TIF_CORE_TAGGED);
+}
+
+/* Per-task interface */
+static unsigned long sched_core_alloc_task_cookie(void)
+{
+	struct sched_core_cookie *ptr =
+		kmalloc(sizeof(struct sched_core_cookie), GFP_KERNEL);
+
+	if (!ptr)
+		return 0;
+	refcount_set(&ptr->refcnt, 1);
+	return (unsigned long)ptr;
+}
+
+static bool sched_core_get_task_cookie(unsigned long cookie)
+{
+	struct sched_core_cookie *ptr = (struct sched_core_cookie *)cookie;
+
+	return refcount_inc_not_zero(&ptr->refcnt);
+}
+
+static void sched_core_put_task_cookie(unsigned long cookie)
+{
+	struct sched_core_cookie *ptr = (struct sched_core_cookie *)cookie;
+
+	if (refcount_dec_and_test(&ptr->refcnt))
+		kfree(ptr);
+}
+
+struct sched_core_task_write_tag {
+	struct task_struct *tasks[2];
+	unsigned long cookies[2];
+};
+
+/*
+ * Ensure that the task has been requeued. The stopper ensures that the task cannot
+ * be migrated to a different CPU while its core scheduler queue state is being updated.
+ * It also makes sure to requeue a task if it was running actively on another CPU.
+ */
+static int sched_core_task_join_stopper(void *data)
+{
+	struct sched_core_task_write_tag *tag = (struct sched_core_task_write_tag *)data;
+	int i;
+
+	for (i = 0; i < 2; i++)
+		sched_core_tag_requeue(tag->tasks[i], tag->cookies[i], false /* !group */);
+
+	return 0;
+}
+
+static int sched_core_share_tasks(struct task_struct *t1, struct task_struct *t2)
+{
+	struct sched_core_task_write_tag wr = {}; /* for stop machine. */
+	bool sched_core_put_after_stopper = false;
+	unsigned long cookie;
+	int ret = -ENOMEM;
+
+	mutex_lock(&sched_core_mutex);
+
+	/* Assign a unique per-task cookie solely for t1. */
+	if (t1 == t2) {
+		cookie = sched_core_alloc_task_cookie();
+		if (!cookie)
+			goto out_unlock;
+
+		if (t1->core_task_cookie)
+			sched_core_put_task_cookie(t1->core_task_cookie);
+		t1->core_task_cookie = cookie;
+	} else
+	/*
+	 * 		t1		joining		t2
+	 * CASE 1:
+	 * before	0				0
+	 * after	new cookie			new cookie
+	 *
+	 * CASE 2:
+	 * before	X (non-zero)			0
+	 * after	0				0
+	 *
+	 * CASE 3:
+	 * before	0				X (non-zero)
+	 * after	X				X
+	 *
+	 * CASE 4:
+	 * before	Y (non-zero)			X (non-zero)
+	 * after	X				X
+	 */
+	if (!t1->core_task_cookie && !t2->core_task_cookie) {
+		/* CASE 1. */
+		cookie = sched_core_alloc_task_cookie();
+		if (!cookie)
+			goto out_unlock;
+
+		sched_core_get();
+		sched_core_get();
+
+		wr.tasks[0] = t1;
+		wr.tasks[1] = t2;
+		wr.cookies[0] = wr.cookies[1] = cookie;
+
+	} else if (t1->core_task_cookie && !t2->core_task_cookie) {
+		/* CASE 2. */
+		sched_core_put_task_cookie(t1->core_task_cookie);
+
+		wr.tasks[0] = t1; /* Reset cookie for t1. */
+		sched_core_put_after_stopper = true;
+
+	} else if (!t1->core_task_cookie && t2->core_task_cookie) {
+		/* CASE 3. */
+		if (!sched_core_get_task_cookie(t2->core_task_cookie)) {
+			ret = -EINVAL;
+			goto out_unlock;
+		}
+		sched_core_get();
+
+		wr.tasks[0] = t1;
+		wr.cookies[0] = t2->core_task_cookie;
+
+	} else {
+		/* CASE 4. */
+		if (!sched_core_get_task_cookie(t2->core_task_cookie)) {
+			ret = -EINVAL;
+			goto out_unlock;
+		}
+		sched_core_put_task_cookie(t1->core_task_cookie);
+
+		wr.tasks[0] = t1;
+		wr.cookies[0] = t2->core_task_cookie;
+	}
+
+	stop_machine(sched_core_task_join_stopper, (void *)&wr, NULL);
+
+	if (sched_core_put_after_stopper)
+		sched_core_put_locked();
+
+	ret = 0;
+out_unlock:
+	mutex_unlock(&sched_core_mutex);
+	return ret;
+}
+
+/* CGroup interface */
 static u64 cpu_core_tag_read_u64(struct cgroup_subsys_state *css, struct cftype *cft)
 {
 	struct task_group *tg = css_tg(css);
@@ -8759,22 +8968,9 @@ static int __sched_write_tag(void *data)
 	 * when we set cgroup tag to 0 when the loop is done below.
 	 */
 	while ((p = css_task_iter_next(&it))) {
-		p->core_cookie = !!val ? (unsigned long)tg : 0UL;
+		unsigned long cookie = !!val ? (unsigned long)tg : 0UL;
 
-		if (sched_core_enqueued(p)) {
-			sched_core_dequeue(task_rq(p), p);
-			if (!p->core_cookie)
-				continue;
-		}
-
-		if (sched_core_enabled(task_rq(p)) &&
-		    p->core_cookie && task_on_rq_queued(p))
-			sched_core_enqueue(task_rq(p), p);
-
-		if (p->core_cookie)
-			set_tsk_thread_flag(p, TIF_CORE_TAGGED);
-		else
-			clear_tsk_thread_flag(p, TIF_CORE_TAGGED);
+		sched_core_tag_requeue(p, cookie, true /* group */);
 	}
 	css_task_iter_end(&it);
 
