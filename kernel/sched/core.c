@@ -8076,7 +8076,7 @@ static void sched_change_group(struct task_struct *tsk, int type)
 		clear_tsk_thread_flag(tsk, TIF_CORE_TAGGED);
 	}
 
-	if (tg->tagged /* && !tsk->core_cookie ? */) {
+	if (tg->core_tagged /* && !tsk->core_cookie ? */) {
 		tsk->core_cookie = (unsigned long)tg;
 		set_tsk_thread_flag(tsk, TIF_CORE_TAGGED);
 		trace_printk("Setting tsk pid %d to cookie %lu  and setting TIF\n",
@@ -8181,9 +8181,9 @@ static void cpu_cgroup_css_offline(struct cgroup_subsys_state *css)
 #ifdef CONFIG_SCHED_CORE
 	struct task_group *tg = css_tg(css);
 
-	if (tg->tagged) {
+	if (tg->core_tagged) {
 		sched_core_put();
-		tg->tagged = 0;
+		tg->core_tagged = 0;
 	}
 #endif
 }
@@ -8983,24 +8983,39 @@ static u64 cpu_core_tag_read_u64(struct cgroup_subsys_state *css, struct cftype 
 {
 	struct task_group *tg = css_tg(css);
 
-	return !!tg->tagged;
+	return !!tg->core_tagged;
+}
+
+static u64 cpu_core_tag_color_read_u64(struct cgroup_subsys_state *css, struct cftype *cft)
+{
+	struct task_group *tg = css_tg(css);
+
+	return tg->core_tag_color;
 }
 
 struct write_core_tag {
 	struct cgroup_subsys_state *css;
 	int val;
+	int color_write;
 };
 
 static int __sched_write_tag(void *data)
 {
 	struct write_core_tag *tag = (struct write_core_tag *) data;
 	struct cgroup_subsys_state *css = tag->css;
-	int val = tag->val;
 	struct task_group *tg = css_tg(tag->css);
 	struct css_task_iter it;
 	struct task_struct *p;
+	unsigned long cookie;
+	int val = tag->val;
 
-	tg->tagged = !!val;
+	if (tag->color_write) {
+		cookie = ((unsigned long)tg | val);
+		tg->core_tag_color = val;
+	} else {
+		cookie = !!val ? (unsigned long)tg : 0UL;
+		tg->core_tagged = !!val;
+	}
 
 	css_task_iter_start(css, 0, &it);
 	/*
@@ -9008,13 +9023,10 @@ static int __sched_write_tag(void *data)
 	 * There could still be dying tasks left in the core queue
 	 * when we set cgroup tag to 0 when the loop is done below.
 	 */
-	while ((p = css_task_iter_next(&it))) {
-		unsigned long cookie = !!val ? (unsigned long)tg : 0UL;
-
+	while ((p = css_task_iter_next(&it)))
 		sched_core_tag_requeue(p, cookie, true /* group */);
-	}
-	css_task_iter_end(&it);
 
+	css_task_iter_end(&it);
 	return 0;
 }
 
@@ -9029,7 +9041,7 @@ static int cpu_core_tag_write_u64(struct cgroup_subsys_state *css, struct cftype
 	if (!static_branch_likely(&sched_smt_present))
 		return -EINVAL;
 
-	if (tg->tagged == !!val)
+	if (tg->core_tagged == !!val)
 		return 0;
 
 	if (!!val)
@@ -9037,9 +9049,36 @@ static int cpu_core_tag_write_u64(struct cgroup_subsys_state *css, struct cftype
 
 	wtag.css = css;
 	wtag.val = val;
+	wtag.color_write = 0;
 	stop_machine(__sched_write_tag, (void *) &wtag, NULL);
 	if (!val)
 		sched_core_put();
+
+	return 0;
+}
+
+static int cpu_core_tag_color_write_u64(struct cgroup_subsys_state *css,
+					struct cftype *cft, u64 val)
+{
+	struct task_group *tg = css_tg(css);
+	struct write_core_tag wtag;
+
+	if (val > 256)
+		return -ERANGE;
+
+	if (!static_branch_likely(&sched_smt_present))
+		return -EINVAL;
+
+	/* If CGroup is not tagged, no need to set any cookies. */
+	if (!tg->core_tagged) {
+		tg->core_tag_color = val;
+		return 0;
+	}
+
+	wtag.css = css;
+	wtag.val = val;
+	wtag.color_write = 1;
+	stop_machine(__sched_write_tag, (void *) &wtag, NULL);
 
 	return 0;
 }
@@ -9083,10 +9122,16 @@ static struct cftype cpu_legacy_files[] = {
 #endif
 #ifdef CONFIG_SCHED_CORE
 	{
-		.name = "tag",
+		.name = "core_tag",
 		.flags = CFTYPE_NOT_ON_ROOT,
 		.read_u64 = cpu_core_tag_read_u64,
 		.write_u64 = cpu_core_tag_write_u64,
+	},
+	{
+		.name = "core_tag_color",
+		.flags = CFTYPE_NOT_ON_ROOT,
+		.read_u64 = cpu_core_tag_color_read_u64,
+		.write_u64 = cpu_core_tag_color_write_u64,
 	},
 #endif
 #ifdef CONFIG_UCLAMP_TASK_GROUP
@@ -9264,10 +9309,16 @@ static struct cftype cpu_files[] = {
 #endif
 #ifdef CONFIG_SCHED_CORE
 	{
-		.name = "tag",
+		.name = "core_tag",
 		.flags = CFTYPE_NOT_ON_ROOT,
 		.read_u64 = cpu_core_tag_read_u64,
 		.write_u64 = cpu_core_tag_write_u64,
+	},
+	{
+		.name = "core_tag_color",
+		.flags = CFTYPE_NOT_ON_ROOT,
+		.read_u64 = cpu_core_tag_color_read_u64,
+		.write_u64 = cpu_core_tag_color_write_u64,
 	},
 #endif
 #ifdef CONFIG_CFS_BANDWIDTH
