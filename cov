@@ -1,0 +1,81 @@
+Hello!
+These are RFC patches for the core-scheduling interface that are only
+build-tested and could be buggy, but I am just sharing early to give an idea
+about the direction I was going. I will be continuing to work on it next week.
+Meanwhile your feedback is very welcome!
+
+The main usecases covered are both practical and cover ChromeOS and Google
+cloud usecases:
+
+1. ChromeOS uses a per-process prctl interface. Every tab in Chrome is
+   sandboxed and cannot be trusted. A prctl interface which accepts a PID to share
+   a core with is proposed. The PID idea came from Peter Zijlstra.
+
+2. Google cloud uses CGroups with two-tag hierarchy. The first tag can be set
+   only by privileged while the second is not. Please see the patch for more
+   details.  For upstream, I have chosen that the first-level tag is a boolean and
+   that first-level cookie value is not exposed to the user for security reasons.
+
+These patches are based on the v7 core-scheduling series recently posted:
+https://lore.kernel.org/lkml/cover.1598643276.git.jdesfossez@digitalocean.com/T/#t
+
+For the CGroup usecase, for this first pass - I avoided handling the case where
+the tag is 0 in a sub-cgroup, but its color is set and such CGroup's parent is
+tagged.
+
+option-prefix RFC
+option-subject Core-scheduling interface
+
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Vineeth Pillai <viremana@linux.microsoft.com>
+Cc: Joel Fernandes <joelaf@google.com>
+Cc: Tim Chen <tim.c.chen@linux.intel.com>
+Cc: Aaron Lu <aaron.lwe@gmail.com>
+Cc: 
+Cc: Aubrey Li <aubrey.intel@gmail.com>
+Cc: 
+Cc: Dhaval Giani <dhaval.giani@oracle.com>
+Cc: 
+Cc: Chris Hyser <chris.hyser@oracle.com>
+Cc: 
+Cc: Nishanth Aravamudan <naravamudan@digitalocean.com>
+Cc: Julien Desfossez <jdesfossez@digitalocean.com>
+Cc: mingo@kernel.org
+Cc: 
+Cc: tglx@linutronix.de
+Cc: pjt@google.com
+Cc: 
+Cc: linux-kernel@vger.kernel.org
+Cc: fweisbec@gmail.com
+Cc: 
+Cc: keescook@chromium.org
+Cc: kerrnel@google.com
+Cc: 
+Cc: Phil Auld <pauld@redhat.com>
+Cc: 
+Cc: Valentin Schneider <valentin.schneider@arm.com>
+Cc: 
+Cc: Mel Gorman <mgorman@techsingularity.net>
+Cc: 
+Cc: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+Cc: 
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: joel@joelfernandes.org
+Cc: 
+Cc: vineeth@bitbyteword.org
+Cc: Chen Yu <yu.c.chen@intel.com>
+Cc: 
+Cc: Christian Brauner <christian.brauner@ubuntu.com>
+Cc: 
+Cc: Agata Gruza <agata.gruza@intel.com>
+Cc: 
+Cc: Antonio Gomez Iglesias <antonio.gomez.iglesias@intel.com>
+Cc: 
+Cc: graf@amazon.com
+Cc: konrad.wilk@oracle.com
+Cc: dfaggioli@suse.com
+Cc: 
+Cc: rostedt@goodmis.org
+Cc: derkling@google.com
+Cc: benbjiang@tencent.com
+
