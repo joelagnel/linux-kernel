@@ -310,6 +310,7 @@ static int __sched_core_stopper(void *data)
 }
 
 static DEFINE_MUTEX(sched_core_mutex);
+static DEFINE_MUTEX(sched_core_tasks_mutex);
 static int sched_core_count;
 
 static void __sched_core_enable(void)
@@ -3588,8 +3589,9 @@ int sched_fork(unsigned long clone_flags, struct task_struct *p)
 	RB_CLEAR_NODE(&p->core_node);
 
 	/*
-	 * Tag child via per-task cookie only if parent is tagged via per-task
-	 * cookie. This is independent of, but can be additive to the CGroup tagging.
+	 * If parent is tagged via per-task cookie, tag the child (either with
+	 * the parent's cookie, or a new one). The final cookie is calculated
+	 * by concatenating the per-task cookie with that of the CGroup's.
 	 */
 	if (current->core_task_cookie) {
 
@@ -9301,7 +9303,7 @@ static int sched_core_share_tasks(struct task_struct *t1, struct task_struct *t2
 	unsigned long cookie;
 	int ret = -ENOMEM;
 
-	mutex_lock(&sched_core_mutex);
+	mutex_lock(&sched_core_tasks_mutex);
 
 	/*
 	 * NOTE: sched_core_get() is done by sched_core_alloc_task_cookie() or
@@ -9400,8 +9402,49 @@ static int sched_core_share_tasks(struct task_struct *t1, struct task_struct *t2
 
 	ret = 0;
 out_unlock:
-	mutex_unlock(&sched_core_mutex);
+	mutex_unlock(&sched_core_tasks_mutex);
 	return ret;
+}
+
+/* Called from prctl interface: PR_SCHED_CORE_SHARE */
+int sched_core_share_pid(pid_t pid)
+{
+	struct task_struct *task;
+	int err;
+
+	if (pid == 0) { /* Recent current task's cookie. */
+		/* Resetting a cookie requires privileges. */
+		if (current->core_task_cookie)
+			if (!capable(CAP_SYS_ADMIN))
+				return -EPERM;
+		task = NULL;
+	} else {
+		rcu_read_lock();
+		task = pid ? find_task_by_vpid(pid) : current;
+		if (!task) {
+			rcu_read_unlock();
+			return -ESRCH;
+		}
+
+		get_task_struct(task);
+
+		/*
+		 * Check if this process has the right to modify the specified
+		 * process. Use the regular "ptrace_may_access()" checks.
+		 */
+		if (!ptrace_may_access(task, PTRACE_MODE_READ_REALCREDS)) {
+			rcu_read_unlock();
+			err = -EPERM;
+			goto out_put;
+		}
+		rcu_read_unlock();
+	}
+
+	err = sched_core_share_tasks(current, task);
+out_put:
+	if (task)
+		put_task_struct(task);
+	return err;
 }
 
 /* CGroup interface */
