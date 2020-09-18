@@ -8937,6 +8937,47 @@ out_unlock:
 	return ret;
 }
 
+/* Called from prctl interface: PR_SCHED_CORE_SHARE */
+int sched_core_share_pid(pid_t pid)
+{
+	struct task_struct *task;
+	int err = -EPERM;
+
+	if (pid == 0) {
+		task = current;
+		/* Resetting a cookie requires privileges. */
+		if (task->core_task_cookie && !capable(CAP_SYS_ADMIN))
+			goto out;
+	} else {
+		rcu_read_lock();
+		task = pid ? find_task_by_vpid(pid) : current;
+		if (!task) {
+			rcu_read_unlock();
+			err = -ESRCH;
+			goto out_put;
+		}
+
+		get_task_struct(task);
+
+		/*
+		 * Check if this process has the right to modify the specified
+		 * process. Use the regular "ptrace_may_access()" checks.
+		 */
+		if (!ptrace_may_access(task, PTRACE_MODE_READ_REALCREDS)) {
+			rcu_read_unlock();
+			err = -EPERM;
+			goto out_put;
+		}
+		rcu_read_unlock();
+	}
+
+	err = sched_core_share_tasks(current, task);
+out_put:
+	put_task_struct(task);
+out:
+	return err;
+}
+
 /* CGroup interface */
 static u64 cpu_core_tag_read_u64(struct cgroup_subsys_state *css, struct cftype *cft)
 {

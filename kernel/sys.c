@@ -2527,6 +2527,9 @@ SYSCALL_DEFINE5(prctl, int, option, unsigned long, arg2, unsigned long, arg3,
 
 		error = (current->flags & PR_IO_FLUSHER) == PR_IO_FLUSHER;
 		break;
+	case PR_SCHED_CORE_SHARE:
+		error = sched_core_share_pid(arg2);
+		break;
 	default:
 		error = -EINVAL;
 		break;
