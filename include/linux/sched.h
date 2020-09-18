@@ -2061,11 +2061,13 @@ void sched_core_unsafe_enter(void);
 void sched_core_unsafe_exit(void);
 void sched_core_wait_till_safe(void);
 int sched_core_share_pid(pid_t pid);
+void sched_tsk_free(struct task_struct *tsk);
 #else
 #define sched_core_unsafe_enter(void) do { } while (0)
 #define sched_core_unsafe_exit(void) do { } while (0)
 #define sched_core_wait_till_safe(void) do { } while (0)
 #define sched_core_share_pid(pid_t pid) do { } while (0)
+#define sched_tsk_free(tsk) do { } while (0)
 #endif
 
 #endif
