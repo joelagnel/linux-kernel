@@ -9631,6 +9631,14 @@ static int cpu_core_tag_color_write_u64(struct cgroup_subsys_state *css,
 
 	return 0;
 }
+
+void sched_tsk_free(struct task_struct *tsk)
+{
+	if (!tsk->core_task_cookie)
+		return;
+	sched_core_put_task_cookie(tsk->core_task_cookie);
+	sched_core_put();
+}
 #endif
 
 static struct cftype cpu_legacy_files[] = {
