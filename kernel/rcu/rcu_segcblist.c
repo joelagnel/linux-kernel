@@ -219,8 +219,18 @@ void rcu_segcblist_offload(struct rcu_segcblist *rsclp)
  */
 bool rcu_segcblist_ready_cbs(struct rcu_segcblist *rsclp)
 {
-	return rcu_segcblist_is_enabled(rsclp) &&
+	bool ready;
+	long len;
+
+	ready = rcu_segcblist_is_enabled(rsclp) &&
 	       &rsclp->head != READ_ONCE(rsclp->tails[RCU_DONE_TAIL]);
+	len = rcu_segcblist_get_seglen(rsclp, RCU_DONE_TAIL);
+
+	if (WARN_ON_ONCE(ready && !len))
+		trace_printk("Ready but len 0\n");
+	if (WARN_ON_ONCE(!ready && len))
+		trace_printk("!Ready but len !0\n");
+	return ready;
 }
 
 /*
