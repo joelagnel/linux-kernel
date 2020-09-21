@@ -421,6 +421,10 @@ void trace_rcu_segcb_list(struct rcu_segcblist *rsclp, char *context)
 	rcu_segcblist_countseq(rsclp, cbs, gps);
 
 	trace_rcu_segcb(context, cbs, gps);
+
+	trace_printk("Old:\n");
+	rcu_segcblist_countseq_old(rsclp, cbs, gps);
+	trace_rcu_segcb(context, cbs, gps);
 }
 #endif
 
@@ -628,6 +632,8 @@ void rcu_segcblist_merge(struct rcu_segcblist *dst_rsclp,
 	struct rcu_cblist donecbs;
 	struct rcu_cblist pendcbs;
 
+	trace_printk("rcu_segcblist_merge start\n");
+
 	rcu_cblist_init(&donecbs);
 	rcu_cblist_init(&pendcbs);
 
@@ -638,4 +644,6 @@ void rcu_segcblist_merge(struct rcu_segcblist *dst_rsclp,
 	rcu_segcblist_insert_pend_cbs(dst_rsclp, &pendcbs);
 
 	rcu_segcblist_init(src_rsclp);
+
+	trace_printk("rcu_segcblist_merge end\n");
 }

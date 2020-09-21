@@ -2326,12 +2326,16 @@ static int rcu_torture_barrier_init(void)
 static void rcu_torture_barrier_cleanup(void)
 {
 	int i;
-
+	pr_err("01\n");
 	torture_stop_kthread(rcu_torture_barrier, barrier_task);
+	pr_err("02\n");
 	if (barrier_cbs_tasks != NULL) {
+
+	pr_err("03\n");
 		for (i = 0; i < n_barrier_cbs; i++)
 			torture_stop_kthread(rcu_torture_barrier_cbs,
 					     barrier_cbs_tasks[i]);
+	pr_err("04\n");
 		kfree(barrier_cbs_tasks);
 		barrier_cbs_tasks = NULL;
 	}
@@ -2468,24 +2472,32 @@ rcu_torture_cleanup(void)
 	unsigned long gp_seq = 0;
 	int i;
 
+	pr_err("rcu_torture_cleanup: %d %d\n", atomic_read(&n_rcu_torture_error), n_rcu_torture_barrier_error);
+
 	if (torture_cleanup_begin()) {
 		if (cur_ops->cb_barrier != NULL)
 			cur_ops->cb_barrier();
 		return;
 	}
+
+	pr_err("-2\n");
 	if (!cur_ops) {
 		torture_cleanup_end();
 		return;
 	}
 
+	pr_err("-1\n");
 	if (cur_ops->gp_kthread_dbg)
 		cur_ops->gp_kthread_dbg();
 	rcu_torture_read_exit_cleanup();
+	pr_err("0\n");
 	rcu_torture_barrier_cleanup();
+	pr_err("1\n");
 	rcu_torture_fwd_prog_cleanup();
 	torture_stop_kthread(rcu_torture_stall, stall_task);
 	torture_stop_kthread(rcu_torture_writer, writer_task);
 
+	pr_err("2\n");
 	if (reader_tasks) {
 		for (i = 0; i < nrealreaders; i++)
 			torture_stop_kthread(rcu_torture_reader,
@@ -2493,6 +2505,7 @@ rcu_torture_cleanup(void)
 		kfree(reader_tasks);
 	}
 
+	pr_err("3\n");
 	if (fakewriter_tasks) {
 		for (i = 0; i < nfakewriters; i++) {
 			torture_stop_kthread(rcu_torture_fakewriter,
@@ -2502,16 +2515,20 @@ rcu_torture_cleanup(void)
 		fakewriter_tasks = NULL;
 	}
 
+	pr_err("4\n");
 	rcutorture_get_gp_data(cur_ops->ttype, &flags, &gp_seq);
 	srcutorture_get_gp_data(cur_ops->ttype, srcu_ctlp, &flags, &gp_seq);
+	pr_err("5\n");
 	pr_alert("%s:  End-test grace-period state: g%ld f%#x total-gps=%ld\n",
 		 cur_ops->name, (long)gp_seq, flags,
 		 rcutorture_seq_diff(gp_seq, start_gp_seq));
 	torture_stop_kthread(rcu_torture_stats, stats_task);
+	pr_err("6\n");
 	torture_stop_kthread(rcu_torture_fqs, fqs_task);
 	if (rcu_torture_can_boost())
 		cpuhp_remove_state(rcutor_hp);
 
+	pr_err("7\n");
 	/*
 	 * Wait for all RCU callbacks to fire, then do torture-type-specific
 	 * cleanup operations.
@@ -2521,8 +2538,10 @@ rcu_torture_cleanup(void)
 	if (cur_ops->cleanup != NULL)
 		cur_ops->cleanup();
 
+	pr_err("8\n");
 	rcu_torture_stats_print();  /* -After- the stats thread is stopped! */
 
+	pr_err("9\n");
 	if (err_segs_recorded) {
 		pr_alert("Failure/close-call rcutorture reader segments:\n");
 		if (rt_read_nsegs == 0)
@@ -2550,6 +2569,8 @@ rcu_torture_cleanup(void)
 
 		}
 	}
+
+	pr_err("10\n");
 	if (atomic_read(&n_rcu_torture_error) || n_rcu_torture_barrier_error)
 		rcu_torture_print_module_parms(cur_ops, "End of test: FAILURE");
 	else if (torture_onoff_failures())

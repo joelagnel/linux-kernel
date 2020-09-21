@@ -2694,6 +2694,8 @@ static __latent_entropy void rcu_core(void)
 	const bool offloaded = IS_ENABLED(CONFIG_RCU_NOCB_CPU) &&
 			       rcu_segcblist_is_offloaded(&rdp->cblist);
 
+	trace_printk("Enter rcu_core\n");
+	trace_dump_stack(0);
 	if (cpu_is_offline(smp_processor_id()))
 		return;
 	trace_rcu_utilization(TPS("Start RCU core"));
@@ -2984,6 +2986,7 @@ __call_rcu(struct rcu_head *head, rcu_callback_t func)
 	if (rcu_nocb_try_bypass(rdp, head, &was_alldone, flags))
 		return; // Enqueued onto ->nocb_bypass, so just leave.
 	// If no-CBs CPU gets here, rcu_nocb_try_bypass() acquired ->nocb_lock.
+	trace_rcu_segcb_list(&rdp->cblist, "SegCBEFOREQueued");
 	rcu_segcblist_enqueue(&rdp->cblist, head);
 	if (__is_kvfree_rcu_offset((unsigned long)func))
 		trace_rcu_kvfree_callback(rcu_state.name, head,
