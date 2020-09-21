@@ -76,6 +76,7 @@ struct rcu_segcblist {
 #endif
 	u8 enabled;
 	u8 offloaded;
+	u8 invoking;
 };
 
 #define RCU_SEGCBLIST_INITIALIZER(n) \

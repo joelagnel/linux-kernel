@@ -2461,6 +2461,7 @@ static void rcu_do_batch(struct rcu_data *rdp)
 	}
 	trace_rcu_batch_start(rcu_state.name,
 			      rcu_segcblist_n_cbs(&rdp->cblist), bl);
+	rcu_segcblist_set_invoking(&rdp->cblist);
 	rcu_segcblist_extract_done_cbs(&rdp->cblist, &rcl);
 	if (offloaded)
 		rdp->qlen_last_fqs_check = rcu_segcblist_n_cbs(&rdp->cblist);
@@ -2518,6 +2519,9 @@ static void rcu_do_batch(struct rcu_data *rdp)
 	rcu_segcblist_insert_done_cbs(&rdp->cblist, &rcl);
 	smp_mb(); /* List handling before counting for rcu_barrier(). */
 	rcu_segcblist_add_len(&rdp->cblist, -count);
+
+	smp_mb();
+	rcu_segcblist_reset_invoking(&rdp->cblist);
 
 	/* Reinstate batch limit if we have worked down the excess. */
 	count = rcu_segcblist_n_cbs(&rdp->cblist);
