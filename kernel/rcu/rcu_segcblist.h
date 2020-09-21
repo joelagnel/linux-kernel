@@ -40,33 +40,14 @@ static inline bool rcu_segcblist_empty(struct rcu_segcblist *rsclp)
 	return !READ_ONCE(rsclp->head);
 }
 
-static inline void rcu_segcblist_set_invoking(struct rcu_segcblist *rsclp)
-{
-	WRITE_ONCE(rsclp->invoking, 1);
-}
-
-static inline void rcu_segcblist_reset_invoking(struct rcu_segcblist *rsclp)
-{
-	WRITE_ONCE(rsclp->invoking, 0);
-}
-
 /* Return number of callbacks in segmented callback list. */
 static inline long rcu_segcblist_n_cbs(struct rcu_segcblist *rsclp)
 {
-	long ret;
 #ifdef CONFIG_RCU_NOCB_CPU
-	ret = atomic_long_read(&rsclp->len);
+	return atomic_long_read(&rsclp->len);
 #else
-	ret = READ_ONCE(rsclp->len);
+	return READ_ONCE(rsclp->len);
 #endif
-
-	/*
-	 * An invoking list should not appear empty. This is required
-	 * by rcu_barrier().
-	 */
-	if (ret)
-		return ret;
-	return READ_ONCE(rsclp->invoking) ? 1 : 0;
 }
 
 /*
