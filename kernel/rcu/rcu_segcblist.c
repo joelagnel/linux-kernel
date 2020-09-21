@@ -388,7 +388,6 @@ void rcu_segcblist_extract_done_cbs(struct rcu_segcblist *rsclp,
 		if (rsclp->tails[i] == rsclp->tails[RCU_DONE_TAIL])
 			WRITE_ONCE(rsclp->tails[i], &rsclp->head);
 	rcu_segcblist_set_seglen(rsclp, RCU_DONE_TAIL, 0);
-	rcu_segcblist_add_len(rsclp, -(rclp->len));
 }
 
 /*
@@ -452,7 +451,17 @@ void rcu_segcblist_extract_pend_cbs(struct rcu_segcblist *rsclp,
 		WRITE_ONCE(rsclp->tails[i], rsclp->tails[RCU_DONE_TAIL]);
 		rcu_segcblist_set_seglen(rsclp, i, 0);
 	}
-	rcu_segcblist_add_len(rsclp, -(rclp->len));
+}
+
+/*
+ * Insert counts from the specified rcu_cblist structure in the
+ * specified rcu_segcblist structure.
+ */
+void rcu_segcblist_insert_count(struct rcu_segcblist *rsclp,
+				struct rcu_cblist *rclp)
+{
+	rcu_segcblist_add_len(rsclp, rclp->len);
+	rclp->len = 0;
 }
 
 /*
@@ -476,7 +485,6 @@ void rcu_segcblist_insert_done_cbs(struct rcu_segcblist *rsclp,
 			break;
 	rclp->head = NULL;
 	rclp->tail = &rclp->head;
-	rcu_segcblist_add_len(rsclp, rclp->len);
 }
 
 /*
@@ -492,7 +500,6 @@ void rcu_segcblist_insert_pend_cbs(struct rcu_segcblist *rsclp,
 	rcu_segcblist_add_seglen(rsclp, RCU_NEXT_TAIL, rclp->len);
 	WRITE_ONCE(*rsclp->tails[RCU_NEXT_TAIL], rclp->head);
 	WRITE_ONCE(rsclp->tails[RCU_NEXT_TAIL], rclp->tail);
-	rcu_segcblist_add_len(rsclp, rclp->len);
 }
 
 /*
@@ -637,9 +644,12 @@ void rcu_segcblist_merge(struct rcu_segcblist *dst_rsclp,
 	rcu_cblist_init(&donecbs);
 	rcu_cblist_init(&pendcbs);
 
+	rcu_segcblist_set_len(src_rsclp, 0);
 	rcu_segcblist_extract_done_cbs(src_rsclp, &donecbs);
 	rcu_segcblist_extract_pend_cbs(src_rsclp, &pendcbs);
 
+	rcu_segcblist_insert_count(dst_rsclp, &donecbs);
+	rcu_segcblist_insert_count(dst_rsclp, &pendcbs);
 	rcu_segcblist_insert_done_cbs(dst_rsclp, &donecbs);
 	rcu_segcblist_insert_pend_cbs(dst_rsclp, &pendcbs);
 
