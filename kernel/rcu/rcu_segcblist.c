@@ -461,7 +461,6 @@ void rcu_segcblist_insert_count(struct rcu_segcblist *rsclp,
 				struct rcu_cblist *rclp)
 {
 	rcu_segcblist_add_len(rsclp, rclp->len);
-	rclp->len = 0;
 }
 
 /*
