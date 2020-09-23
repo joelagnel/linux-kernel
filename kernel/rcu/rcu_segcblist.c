@@ -226,10 +226,14 @@ bool rcu_segcblist_ready_cbs(struct rcu_segcblist *rsclp)
 	       &rsclp->head != READ_ONCE(rsclp->tails[RCU_DONE_TAIL]);
 	len = rcu_segcblist_get_seglen(rsclp, RCU_DONE_TAIL);
 
-	if (WARN_ON_ONCE(ready && !len))
+	if (WARN_ON_ONCE(!len && &rsclp->head != READ_ONCE(rsclp->tails[RCU_DONE_TAIL]))) {
 		trace_printk("Ready but len 0\n");
-	if (WARN_ON_ONCE(!ready && len))
+		tracing_stop();
+		panic("tpr\n");
+	} else
+	if (WARN_ON_ONCE(len && &rsclp->head == READ_ONCE(rsclp->tails[RCU_DONE_TAIL]))) {
 		trace_printk("!Ready but len !0\n");
+	}
 	return ready;
 }
 
@@ -421,7 +425,8 @@ void trace_rcu_segcb_list(struct rcu_segcblist *rsclp, char *context)
 
 	trace_rcu_segcb(context, cbs, gps);
 
-	trace_printk("Old:\n");
+	trace_printk("Old: \n");
+	trace_printk("First readY?: %d\n", rcu_segcblist_ready_cbs(rsclp) ? 1:0);
 	rcu_segcblist_countseq_old(rsclp, cbs, gps);
 	trace_rcu_segcb(context, cbs, gps);
 }
@@ -638,7 +643,10 @@ void rcu_segcblist_merge(struct rcu_segcblist *dst_rsclp,
 	struct rcu_cblist donecbs;
 	struct rcu_cblist pendcbs;
 
-	trace_printk("rcu_segcblist_merge start\n");
+	trace_printk("rcu_segcblist_merge start, source:\n");
+	trace_rcu_segcb_list(src_rsclp, "PreMerge");
+	trace_printk("rcu_segcblist_merge start, dest:\n");
+	trace_rcu_segcb_list(dst_rsclp, "PreMerge");
 
 	rcu_cblist_init(&donecbs);
 	rcu_cblist_init(&pendcbs);
@@ -654,5 +662,8 @@ void rcu_segcblist_merge(struct rcu_segcblist *dst_rsclp,
 
 	rcu_segcblist_init(src_rsclp);
 
-	trace_printk("rcu_segcblist_merge end\n");
+	trace_printk("rcu_segcblist_merge end, src:\n");
+	trace_rcu_segcb_list(src_rsclp, "PostMerge");
+	trace_printk("rcu_segcblist_merge end, dst:\n");
+	trace_rcu_segcb_list(dst_rsclp, "PostMerge");
 }

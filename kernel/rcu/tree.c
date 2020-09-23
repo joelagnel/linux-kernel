@@ -2691,7 +2691,6 @@ static __latent_entropy void rcu_core(void)
 			       rcu_segcblist_is_offloaded(&rdp->cblist);
 
 	trace_printk("Enter rcu_core\n");
-	trace_dump_stack(0);
 	if (cpu_is_offline(smp_processor_id()))
 		return;
 	trace_rcu_utilization(TPS("Start RCU core"));
