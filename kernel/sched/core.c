@@ -9044,6 +9044,13 @@ static u64 cpu_core_tag_color_read_u64(struct cgroup_subsys_state *css, struct c
 	return tg->core_tag_color;
 }
 
+#ifdef CONFIG_SCHED_DEBUG
+static u64 cpu_core_group_cookie_read_u64(struct cgroup_subsys_state *css, struct cftype *cft)
+{
+	return cpu_core_get_group_cookie(css_tg(css));
+}
+#endif
+
 struct write_core_tag {
 	struct cgroup_subsys_state *css;
 	u64 cookie;
@@ -9214,6 +9221,14 @@ static struct cftype cpu_legacy_files[] = {
 		.read_u64 = cpu_core_tag_color_read_u64,
 		.write_u64 = cpu_core_tag_color_write_u64,
 	},
+#ifdef CONFIG_SCHED_DEBUG
+	/* Read the effective cookie (color+tag) of the group. */
+	{
+		.name = "core_group_cookie",
+		.flags = CFTYPE_NOT_ON_ROOT,
+		.read_u64 = cpu_core_group_cookie_read_u64,
+	},
+#endif
 #endif
 #ifdef CONFIG_UCLAMP_TASK_GROUP
 	{
@@ -9401,6 +9416,14 @@ static struct cftype cpu_files[] = {
 		.read_u64 = cpu_core_tag_color_read_u64,
 		.write_u64 = cpu_core_tag_color_write_u64,
 	},
+#ifdef CONFIG_SCHED_DEBUG
+	/* Read the effective cookie (color+tag) of the group. */
+	{
+		.name = "core_group_cookie",
+		.flags = CFTYPE_NOT_ON_ROOT,
+		.read_u64 = cpu_core_group_cookie_read_u64,
+	},
+#endif
 #endif
 #ifdef CONFIG_CFS_BANDWIDTH
 	{
