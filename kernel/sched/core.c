@@ -8784,7 +8784,7 @@ void sched_core_tag_requeue(struct task_struct *p, unsigned long cookie, bool gr
 
 	if (sched_core_enqueued(p)) {
 		sched_core_dequeue(task_rq(p), p);
-		if (!p->core_task_cookie)
+		if (!p->core_cookie)
 			return;
 	}
 
@@ -8792,7 +8792,7 @@ void sched_core_tag_requeue(struct task_struct *p, unsigned long cookie, bool gr
 			p->core_task_cookie && task_on_rq_queued(p))
 		sched_core_enqueue(task_rq(p), p);
 
-	if (p->core_task_cookie)
+	if (p->core_cookie)
 		set_tsk_thread_flag(p, TIF_CORE_TAGGED);
 	else
 		clear_tsk_thread_flag(p, TIF_CORE_TAGGED);
@@ -8979,6 +8979,57 @@ out:
 }
 
 /* CGroup interface */
+
+/*
+ * Helper to get the cookie in a hierarchy.
+ * The cookie is a combination of a tag and color. Any ancestor
+ * can have a tag/color. tag is the first-level cookie setting
+ * with color being the second. Atmost one color and one tag is
+ * allowed.
+ */
+static u64 cpu_core_get_group_cookie(struct task_group *tg)
+{
+	u64 color = 0;
+
+	if (!tg)
+		return 0;
+
+	for (; tg; tg = tg->parent) {
+		if (tg->core_tag_color) {
+			WARN_ON_ONCE(color);
+			color = tg->core_tag_color;
+		}
+
+		if (tg->core_tagged) {
+			return (unsigned long)tg | color;
+		}
+	}
+
+	return 0;
+}
+
+/* Determine if any group in @tg's children are tagged or colored. */
+static bool cpu_core_check_descendants(struct task_group *tg, bool check_tag,
+					bool check_color)
+{
+	struct task_group *child;
+
+	rcu_read_lock();
+	list_for_each_entry_rcu(child, &tg->children, siblings) {
+		if ((child->core_tagged && check_tag) ||
+		    (child->core_tag_color && check_color)) {
+			rcu_read_unlock();
+			return true;
+		}
+
+		rcu_read_unlock();
+		return cpu_core_check_descendants(child, check_tag, check_color);
+	}
+
+	rcu_read_unlock();
+	return false;
+}
+
 static u64 cpu_core_tag_read_u64(struct cgroup_subsys_state *css, struct cftype *cft)
 {
 	struct task_group *tg = css_tg(css);
@@ -8995,38 +9046,32 @@ static u64 cpu_core_tag_color_read_u64(struct cgroup_subsys_state *css, struct c
 
 struct write_core_tag {
 	struct cgroup_subsys_state *css;
-	int val;
-	int color_write;
+	u64 cookie;
 };
 
 static int __sched_write_tag(void *data)
 {
 	struct write_core_tag *tag = (struct write_core_tag *) data;
-	struct cgroup_subsys_state *css = tag->css;
-	struct task_group *tg = css_tg(tag->css);
-	struct css_task_iter it;
 	struct task_struct *p;
-	unsigned long cookie;
-	int val = tag->val;
+	struct cgroup_subsys_state *css;
 
-	if (tag->color_write) {
-		cookie = ((unsigned long)tg | val);
-		tg->core_tag_color = val;
-	} else {
-		cookie = !!val ? (unsigned long)tg : 0UL;
-		tg->core_tagged = !!val;
+	rcu_read_lock();
+	css_for_each_descendant_pre(css, tag->css) {
+		struct css_task_iter it;
+
+		css_task_iter_start(css, 0, &it);
+		/*
+		 * Note: css_task_iter_next will skip dying tasks.
+		 * There could still be dying tasks left in the core queue
+		 * when we set cgroup tag to 0 when the loop is done below.
+		 */
+		while ((p = css_task_iter_next(&it)))
+			sched_core_tag_requeue(p, tag->cookie, true /* group */);
+
+		css_task_iter_end(&it);
 	}
+	rcu_read_unlock();
 
-	css_task_iter_start(css, 0, &it);
-	/*
-	 * Note: css_task_iter_next will skip dying tasks.
-	 * There could still be dying tasks left in the core queue
-	 * when we set cgroup tag to 0 when the loop is done below.
-	 */
-	while ((p = css_task_iter_next(&it)))
-		sched_core_tag_requeue(p, cookie, true /* group */);
-
-	css_task_iter_end(&it);
 	return 0;
 }
 
@@ -9041,15 +9086,26 @@ static int cpu_core_tag_write_u64(struct cgroup_subsys_state *css, struct cftype
 	if (!static_branch_likely(&sched_smt_present))
 		return -EINVAL;
 
-	if (tg->core_tagged == !!val)
+	if (!tg->core_tagged && val) {
+		/* Tag is being set. Check ancestors and descendants. */
+		if (cpu_core_get_group_cookie(tg) ||
+		    cpu_core_check_descendants(tg, true /* tag */, true /* color */))
+			return -EBUSY;
+	} else if (tg->core_tagged && !val) {
+		/* Tag is being reset. Check descendants. */
+		if (cpu_core_check_descendants(tg, true /* tag */, true /* color */))
+			return -EBUSY;
+	} else {
 		return 0;
+	}
 
 	if (!!val)
 		sched_core_get();
 
 	wtag.css = css;
-	wtag.val = val;
-	wtag.color_write = 0;
+	wtag.cookie = (u64)tg << 8; /* Reserve lower 8 bits for color. */
+	tg->core_tagged = val;
+
 	stop_machine(__sched_write_tag, (void *) &wtag, NULL);
 	if (!val)
 		sched_core_put();
@@ -9062,6 +9118,7 @@ static int cpu_core_tag_color_write_u64(struct cgroup_subsys_state *css,
 {
 	struct task_group *tg = css_tg(css);
 	struct write_core_tag wtag;
+	u64 cookie;
 
 	if (val > 256)
 		return -ERANGE;
@@ -9069,15 +9126,32 @@ static int cpu_core_tag_color_write_u64(struct cgroup_subsys_state *css,
 	if (!static_branch_likely(&sched_smt_present))
 		return -EINVAL;
 
-	/* If CGroup is not tagged, no need to set any cookies. */
-	if (!tg->core_tagged) {
-		tg->core_tag_color = val;
-		return 0;
-	}
+	cookie = cpu_core_get_group_cookie(tg);
+	/* Can't set color if nothing in the ancestors were tagged. */
+	if (!cookie)
+		return -EINVAL;
 
+	/*
+	 * Something in the ancestors already colors us. Can't change the color
+	 * at this level.
+	 */
+	if (!tg->core_tag_color && (cookie & 255))
+		return -EINVAL;
+
+	/*
+	 * Check if any descendants are colored. If so, we can't recolor them.
+	 * Don't need to check if descendants are tagged, since we don't allow
+	 * tagging when already tagged.
+	 */
+	if (cpu_core_check_descendants(tg, false /* tag */, true /* color */))
+		return -EINVAL;
+
+	cookie &= ~255;
+	cookie |= val;
 	wtag.css = css;
-	wtag.val = val;
-	wtag.color_write = 1;
+	wtag.cookie = cookie;
+	tg->core_tag_color = val;
+
 	stop_machine(__sched_write_tag, (void *) &wtag, NULL);
 
 	return 0;
