@@ -3639,34 +3639,45 @@ static int rcu_pending(int user)
 	check_cpu_stall(rdp);
 
 	/* Does this CPU need a deferred NOCB wakeup? */
-	if (rcu_nocb_need_deferred_wakeup(rdp))
+	if (rcu_nocb_need_deferred_wakeup(rdp)) {
+		trace_printk("rcu_pending: nocb def wake\n");
 		return 1;
+	}
 
 	/* Is this a nohz_full CPU in userspace or idle?  (Ignore RCU if so.) */
-	if ((user || rcu_is_cpu_rrupt_from_idle()) && rcu_nohz_full_cpu())
+	if ((user || rcu_is_cpu_rrupt_from_idle()) && rcu_nohz_full_cpu()) {
 		return 0;
+	}
 
 	/* Is the RCU core waiting for a quiescent state from this CPU? */
 	gp_in_progress = rcu_gp_in_progress();
-	if (rdp->core_needs_qs && !rdp->cpu_no_qs.b.norm && gp_in_progress)
+	if (rdp->core_needs_qs && !rdp->cpu_no_qs.b.norm && gp_in_progress) {
+		trace_printk("rcu_pending: gp_in_progress\n");
 		return 1;
+	}
 
 	/* Does this CPU have callbacks ready to invoke? */
 	if (!rcu_segcblist_is_offloaded(&rdp->cblist) &&
-	    rcu_segcblist_ready_cbs(&rdp->cblist))
+	    rcu_segcblist_ready_cbs(&rdp->cblist)) {
+		trace_printk("rcu_pending: ready to invoke\n");
 		return 1;
+	}
 
 	/* Has RCU gone idle with this CPU needing another grace period? */
 	if (!gp_in_progress && rcu_segcblist_is_enabled(&rdp->cblist) &&
 	    (!IS_ENABLED(CONFIG_RCU_NOCB_CPU) ||
 	     !rcu_segcblist_is_offloaded(&rdp->cblist)) &&
-	    !rcu_segcblist_restempty(&rdp->cblist, RCU_NEXT_READY_TAIL))
+	    !rcu_segcblist_restempty(&rdp->cblist, RCU_NEXT_READY_TAIL)) {
+		trace_printk("rcu_pending: CBs need GP numbers\n");
 		return 1;
+	}
 
 	/* Have RCU grace period completed or started?  */
 	if (rcu_seq_current(&rnp->gp_seq) != rdp->gp_seq ||
-	    unlikely(READ_ONCE(rdp->gpwrap))) /* outside lock */
+	    unlikely(READ_ONCE(rdp->gpwrap))) /* outside lock */ {
+		trace_printk("rcu_pending: GP compelted or started\n");
 		return 1;
+	}
 
 	/* nothing to do */
 	return 0;
