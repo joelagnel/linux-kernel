@@ -757,6 +757,7 @@ extern const struct attribute_group aspm_ctrl_attr_group;
 
 extern const struct attribute_group pci_dev_reset_method_attr_group;
 bool pci_drv_allowed_for_untrusted_devs(struct device_driver *drvr);
+bool pci_allowed_to_attach(struct pci_driver *drv, struct pci_dev *dev);
 
 #ifdef CONFIG_X86_INTEL_MID
 bool pci_use_mid_pm(void);
