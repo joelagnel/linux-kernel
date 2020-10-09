@@ -8505,6 +8505,9 @@ void sched_offline_group(struct task_group *tg)
 	spin_unlock_irqrestore(&task_group_lock, flags);
 }
 
+#define SCHED_CORE_GROUP_COOKIE_MASK ((1UL << (sizeof(unsigned long) * 4)) - 1)
+static unsigned long cpu_core_get_group_cookie(struct task_group *tg);
+
 static void sched_change_group(struct task_struct *tsk, int type)
 {
 	struct task_group *tg;
@@ -8519,11 +8522,13 @@ static void sched_change_group(struct task_struct *tsk, int type)
 	tg = autogroup_task_group(tsk, tg);
 
 #ifdef CONFIG_SCHED_CORE
-	if ((unsigned long)tsk->sched_task_group == tsk->core_cookie)
-		tsk->core_cookie = 0UL;
+	if (tsk->core_group_cookie) {
+		tsk->core_group_cookie = 0UL;
+		tsk->core_cookie &= ~SCHED_CORE_GROUP_COOKIE_MASK;
+	}
 
-	if (tg->core_tagged /* && !tsk->core_cookie ? */)
-		tsk->core_cookie = (unsigned long)tg;
+	tsk->core_group_cookie = cpu_core_get_group_cookie(tg);
+	tsk->core_cookie |= tsk->core_group_cookie;
 #endif
 
 	tsk->sched_task_group = tg;
@@ -9471,7 +9476,7 @@ static unsigned long cpu_core_get_group_cookie(struct task_group *tg)
 
 		if (tg->core_tagged) {
 			unsigned long cookie = ((unsigned long)tg << 8) | color;
-			cookie &= (1UL << (sizeof(unsigned long) * 4)) - 1;
+			cookie &= SCHED_CORE_GROUP_COOKIE_MASK;
 			return cookie;
 		}
 	}
