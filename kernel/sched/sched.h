@@ -437,6 +437,11 @@ struct task_group {
 
 };
 
+static inline struct task_group *css_tg(struct cgroup_subsys_state *css)
+{
+	return css ? container_of(css, struct task_group, css) : NULL;
+}
+
 #ifdef CONFIG_FAIR_GROUP_SCHED
 #define ROOT_TASK_GROUP_LOAD	NICE_0_LOAD
 
@@ -1104,6 +1109,8 @@ static inline int cpu_of(struct rq *rq)
 #ifdef CONFIG_SCHED_CORE
 DECLARE_STATIC_KEY_FALSE(__sched_core_enabled);
 
+#define SCHED_CORE_GROUP_COOKIE_MASK ((1UL << (sizeof(unsigned long) * 4)) - 1)
+
 static inline bool sched_core_enabled(struct rq *rq)
 {
 	return static_branch_unlikely(&__sched_core_enabled) && rq->core_enabled;
@@ -1148,9 +1155,53 @@ static inline bool sched_core_cookie_match(struct rq *rq, struct task_struct *p)
 	return idle_core || rq->core->core_cookie == p->core_cookie;
 }
 
-extern void queue_core_balance(struct rq *rq);
+static inline bool sched_core_enqueued(struct task_struct *task)
+{
+	return !RB_EMPTY_NODE(&task->core_node);
+}
+
+void queue_core_balance(struct rq *rq);
+
+void sched_core_enqueue(struct rq *rq, struct task_struct *p);
+void sched_core_dequeue(struct rq *rq, struct task_struct *p);
+void sched_core_get(void);
+void sched_core_put(void);
+
+void sched_core_tag_requeue(struct task_struct *p, unsigned long cookie,
+			    bool group);
+
+int sched_core_share_pid(pid_t pid);
+int sched_core_share_tasks(struct task_struct *t1, struct task_struct *t2);
+
+unsigned long cpu_core_get_group_cookie(struct task_group *tg);
+
+u64 cpu_core_tag_read_u64(struct cgroup_subsys_state *css,
+			  struct cftype *cft);
+
+u64 cpu_core_tag_color_read_u64(struct cgroup_subsys_state *css,
+				struct cftype *cft);
+
+#ifdef CONFIG_SCHED_DEBUG
+u64 cpu_core_group_cookie_read_u64(struct cgroup_subsys_state *css,
+				   struct cftype *cft);
+#endif
+
+int cpu_core_tag_write_u64(struct cgroup_subsys_state *css, struct cftype *cft,
+			   u64 val);
+
+int cpu_core_tag_color_write_u64(struct cgroup_subsys_state *css,
+				 struct cftype *cft, u64 val);
+
+#ifndef TIF_UNSAFE_RET
+#define TIF_UNSAFE_RET (0)
+#endif
 
 #else /* !CONFIG_SCHED_CORE */
+
+static inline bool sched_core_enqueued(struct task_struct *task) { return false; }
+static inline void sched_core_enqueue(struct rq *rq, struct task_struct *p) { }
+static inline void sched_core_dequeue(struct rq *rq, struct task_struct *p) { }
+static inline int sched_core_share_tasks(struct task_struct *t1, struct task_struct *t2) { }
 
 static inline bool sched_core_enabled(struct rq *rq)
 {
@@ -2779,7 +2830,4 @@ void swake_up_all_locked(struct swait_queue_head *q);
 void __prepare_to_swait(struct swait_queue_head *q, struct swait_queue *wait);
 
 #ifdef CONFIG_SCHED_CORE
-#ifndef TIF_UNSAFE_RET
-#define TIF_UNSAFE_RET (0)
-#endif
 #endif
