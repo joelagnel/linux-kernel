@@ -36,14 +36,17 @@ not needed, SRCU should be avoided.
 Counter-based RCU implementations such as QRCU [1] and SRCU depend on sampling
 of an index which tells the reader which pair of counters to modify. It is
 possible that there is a race between reader and writer, such that the index
-sampled is not the right one. This can cause some implementations to keep
-looping till they get the right index, potentially for a long time.
+sampled is not the right one because it was sampled after a flip happened. This
+can cause an implementation to retry. It can even keep retrying indefinitely if
+it keeps getting blocked and keeps sampling the incorrect index potentially
+waiting for a long time.
 
 SRCU's design on the other hand does not suffer from this issue. Even though
 SRCU readers have higher overhead than non-preemptible RCU (which is basically
-just a compiler barrier), the number of instructions they have to execute are
-fixed.  This is because SRCU carefully scans counters during grace period
-detection, such that unbounded looping in the reader is not necessary.
+just a compiler barrier), the number of instructions they execute are fixed.
+This is because SRCU updates scan the inactive set of counters twice (both
+before and after a flip), such that unbounded looping in the reader is not
+necessary.
 
 4. Starvation freedom
 
@@ -66,6 +69,27 @@ lore.kernel.org/r/CAEXW_YRtGhiaz+86pTL2WTyx5tqrpjB-bgQbnMLXjSQXPCmYfw@mail.gmail
 The grace period machinery of SRCU is driven using workqueues which
 periodically queue/requeue work, to detect end of grace periods, start new
 grace periods and invoke callbacks. This design choice is because SRCU does not
-do updates that often which RCU which is doing updates all the time. In the
-future, if it is seen that SRCU does a lot of updates, then the design may move
-to using kernel threads.
+do updates that often. On the other hand, RCU does updates all the time and we
+really care about forward progress much more there. In the future, if it is
+seen that SRCU does a lot of updates, then the design may move to using kernel
+threads.
+
+The other reason is, SRCU readers are expected to block for a long period of
+time such as waiting for a network connection. In this case, worrying about
+forward progress of grace periods makes even less sense.
+
+7. Why TREE SRCU?
+
+The tree-based SRCU scheme uses the same Tree mechanism as regular RCU to
+program start and end of grace periods, and invoke callbacks. Thus reducing
+lock contention on any locking needed to manage the SRCU state.
+
+This arose out of work to get rid of mmap_sem and replace it with SRCU in the
+mm subsystem (such work has not yet been completed). By using TREE SRCU, the
+idea is for SRCU to scale to a large number of CPUs (potentially 1000s) where
+contention could be quite high in the page fault code paths where it tries to
+update the memory map.
+
+8. Memory barriers
+
+All about GP guarantees and scanning.
