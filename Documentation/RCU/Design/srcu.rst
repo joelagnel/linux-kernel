@@ -44,3 +44,28 @@ SRCU readers have higher overhead than non-preemptible RCU (which is basically
 just a compiler barrier), the number of instructions they have to execute are
 fixed.  This is because SRCU carefully scans counters during grace period
 detection, such that unbounded looping in the reader is not necessary.
+
+4. Starvation freedom
+
+Info on this is mentioned in:
+https://people.kernel.org/joelfernandes/srcu-state-machine-and-double-scan
+To prevent starvation, flipping and draining of inactive counter-part is
+needed. The reader-count on the inactive part has to monotonically decrease so
+that scanning inactive counter part eventually converges.
+
+5. Overhead of SRCU
+
+SRCU needs mem barriers to maintain the RCU invariants. To a point where Paul
+is proposing a new RCU variant (Tasks tracing RCU), which uses TasksRCU like
+mechanisms and IPIs to detect grace periods, while using task-specific nesting
+counters on the reader side.
+lore.kernel.org/r/CAEXW_YRtGhiaz+86pTL2WTyx5tqrpjB-bgQbnMLXjSQXPCmYfw@mail.gmail.com
+
+6. Use of workqueues instead of GP thread
+
+The grace period machinery of SRCU is driven using workqueues which
+periodically queue/requeue work, to detect end of grace periods, start new
+grace periods and invoke callbacks. This design choice is because SRCU does not
+do updates that often which RCU which is doing updates all the time. In the
+future, if it is seen that SRCU does a lot of updates, then the design may move
+to using kernel threads.
