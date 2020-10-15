@@ -1,0 +1,31 @@
+This is required for several usecases identified. One of them being tracing how
+the segmented callback list changes. Tracing this has identified issues in RCU
+code in the past.
+
+>From Paul:
+Another use case is of course more accurately determining whether a given CPU's
+large pile of callbacks can be best served by making grace periods go faster,
+invoking callbacks more vigorously, or both.  It should also be possible to
+simplify some of the callback handling a bit, given that some of the unnatural
+acts are due to there having been no per-batch counts.
+
+Revision history:
+v9: Fix SRCU issues (Frederic).
+
+v8: Small style changes, making the seglen as non-atomic since it is always
+    under lock (Frederic).
+
+v7: Cleaned up memory barriers (thanks fweisbec@ for reviewing), made minor
+corrections per Neeraj (thanks).
+
+v6: Fixed TREE04, and restored older logic to ensure rcu_barrier works.
+
+v5: Various changes, bug fixes. Discovery of rcu_barrier issue.
+
+v4: Restructured rcu_do_batch() and segcblist merging to avoid issues.
+    Fixed minor nit from Davidlohr.
+v1->v3: minor nits.
+(https://lore.kernel.org/lkml/20200719034210.2382053-1-joel@xxxxxxxxxxxxxxxxx/)
+
+option-subject Add support for length of each segment in the segcblist
+option-prefix PATCH v8
