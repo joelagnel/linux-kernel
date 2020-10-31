@@ -511,6 +511,10 @@ bool cfs_prio_less(struct task_struct *a, struct task_struct *b, bool in_fi)
 	cfs_rqa = sea->cfs_rq;
 	cfs_rqb = seb->cfs_rq;
 
+	trace_printk("CFS_PRIO_LESS (in_fi:%d): (%s/%d;vr:%Lu,mvfi:%Lu,mv:%Lu) ?< (%s/%d;vr:%Lu,mvfi:%Lu,mv:%Lu)\n",		 !!in_fi,
+		     a->comm, a->pid, sea->vruntime, cfs_rqa->min_vruntime_fi, cfs_rqa->min_vruntime,
+		     b->comm, b->pid, seb->vruntime, cfs_rqb->min_vruntime_fi, cfs_rqb->min_vruntime);
+
 	/* normalize vruntime WRT their rq's base */
 	delta = (s64)(sea->vruntime - seb->vruntime) +
 		(s64)(cfs_rqb->min_vruntime_fi - cfs_rqa->min_vruntime_fi);
@@ -11080,6 +11084,7 @@ static void propagate_entity_cfs_rq(struct sched_entity *se)
 		update_load_avg(cfs_rq, se, UPDATE_TG);
 	}
 }
+
 static void se_fi_update(struct sched_entity *se, unsigned int fi_seq, bool forceidle)
 {
 	bool root = true;
@@ -11087,6 +11092,10 @@ static void se_fi_update(struct sched_entity *se, unsigned int fi_seq, bool forc
 
 	for_each_sched_entity(se) {
 		struct cfs_rq *cfs_rq = cfs_rq_of(se);
+
+		trace_printk("se_fi_update: cfs_fiseq=%d fi_seq=%d forceidle=%d\n",
+			     cfs_rq->forceidle_seq, fi_seq, !!forceidle);
+
 		if (forceidle) {
 			if (cfs_rq->forceidle_seq == fi_seq)
 				break;
