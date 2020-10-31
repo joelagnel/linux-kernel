@@ -497,9 +497,13 @@ struct cfs_rq {
 	unsigned int		nr_running;
 	unsigned int		h_nr_running;
 
+#ifdef CONFIG_SCHED_CORE
+	unsigned int		forceidle_seq;
+	u64			min_vruntime_fi;
+#endif
+
 	u64			exec_clock;
 	u64			min_vruntime;
-	u64			min_vruntime_fi;
 #ifndef CONFIG_64BIT
 	u64			min_vruntime_copy;
 #endif
@@ -974,7 +978,6 @@ struct rq {
 	unsigned int		core_enabled;
 	unsigned int		core_sched_seq;
 	struct rb_root		core_tree;
-	bool			core_forceidle;
 	unsigned char		core_pause_pending;
 	unsigned int		core_this_irq_nest;
 
@@ -982,6 +985,8 @@ struct rq {
 	unsigned int		core_task_seq;
 	unsigned int		core_pick_seq;
 	unsigned long		core_cookie;
+	unsigned int		core_forceidle;
+	unsigned int		core_forceidle_seq;
 	unsigned int		core_irq_nest;
 #endif
 };
@@ -1060,6 +1065,8 @@ extern void queue_core_balance(struct rq *rq);
 
 void sched_core_add(struct rq *rq, struct task_struct *p);
 void sched_core_remove(struct rq *rq, struct task_struct *p);
+
+bool cfs_prio_less(struct task_struct *a, struct task_struct *b);
 
 #else /* !CONFIG_SCHED_CORE */
 

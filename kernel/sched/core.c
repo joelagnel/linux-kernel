@@ -4066,6 +4066,8 @@ pick_task(struct rq *rq, const struct sched_class *class, struct task_struct *ma
 	return cookie_pick;
 }
 
+extern void task_vruntime_update(struct rq *rq, struct task_struct *p);
+
 static struct task_struct *
 pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
 {
@@ -4141,15 +4143,6 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
 			update_rq_clock(rq_i);
 	}
 
-	if (!fi_before) {
-		for_each_cpu(i, smt_mask) {
-			struct rq *rq_i = cpu_rq(i);
-
-			/* Reset the snapshot if core is no longer in force-idle. */
-			rq_i->cfs.min_vruntime_fi = rq_i->cfs.min_vruntime;
-		}
-	}
-
 	/*
 	 * Try and select tasks for each sibling in decending sched_class
 	 * order.
@@ -4199,6 +4192,10 @@ again:
 			 */
 			if (i == cpu && !need_sync && !p->core_cookie) {
 				next = p;
+
+				WARN_ON_ONCE(fi_before);
+				task_vruntime_update(rq_i, p);
+
 				goto done;
 			}
 
@@ -4206,6 +4203,11 @@ again:
 				occ++;
 
 			rq_i->core_pick = p;
+			if (rq_i->idle == p && rq_i->nr_running) {
+				rq->core->core_forceidle = true;
+				if (!fi_before)
+					rq->core->core_forceidle_seq++;
+			}
 
 			/*
 			 * If this new candidate is of higher priority than the
@@ -4224,6 +4226,7 @@ again:
 				max = p;
 
 				if (old_max) {
+					rq->core->core_forceidle = false;
 					for_each_cpu(j, smt_mask) {
 						if (j == i)
 							continue;
@@ -4268,29 +4271,22 @@ next_class:;
 
 		WARN_ON_ONCE(!rq_i->core_pick);
 
-		if (is_idle_task(rq_i->core_pick) && rq_i->nr_running) {
-			rq_i->core_forceidle = true;
-			need_sync = true;
+		if (!(!fi_before && rq->core->core_forceidle)) {
+			task_vruntime_update(rq_i, rq_i->core_pick);
+
+			rq_i->core_pick->core_occupation = occ;
+
+			if (i == cpu)
+				continue;
+
+			if (rq_i->curr != rq_i->core_pick) {
+				resched_curr(rq_i);
+			}
 		}
 
-		rq_i->core_pick->core_occupation = occ;
-
-		if (i == cpu)
-			continue;
-
-		if (rq_i->curr != rq_i->core_pick)
-			resched_curr(rq_i);
-
 		/* Did we break L1TF mitigation requirements? */
-		WARN_ON_ONCE(!cookie_match(next, rq_i->core_pick));
-	}
-
-	if (!fi_before && need_sync) {
-		for_each_cpu(i, smt_mask) {
-			struct rq *rq_i = cpu_rq(i);
-
-			/* Snapshot if core is in force-idle. */
-			rq_i->cfs.min_vruntime_fi = rq_i->cfs.min_vruntime;
+		if (unlikely(!cookie_match(next, rq_i->core_pick))) {
+			WARN_ON_ONCE(1);
 		}
 	}
 done:
