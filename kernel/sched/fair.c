@@ -511,13 +511,14 @@ bool cfs_prio_less(struct task_struct *a, struct task_struct *b, bool in_fi)
 	cfs_rqa = sea->cfs_rq;
 	cfs_rqb = seb->cfs_rq;
 
-	trace_printk("CFS_PRIO_LESS (in_fi:%d): (%s/%d;vr:%Lu,mvfi:%Lu,mv:%Lu) ?< (%s/%d;vr:%Lu,mvfi:%Lu,mv:%Lu)\n",		 !!in_fi,
-		     a->comm, a->pid, sea->vruntime, cfs_rqa->min_vruntime_fi, cfs_rqa->min_vruntime,
-		     b->comm, b->pid, seb->vruntime, cfs_rqb->min_vruntime_fi, cfs_rqb->min_vruntime);
-
 	/* normalize vruntime WRT their rq's base */
 	delta = (s64)(sea->vruntime - seb->vruntime) +
 		(s64)(cfs_rqb->min_vruntime_fi - cfs_rqa->min_vruntime_fi);
+
+	trace_printk("CFS_PRIO_LESS (in_fi:%d delta:%Ld): (%s/%d;vr:%Lu,mvfi:%Lu,mv:%Lu) ?< (%s/%d;vr:%Lu,mvfi:%Lu,mv:%Lu)\n",
+		     !!in_fi, delta,
+		     a->comm, a->pid, sea->vruntime, cfs_rqa->min_vruntime_fi, cfs_rqa->min_vruntime,
+		     b->comm, b->pid, seb->vruntime, cfs_rqb->min_vruntime_fi, cfs_rqb->min_vruntime);
 
 	return delta > 0;
 }
