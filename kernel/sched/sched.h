@@ -1066,7 +1066,7 @@ extern void queue_core_balance(struct rq *rq);
 void sched_core_add(struct rq *rq, struct task_struct *p);
 void sched_core_remove(struct rq *rq, struct task_struct *p);
 
-bool cfs_prio_less(struct task_struct *a, struct task_struct *b);
+bool cfs_prio_less(struct task_struct *a, struct task_struct *b, bool fi);
 
 #else /* !CONFIG_SCHED_CORE */
 
@@ -2556,7 +2556,7 @@ unsigned long scale_irq_capacity(unsigned long util, unsigned long irq, unsigned
 #define perf_domain_span(pd) NULL
 #endif
 
-bool cfs_prio_less(struct task_struct *a, struct task_struct *b);
+bool cfs_prio_less(struct task_struct *a, struct task_struct *b, bool fi);
 
 #ifdef CONFIG_SMP
 extern struct static_key_false sched_energy_present;

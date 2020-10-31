@@ -484,7 +484,7 @@ static inline u64 cfs_rq_min_vruntime(struct cfs_rq *cfs_rq)
 
 #ifdef CONFIG_FAIR_GROUP_SCHED
 static void se_fi_update(struct sched_entity *se, unsigned int fi_seq, bool forceidle);
-bool cfs_prio_less(struct task_struct *a, struct task_struct *b)
+bool cfs_prio_less(struct task_struct *a, struct task_struct *b, bool in_fi)
 {
 	struct rq *rq = task_rq(a);
 	struct sched_entity *sea = &a->se;
@@ -505,8 +505,8 @@ bool cfs_prio_less(struct task_struct *a, struct task_struct *b)
 			seb = parent_entity(seb);
 	}
 
-	se_fi_update(sea, rq->core->core_forceidle_seq, rq->core->core_forceidle);
-	se_fi_update(seb, rq->core->core_forceidle_seq, rq->core->core_forceidle);
+	se_fi_update(sea, rq->core->core_forceidle_seq, in_fi);
+	se_fi_update(seb, rq->core->core_forceidle_seq, in_fi);
 
 	cfs_rqa = sea->cfs_rq;
 	cfs_rqb = seb->cfs_rq;
@@ -11105,14 +11105,14 @@ static void se_fi_update(struct sched_entity *se, unsigned int fi_seq, bool forc
 	}
 }
 
-void task_vruntime_update(struct rq *rq, struct task_struct *p)
+void task_vruntime_update(struct rq *rq, struct task_struct *p, bool in_fi)
 {
 	struct sched_entity *se = &p->se;
 
 	if (p->sched_class != &fair_sched_class)
 		return;
 
-	se_fi_update(se, rq->core->core_forceidle_seq, rq->core->core_forceidle);
+	se_fi_update(se, rq->core->core_forceidle_seq, in_fi);
 }
 
 #else
