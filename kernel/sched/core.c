@@ -4297,18 +4297,17 @@ next_class:;
 
 		WARN_ON_ONCE(!rq_i->core_pick);
 
-		if (!(!fi_before && rq->core->core_forceidle)) {
+		if (!(!fi_before && rq->core->core_forceidle))
 			task_vruntime_update(rq_i, rq_i->core_pick, true);
 
-			rq_i->core_pick->core_occupation = occ;
+		rq_i->core_pick->core_occupation = occ;
 
-			if (i == cpu)
-				continue;
+		if (i == cpu)
+			continue;
 
-			if (rq_i->curr != rq_i->core_pick) {
-				trace_printk("IPI(%d)\n", i);
-				resched_curr(rq_i);
-			}
+		if (rq_i->curr != rq_i->core_pick) {
+			trace_printk("IPI(%d)\n", i);
+			resched_curr(rq_i);
 		}
 
 		/* Did we break L1TF mitigation requirements? */
