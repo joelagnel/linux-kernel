@@ -518,8 +518,10 @@ struct cfs_rq {
 	u64			exec_clock;
 	u64			min_vruntime;
 #ifdef CONFIG_SCHED_CORE
+	unsigned int		forceidle_seq;
 	u64			min_vruntime_fi;
 #endif
+
 #ifndef CONFIG_64BIT
 	u64			min_vruntime_copy;
 #endif
@@ -1078,6 +1080,7 @@ struct rq {
 	unsigned int		core_pick_seq;
 	unsigned long		core_cookie;
 	unsigned char		core_forceidle;
+	unsigned int		core_forceidle_seq;
 #endif
 };
 
@@ -1134,7 +1137,7 @@ static inline raw_spinlock_t *rq_lockp(struct rq *rq)
 	return &rq->__lock;
 }
 
-bool cfs_prio_less(struct task_struct *a, struct task_struct *b);
+bool cfs_prio_less(struct task_struct *a, struct task_struct *b, bool fi);
 
 /*
  * Helpers to check if the CPU's core cookie matches with the task's cookie
@@ -1192,6 +1195,8 @@ static inline bool sched_group_cookie_match(struct rq *rq,
 }
 
 extern void queue_core_balance(struct rq *rq);
+
+bool cfs_prio_less(struct task_struct *a, struct task_struct *b, bool fi);
 
 #else /* !CONFIG_SCHED_CORE */
 
