@@ -5,10 +5,10 @@
  * Copyright 2020 Google LLC.
  */
 
-#include "sc7180-trogdor-coachz.dts"
+#include "sc7180-trogdor-coachz-r0.dts"
 #include "sc7180-trogdor-lte-sku.dtsi"
 
 / {
-	model = "Google CoachZ with LTE";
-	compatible = "google,coachz-sku0", "qcom,sc7180";
+	model = "Google CoachZ (rev0) with LTE";
+	compatible = "google,coachz-rev0-sku0", "qcom,sc7180";
 };
