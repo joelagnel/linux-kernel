@@ -1069,6 +1069,8 @@ fs_initcall(init_fs_namei_sysctls);
 
 #endif /* CONFIG_SYSCTL */
 
+#ifdef CONFIG_SECURITY_CHROMIUMOS_NO_SYMLINK_MOUNT
+
 /**
  * nameidata_set_temporary - Used by Chromium OS LSM to check
  * whether a mount point includes traversing symlinks.
@@ -1121,6 +1123,8 @@ int nameidata_get_total_link_count(void)
 	return tmp->total_link_count;
 }
 EXPORT_SYMBOL(nameidata_get_total_link_count);
+
+#endif /* CONFIG_SECURITY_CHROMIUMOS_NO_SYMLINK_MOUNT */
 
 /**
  * may_follow_link - Check symlink following for unsafe situations
