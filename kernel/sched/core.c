@@ -333,8 +333,12 @@ static void __sched_core_disable(void)
 	printk("core sched disabled\n");
 }
 
+DEFINE_STATIC_KEY_TRUE(sched_coresched_supported);
+
 void sched_core_get(void)
 {
+	if (!static_branch_likely(&sched_coresched_supported))
+		return;
 	mutex_lock(&sched_core_mutex);
 	if (!sched_core_count++)
 		__sched_core_enable();
@@ -343,6 +347,8 @@ void sched_core_get(void)
 
 void sched_core_put(void)
 {
+	if (!static_branch_likely(&sched_coresched_supported))
+		return;
 	mutex_lock(&sched_core_mutex);
 	if (!--sched_core_count)
 		__sched_core_disable();
