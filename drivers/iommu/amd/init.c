@@ -1601,9 +1601,11 @@ static int __init init_iommu_one(struct amd_iommu *iommu, struct ivhd_header *h)
 	if (ret)
 		return ret;
 
-	ret = amd_iommu_create_irq_domain(iommu);
-	if (ret)
-		return ret;
+	if (amd_iommu_irq_remap) {
+		ret = amd_iommu_create_irq_domain(iommu);
+		if (ret)
+			return ret;
+	}
 
 	/*
 	 * Make sure IOMMU is not considered to translate itself. The IVRS
@@ -1967,13 +1969,15 @@ static int iommu_setup_msi(struct amd_iommu *iommu)
 
 union intcapxt {
 	u64	capxt;
-	u64	reserved_0		:  2,
-		dest_mode_logical	:  1,
-		reserved_1		:  5,
-		destid_0_23		: 24,
-		vector			:  8,
-		reserved_2		: 16,
-		destid_24_31		:  8;
+	struct {
+		u64	reserved_0		:  2,
+			dest_mode_logical	:  1,
+			reserved_1		:  5,
+			destid_0_23		: 24,
+			vector			:  8,
+			reserved_2		: 16,
+			destid_24_31		:  8;
+	};
 } __attribute__ ((packed));
 
 /*
