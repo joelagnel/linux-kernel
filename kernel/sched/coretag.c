@@ -525,45 +525,13 @@ u64 cpu_core_group_cookie_read_u64(struct cgroup_subsys_state *css,
 }
 #endif
 
-struct write_core_tag {
-	struct cgroup_subsys_state *css;
-	unsigned long cookie;
-	enum sched_core_cookie_type cookie_type;
-};
-
-static int __sched_write_tag(void *data)
-{
-	struct write_core_tag *tag = (struct write_core_tag *)data;
-	struct task_struct *p;
-	struct cgroup_subsys_state *css;
-
-	rcu_read_lock();
-	css_for_each_descendant_pre(css, tag->css) {
-		struct css_task_iter it;
-
-		css_task_iter_start(css, 0, &it);
-		/*
-		 * Note: css_task_iter_next will skip dying tasks.
-		 * There could still be dying tasks left in the core queue
-		 * when we set cgroup tag to 0 when the loop is done below.
-		 */
-		while ((p = css_task_iter_next(&it)))
-			sched_core_update_cookie(p, tag->cookie,
-						 tag->cookie_type);
-
-		css_task_iter_end(&it);
-	}
-	rcu_read_unlock();
-
-	return 0;
-}
-
 int cpu_core_tag_write_u64(struct cgroup_subsys_state *css, struct cftype *cft,
 			   u64 val)
 {
 	struct task_group *tg = css_tg(css);
-	struct write_core_tag wtag;
+	struct cgroup_subsys_state *css_tmp;
 	unsigned long group_cookie;
+	struct task_struct *p;
 
 	if (val > 1)
 		return -ERANGE;
@@ -588,16 +556,27 @@ int cpu_core_tag_write_u64(struct cgroup_subsys_state *css, struct cftype *cft,
 	if (!!val)
 		sched_core_get();
 
-	wtag.css = css;
-	wtag.cookie = (unsigned long)tg;
-	wtag.cookie_type = sched_core_group_cookie_type;
-
 	tg->core_tagged = val;
 
-	stop_machine(__sched_write_tag, (void *)&wtag, NULL);
+	rcu_read_lock();
+	css_for_each_descendant_pre(css_tmp, css) {
+		struct css_task_iter it;
+
+		css_task_iter_start(css_tmp, 0, &it);
+		/*
+		 * Note: css_task_iter_next will skip dying tasks.
+		 * There could still be dying tasks left in the core queue
+		 * when we set cgroup tag to 0 when the loop is done below.
+		 */
+		while ((p = css_task_iter_next(&it)))
+			sched_core_update_cookie(p, (unsigned long)tg, sched_core_group_cookie_type);
+
+		css_task_iter_end(&it);
+	}
+	rcu_read_unlock();
+
 	if (!val)
 		sched_core_put();
-
 	return 0;
 }
 #endif
