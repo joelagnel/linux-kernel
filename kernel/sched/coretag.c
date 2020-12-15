@@ -205,15 +205,19 @@ finish:
  * @cookie: The new cookie.
  * @cookie_type: The cookie field to which the cookie corresponds.
  *
- * REQUIRES: either task_rq(p)->lock held or called from a stop-machine handler.
- * Doing so ensures that we do not cause races/corruption by modifying/reading
- * task cookie fields.
+ * Here we acquire task_rq(p)->lock to ensure we do not cause races/corruption
+ * by modifying/reading task cookie fields.
  */
 static void sched_core_update_cookie(struct task_struct *p, unsigned long cookie,
 				     enum sched_core_cookie_type cookie_type)
 {
+	struct rq_flags rf;
+	struct rq *rq;
+
 	if (!p)
 		return;
+
+	rq = task_rq_lock(p, &rf);
 
 	switch (cookie_type) {
 	case sched_core_no_update:
@@ -232,14 +236,24 @@ static void sched_core_update_cookie(struct task_struct *p, unsigned long cookie
 	__sched_core_update_cookie(p);
 
 	if (sched_core_enqueued(p)) {
-		sched_core_dequeue(task_rq(p), p);
+		sched_core_dequeue(rq, p);
 		if (!p->core_cookie)
 			return;
 	}
 
-	if (sched_core_enabled(task_rq(p)) &&
+	if (sched_core_enabled(rq) &&
 	    p->core_cookie && task_on_rq_queued(p))
 		sched_core_enqueue(task_rq(p), p);
+
+	/*
+	 * If task is currently running or waking, it may not be compatible
+	 * anymore after the cookie change, so enter the scheduler on its CPU
+	 * to schedule it away.
+	 */
+	if (task_running(rq, p) || p->state == TASK_WAKING)
+		resched_curr(rq);
+
+	task_rq_unlock(rq, p, &rf);
 }
 
 #ifdef CONFIG_CGROUP_SCHED
@@ -304,32 +318,14 @@ static void sched_core_put_cookie_work(struct work_struct *ws)
 	sched_core_put();
 }
 
-struct sched_core_task_write_tag {
-	struct task_struct *tasks[2];
-	unsigned long cookies[2];
-};
-
-/*
- * Ensure that the task has been requeued. The stopper ensures that the task cannot
- * be migrated to a different CPU while its core scheduler queue state is being updated.
- * It also makes sure to requeue a task if it was running actively on another CPU.
- */
-static int sched_core_task_join_stopper(void *data)
+static inline void sched_core_update_task_cookie(struct task_struct *t,
+						 unsigned long c)
 {
-	struct sched_core_task_write_tag *tag = (struct sched_core_task_write_tag *)data;
-	int i;
-
-	for (i = 0; i < 2; i++)
-		sched_core_update_cookie(tag->tasks[i], tag->cookies[i],
-					 sched_core_task_cookie_type);
-
-	return 0;
+	sched_core_update_cookie(t, c, sched_core_task_cookie_type);
 }
 
 int sched_core_share_tasks(struct task_struct *t1, struct task_struct *t2)
 {
-	struct sched_core_task_write_tag wr = {}; /* for stop machine. */
-	bool sched_core_put_after_stopper = false;
 	unsigned long cookie;
 	int ret = -ENOMEM;
 
@@ -338,8 +334,8 @@ int sched_core_share_tasks(struct task_struct *t1, struct task_struct *t2)
 	if (!t2) {
 		if (t1->core_task_cookie) {
 			sched_core_put_task_cookie(t1->core_task_cookie);
-			sched_core_put_after_stopper = true;
-			wr.tasks[0] = t1; /* Keep wr.cookies[0] reset for t1. */
+			sched_core_update_task_cookie(t1, 0);
+			sched_core_put();
 		}
 	} else if (t1 == t2) {
 		/* Assign a unique per-task cookie solely for t1. */
@@ -349,12 +345,10 @@ int sched_core_share_tasks(struct task_struct *t1, struct task_struct *t2)
 			goto out_unlock;
 		sched_core_get();
 
-		if (t1->core_task_cookie) {
+		if (t1->core_task_cookie)
 			sched_core_put_task_cookie(t1->core_task_cookie);
-			sched_core_put_after_stopper = true;
-		}
-		wr.tasks[0] = t1;
-		wr.cookies[0] = cookie;
+		sched_core_update_task_cookie(t1, cookie);
+		sched_core_put();
 	} else if (!t1->core_task_cookie && !t2->core_task_cookie) {
 		/*
 		 * 		t1		joining		t2
@@ -385,24 +379,18 @@ int sched_core_share_tasks(struct task_struct *t1, struct task_struct *t2)
 		sched_core_get_task_cookie(cookie);
 		sched_core_get(); /* For the other task. */
 
-		wr.tasks[0] = t1;
-		wr.tasks[1] = t2;
-		wr.cookies[0] = wr.cookies[1] = cookie;
-
+		sched_core_update_task_cookie(t1, cookie);
+		sched_core_update_task_cookie(t2, cookie);
 	} else if (t1->core_task_cookie && !t2->core_task_cookie) {
 		/* CASE 2. */
 		sched_core_put_task_cookie(t1->core_task_cookie);
-		sched_core_put_after_stopper = true;
-
-		wr.tasks[0] = t1; /* Reset cookie for t1. */
-
+		sched_core_update_task_cookie(t1, 0);
+		sched_core_put();
 	} else if (!t1->core_task_cookie && t2->core_task_cookie) {
 		/* CASE 3. */
 		sched_core_get_task_cookie(t2->core_task_cookie);
 		sched_core_get();
-
-		wr.tasks[0] = t1;
-		wr.cookies[0] = t2->core_task_cookie;
+		sched_core_update_task_cookie(t1, t2->core_task_cookie);
 
 	} else {
 		/* CASE 4. */
@@ -410,16 +398,9 @@ int sched_core_share_tasks(struct task_struct *t1, struct task_struct *t2)
 		sched_core_get();
 
 		sched_core_put_task_cookie(t1->core_task_cookie);
-		sched_core_put_after_stopper = true;
-
-		wr.tasks[0] = t1;
-		wr.cookies[0] = t2->core_task_cookie;
-	}
-
-	stop_machine(sched_core_task_join_stopper, (void *)&wr, NULL);
-
-	if (sched_core_put_after_stopper)
+		sched_core_update_task_cookie(t1, t2->core_task_cookie);
 		sched_core_put();
+	}
 
 	ret = 0;
 out_unlock:
