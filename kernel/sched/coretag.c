@@ -33,7 +33,7 @@ struct sched_core_task_cookie {
 	struct work_struct work; /* to free in WQ context. */;
 };
 
-static DEFINE_MUTEX(sched_core_tasks_mutex);
+static DEFINE_RAW_SPINLOCK(sched_core_group_lock);
 
 /* All active sched_core_cookies */
 static struct rb_root sched_core_cookies = RB_ROOT;
@@ -79,15 +79,13 @@ static inline void __sched_core_erase_cookie(struct sched_core_cookie *cookie)
 /* Called when a task no longer points to the cookie in question */
 static void sched_core_put_cookie(struct sched_core_cookie *cookie)
 {
-	unsigned long flags;
-
 	if (!cookie)
 		return;
 
 	if (refcount_dec_and_test(&cookie->refcnt)) {
-		raw_spin_lock_irqsave(&sched_core_cookies_lock, flags);
+		raw_spin_lock(&sched_core_cookies_lock);
 		__sched_core_erase_cookie(cookie);
-		raw_spin_unlock_irqrestore(&sched_core_cookies_lock, flags);
+		raw_spin_unlock(&sched_core_cookies_lock);
 		kfree(cookie);
 	}
 }
@@ -99,10 +97,6 @@ static void sched_core_put_cookie(struct sched_core_cookie *cookie)
  * an existing core_cookie or creates a new one, and then updates the task's
  * core_cookie to point to it. Additionally, it handles the necessary reference
  * counting.
- *
- * REQUIRES: task_rq(p) lock or called from cpu_stopper.
- * Doing so ensures that we do not cause races/corruption by modifying/reading
- * task cookie fields.
  */
 static void __sched_core_update_cookie(struct task_struct *p)
 {
@@ -117,7 +111,12 @@ static void __sched_core_update_cookie(struct task_struct *p)
 		(sched_core_cookie_cmp(&temp, &zero_cookie) == 0);
 	struct sched_core_cookie *const curr_cookie =
 		(struct sched_core_cookie *)p->core_cookie;
-	unsigned long flags;
+
+	/*
+	 * Ensures that we do not cause races/corruption by modifying/reading
+	 * task cookie fields.
+	 */
+	lockdep_assert_held(rq_lockp(task_rq(p)));
 
 	/*
 	 * Already have a cookie matching the requested settings? Nothing to
@@ -127,7 +126,7 @@ static void __sched_core_update_cookie(struct task_struct *p)
 	    (!curr_cookie && is_zero_cookie))
 		return;
 
-	raw_spin_lock_irqsave(&sched_core_cookies_lock, flags);
+	raw_spin_lock(&sched_core_cookies_lock);
 
 	if (is_zero_cookie) {
 		match = NULL;
@@ -186,14 +185,9 @@ retry:
 	}
 
 finish:
-	/*
-	 * Set the core_cookie under the cookies lock. This guarantees that
-	 * p->core_cookie cannot be freed while the cookies lock is held in
-	 * sched_core_fork().
-	 */
 	p->core_cookie = (unsigned long)match;
 
-	raw_spin_unlock_irqrestore(&sched_core_cookies_lock, flags);
+	raw_spin_unlock(&sched_core_cookies_lock);
 
 	sched_core_put_cookie(curr_cookie);
 }
@@ -204,9 +198,6 @@ finish:
  * @p: The task whose cookie should be updated.
  * @cookie: The new cookie.
  * @cookie_type: The cookie field to which the cookie corresponds.
- *
- * Here we acquire task_rq(p)->lock to ensure we do not cause races/corruption
- * by modifying/reading task cookie fields.
  */
 static void sched_core_update_cookie(struct task_struct *p, unsigned long cookie,
 				     enum sched_core_cookie_type cookie_type)
@@ -220,12 +211,11 @@ static void sched_core_update_cookie(struct task_struct *p, unsigned long cookie
 	rq = task_rq_lock(p, &rf);
 
 	switch (cookie_type) {
-	case sched_core_no_update:
-		break;
 	case sched_core_task_cookie_type:
 		p->core_task_cookie = cookie;
 		break;
 	case sched_core_group_cookie_type:
+		lockdep_assert_held(&sched_core_group_lock);
 		p->core_group_cookie = cookie;
 		break;
 	default:
@@ -257,21 +247,28 @@ static void sched_core_update_cookie(struct task_struct *p, unsigned long cookie
 }
 
 #ifdef CONFIG_CGROUP_SCHED
-void cpu_core_get_group_cookie(struct task_group *tg,
-			       unsigned long *group_cookie_ptr);
+static unsigned long cpu_core_get_group_cookie(struct task_group *tg);
 
 void sched_core_change_group(struct task_struct *p, struct task_group *new_tg)
 {
-	unsigned long new_group_cookie;
+	/*
+	 * Stabilize group_cookie of the new task_group.
+	 *
+	 * Note that we already hold task_rq(p)->lock, which allows us to modify
+	 * core_group_cookie below.
+	 */
+	raw_spin_lock(&sched_core_group_lock);
 
-	cpu_core_get_group_cookie(new_tg, &new_group_cookie);
+	p->core_group_cookie = cpu_core_get_group_cookie(new_tg);
 
-	if (p->core_group_cookie == new_group_cookie)
-		return;
-
-	p->core_group_cookie = new_group_cookie;
-
+	/*
+	 * Ensure that the cookie is correct (even if group_cookie did not
+	 * change). The latter can happen if we fail to set the cookie during
+	 * fork().
+	 */
 	__sched_core_update_cookie(p);
+
+	raw_spin_unlock(&sched_core_group_lock);
 }
 #endif
 
@@ -326,6 +323,7 @@ static inline void sched_core_update_task_cookie(struct task_struct *t,
 
 int sched_core_share_tasks(struct task_struct *t1, struct task_struct *t2)
 {
+	static DEFINE_MUTEX(sched_core_tasks_mutex);
 	unsigned long cookie;
 	int ret = -ENOMEM;
 
@@ -463,26 +461,17 @@ out:
  * Helper to get the group cookie in a hierarchy. Any ancestor can have a
  * cookie.
  *
- * Sets *group_cookie_ptr to the hierarchical group cookie.
+ * sched_core_group_lock will prevent this from racing with an update.
  */
-void cpu_core_get_group_cookie(struct task_group *tg,
-			       unsigned long *group_cookie_ptr)
+static unsigned long cpu_core_get_group_cookie(struct task_group *tg)
 {
-	unsigned long group_cookie = 0UL;
-
-	if (!tg)
-		goto out;
-
 	for (; tg; tg = tg->parent) {
 
-		if (tg->core_tagged) {
-			group_cookie = (unsigned long)tg;
-			break;
-		}
+		if (tg->core_tagged)
+			return (unsigned long)tg;
 	}
 
-out:
-	*group_cookie_ptr = group_cookie;
+	return 0;
 }
 
 /* Determine if any group in @tg's children are tagged. */
@@ -517,11 +506,7 @@ u64 cpu_core_tag_read_u64(struct cgroup_subsys_state *css,
 u64 cpu_core_group_cookie_read_u64(struct cgroup_subsys_state *css,
 				   struct cftype *cft)
 {
-	unsigned long group_cookie;
-
-	cpu_core_get_group_cookie(css_tg(css), &group_cookie);
-
-	return group_cookie;
+	return cpu_core_get_group_cookie(css_tg(css));
 }
 #endif
 
@@ -530,8 +515,8 @@ int cpu_core_tag_write_u64(struct cgroup_subsys_state *css, struct cftype *cft,
 {
 	struct task_group *tg = css_tg(css);
 	struct cgroup_subsys_state *css_tmp;
-	unsigned long group_cookie;
 	struct task_struct *p;
+	int ret = 0;
 
 	if (val > 1)
 		return -ERANGE;
@@ -539,18 +524,23 @@ int cpu_core_tag_write_u64(struct cgroup_subsys_state *css, struct cftype *cft,
 	if (!static_branch_likely(&sched_smt_present))
 		return -EINVAL;
 
+	raw_spin_lock(&sched_core_group_lock);
+
 	if (!tg->core_tagged && val) {
 		/* Tag is being set. Check ancestors and descendants. */
-		cpu_core_get_group_cookie(tg, &group_cookie);
-		if (group_cookie ||
-		    cpu_core_check_descendants(tg, true /* tag */))
-			return -EBUSY;
+		if (cpu_core_get_group_cookie(tg) ||
+		    cpu_core_check_descendants(tg, true /* tag */)) {
+			ret = -EBUSY;
+			goto out_unlock;
+		}
 	} else if (tg->core_tagged && !val) {
 		/* Tag is being reset. Check descendants. */
-		if (cpu_core_check_descendants(tg, true /* tag */))
-			return -EBUSY;
+		if (cpu_core_check_descendants(tg, true /* tag */)) {
+			ret = -EBUSY;
+			goto out_unlock;
+		}
 	} else {
-		return 0;
+		goto out_unlock;
 	}
 
 	if (!!val)
@@ -577,30 +567,22 @@ int cpu_core_tag_write_u64(struct cgroup_subsys_state *css, struct cftype *cft,
 
 	if (!val)
 		sched_core_put();
-	return 0;
+
+out_unlock:
+	raw_spin_unlock(&sched_core_group_lock);
+	return ret;
 }
 #endif
 
 /*
- * Tagging support when fork(2) is called:
- * If it is a CLONE_THREAD fork, share parent's tag. Otherwise assign a unique per-task tag.
+ * Called from sched_fork()
+ *
+ * It is possible to race with a write to the cgroup tag, since the newly forked
+ * task is not yet visible. That's ok; sched_change_group() will validate that
+ * the cookie is correct.
  */
-static int sched_update_core_tag_stopper(void *data)
-{
-	struct task_struct *p = (struct task_struct *)data;
-
-	/* Recalculate core cookie */
-	sched_core_update_cookie(p, 0, sched_core_no_update);
-
-	return 0;
-}
-
-/* Called from sched_fork() */
 int sched_core_fork(struct task_struct *p, unsigned long clone_flags)
 {
-	struct sched_core_cookie *parent_cookie =
-		(struct sched_core_cookie *)current->core_cookie;
-
 	/*
 	 * core_cookie is ref counted; avoid an uncounted reference.
 	 * If p should have a cookie, it will be set below.
@@ -644,37 +626,34 @@ int sched_core_fork(struct task_struct *p, unsigned long clone_flags)
 	 * If parent is tagged, inherit the cookie and ensure that the reference
 	 * count is updated.
 	 *
-	 * Technically, we could instead zero-out the task's group_cookie and
-	 * allow sched_core_change_group() to handle this post-fork, but
-	 * inheriting here has a performance advantage, since we don't
-	 * need to traverse the core_cookies RB tree and can instead grab the
-	 * parent's cookie directly.
+	 * Technically, this isn't necessary, as sched_core_change_group() will
+	 * handle this post-fork, but inheriting here has a performance
+	 * advantage, since we don't need to traverse the core_cookies RB tree
+	 * and can instead grab the parent's cookie directly.
 	 */
-	if (parent_cookie) {
-		bool need_stopper = false;
-		unsigned long flags;
+	if (current->core_cookie) {
+		struct sched_core_cookie *parent_cookie;
 
 		/*
-		 * cookies lock prevents task->core_cookie from changing or
-		 * being freed
+		 * Less contended than rq_lock(current), and is sufficient to
+		 * protect current->core_cookie.
 		 */
-		raw_spin_lock_irqsave(&sched_core_cookies_lock, flags);
+		raw_spin_lock(&sched_core_cookies_lock);
 
-		if (likely(refcount_inc_not_zero(&parent_cookie->refcnt))) {
+		parent_cookie =
+			(struct sched_core_cookie *)current->core_cookie;
+
+		if (likely(parent_cookie &&
+			   refcount_inc_not_zero(&parent_cookie->refcnt))) {
 			p->core_cookie = (unsigned long)parent_cookie;
 		} else {
 			/*
-			 * Raced with put(). We'll use stop_machine to get
-			 * a core_cookie
+			 * Raced; sched_change_group() will set the cookie at
+			 * the end of fork().
 			 */
-			need_stopper = true;
 		}
 
-		raw_spin_unlock_irqrestore(&sched_core_cookies_lock, flags);
-
-		if (need_stopper)
-			stop_machine(sched_update_core_tag_stopper,
-				     (void *)p, NULL);
+		raw_spin_unlock(&sched_core_cookies_lock);
 	}
 
 	return 0;

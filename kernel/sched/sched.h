@@ -1137,7 +1137,6 @@ DECLARE_STATIC_KEY_FALSE(__sched_core_enabled);
 static inline struct cpumask *sched_group_span(struct sched_group *sg);
 
 enum sched_core_cookie_type {
-	sched_core_no_update = 0,
 	sched_core_task_cookie_type,
 	sched_core_group_cookie_type,
 };
