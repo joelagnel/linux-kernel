@@ -77,9 +77,8 @@ static int chromeos_invalidate_kernel_submit(struct bio *bio,
 static dev_t get_boot_dev_from_root_dev(struct block_device *root_bdev)
 {
 	/* Very basic sanity checking. This should be better. */
-	if (!root_bdev || !root_bdev->bd_part ||
-	    MAJOR(root_bdev->bd_dev) == 254 ||
-	    root_bdev->bd_part->partno <= 1) {
+	if (!root_bdev || MAJOR(root_bdev->bd_dev) == 254 ||
+	    root_bdev->bd_partno <= 1) {
 		return 0;
 	}
 	return MKDEV(MAJOR(root_bdev->bd_dev), MINOR(root_bdev->bd_dev) - 1);
