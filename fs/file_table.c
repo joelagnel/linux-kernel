@@ -338,7 +338,13 @@ void fput_many(struct file *file, unsigned int refs)
 
 		if (likely(!in_interrupt() && !(task->flags & PF_KTHREAD))) {
 			init_task_work(&file->f_u.fu_rcuhead, ____fput);
-			if (!task_work_add(task, &file->f_u.fu_rcuhead, TWA_RESUME))
+			/*
+			 * We could be dependent on the fput task_work running,
+			 * eg for pipes where someone is waiting on release
+			 * being called. Use TWA_SIGNAL to ensure it's run
+			 * before the task goes idle.
+			 */
+			if (!task_work_add(task, &file->f_u.fu_rcuhead, TWA_SIGNAL))
 				return;
 			/*
 			 * After this task has run exit_task_work(),
