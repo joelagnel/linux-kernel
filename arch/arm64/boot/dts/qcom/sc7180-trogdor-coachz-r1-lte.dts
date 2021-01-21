@@ -16,3 +16,7 @@
 &cros_ec_proximity {
 	label = "proximity-wifi-lte";
 };
+
+&cros_ec_proximity {
+	label = "proximity-wifi-lte";
+};
