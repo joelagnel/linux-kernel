@@ -14,8 +14,8 @@
 #include "esdfs.h"
 #include <linux/fsnotify.h>
 
-static int esdfs_create(struct inode *dir, struct dentry *dentry,
-			 umode_t mode, bool want_excl)
+static int esdfs_create(struct user_namespace *mnt_userns, struct inode *dir,
+			struct dentry *dentry, umode_t mode, bool want_excl)
 {
 	int err;
 	struct dentry *lower_dentry;
@@ -47,7 +47,8 @@ static int esdfs_create(struct inode *dir, struct dentry *dentry,
 	esdfs_set_lower_mode(ESDFS_SB(dir->i_sb), ESDFS_I(dir), &mode);
 
 	lower_inode = esdfs_lower_inode(dir);
-	err = vfs_create(lower_inode, lower_dentry, mode, want_excl);
+	err = vfs_create(mnt_userns, lower_inode, lower_dentry, mode, 
+			 want_excl);
 	if (err)
 		goto out;
 
@@ -101,7 +102,7 @@ static int esdfs_unlink(struct inode *dir, struct dentry *dentry)
 	 */
 	lower_dir_inode = lower_dir_dentry->d_inode;
 
-	err = vfs_unlink(lower_dir_inode, lower_dentry, NULL);
+	err = vfs_unlink(&init_user_ns, lower_dir_inode, lower_dentry, NULL);
 
 	/*
 	 * Note: unlinking on top of NFS can cause silly-renamed files.
@@ -128,7 +129,8 @@ out:
 	return err;
 }
 
-static int esdfs_mkdir(struct inode *dir, struct dentry *dentry, umode_t mode)
+static int esdfs_mkdir(struct user_namespace *mnt_userns, struct inode *dir,
+		       struct dentry *dentry, umode_t mode)
 {
 	int err;
 	struct dentry *lower_dentry;
@@ -152,7 +154,8 @@ static int esdfs_mkdir(struct inode *dir, struct dentry *dentry, umode_t mode)
 
 	mode |= S_IFDIR;
 	esdfs_set_lower_mode(ESDFS_SB(dir->i_sb), ESDFS_I(dir), &mode);
-	err = vfs_mkdir(lower_parent_dentry->d_inode, lower_dentry, mode);
+	err = vfs_mkdir(mnt_userns, lower_parent_dentry->d_inode, lower_dentry,
+			mode);
 	if (err)
 		goto unlock_lower_parent;
 
@@ -208,7 +211,7 @@ static int esdfs_rmdir(struct inode *dir, struct dentry *dentry)
 		goto out;
 	}
 
-	err = vfs_rmdir(lower_dir_dentry->d_inode, lower_dentry);
+	err = vfs_rmdir(&init_user_ns, lower_dir_dentry->d_inode, lower_dentry);
 	if (err)
 		goto out;
 
@@ -230,8 +233,10 @@ out:
  * The locking rules in esdfs_rename are complex.  We could use a simpler
  * superblock-level name-space lock for renames and copy-ups.
  */
-static int esdfs_rename(struct inode *old_dir, struct dentry *old_dentry,
-			struct inode *new_dir, struct dentry *new_dentry, unsigned int flags)
+static int esdfs_rename(struct user_namespace *mnt_userns, 
+			struct inode *old_dir, struct dentry *old_dentry,
+			struct inode *new_dir, struct dentry *new_dentry,
+			unsigned int flags)
 {
 	int err = 0;
 	struct esdfs_sb_info *sbi = ESDFS_SB(old_dir->i_sb);
@@ -243,6 +248,7 @@ static int esdfs_rename(struct inode *old_dir, struct dentry *old_dentry,
 	struct path lower_old_path, lower_new_path;
 	int mask;
 	const struct cred *creds;
+	struct renamedata rd;
 
 	if (test_opt(sbi, SPECIAL_DOWNLOAD)) {
 		if ((ESDFS_I(old_dir)->tree == ESDFS_TREE_DOWNLOAD
@@ -296,9 +302,15 @@ static int esdfs_rename(struct inode *old_dir, struct dentry *old_dentry,
 		goto out;
 	}
 
-	err = vfs_rename(lower_old_dir_dentry->d_inode, lower_old_dentry,
-			 lower_new_dir_dentry->d_inode, lower_new_dentry,
-			 NULL, flags);
+	rd.old_mnt_userns = mnt_userns;
+	rd.old_dir = lower_old_dir_dentry->d_inode;
+	rd.old_dentry = lower_old_dentry;
+	rd.new_mnt_userns = mnt_userns;
+	rd.new_dir = lower_new_dir_dentry->d_inode;
+	rd.new_dentry = lower_new_dentry;
+	rd.flags = flags;
+ 
+	err = vfs_rename(&rd);
 	if (err)
 		goto out;
 
@@ -327,13 +339,14 @@ out:
 	return err;
 }
 
-static int esdfs_permission(struct inode *inode, int mask)
+static int esdfs_permission(struct user_namespace *mnt_userns,
+			    struct inode *inode, int mask)
 {
 	struct inode *lower_inode;
 	int err;
 
 	/* First, check the upper permissions */
-	err = generic_permission(inode, mask);
+	err = generic_permission(mnt_userns, inode, mask);
 
 	/* Basic checking of the lower inode (can't override creds here) */
 	lower_inode = esdfs_lower_inode(inode);
@@ -351,7 +364,8 @@ static int esdfs_permission(struct inode *inode, int mask)
 	return err;
 }
 
-static int esdfs_setattr(struct dentry *dentry, struct iattr *ia)
+static int esdfs_setattr(struct user_namespace *mnt_userns,
+			 struct dentry *dentry, struct iattr *ia)
 {
 	int err;
 	loff_t oldsize;
@@ -382,7 +396,7 @@ static int esdfs_setattr(struct dentry *dentry, struct iattr *ia)
 	 * this user can change the lower inode: that should happen when
 	 * calling notify_change on the lower inode.
 	 */
-	err = setattr_prepare(dentry, ia);
+	err = setattr_prepare(mnt_userns, dentry, ia);
 	if (err)
 		return err;
 
@@ -449,7 +463,8 @@ static int esdfs_setattr(struct dentry *dentry, struct iattr *ia)
 	 * tries to open(), unlink(), then ftruncate() a file.
 	 */
 	inode_lock(lower_dentry->d_inode);
-	err = notify_change(lower_dentry, &lower_ia, /* note: lower_ia */
+	err = notify_change(mnt_userns, lower_dentry,
+			    &lower_ia, /* note: lower_ia */
 			    NULL);
 	inode_unlock(lower_dentry->d_inode);
 	if (err)
@@ -469,8 +484,9 @@ out:
 	return err;
 }
 
-static int esdfs_getattr(const struct path *path, struct kstat *stat,
-			u32 request_mask, unsigned int flags)
+static int esdfs_getattr(struct user_namespace *mnt_userns, 
+			 const struct path *path, struct kstat *stat,
+			 u32 request_mask, unsigned int flags)
 {
 	int err;
 	struct dentry *dentry = path->dentry;
@@ -499,7 +515,7 @@ static int esdfs_getattr(const struct path *path, struct kstat *stat,
 	lower_inode = esdfs_lower_inode(inode);
 	esdfs_copy_attr(inode, lower_inode);
 	fsstack_copy_inode_size(inode, lower_inode);
-	generic_fillattr(inode, stat);
+	generic_fillattr(mnt_userns, inode, stat);
 
 	stat->blocks = lower_stat.blocks;
 
