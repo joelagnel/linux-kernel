@@ -214,12 +214,13 @@ static ssize_t hwfifo_watermark_max_show(struct device *dev,
 
 static IIO_DEVICE_ATTR_RO(hwfifo_watermark_max, 0);
 
-static const struct attribute *cros_ec_sensor_fifo_attributes[] = {
+const struct attribute *cros_ec_sensor_fifo_attributes[] = {
 	&iio_dev_attr_hwfifo_flush.dev_attr.attr,
 	&iio_dev_attr_hwfifo_timeout.dev_attr.attr,
 	&iio_dev_attr_hwfifo_watermark_max.dev_attr.attr,
 	NULL,
 };
+EXPORT_SYMBOL_GPL(cros_ec_sensor_fifo_attributes);
 
 int cros_ec_sensors_push_data(struct iio_dev *indio_dev,
 			      s16 *data,
