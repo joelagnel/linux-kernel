@@ -5254,6 +5254,13 @@ static bool intel_edp_init_connector(struct intel_dp *intel_dp,
 
 	intel_edp_add_properties(intel_dp);
 
+	if (fixed_mode) {
+		drm_connector_init_panel_orientation_property(connector);
+		drm_connector_set_panel_orientation_with_quirk(connector,
+				dev_priv->vbt.orientation,
+				fixed_mode->hdisplay, fixed_mode->vdisplay);
+	}
+
 	return true;
 
 out_vdd_off:
