@@ -112,13 +112,13 @@ static int cros_ec_ring_probe(struct platform_device *pdev)
 	indio_dev->channels = cros_ec_ring_channels;
 	indio_dev->num_channels = ARRAY_SIZE(cros_ec_ring_channels);
 	indio_dev->info = &ec_sensors_info;
-	indio_dev->modes = INDIO_BUFFER_SOFTWARE;
 
-	buffer = devm_iio_kfifo_allocate(dev);
-	if (!buffer)
-		return -ENOMEM;
+	ret = devm_iio_kfifo_buffer_setup(&pdev->dev, indio_dev,
+					  INDIO_BUFFER_SOFTWARE,
+					  NULL);
+	if (ret)
+		return ret;
 
-	iio_device_attach_buffer(indio_dev, buffer);
 	ret = cros_ec_sensorhub_register_push_data(
 			sensor_hub, sensor_hub->sensor_num, indio_dev,
 			cros_sensor_ring_push_sample);
