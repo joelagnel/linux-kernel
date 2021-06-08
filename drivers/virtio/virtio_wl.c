@@ -1391,7 +1391,7 @@ static long virtwl_ioctl_new(struct file *filp, void __user *ptr,
 	ret = copy_to_user(ptr, &ioctl_new, size);
 	if (ret) {
 		/* The release operation will handle freeing this alloc */
-		ksys_close(ioctl_new.fd);
+		close_fd(ioctl_new.fd);
 		return -EFAULT;
 	}
 
