@@ -148,6 +148,9 @@ const_debug unsigned int sysctl_sched_nr_migrate = 8;
 const_debug unsigned int sysctl_sched_nr_migrate = 32;
 #endif
 
+unsigned int sysctl_iowait_reset_ticks = 20;
+unsigned int sysctl_iowait_apply_ticks = 10;
+
 __read_mostly int scheduler_running;
 
 #ifdef CONFIG_SCHED_CORE
