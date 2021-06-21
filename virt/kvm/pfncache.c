@@ -117,15 +117,18 @@ static kvm_pfn_t hva_to_pfn_retry(struct kvm *kvm, unsigned long uhva)
 	unsigned long mmu_seq;
 	kvm_pfn_t new_pfn;
 	int retry;
+	struct page *page;
 
 	do {
 		mmu_seq = kvm->mmu_notifier_seq;
 		smp_rmb();
 
 		/* We always request a writeable mapping */
-		new_pfn = hva_to_pfn(uhva, false, NULL, true, NULL);
+		new_pfn = hva_to_pfn(uhva, false, NULL, true, NULL, &page);
 		if (is_error_noslot_pfn(new_pfn))
 			break;
+		if (page)
+			put_page(page);
 
 		KVM_MMU_READ_LOCK(kvm);
 		retry = mmu_notifier_retry_hva(kvm, mmu_seq, uhva);
