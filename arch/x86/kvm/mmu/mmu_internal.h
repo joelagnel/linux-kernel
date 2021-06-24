@@ -74,7 +74,9 @@ struct kvm_mmu_page {
 	bool tdp_mmu_page;
 
 	/* Used for freeing the page asynchronously if it is a TDP MMU page. */
+	atomic_t ref_count;
 	struct rcu_head rcu_head;
+	struct list_head mmu_page_list;
 #endif
 };
 
