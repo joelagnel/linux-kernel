@@ -1195,6 +1195,8 @@ struct kvm_arch {
 	hpa_t	hv_root_tdp;
 	spinlock_t hv_root_tdp_lock;
 #endif
+	spinlock_t mmu_page_list_lock;
+	struct list_head mmu_page_list;
 };
 
 struct kvm_vm_stat {
