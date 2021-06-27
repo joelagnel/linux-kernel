@@ -1023,6 +1023,12 @@ static inline pgprot_t arch_filter_pgprot(pgprot_t prot)
 }
 
 
+static inline bool arch_has_hw_pte_young(void)
+{
+	return system_has_hw_af();
+}
+#define arch_has_hw_pte_young arch_has_hw_pte_young
+
 #endif /* !__ASSEMBLY__ */
 
 #endif /* __ASM_PGTABLE_H */
