@@ -7,6 +7,7 @@
 
 #include <linux/device.h>
 #include <linux/iio/buffer.h>
+#include <linux/iio/buffer_impl.h>
 #include <linux/iio/common/cros_ec_sensors_core.h>
 #include <linux/iio/iio.h>
 #include <linux/iio/kfifo_buf.h>
@@ -426,7 +427,7 @@ static int cros_ec_light_prox_probe(struct platform_device *pdev)
 	if (ret)
 		return ret;
 
-	iio_buffer_set_attrs(indio_dev->buffer, cros_ec_sensor_fifo_attributes);
+	indio_dev->buffer->attrs = cros_ec_sensor_fifo_attributes;
 
 	indio_dev->info = &cros_ec_light_prox_info;
 	state = iio_priv(indio_dev);
