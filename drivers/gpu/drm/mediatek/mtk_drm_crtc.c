@@ -228,7 +228,7 @@ static void ddp_cmdq_cb(struct cmdq_cb_data data)
 	struct mtk_crtc_state *state = to_mtk_crtc_state(mtk_crtc->base.state);
 	unsigned int i;
 
-	if (data.sta == CMDQ_CB_ERROR)
+	if (data.sta != 0)
 		goto destroy_pkt;
 
 	if (state->pending_config) {
