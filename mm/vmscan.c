@@ -3299,7 +3299,7 @@ static void reset_batch_size(struct lruvec *lruvec, struct mm_walk_args *args)
 
 	args->batch_size = 0;
 
-	spin_lock_irq(&pgdat->lru_lock);
+	spin_lock_irq(&lruvec->lru_lock);
 
 	for_each_gen_type_zone(gen, type, zone) {
 		enum lru_list lru = type * LRU_FILE;
@@ -3317,7 +3317,7 @@ static void reset_batch_size(struct lruvec *lruvec, struct mm_walk_args *args)
 		update_lru_size(lruvec, lru, zone, total);
 	}
 
-	spin_unlock_irq(&pgdat->lru_lock);
+	spin_unlock_irq(&lruvec->lru_lock);
 }
 
 static int page_update_gen(struct page *page, int new_gen)
@@ -3962,7 +3962,7 @@ static void inc_max_seq(struct lruvec *lruvec, unsigned long max_seq)
 	struct lrugen *lrugen = &lruvec->evictable;
 	struct pglist_data *pgdat = lruvec_pgdat(lruvec);
 
-	spin_lock_irq(&pgdat->lru_lock);
+	spin_lock_irq(&lruvec->lru_lock);
 
 	VM_BUG_ON(!seq_is_valid(lruvec));
 
@@ -3974,9 +3974,9 @@ static void inc_max_seq(struct lruvec *lruvec, unsigned long max_seq)
 			continue;
 
 		while (!inc_min_seq(lruvec, type)) {
-			spin_unlock_irq(&pgdat->lru_lock);
+			spin_unlock_irq(&lruvec->lru_lock);
 			cond_resched();
-			spin_lock_irq(&pgdat->lru_lock);
+			spin_lock_irq(&lruvec->lru_lock);
 		}
 	}
 
@@ -4007,7 +4007,7 @@ static void inc_max_seq(struct lruvec *lruvec, unsigned long max_seq)
 	/* make sure all preceding modifications appear first */
 	smp_store_release(&lrugen->max_seq, lrugen->max_seq + 1);
 unlock:
-	spin_unlock_irq(&pgdat->lru_lock);
+	spin_unlock_irq(&lruvec->lru_lock);
 }
 
 /* Main function used by the foreground, the background and the user-triggered aging. */
@@ -4106,10 +4106,11 @@ void lru_gen_scan_around(struct page_vma_mapped_walk *pvmw)
 
 	arch_enter_lazy_mmu_mode();
 
-	memcg = lock_page_memcg(pvmw->page);
-	spin_lock_irq(&pgdat->lru_lock);
+	lock_page_memcg(pvmw->page);
+	memcg = page_memcg(pvmw->page);
 
 	lruvec = mem_cgroup_lruvec(memcg, pgdat);
+	spin_lock_irq(&lruvec->lru_lock);
 	new_gen = lru_gen_from_seq(lruvec->evictable.max_seq);
 
 	for (i = 0, addr = start; addr != end; i++, addr += PAGE_SIZE) {
@@ -4149,7 +4150,7 @@ void lru_gen_scan_around(struct page_vma_mapped_walk *pvmw)
 			lru_gen_update_size(page, lruvec, old_gen, new_gen);
 	}
 
-	spin_unlock_irq(&pgdat->lru_lock);
+	spin_unlock_irq(&lruvec->lru_lock);
 	unlock_page_memcg(pvmw->page);
 
 	arch_leave_lazy_mmu_mode();
