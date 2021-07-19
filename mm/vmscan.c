@@ -4441,7 +4441,7 @@ static bool evict_pages(struct lruvec *lruvec, struct scan_control *sc, int swap
 	struct reclaim_stat stat;
 	struct pglist_data *pgdat = lruvec_pgdat(lruvec);
 
-	spin_lock_irq(&pgdat->lru_lock);
+	spin_lock_irq(&lruvec->lru_lock);
 
 	isolated = isolate_pages(lruvec, sc, swappiness, nr_to_scan, &type, &list);
 	VM_BUG_ON(list_empty(&list) == !!isolated);
@@ -4449,7 +4449,7 @@ static bool evict_pages(struct lruvec *lruvec, struct scan_control *sc, int swap
 	if (isolated)
 		__mod_node_page_state(pgdat, NR_ISOLATED_ANON + type, isolated);
 
-	spin_unlock_irq(&pgdat->lru_lock);
+	spin_unlock_irq(&lruvec->lru_lock);
 
 	if (!isolated)
 		goto done;
@@ -4474,7 +4474,7 @@ static bool evict_pages(struct lruvec *lruvec, struct scan_control *sc, int swap
 		ClearPageReferenced(page);
 	}
 
-	spin_lock_irq(&pgdat->lru_lock);
+	spin_lock_irq(&lruvec->lru_lock);
 
 	move_pages_to_lru(lruvec, &list);
 
@@ -4486,7 +4486,7 @@ static bool evict_pages(struct lruvec *lruvec, struct scan_control *sc, int swap
 	__count_memcg_events(lruvec_memcg(lruvec), item, reclaimed);
 	__count_vm_events(PGSTEAL_ANON + type, reclaimed);
 
-	spin_unlock_irq(&pgdat->lru_lock);
+	spin_unlock_irq(&lruvec->lru_lock);
 
 	mem_cgroup_uncharge_list(&list);
 	free_unref_page_list(&list);
