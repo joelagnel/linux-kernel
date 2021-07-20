@@ -2,7 +2,7 @@
 /*
  * Google CoachZ board device tree source
  *
- * Copyright 2021 Google LLC.
+ * Copyright 2020 Google LLC.
  */
 
 /dts-v1/;
@@ -10,8 +10,37 @@
 #include "sc7180-trogdor-coachz.dtsi"
 
 / {
-	model = "Google CoachZ (rev3+)";
-	compatible = "google,coachz", "qcom,sc7180";
+	model = "Google CoachZ (rev0)";
+	compatible = "google,coachz-rev0", "qcom,sc7180";
+};
+
+&pp3300_dx_edp {
+	gpio = <&tlmm 52 GPIO_ACTIVE_HIGH>;
+};
+
+/*
+ * CoachZ rev0 is stuffed with a 47k NTC as thermistor for skin temperature,
+ * which currently is not supported by the PM6150 ADC driver. Disable the
+ * skin temperature thermal zone to avoid using bogus temperature values.
+ */
+&skin_temp_thermal {
+	status = "disabled";
+};
+
+&usb_hub {
+	 vdd-supply = <&pp3300_l7c>;
+};
+
+/* PINCTRL - modifications to sc7180-trogdor-coachz.dtsi */
+
+&en_pp3300_dx_edp {
+	pinmux  {
+		pins = "gpio52";
+	};
+
+	pinconf {
+		pins = "gpio52";
+	};
 };
 
 &tlmm {
