@@ -35,6 +35,11 @@ config DRM_MIPI_DSI
 	bool
 	depends on DRM
 
+config DRM_DP_AUX_BUS
+	tristate
+	depends on DRM
+	depends on OF
+
 config DRM_DP_AUX_CHARDEV
 	bool "DRM DP AUX Interface"
 	depends on DRM
@@ -191,6 +196,8 @@ config DRM_TTM_HELPER
 	help
 	  Helpers for ttm-based gem objects
 
+source "drivers/gpu/drm/ttm/Kconfig"
+
 config DRM_GEM_CMA_HELPER
 	bool
 	depends on DRM
@@ -286,6 +293,8 @@ config DRM_VKMS
 	  a VKMS.
 
 	  If M is selected the module will be called vkms.
+
+source "drivers/gpu/drm/evdi/Kconfig"
 
 source "drivers/gpu/drm/exynos/Kconfig"
 
