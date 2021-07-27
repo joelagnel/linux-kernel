@@ -1,51 +1,73 @@
 // SPDX-License-Identifier: (GPL-2.0+ OR MIT)
 /*
- * Google CoachZ board device tree source
+ * Google Pompom board device tree source
  *
- * Copyright 2021 Google LLC.
+ * Copyright 2020 Google LLC.
  */
 
 /dts-v1/;
 
-#include "sc7180-trogdor-coachz.dtsi"
+#include "sc7180-trogdor-pompom.dtsi"
 
 / {
-	model = "Google CoachZ (rev3+)";
-	compatible = "google,coachz", "qcom,sc7180";
+	model = "Google Pompom (rev0)";
+	compatible = "google,pompom-rev0", "qcom,sc7180";
 };
 
+&usb_hub {
+	 vdd-supply = <&pp3300_l7c>;
+};
+
+&trackpad {
+	interrupts = <58 IRQ_TYPE_EDGE_FALLING>;
+};
+
+/* PINCTRL - modifications to sc7180-trogdor.dtsi */
+
+&trackpad_int_1v8_odl {
+	pinmux {
+		pins = "gpio58";
+	};
+
+	pinconf {
+		pins = "gpio58";
+	};
+};
+
+/* PINCTRL - board-specific pinctrl */
+
 &tlmm {
-	gpio-line-names = "HUB_RST_L",
-			  "AP_RAM_ID0",
-			  "AP_SKU_ID2",
-			  "AP_RAM_ID1",
-			  "FP_TO_AP_IRQ_L",
-			  "AP_RAM_ID2",
-			  "UF_CAM_EN",
-			  "WF_CAM_EN",
+	gpio-line-names = "",
+			  "",
+			  "",
+			  "",
+			  "",
+			  "",
+			  "AP_TP_I2C_SDA",
+			  "AP_TP_I2C_SCL",
 			  "TS_RESET_L",
 			  "TS_INT_L",
-			  "FPMCU_BOOT0",
+			  "",
 			  "EDP_BRIJ_IRQ",
 			  "AP_EDP_BKLTEN",
-			  "UF_CAM_MCLK",
-			  "WF_CAM_CLK",
+			  "AP_RAM_ID2",
+			  "",
 			  "EDP_BRIJ_I2C_SDA",
 			  "EDP_BRIJ_I2C_SCL",
-			  "UF_CAM_SDA",
-			  "UF_CAM_SCL",
-			  "WF_CAM_SDA",
-			  "WF_CAM_SCL",
-			  "WLC_IRQ",
-			  "FP_RST_L",
+			  "HUB_RST_L",
+			  "DMIC_SEL",
+			  "AP_RAM_ID1",
+			  "AP_SKU_ID2",
+			  "PEN_IRQ_L",
+			  "FPMCU_SEL",
 			  "AMP_EN",
-			  "WLC_NRST",
+			  "P_SENSOR_INT_L",
 			  "AP_SAR_SENSOR_SDA",
 			  "AP_SAR_SENSOR_SCL",
 			  "",
-			  "",
-			  "WF_CAM_RST_L",
-			  "UF_CAM_RST_L",
+			  "HP_IRQ",
+			  "AP_RAM_ID0",
+			  "EN_PP3300_DX_EDP",
 			  "AP_BRD_ID2",
 			  "BRIJ_SUSPEND",
 			  "AP_BRD_ID0",
@@ -61,19 +83,19 @@
 			  "",
 			  "UART_AP_TX_DBG_RX",
 			  "UART_DBG_TX_AP_RX",
-			  "",
-			  "",
+			  "HP_I2C_SDA",
+			  "HP_I2C_SCL",
 			  "FORCED_USB_BOOT",
 			  "AMP_BCLK",
 			  "AMP_LRCLK",
 			  "AMP_DIN",
-			  "EN_PP3300_DX_EDP",
+			  "PEN_PDCT_L",
 			  "HP_BCLK",
 			  "HP_LRCLK",
 			  "HP_DOUT",
 			  "HP_DIN",
 			  "HP_MCLK",
-			  "AP_SKU_ID0",
+			  "TRACKPAD_INT_1V8_ODL",
 			  "AP_EC_SPI_MISO",
 			  "AP_EC_SPI_MOSI",
 			  "AP_EC_SPI_CLK",
@@ -93,27 +115,27 @@
 			  "",
 			  "",
 			  "",
-			  "FPMCU_SEL",
+			  "",
 			  "UIM2_DATA",
 			  "UIM2_CLK",
 			  "UIM2_RST",
-			  "UIM2_PRESENT_L",
+			  "UIM2_PRESENT",
 			  "UIM1_DATA",
 			  "UIM1_CLK",
 			  "UIM1_RST",
 			  "",
-			  "DMIC_CLK_EN",
-			  "HUB_EN",
+			  "EN_PP3300_CODEC",
+			  "EN_PP3300_HUB",
 			  "",
-			  "AP_SPI_FP_MISO",
-			  "AP_SPI_FP_MOSI",
-			  "AP_SPI_FP_CLK",
-			  "AP_SPI_FP_CS_L",
+			  "",
+			  "",
+			  "",
+			  "",
 			  "AP_SKU_ID1",
 			  "AP_RST_REQ",
 			  "",
 			  "AP_BRD_ID1",
-			  "AP_EC_INT_L",
+			  "AP_EC_INT_R_L",
 			  "",
 			  "",
 			  "",
@@ -124,7 +146,7 @@
 			  "",
 			  "",
 			  "EDP_BRIJ_EN",
-			  "",
+			  "AP_SKU_ID0",
 			  "",
 			  "",
 			  "",
