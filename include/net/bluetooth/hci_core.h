@@ -194,6 +194,7 @@ struct smp_irk {
 	struct list_head list;
 	struct rcu_head rcu;
 	bdaddr_t rpa;
+	__u32 rpa_timestamp;
 	bdaddr_t bdaddr;
 	u8 addr_type;
 	u8 val[16];
@@ -320,6 +321,7 @@ struct hci_dev {
 	__u8		dev_name[HCI_MAX_NAME_LENGTH];
 	__u8		short_name[HCI_MAX_SHORT_NAME_LENGTH];
 	__u8		eir[HCI_MAX_EIR_LENGTH];
+	__u16		eir_max_name_len;
 	__u16		appearance;
 	__u8		dev_class[3];
 	__u8		major_class;
@@ -444,6 +446,7 @@ struct hci_dev {
 	unsigned int	acl_pkts;
 	unsigned int	sco_pkts;
 	unsigned int	le_pkts;
+	unsigned int	wbs_pkt_len;
 
 	__u16		block_len;
 	__u16		block_mtu;
@@ -476,7 +479,8 @@ struct hci_dev {
 	struct work_struct	cmd_work;
 	struct work_struct	tx_work;
 
-	struct work_struct	discov_update;
+	struct work_struct	start_discov_update;
+	struct work_struct	stop_discov_update;
 	struct work_struct	bg_scan_update;
 	struct work_struct	scan_update;
 	struct work_struct	connectable_update;
@@ -561,6 +565,8 @@ struct hci_dev {
 	__u8			cur_adv_instance;
 	__u16			adv_instance_timeout;
 	struct delayed_work	adv_instance_expire;
+	/* We can have a single directed advertisement using adv handle 0 */
+	bool			ext_directed_advertising;
 
 	struct idr		adv_monitors_idr;
 	unsigned int		adv_monitors_cnt;
@@ -605,6 +611,9 @@ struct hci_dev {
 	int (*set_bdaddr)(struct hci_dev *hdev, const bdaddr_t *bdaddr);
 	void (*cmd_timeout)(struct hci_dev *hdev);
 	bool (*prevent_wake)(struct hci_dev *hdev);
+#ifdef CONFIG_BT_FEATURE_QUALITY_REPORT
+	int (*set_quality_report)(struct hci_dev *hdev, bool enable);
+#endif
 };
 
 #define HCI_PHY_HANDLE(handle)	(handle & 0xff)
@@ -752,12 +761,19 @@ extern struct mutex hci_cb_list_lock;
 #define hci_dev_test_and_clear_flag(hdev, nr)  test_and_clear_bit((nr), (hdev)->dev_flags)
 #define hci_dev_test_and_change_flag(hdev, nr) test_and_change_bit((nr), (hdev)->dev_flags)
 
-#define hci_dev_clear_volatile_flags(hdev)			\
-	do {							\
-		hci_dev_clear_flag(hdev, HCI_LE_SCAN);		\
-		hci_dev_clear_flag(hdev, HCI_LE_ADV);		\
-		hci_dev_clear_flag(hdev, HCI_LL_RPA_RESOLUTION);\
-		hci_dev_clear_flag(hdev, HCI_PERIODIC_INQ);	\
+#ifdef CONFIG_BT_FEATURE_QUALITY_REPORT
+#define hci_dev_clear_flag_quality_report(x) { hci_dev_clear_flag(hdev, x); }
+#else
+#define hci_dev_clear_flag_quality_report(x) {}
+#endif
+
+#define hci_dev_clear_volatile_flags(hdev)				\
+	do {								\
+		hci_dev_clear_flag(hdev, HCI_LE_SCAN);			\
+		hci_dev_clear_flag(hdev, HCI_LE_ADV);			\
+		hci_dev_clear_flag(hdev, HCI_LL_RPA_RESOLUTION);	\
+		hci_dev_clear_flag(hdev, HCI_PERIODIC_INQ);		\
+		hci_dev_clear_flag_quality_report(HCI_QUALITY_REPORT)	\
 	} while (0)
 
 /* ----- HCI interface to upper protocols ----- */
@@ -1660,6 +1676,36 @@ static inline struct smp_irk *hci_get_irk(struct hci_dev *hdev,
 	return hci_find_irk_by_rpa(hdev, bdaddr);
 }
 
+/* Erratum 5412 which has been fixed in 4.2 changed the validation of
+ * connection parameters.  For backwards compatibility reasons, the old
+ * calculation must be tolerated.
+ * For further details :
+ * https://www.bluetooth.org/errata/errata_view.cfm?errata_id=5419
+ */
+static inline int hci_check_conn_params_legacy(u16 min, u16 max, u16 latency,
+					u16 to_multiplier)
+{
+	u16 max_latency;
+
+	if (min > max || min < 6 || max > 3200)
+		return -EINVAL;
+
+	if (to_multiplier < 10 || to_multiplier > 3200)
+		return -EINVAL;
+
+	if (max >= to_multiplier * 8)
+		return -EINVAL;
+
+	max_latency = (to_multiplier * 8 / max) - 1;
+	if (latency > 499 || latency > max_latency)
+		return -EINVAL;
+
+	return 0;
+}
+
+/* Connection Parameter Validation Helper.
+ * See Vol 6, Part B, section 4.5.1.
+ */
 static inline int hci_check_conn_params(u16 min, u16 max, u16 latency,
 					u16 to_multiplier)
 {
@@ -1756,8 +1802,6 @@ void hci_mgmt_chan_unregister(struct hci_mgmt_chan *c);
 #define DISCOV_INTERLEAVED_INQUIRY_LEN	0x04
 #define DISCOV_BREDR_INQUIRY_LEN	0x08
 #define DISCOV_LE_RESTART_DELAY		msecs_to_jiffies(200)	/* msec */
-#define DISCOV_LE_FAST_ADV_INT_MIN	0x00A0	/* 100 msec */
-#define DISCOV_LE_FAST_ADV_INT_MAX	0x00F0	/* 150 msec */
 
 void mgmt_fill_version_info(void *ver);
 int mgmt_new_settings(struct hci_dev *hdev);
