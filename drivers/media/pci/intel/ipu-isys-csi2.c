@@ -314,17 +314,17 @@ static const struct v4l2_subdev_video_ops csi2_sd_video_ops = {
 };
 
 static int ipu_isys_csi2_get_fmt(struct v4l2_subdev *sd,
-				 struct v4l2_subdev_pad_config *cfg,
+				 struct v4l2_subdev_state *state,
 				 struct v4l2_subdev_format *fmt)
 {
-	return ipu_isys_subdev_get_ffmt(sd, cfg, fmt);
+	return ipu_isys_subdev_get_ffmt(sd, state, fmt);
 }
 
 static int ipu_isys_csi2_set_fmt(struct v4l2_subdev *sd,
-				 struct v4l2_subdev_pad_config *cfg,
+				 struct v4l2_subdev_state *state,
 				 struct v4l2_subdev_format *fmt)
 {
-	return ipu_isys_subdev_set_ffmt(sd, cfg, fmt);
+	return ipu_isys_subdev_set_ffmt(sd, state, fmt);
 }
 
 static int __subdev_link_validate(struct v4l2_subdev *sd,
@@ -360,12 +360,12 @@ static struct media_entity_operations csi2_entity_ops = {
 };
 
 static void csi2_set_ffmt(struct v4l2_subdev *sd,
-			  struct v4l2_subdev_pad_config *cfg,
+			  struct v4l2_subdev_state *state,
 			  struct v4l2_subdev_format *fmt)
 {
 	enum isys_subdev_prop_tgt tgt = IPU_ISYS_SUBDEV_PROP_TGT_SINK_FMT;
 	struct v4l2_mbus_framefmt *ffmt =
-		__ipu_isys_get_ffmt(sd, cfg, fmt->pad,
+		__ipu_isys_get_ffmt(sd, state, fmt->pad,
 				    fmt->which);
 
 	if (fmt->format.field != V4L2_FIELD_ALTERNATE)
@@ -373,7 +373,7 @@ static void csi2_set_ffmt(struct v4l2_subdev *sd,
 
 	if (fmt->pad == CSI2_PAD_SINK) {
 		*ffmt = fmt->format;
-		ipu_isys_subdev_fmt_propagate(sd, cfg, &fmt->format, NULL,
+		ipu_isys_subdev_fmt_propagate(sd, state, &fmt->format, NULL,
 					      tgt, fmt->pad, fmt->which);
 		return;
 	}

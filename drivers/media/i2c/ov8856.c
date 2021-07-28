@@ -2246,7 +2246,7 @@ static int ov8856_open(struct v4l2_subdev *sd, struct v4l2_subdev_fh *fh)
 
 	mutex_lock(&ov8856->mutex);
 	ov8856_update_pad_format(ov8856, &ov8856->priv_lane->supported_modes[0],
-				 v4l2_subdev_get_try_format(sd, fh->pad, 0));
+				 v4l2_subdev_get_try_format(sd, fh->state, 0));
 	mutex_unlock(&ov8856->mutex);
 
 	return 0;
