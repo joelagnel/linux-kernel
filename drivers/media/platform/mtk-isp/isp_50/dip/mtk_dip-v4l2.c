@@ -28,9 +28,9 @@ static int mtk_dip_subdev_open(struct v4l2_subdev *sd,
 	struct mtk_dip_pipe *pipe = mtk_dip_subdev_to_pipe(sd);
 
 	for (i = 0; i < pipe->desc->total_queues; i++) {
-		*v4l2_subdev_get_try_format(&pipe->subdev, fh->pad, i) =
+		*v4l2_subdev_get_try_format(&pipe->subdev, fh->state, i) =
 			pipe->nodes[i].pad_fmt;
-		*v4l2_subdev_get_try_crop(&pipe->subdev, fh->pad, i) =
+		*v4l2_subdev_get_try_crop(&pipe->subdev, fh->state, i) =
 			pipe->nodes[i].crop;
 	}
 
@@ -61,7 +61,7 @@ static int mtk_dip_subdev_s_stream(struct v4l2_subdev *sd,
 }
 
 static int mtk_dip_subdev_get_fmt(struct v4l2_subdev *sd,
-				  struct v4l2_subdev_pad_config *cfg,
+				  struct v4l2_subdev_state *state,
 				  struct v4l2_subdev_format *fmt)
 {
 	struct mtk_dip_pipe *dip_pipe = mtk_dip_subdev_to_pipe(sd);
@@ -74,7 +74,7 @@ static int mtk_dip_subdev_get_fmt(struct v4l2_subdev *sd,
 	if (fmt->which == V4L2_SUBDEV_FORMAT_ACTIVE) {
 		fmt->format = dip_pipe->nodes[pad].pad_fmt;
 	} else {
-		mf = v4l2_subdev_get_try_format(sd, cfg, pad);
+		mf = v4l2_subdev_get_try_format(sd, state, pad);
 		fmt->format = *mf;
 	}
 
@@ -82,7 +82,7 @@ static int mtk_dip_subdev_get_fmt(struct v4l2_subdev *sd,
 }
 
 static int mtk_dip_subdev_set_fmt(struct v4l2_subdev *sd,
-				  struct v4l2_subdev_pad_config *cfg,
+				  struct v4l2_subdev_state *state,
 				  struct v4l2_subdev_format *fmt)
 {
 	struct mtk_dip_pipe *dip_pipe = mtk_dip_subdev_to_pipe(sd);
@@ -94,7 +94,7 @@ static int mtk_dip_subdev_set_fmt(struct v4l2_subdev *sd,
 		return -EINVAL;
 
 	if (fmt->which == V4L2_SUBDEV_FORMAT_TRY)
-		mf = v4l2_subdev_get_try_format(sd, cfg, pad);
+		mf = v4l2_subdev_get_try_format(sd, state, pad);
 	else
 		mf = &dip_pipe->nodes[pad].pad_fmt;
 
@@ -114,7 +114,7 @@ static int mtk_dip_subdev_set_fmt(struct v4l2_subdev *sd,
 }
 
 static int mtk_dip_subdev_get_selection(struct v4l2_subdev *sd,
-					struct v4l2_subdev_pad_config *cfg,
+					struct v4l2_subdev_state *state,
 					struct v4l2_subdev_selection *sel)
 {
 	struct v4l2_rect *try_sel, *r;
@@ -130,7 +130,7 @@ static int mtk_dip_subdev_get_selection(struct v4l2_subdev *sd,
 
 	switch (sel->target) {
 	case V4L2_SEL_TGT_CROP:
-		try_sel = v4l2_subdev_get_try_crop(sd, cfg, sel->pad);
+		try_sel = v4l2_subdev_get_try_crop(sd, state, sel->pad);
 		r = &dip_pipe->nodes[sel->pad].crop;  /* effective resolution */
 		break;
 	default:
@@ -150,7 +150,7 @@ static int mtk_dip_subdev_get_selection(struct v4l2_subdev *sd,
 }
 
 static int mtk_dip_subdev_set_selection(struct v4l2_subdev *sd,
-					struct v4l2_subdev_pad_config *cfg,
+					struct v4l2_subdev_state *state,
 					struct v4l2_subdev_selection *sel)
 {
 	struct v4l2_rect *rect, *try_sel;
@@ -166,7 +166,7 @@ static int mtk_dip_subdev_set_selection(struct v4l2_subdev *sd,
 
 	switch (sel->target) {
 	case V4L2_SEL_TGT_CROP:
-		try_sel = v4l2_subdev_get_try_crop(sd, cfg, sel->pad);
+		try_sel = v4l2_subdev_get_try_crop(sd, state, sel->pad);
 		rect = &dip_pipe->nodes[sel->pad].crop;
 		break;
 	default:
