@@ -495,13 +495,13 @@ static void init_fmt(struct mtk_seninf *priv)
 }
 
 static int seninf_init_cfg(struct v4l2_subdev *sd,
-			   struct v4l2_subdev_pad_config *cfg)
+			   struct v4l2_subdev_state *state)
 {
 	struct v4l2_mbus_framefmt *mf;
 	unsigned int i;
 
 	for (i = 0; i < sd->entity.num_pads; i++) {
-		mf = v4l2_subdev_get_try_format(sd, cfg, i);
+		mf = v4l2_subdev_get_try_format(sd, state, i);
 		*mf = mtk_seninf_default_fmt;
 	}
 
@@ -509,7 +509,7 @@ static int seninf_init_cfg(struct v4l2_subdev *sd,
 }
 
 static int seninf_set_fmt(struct v4l2_subdev *sd,
-			  struct v4l2_subdev_pad_config *cfg,
+			  struct v4l2_subdev_state *state,
 			  struct v4l2_subdev_format *fmt)
 {
 	struct mtk_seninf *priv = container_of(sd, struct mtk_seninf, subdev);
@@ -518,7 +518,7 @@ static int seninf_set_fmt(struct v4l2_subdev *sd,
 		fmt->format.code = MEDIA_BUS_FMT_SBGGR10_1X10;
 
 	if (fmt->which == V4L2_SUBDEV_FORMAT_TRY) {
-		*v4l2_subdev_get_try_format(sd, cfg, fmt->pad) = fmt->format;
+		*v4l2_subdev_get_try_format(sd, state, fmt->pad) = fmt->format;
 	} else {
 		priv->fmt[fmt->pad].pad = fmt->pad;
 		priv->fmt[fmt->pad].format.code = fmt->format.code;
@@ -530,13 +530,13 @@ static int seninf_set_fmt(struct v4l2_subdev *sd,
 }
 
 static int seninf_get_fmt(struct v4l2_subdev *sd,
-			  struct v4l2_subdev_pad_config *cfg,
+			  struct v4l2_subdev_state *state,
 			  struct v4l2_subdev_format *fmt)
 {
 	struct mtk_seninf *priv = container_of(sd, struct mtk_seninf, subdev);
 
 	if (fmt->which == V4L2_SUBDEV_FORMAT_TRY) {
-		fmt->format = *v4l2_subdev_get_try_format(sd, cfg, fmt->pad);
+		fmt->format = *v4l2_subdev_get_try_format(sd, state, fmt->pad);
 	} else {
 		fmt->format.code = priv->fmt[fmt->pad].format.code;
 		fmt->format.width = priv->fmt[fmt->pad].format.width;
@@ -553,7 +553,7 @@ static int seninf_get_fmt(struct v4l2_subdev *sd,
 }
 
 static int seninf_enum_mbus_code(struct v4l2_subdev *sd,
-				 struct v4l2_subdev_pad_config *cfg,
+				 struct v4l2_subdev_state *state,
 				 struct v4l2_subdev_mbus_code_enum *code)
 {
 	struct mtk_seninf *priv = container_of(sd, struct mtk_seninf, subdev);
