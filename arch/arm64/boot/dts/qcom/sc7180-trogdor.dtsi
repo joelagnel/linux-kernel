@@ -247,27 +247,12 @@
 		};
 	};
 
-	max98357a: audio-codec-0 {
-		compatible = "maxim,max98357a";
+	max98360a: audio-codec-0 {
+		compatible = "maxim,max98360a";
 		pinctrl-names = "default";
 		pinctrl-0 = <&amp_en>;
 		sdmode-gpios = <&tlmm 23 GPIO_ACTIVE_HIGH>;
 		#sound-dai-cells = <0>;
-	};
-
-	panel: panel {
-		/* Compatible will be filled in per-board */
-		power-supply = <&pp3300_dx_edp>;
-		backlight = <&backlight>;
-		hpd-gpios = <&sn65dsi86_bridge 2 GPIO_ACTIVE_HIGH>;
-
-		ports {
-			port {
-				panel_in_edp: endpoint {
-					remote-endpoint = <&sn65dsi86_out>;
-				};
-			};
-		};
 	};
 
 	pwmleds {
@@ -311,9 +296,26 @@
 			};
 
 			sound_multimedia1_codec: codec {
-				sound-dai = <&max98357a>;
+				sound-dai = <&max98360a>;
 			};
 		};
+
+		dai-link@5 {
+			link-name = "MultiMedia2";
+			reg = <LPASS_DP_RX>;
+			cpu {
+				sound-dai = <&lpass_cpu LPASS_DP_RX>;
+			};
+
+			sound_multimedia2_codec: codec {
+				sound-dai = <&mdss_dp>;
+			};
+		};
+	};
+
+	usb_hub: usb-hub {
+		compatible = "realtek,rts5411", "onboard-usb-hub";
+		vdd-supply = <&pp3300_hub>;
 	};
 };
 
@@ -666,6 +668,21 @@ edp_brij_i2c: &i2c2 {
 				};
 			};
 		};
+
+		aux-bus {
+			panel: panel {
+				/* Compatible will be filled in per-board */
+				power-supply = <&pp3300_dx_edp>;
+				backlight = <&backlight>;
+				hpd-gpios = <&sn65dsi86_bridge 2 GPIO_ACTIVE_HIGH>;
+
+				port {
+					panel_in_edp: endpoint {
+						remote-endpoint = <&sn65dsi86_out>;
+					};
+				};
+			};
+		};
 	};
 };
 
@@ -768,6 +785,10 @@ hp_i2c: &i2c9 {
 		reg = <MI2S_SECONDARY>;
 		qcom,playback-sd-lines = <0>;
 	};
+
+	hdmi@5 {
+		reg = <LPASS_DP_RX>;
+	};
 };
 
 &mdp {
@@ -776,6 +797,15 @@ hp_i2c: &i2c9 {
 
 &mdss {
 	status = "okay";
+};
+
+&mdss_dp {
+	status = "okay";
+	pinctrl-names = "default";
+	pinctrl-0 = <&dp_hot_plug_det>;
+	data-lanes = <0 1>;
+	vdda-1p2-supply = <&vdda_usb_ss_dp_1p2>;
+	vdda-0p9-supply = <&vdda_usb_ss_dp_core>;
 };
 
 &pm6150_adc {
@@ -898,6 +928,22 @@ ap_spi_fp: &spi10 {
 
 &usb_1_dwc3 {
 	dr_mode = "host";
+	#address-cells = <1>;
+	#size-cells = <0>;
+
+	/* 2.0 hub on port 1 */
+	hub@1 {
+		compatible = "usbbda,5411";
+		reg = <1>;
+		hub = <&usb_hub>;
+	};
+
+	/* 3.0 hub on port 2 */
+	hub@2 {
+		compatible = "usbbda,411";
+		reg = <2>;
+		hub = <&usb_hub>;
+	};
 };
 
 &usb_1_hsphy {

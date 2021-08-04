@@ -7,30 +7,109 @@
 
 /dts-v1/;
 
-#include "sc7180-trogdor-coachz.dtsi"
+#include "sc7180.dtsi"
+
+ap_ec_spi: &spi6 {};
+ap_h1_spi: &spi0 {};
+
+#include "sc7180-trogdor.dtsi"
 
 / {
-	model = "Google CoachZ (rev1 - 2)";
-	compatible = "google,coachz-rev1", "google,coachz-rev2", "qcom,sc7180";
+	model = "Google CoachZ";
+	compatible = "google,coachz", "qcom,sc7180";
 };
 
-/*
- * CoachZ rev1 is stuffed with a 47k NTC as charger thermistor which currently
- * is not supported by the PM6150 ADC driver. Disable the charger thermal zone
- * to avoid using bogus temperature values.
- */
-&charger_thermal {
+&alc5682 {
 	status = "disabled";
 };
 
-/*
- * CoachZ rev1 is stuffed with a 47k NTC as thermistor for skin temperature,
- * which currently is not supported by the PM6150 ADC driver. Disable the
- * skin temperature thermal zone to avoid using bogus temperature values.
- */
-&skin_temp_thermal {
+&ap_tp_i2c {
 	status = "disabled";
 };
+
+&ap_spi_fp {
+	status = "okay";
+};
+
+&backlight {
+	pwms = <&cros_ec_pwm 0>;
+};
+
+&hp_i2c {
+	status = "disabled";
+};
+
+ap_ts_pen_1v8: &i2c4 {
+	status = "okay";
+	clock-frequency = <400000>;
+
+	ap_ts: touchscreen@5d {
+		compatible = "goodix,gt7375p";
+		reg = <0x5d>;
+		pinctrl-names = "default";
+		pinctrl-0 = <&ts_int_l>, <&ts_reset_l>;
+
+		interrupt-parent = <&tlmm>;
+		interrupts = <9 IRQ_TYPE_LEVEL_LOW>;
+
+		reset-gpios = <&tlmm 8 GPIO_ACTIVE_LOW>;
+
+		vdd-supply = <&pp3300_ts>;
+	};
+};
+
+/*
+ * There's no SAR sensor, so i2c5 is re-purposed.  We leave the
+ * proximity@28 node under i2c5 (from trogdor.dtsi) since it's "disabled"
+ * and doesn't hurt.
+ */
+i2c_wlc: &i2c5 {
+	/* Currently not connected to anything; see b/168652326 */
+};
+
+&panel {
+	compatible = "boe,nv110wtm-n61";
+};
+
+&pp3300_codec {
+	status = "disabled";
+};
+
+&pp3300_dx_edp {
+	gpio = <&tlmm 52 GPIO_ACTIVE_HIGH>;
+};
+
+&sdhc_2 {
+	status = "okay";
+};
+
+&sn65dsi86_out {
+	data-lanes = <0 1 2 3>;
+};
+
+/* PINCTRL - modifications to sc7180-trogdor.dtsi */
+
+&en_pp3300_dx_edp {
+	pinmux  {
+		pins = "gpio52";
+	};
+
+	pinconf {
+		pins = "gpio52";
+	};
+};
+
+&ts_reset_l {
+	pinconf {
+		/*
+		 * We want reset state by default and it will be up to the
+		 * driver to disable this when it's ready.
+		 */
+		output-low;
+	};
+};
+
+/* PINCTRL - board-specific pinctrl */
 
 &tlmm {
 	gpio-line-names = "HUB_RST_L",
@@ -156,17 +235,4 @@
 			  "AP_TS_PEN_I2C_SCL",
 			  "DP_HOT_PLUG_DET",
 			  "EC_IN_RW_ODL";
-
-	dmic_clk_en: dmic_clk_en {
-		pinmux {
-			pins = "gpio83";
-			function = "gpio";
-		};
-
-		pinconf {
-			pins = "gpio83";
-			drive-strength = <8>;
-			bias-pull-up;
-		};
-	};
 };
