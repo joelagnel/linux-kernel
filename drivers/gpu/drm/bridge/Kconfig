@@ -74,6 +74,13 @@ config DRM_DISPLAY_CONNECTOR
 	  on ARM-based platforms. Saying Y here when this driver is not needed
 	  will not cause any issue.
 
+config DRM_ITE_IT6505
+        tristate "ITE IT6505 DisplayPort bridge"
+        depends on OF
+        select DRM_KMS_HELPER
+        help
+          ITE IT6505 DisplayPort bridge chip driver.
+
 config DRM_LONTIUM_LT8912B
 	tristate "Lontium LT8912B DSI/HDMI bridge"
 	depends on OF
@@ -303,6 +310,7 @@ config DRM_TI_SN65DSI86
 	select DRM_PANEL
 	select DRM_MIPI_DSI
 	select AUXILIARY_BUS
+	select DRM_DP_AUX_BUS
 	help
 	  Texas Instruments SN65DSI86 DSI to eDP Bridge driver
 
