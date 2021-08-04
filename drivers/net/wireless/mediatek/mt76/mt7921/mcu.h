@@ -199,7 +199,8 @@ struct sta_rec_sec {
 } __packed;
 
 enum mcu_cipher_type {
-	MCU_CIPHER_WEP40 = 1,
+	MCU_CIPHER_NONE,
+	MCU_CIPHER_WEP40,
 	MCU_CIPHER_WEP104,
 	MCU_CIPHER_WEP128,
 	MCU_CIPHER_TKIP,
@@ -295,11 +296,11 @@ struct mt7921_txpwr_event {
 struct mt7921_mcu_tx_done_event {
 	u8 pid;
 	u8 status;
-	u16 seq;
+	__le16 seq;
 
 	u8 wlan_idx;
 	u8 tx_cnt;
-	u16 tx_rate;
+	__le16 tx_rate;
 
 	u8 flag;
 	u8 tid;
@@ -311,12 +312,38 @@ struct mt7921_mcu_tx_done_event {
 	u8 reason;
 	u8 rsv0[1];
 
-	u32 delay;
-	u32 timestamp;
-	u32 applied_flag;
+	__le32 delay;
+	__le32 timestamp;
+	__le32 applied_flag;
 
 	u8 txs[28];
 
 	u8 rsv1[32];
+} __packed;
+
+enum {
+	TM_SWITCH_MODE,
+	TM_SET_AT_CMD,
+	TM_QUERY_AT_CMD,
+};
+
+enum {
+	MT7921_TM_NORMAL,
+	MT7921_TM_TESTMODE,
+	MT7921_TM_ICAP,
+	MT7921_TM_ICAP_OVERLAP,
+	MT7921_TM_WIFISPECTRUM,
+};
+
+struct mt7921_rftest_cmd {
+	u8 action;
+	u8 rsv[3];
+	__le32 param0;
+	__le32 param1;
+} __packed;
+
+struct mt7921_rftest_evt {
+	__le32 param0;
+	__le32 param1;
 } __packed;
 #endif
