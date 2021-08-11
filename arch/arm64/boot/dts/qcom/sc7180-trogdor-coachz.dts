@@ -5,6 +5,8 @@
  * Copyright 2020 Google LLC.
  */
 
+/dts-v1/;
+
 #include "sc7180.dtsi"
 
 ap_ec_spi: &spi6 {};
@@ -12,64 +14,17 @@ ap_h1_spi: &spi0 {};
 
 #include "sc7180-trogdor.dtsi"
 
-/* Deleted nodes from trogdor.dtsi */
-
-/delete-node/ &alc5682;
-/delete-node/ &pp3300_codec;
-
 / {
-	/* BOARD-SPECIFIC TOP LEVEL NODES */
+	model = "Google CoachZ";
+	compatible = "google,coachz", "qcom,sc7180";
+};
 
-	adau7002: audio-codec-1 {
-		compatible = "adi,adau7002";
-		IOVDD-supply = <&pp1800_l15a>;
-		wakeup-delay-ms = <15>;
-		#sound-dai-cells = <0>;
-	};
+&alc5682 {
+	status = "disabled";
+};
 
-	thermal-zones {
-		skin_temp_thermal: skin-temp-thermal {
-			polling-delay-passive = <250>;
-			polling-delay = <0>;
-
-			thermal-sensors = <&pm6150_adc_tm 1>;
-			sustainable-power = <814>;
-
-			trips {
-				skin_temp_alert0: trip-point0 {
-					temperature = <42000>;
-					hysteresis = <1000>;
-					type = "passive";
-				};
-
-				skin_temp_alert1: trip-point1 {
-					temperature = <45000>;
-					hysteresis = <1000>;
-					type = "passive";
-				};
-
-				skin-temp-crit {
-					temperature = <60000>;
-					hysteresis = <1000>;
-					type = "critical";
-				};
-			};
-
-			cooling-maps {
-				map0 {
-					trip = <&skin_temp_alert0>;
-					cooling-device = <&CPU6 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-							 <&CPU7 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-				};
-
-				map1 {
-					trip = <&skin_temp_alert1>;
-					cooling-device = <&CPU6 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-							 <&CPU7 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-				};
-			};
-		};
-	};
+&ap_tp_i2c {
+	status = "disabled";
 };
 
 &ap_spi_fp {
@@ -80,15 +35,8 @@ ap_h1_spi: &spi0 {};
 	pwms = <&cros_ec_pwm 0>;
 };
 
-&camcc {
-	status = "okay";
-};
-
-&cros_ec {
-	cros_ec_proximity: proximity {
-		compatible = "google,cros-ec-mkbp-proximity";
-		label = "proximity-wifi";
-	};
+&hp_i2c {
+	status = "disabled";
 };
 
 ap_ts_pen_1v8: &i2c4 {
@@ -110,39 +58,25 @@ ap_ts_pen_1v8: &i2c4 {
 	};
 };
 
-&i2c7 {
-	status = "disabled";
-};
-
-&i2c9 {
-	status = "disabled";
+/*
+ * There's no SAR sensor, so i2c5 is re-purposed.  We leave the
+ * proximity@28 node under i2c5 (from trogdor.dtsi) since it's "disabled"
+ * and doesn't hurt.
+ */
+i2c_wlc: &i2c5 {
+	/* Currently not connected to anything; see b/168652326 */
 };
 
 &panel {
 	compatible = "boe,nv110wtm-n61";
 };
 
-&pm6150_adc {
-	skin-temp-thermistor@4e {
-		reg = <ADC5_AMUX_THM2_100K_PU>;
-		qcom,ratiometric;
-		qcom,hw-settle-time = <200>;
-	};
-};
-
-&pm6150_adc_tm {
-	status = "okay";
-
-	skin-temp-thermistor@1 {
-		reg = <1>;
-		io-channels = <&pm6150_adc ADC5_AMUX_THM2_100K_PU>;
-		qcom,ratiometric;
-		qcom,hw-settle-time-us = <200>;
-	};
+&pp3300_codec {
+	status = "disabled";
 };
 
 &pp3300_dx_edp {
-	gpio = <&tlmm 67 GPIO_ACTIVE_HIGH>;
+	gpio = <&tlmm 52 GPIO_ACTIVE_HIGH>;
 };
 
 &sdhc_2 {
@@ -153,28 +87,15 @@ ap_ts_pen_1v8: &i2c4 {
 	data-lanes = <0 1 2 3>;
 };
 
-&sound {
-	compatible = "google,sc7180-coachz";
-	model = "sc7180-adau7002-max98357a";
-	audio-routing = "PDM_DAT", "DMIC";
-
-	pinctrl-names = "default";
-	pinctrl-0 = <&dmic_clk_en>;
-};
-
-&sound_multimedia0_codec {
-	sound-dai = <&adau7002>;
-};
-
 /* PINCTRL - modifications to sc7180-trogdor.dtsi */
 
 &en_pp3300_dx_edp {
 	pinmux  {
-		pins = "gpio67";
+		pins = "gpio52";
 	};
 
 	pinconf {
-		pins = "gpio67";
+		pins = "gpio52";
 	};
 };
 
@@ -243,7 +164,7 @@ ap_ts_pen_1v8: &i2c4 {
 			  "AMP_BCLK",
 			  "AMP_LRCLK",
 			  "AMP_DIN",
-			  "",
+			  "EN_PP3300_DX_EDP",
 			  "HP_BCLK",
 			  "HP_LRCLK",
 			  "HP_DOUT",
@@ -262,14 +183,14 @@ ap_ts_pen_1v8: &i2c4 {
 			   * call it BIOS_FLASH_WP_L.
 			   */
 			  "AP_FLASH_WP_L",
-			  "EN_PP3300_DX_EDP",
+			  "",
 			  "AP_SPI_CS0_L",
 			  "SD_CD_ODL",
 			  "",
 			  "",
 			  "",
 			  "",
-			  "EN_FP_RAILS",
+			  "FPMCU_SEL",
 			  "UIM2_DATA",
 			  "UIM2_CLK",
 			  "UIM2_RST",
@@ -278,7 +199,7 @@ ap_ts_pen_1v8: &i2c4 {
 			  "UIM1_CLK",
 			  "UIM1_RST",
 			  "",
-			  "",
+			  "DMIC_CLK_EN",
 			  "HUB_EN",
 			  "",
 			  "AP_SPI_FP_MISO",
@@ -314,19 +235,4 @@ ap_ts_pen_1v8: &i2c4 {
 			  "AP_TS_PEN_I2C_SCL",
 			  "DP_HOT_PLUG_DET",
 			  "EC_IN_RW_ODL";
-
-	dmic_clk_en: dmic_clk_en {
-		pinmux {
-			pins = "gpio83";
-			function = "gpio";
-		};
-
-		pinconf {
-			pins = "gpio83";
-			drive-strength = <8>;
-			bias-pull-up;
-		};
-	};
 };
-
-#include "sc7180-trogdor-mipi-camera.dtsi"
