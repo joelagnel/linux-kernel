@@ -634,17 +634,21 @@ static u8 *create_uuid128_list(struct hci_dev *hdev, u8 *data, ptrdiff_t len)
 static void create_eir(struct hci_dev *hdev, u8 *data)
 {
 	u8 *ptr = data;
+	u8 size_remaining = HCI_MAX_EIR_LENGTH;
 	size_t name_len;
 
 	name_len = strlen(hdev->dev_name);
 
 	if (name_len > 0) {
 		/* EIR Data type */
-		if (name_len > 48) {
-			name_len = 48;
+		if (name_len > min_t(u16, (HCI_MAX_EIR_LENGTH - 2),
+				     hdev->eir_max_name_len)) {
+			name_len = min_t(u16, (HCI_MAX_EIR_LENGTH - 2),
+					 hdev->eir_max_name_len);
 			ptr[1] = EIR_NAME_SHORT;
-		} else
+		} else {
 			ptr[1] = EIR_NAME_COMPLETE;
+		}
 
 		/* EIR Data length */
 		ptr[0] = name_len + 1;
@@ -652,17 +656,21 @@ static void create_eir(struct hci_dev *hdev, u8 *data)
 		memcpy(ptr + 2, hdev->dev_name, name_len);
 
 		ptr += (name_len + 2);
+		size_remaining -= (name_len + 2);
 	}
 
-	if (hdev->inq_tx_power != HCI_TX_POWER_INVALID) {
+	if (hdev->inq_tx_power != HCI_TX_POWER_INVALID &&
+	    size_remaining >= 3) {
 		ptr[0] = 2;
 		ptr[1] = EIR_TX_POWER;
 		ptr[2] = (u8) hdev->inq_tx_power;
 
 		ptr += 3;
+		size_remaining -= 3;
 	}
 
-	if (hdev->devid_source > 0) {
+	if (hdev->devid_source > 0 &&
+	    size_remaining >= 10) {
 		ptr[0] = 9;
 		ptr[1] = EIR_DEVICE_ID;
 
@@ -672,11 +680,16 @@ static void create_eir(struct hci_dev *hdev, u8 *data)
 		put_unaligned_le16(hdev->devid_version, ptr + 8);
 
 		ptr += 10;
+		size_remaining -= 10;
 	}
 
-	ptr = create_uuid16_list(hdev, ptr, HCI_MAX_EIR_LENGTH - (ptr - data));
-	ptr = create_uuid32_list(hdev, ptr, HCI_MAX_EIR_LENGTH - (ptr - data));
-	ptr = create_uuid128_list(hdev, ptr, HCI_MAX_EIR_LENGTH - (ptr - data));
+	ptr = create_uuid16_list(hdev, ptr, size_remaining);
+	size_remaining = HCI_MAX_EIR_LENGTH - (ptr - data);
+
+	ptr = create_uuid32_list(hdev, ptr, size_remaining);
+	size_remaining = HCI_MAX_EIR_LENGTH - (ptr - data);
+
+	ptr = create_uuid128_list(hdev, ptr, size_remaining);
 }
 
 void __hci_req_update_eir(struct hci_request *req)
@@ -1105,23 +1118,6 @@ void hci_req_add_le_passive_scan(struct hci_request *req)
 	} else if (hci_is_le_conn_scanning(hdev)) {
 		window = hdev->le_scan_window_connect;
 		interval = hdev->le_scan_int_connect;
-	} else if (hci_is_adv_monitoring(hdev)) {
-		window = hdev->le_scan_window_adv_monitor;
-		interval = hdev->le_scan_int_adv_monitor;
-
-		/* Disable duplicates filter when scanning for advertisement
-		 * monitor for the following reasons.
-		 *
-		 * For HW pattern filtering (ex. MSFT), Realtek and Qualcomm
-		 * controllers ignore RSSI_Sampling_Period when the duplicates
-		 * filter is enabled.
-		 *
-		 * For SW pattern filtering, when we're not doing interleaved
-		 * scanning, it is necessary to disable duplicates filter,
-		 * otherwise hosts can only receive one advertisement and it's
-		 * impossible to know if a peer is still in range.
-		 */
-		filter_dup = LE_SCAN_FILTER_DUP_DISABLE;
 	} else {
 		window = hdev->le_scan_window;
 		interval = hdev->le_scan_interval;
@@ -1325,7 +1321,7 @@ void hci_req_prepare_suspend(struct hci_dev *hdev, enum suspended_state next)
 		if (old_state != DISCOVERY_STOPPED) {
 			set_bit(SUSPEND_PAUSE_DISCOVERY, hdev->suspend_tasks);
 			hci_discovery_set_state(hdev, DISCOVERY_STOPPING);
-			queue_work(hdev->req_workqueue, &hdev->discov_update);
+			queue_work(hdev->req_workqueue, &hdev->stop_discov_update);
 		}
 
 		hdev->discovery_paused = true;
@@ -1427,7 +1423,7 @@ void hci_req_prepare_suspend(struct hci_dev *hdev, enum suspended_state next)
 		    hdev->discovery_old_state != DISCOVERY_STOPPING) {
 			set_bit(SUSPEND_UNPAUSE_DISCOVERY, hdev->suspend_tasks);
 			hci_discovery_set_state(hdev, DISCOVERY_STARTING);
-			queue_work(hdev->req_workqueue, &hdev->discov_update);
+			queue_work(hdev->req_workqueue, &hdev->start_discov_update);
 		}
 
 		hci_req_run(&req, suspend_req_complete);
@@ -1565,11 +1561,7 @@ void __hci_req_enable_advertising(struct hci_request *req)
 	flags = get_adv_instance_flags(hdev, hdev->cur_adv_instance);
 	adv_instance = hci_find_adv_instance(hdev, hdev->cur_adv_instance);
 
-	/* If the "connectable" instance flag was not set, then choose between
-	 * ADV_IND and ADV_NONCONN_IND based on the global connectable setting.
-	 */
-	connectable = (flags & MGMT_ADV_FLAG_CONNECTABLE) ||
-		      mgmt_get_connectable(hdev);
+	connectable = (flags & MGMT_ADV_FLAG_CONNECTABLE);
 
 	if (!is_advertising_allowed(hdev, connectable))
 		return;
@@ -1603,23 +1595,16 @@ void __hci_req_enable_advertising(struct hci_request *req)
 		adv_max_interval = hdev->le_adv_max_interval;
 	}
 
-	if (connectable) {
-		cp.type = LE_ADV_IND;
-	} else {
-		if (adv_cur_instance_is_scannable(hdev))
-			cp.type = LE_ADV_SCAN_IND;
-		else
-			cp.type = LE_ADV_NONCONN_IND;
-
-		if (!hci_dev_test_flag(hdev, HCI_DISCOVERABLE) ||
-		    hci_dev_test_flag(hdev, HCI_LIMITED_DISCOVERABLE)) {
-			adv_min_interval = DISCOV_LE_FAST_ADV_INT_MIN;
-			adv_max_interval = DISCOV_LE_FAST_ADV_INT_MAX;
-		}
-	}
-
 	cp.min_interval = cpu_to_le16(adv_min_interval);
 	cp.max_interval = cpu_to_le16(adv_max_interval);
+
+	if (connectable)
+		cp.type = LE_ADV_IND;
+	else if (adv_cur_instance_is_scannable(hdev))
+		cp.type = LE_ADV_SCAN_IND;
+	else
+		cp.type = LE_ADV_NONCONN_IND;
+
 	cp.own_address_type = own_addr_type;
 	cp.channel_map = hdev->le_adv_channel_map;
 
@@ -3349,31 +3334,46 @@ static int stop_discovery(struct hci_request *req, unsigned long opt)
 	return 0;
 }
 
-static void discov_update(struct work_struct *work)
+static void start_discov_update(struct work_struct *work)
 {
 	struct hci_dev *hdev = container_of(work, struct hci_dev,
-					    discov_update);
+					    start_discov_update);
 	u8 status = 0;
 
-	switch (hdev->discovery.state) {
-	case DISCOVERY_STARTING:
+	BT_DBG("%s old state %u", hdev->name, hdev->discovery.state);
+
+	if (hci_discovery_active(hdev))
+		BT_DBG("discovery was already started");
+	else
 		start_discovery(hdev, &status);
-		mgmt_start_discovery_complete(hdev, status);
-		if (status)
-			hci_discovery_set_state(hdev, DISCOVERY_STOPPED);
-		else
-			hci_discovery_set_state(hdev, DISCOVERY_FINDING);
-		break;
-	case DISCOVERY_STOPPING:
-		hci_req_sync(hdev, stop_discovery, 0, HCI_CMD_TIMEOUT, &status);
-		mgmt_stop_discovery_complete(hdev, status);
-		if (!status)
-			hci_discovery_set_state(hdev, DISCOVERY_STOPPED);
-		break;
-	case DISCOVERY_STOPPED:
-	default:
-		return;
+
+	mgmt_start_discovery_complete(hdev, status);
+	if (status) {
+		hci_discovery_set_state(hdev, DISCOVERY_STOPPED);
+		BT_ERR("Failed to start discovery: status 0x%02x", status);
+	} else {
+		hci_discovery_set_state(hdev, DISCOVERY_FINDING);
 	}
+}
+
+static void stop_discov_update(struct work_struct *work)
+{
+	struct hci_dev *hdev = container_of(work, struct hci_dev,
+					    stop_discov_update);
+	u8 status = 0;
+
+	BT_DBG("%s old state %u", hdev->name, hdev->discovery.state);
+
+	if (hdev->discovery.state == DISCOVERY_STOPPED)
+		BT_DBG("discovery was already stopped");
+	else
+		hci_req_sync(hdev, stop_discovery, 0, HCI_CMD_TIMEOUT, &status);
+
+	mgmt_stop_discovery_complete(hdev, status);
+	if (status)
+		BT_ERR("Failed to stop discovery: status 0x%02x", status);
+	else
+		hci_discovery_set_state(hdev, DISCOVERY_STOPPED);
 }
 
 static void discov_off(struct work_struct *work)
@@ -3511,7 +3511,8 @@ int __hci_req_hci_power_on(struct hci_dev *hdev)
 
 void hci_request_setup(struct hci_dev *hdev)
 {
-	INIT_WORK(&hdev->discov_update, discov_update);
+	INIT_WORK(&hdev->start_discov_update, start_discov_update);
+	INIT_WORK(&hdev->stop_discov_update, stop_discov_update);
 	INIT_WORK(&hdev->bg_scan_update, bg_scan_update);
 	INIT_WORK(&hdev->scan_update, scan_update_work);
 	INIT_WORK(&hdev->connectable_update, connectable_update_work);
@@ -3527,7 +3528,8 @@ void hci_request_cancel_all(struct hci_dev *hdev)
 {
 	hci_req_sync_cancel(hdev, ENODEV);
 
-	cancel_work_sync(&hdev->discov_update);
+	cancel_work_sync(&hdev->start_discov_update);
+	cancel_work_sync(&hdev->stop_discov_update);
 	cancel_work_sync(&hdev->bg_scan_update);
 	cancel_work_sync(&hdev->scan_update);
 	cancel_work_sync(&hdev->connectable_update);
