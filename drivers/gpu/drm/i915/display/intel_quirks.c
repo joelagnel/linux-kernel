@@ -53,6 +53,22 @@ static void quirk_increase_ddi_disabled_time(struct drm_i915_private *i915)
 	drm_info(&i915->drm, "Applying Increase DDI Disabled quirk\n");
 }
 
+/*
+ * Some eDP backlight hardware uses the most-significant bits of the brightness
+ * register, so brightness values must be shifted first.
+ */
+static void quirk_shift_edp_backlight_brightness(struct drm_i915_private *i915)
+{
+	i915->quirks |= QUIRK_SHIFT_EDP_BACKLIGHT_BRIGHTNESS;
+	DRM_INFO("Applying shift eDP backlight brightness quirk\n");
+}
+
+static void quirk_no_pps_backlight_power_hook(struct drm_i915_private *i915)
+{
+	i915->quirks |= QUIRK_NO_PPS_BACKLIGHT_POWER_HOOK;
+	drm_info(&i915->drm, "Applying no pps backlight power quirk\n");
+}
+
 struct intel_quirk {
 	int device;
 	int subsystem_vendor;
@@ -69,6 +85,12 @@ struct intel_dmi_quirk {
 static int intel_dmi_reverse_brightness(const struct dmi_system_id *id)
 {
 	DRM_INFO("Backlight polarity reversed on %s\n", id->ident);
+	return 1;
+}
+
+static int intel_dmi_no_pps_backlight(const struct dmi_system_id *id)
+{
+	DRM_INFO("No pps backlight support on %s\n", id->ident);
 	return 1;
 }
 
@@ -95,6 +117,28 @@ static const struct intel_dmi_quirk intel_dmi_quirks[] = {
 			{ }  /* terminating entry */
 		},
 		.hook = quirk_invert_brightness,
+	},
+	{
+		.dmi_id_list = &(const struct dmi_system_id[]) {
+			{
+				.callback = intel_dmi_no_pps_backlight,
+				.ident = "Google Lillipup sku524294",
+				.matches = {DMI_EXACT_MATCH(DMI_BOARD_VENDOR, "Google"),
+					    DMI_EXACT_MATCH(DMI_BOARD_NAME, "Lindar"),
+					    DMI_EXACT_MATCH(DMI_PRODUCT_SKU, "sku524294"),
+				},
+			},
+			{
+				.callback = intel_dmi_no_pps_backlight,
+				.ident = "Google Lillipup sku524295",
+				.matches = {DMI_EXACT_MATCH(DMI_BOARD_VENDOR, "Google"),
+					    DMI_EXACT_MATCH(DMI_BOARD_NAME, "Lindar"),
+					    DMI_EXACT_MATCH(DMI_PRODUCT_SKU, "sku524295"),
+				},
+			},
+			{ }
+		},
+		.hook = quirk_no_pps_backlight_power_hook,
 	},
 };
 
@@ -156,6 +200,9 @@ static struct intel_quirk intel_quirks[] = {
 	/* ASRock ITX*/
 	{ 0x3185, 0x1849, 0x2212, quirk_increase_ddi_disabled_time },
 	{ 0x3184, 0x1849, 0x2212, quirk_increase_ddi_disabled_time },
+
+	/* Google Pixelbook */
+	{ 0x591E, 0x8086, 0x2212, quirk_shift_edp_backlight_brightness },
 };
 
 void intel_init_quirks(struct drm_i915_private *i915)
