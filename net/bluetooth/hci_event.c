@@ -1277,6 +1277,7 @@ static void hci_cc_le_set_ext_adv_enable(struct hci_dev *hdev,
 					 struct sk_buff *skb)
 {
 	struct hci_cp_le_set_ext_adv_enable *cp;
+	struct hci_cp_ext_adv_set *adv_sets = NULL;
 	__u8 status = *((__u8 *) skb->data);
 
 	BT_DBG("%s status 0x%2.2x", hdev->name, status);
@@ -1288,10 +1289,17 @@ static void hci_cc_le_set_ext_adv_enable(struct hci_dev *hdev,
 	if (!cp)
 		return;
 
+	if (cp->num_of_sets)
+		adv_sets = (struct hci_cp_ext_adv_set *)&cp->data;
+
 	hci_dev_lock(hdev);
 
 	if (cp->enable) {
 		struct hci_conn *conn;
+
+		/* Handle 0 is reserved for directed advertisements */
+		if (adv_sets && adv_sets[0].handle == 0)
+			hdev->ext_directed_advertising = true;
 
 		hci_dev_set_flag(hdev, HCI_LE_ADV);
 
@@ -1301,7 +1309,25 @@ static void hci_cc_le_set_ext_adv_enable(struct hci_dev *hdev,
 					   &conn->le_conn_timeout,
 					   conn->conn_timeout);
 	} else {
-		hci_dev_clear_flag(hdev, HCI_LE_ADV);
+		if (!cp->num_of_sets) {
+			/* This request disabled all advertisements */
+			hdev->ext_directed_advertising = false;
+			hci_dev_clear_flag(hdev, HCI_LE_ADV);
+		} else {
+			if (adv_sets && adv_sets[0].handle == 0) {
+				/* The request disabled only directed adv */
+				hdev->ext_directed_advertising = false;
+			}
+
+			/* Clients' advertisements are removed from
+			 * hdev->adv_instances before calling disable. We just
+			 * need to check it here to update HCI_LE_ADV.
+			 */
+			if (list_empty(&hdev->adv_instances) &&
+			    !hdev->ext_directed_advertising) {
+				hci_dev_clear_flag(hdev, HCI_LE_ADV);
+			}
+		}
 	}
 
 	hci_dev_unlock(hdev);
@@ -2646,6 +2672,12 @@ static void hci_conn_complete_evt(struct hci_dev *hdev, struct sk_buff *skb)
 	}
 
 	if (!ev->status) {
+		int mask = hdev->link_mode;
+		__u8 flags = 0;
+
+		mask |= hci_proto_connect_ind(hdev, &ev->bdaddr, ev->link_type,
+					      &flags);
+
 		conn->handle = __le16_to_cpu(ev->handle);
 
 		if (conn->type == ACL_LINK) {
@@ -2668,6 +2700,19 @@ static void hci_conn_complete_evt(struct hci_dev *hdev, struct sk_buff *skb)
 
 		if (test_bit(HCI_ENCRYPT, &hdev->flags))
 			set_bit(HCI_CONN_ENCRYPT, &conn->flags);
+
+		/* Attempt to remain in the central role if preferred */
+		if ((conn->mode == HCI_ROLE_MASTER && (mask & HCI_LM_MASTER)) &&
+		    (conn->link_policy & HCI_LP_RSWITCH)) {
+			struct hci_cp_write_link_policy cp;
+
+			conn->link_policy &= ~HCI_LP_RSWITCH;
+
+			cp.handle = ev->handle;
+			cp.policy = conn->link_policy;
+			hci_send_cmd(hdev, HCI_OP_WRITE_LINK_POLICY,
+				     sizeof(cp), &cp);
+		}
 
 		/* Get remote features */
 		if (conn->type == ACL_LINK) {
@@ -5322,6 +5367,9 @@ static void hci_le_ext_adv_term_evt(struct hci_dev *hdev, struct sk_buff *skb)
 
 	BT_DBG("%s status 0x%2.2x", hdev->name, ev->status);
 
+	if (!ev->handle)
+		hdev->ext_directed_advertising = false;
+
 	if (ev->status) {
 		struct adv_info *adv;
 
@@ -5341,16 +5389,36 @@ static void hci_le_ext_adv_term_evt(struct hci_dev *hdev, struct sk_buff *skb)
 		struct adv_info *adv_instance;
 
 		if (hdev->adv_addr_type != ADDR_LE_DEV_RANDOM)
-			return;
+			goto cleanup_instance;
 
 		if (!ev->handle) {
 			bacpy(&conn->resp_addr, &hdev->random_addr);
-			return;
+			goto cleanup_instance;
 		}
 
 		adv_instance = hci_find_adv_instance(hdev, ev->handle);
 		if (adv_instance)
 			bacpy(&conn->resp_addr, &adv_instance->random_addr);
+	}
+
+cleanup_instance:
+	/* Since the controller tells us this instance is no longer active, we
+	 * remove it.
+	 *
+	 * One caveat is that if the status is HCI_ERROR_CANCELLED_BY_HOST, this
+	 * event is being fired as a result of a hci_cp_le_set_ext_adv_enable
+	 * disable request, which will have its own callback and cleanup via
+	 * the hci_cc_le_set_ext_adv_enable path. If this is the case, we will
+	 * not remove the instance, as it may only be a temporary disable.
+	 */
+	if (ev->status != HCI_ERROR_CANCELLED_BY_HOST) {
+		hci_remove_adv_instance(hdev, ev->handle);
+
+		/* If we are no longer advertising, clear HCI_LE_ADV */
+		if (list_empty(&hdev->adv_instances) &&
+		    !hdev->ext_directed_advertising) {
+			hci_dev_clear_flag(hdev, HCI_LE_ADV);
+		}
 	}
 }
 
