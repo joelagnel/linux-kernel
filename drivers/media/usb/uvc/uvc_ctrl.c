@@ -2299,7 +2299,8 @@ static int uvc_ctrl_init_roi(struct uvc_device *dev, struct uvc_control *ctrl)
 			     sizeof(struct uvc_roi));
 out:
 	if (ret)
-		uvc_printk(KERN_ERR, "Failed to fixup ROI (%d).\n",  ret);
+		dev_printk(KERN_ERR, &dev->udev->dev,
+			   "Failed to fixup ROI (%d).\n");
 	return ret;
 }
 
