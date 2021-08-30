@@ -712,4 +712,7 @@ static inline int pci_acpi_program_hp_params(struct pci_dev *dev)
 extern const struct attribute_group aspm_ctrl_attr_group;
 #endif
 
+bool pci_drv_allowed_for_untrusted_devs(struct device_driver *drvr);
+bool pci_allowed_to_attach(struct pci_driver *drv, struct pci_dev *dev);
+
 #endif /* DRIVERS_PCI_H */
