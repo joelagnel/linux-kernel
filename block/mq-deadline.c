@@ -271,7 +271,7 @@ deadline_move_request(struct deadline_data *dd, struct dd_per_prio *per_prio,
 }
 
 /* Number of requests queued for a given priority level. */
-static u32 dd_queued(struct deadline_data *dd, enum dd_prio prio)
+static inline u32 dd_queued(struct deadline_data *dd, enum dd_prio prio)
 {
 	return dd_sum(dd, inserted, prio) - dd_sum(dd, completed, prio);
 }
