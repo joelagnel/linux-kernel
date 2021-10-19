@@ -183,4 +183,9 @@ static inline struct dentry *wwan_get_debugfs_dir(struct device *parent)
 static inline void wwan_put_debugfs_dir(struct dentry *dir) {}
 #endif
 
+/*
+ * Default WWAN interface MTU value
+ */
+#define WWAN_DEFAULT_MTU       1500
+
 #endif /* __WWAN_H */
