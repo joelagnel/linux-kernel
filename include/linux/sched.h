@@ -2025,14 +2025,8 @@ const struct cpumask *sched_trace_rd_span(struct root_domain *rd);
 
 #ifdef CONFIG_SCHED_CORE
 int task_set_core_sched(int set, struct task_struct *tsk, unsigned long cookie);
-void sched_core_irq_enter(void);
-void sched_core_irq_exit(void);
-void sched_core_user_enter(void);
 #else
 #define task_set_core_sched(set, tsk, cookie) (-EINVAL)
-#define sched_core_irq_enter(void) do { } while (0)
-#define sched_core_irq_exit(void) do { } while (0)
-#define sched_core_user_enter(void) do { } while (0)
 #endif
 
 #endif

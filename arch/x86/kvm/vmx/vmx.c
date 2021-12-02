@@ -6551,23 +6551,11 @@ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
 	 */
 	x86_spec_ctrl_set_guest(vmx->spec_ctrl, 0);
 
-	/* VM entries need to wait if the core is not ready. */
-#ifdef CONFIG_SCHED_CORE
-	sched_core_user_enter();
-
-	/* Don't need to flush if VM is trusted. */
-	if (current && current->core_cookie) {
-#endif
-
 	/* L1D Flush includes CPU buffer clear to mitigate MDS */
 	if (static_branch_unlikely(&vmx_l1d_should_flush))
 		vmx_l1d_flush(vcpu);
 	else if (static_branch_unlikely(&mds_user_clear))
 		mds_clear_cpu_buffers();
-
-#ifdef CONFIG_SCHED_CORE
-	}
-#endif
 
 	if (vcpu->arch.cr2 != read_cr2())
 		write_cr2(vcpu->arch.cr2);
