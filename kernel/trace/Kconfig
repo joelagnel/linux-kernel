@@ -648,7 +648,7 @@ config HIST_TRIGGERS
 	select TRACING_MAP
 	select TRACING
 	select DYNAMIC_EVENTS
-	default n
+	default y
 	help
 	  Hist triggers allow one or more arbitrary trace event fields
 	  to be aggregated into hash tables and dumped to stdout by
