@@ -31,6 +31,41 @@ TRACE_EVENT(sched_kthread_stop,
 	TP_printk("comm=%s pid=%d", __entry->comm, __entry->pid)
 );
 
+TRACE_EVENT(sched_info,
+
+	TP_PROTO(struct task_struct *p, struct rq *rq, char *i),
+
+	TP_ARGS(p, rq, i),
+
+	TP_STRUCT__entry(
+		__array(	char,	comm,	TASK_COMM_LEN	)
+		__array(	char,	info,	128		)
+		__field(	pid_t,	pid			)
+		__field(	int,	prio			)
+		__field(	int,	cpu			)
+		__field(	int,	rq_nr_running		)
+		__field(unsigned long,  pcookie			)
+		__field(unsigned long,  vr			)
+		__field(	int,	rootse			)
+	),
+
+	TP_fast_assign(
+		memcpy(__entry->comm,  p->comm, TASK_COMM_LEN);
+		strncpy(__entry->info, i,	128);
+		__entry->pid		= p->pid;
+		__entry->prio		= p->prio;
+		__entry->cpu            = task_cpu(p);
+		__entry->rq_nr_running	= rq->nr_running;
+		__entry->pcookie = p->core_cookie;
+		__entry->vr = p->se.vruntime;
+		__entry->rootse = p->se.parent ? 0 : 1;
+	),
+
+	TP_printk("info=%s comm=%s pid=%d prio=%d pcookie=%lx cpu=%d rqnr=%d vruntime=%lu rootse?=%d",
+		  __entry->info, __entry->comm, __entry->pid, __entry->prio, __entry->pcookie, __entry->cpu,
+		  __entry->rq_nr_running, __entry->vr, __entry->rootse)
+);
+
 /*
  * Tracepoint for the return value of the kthread stopping:
  */

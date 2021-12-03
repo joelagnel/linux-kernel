@@ -470,6 +470,9 @@ static inline u64 cfs_rq_min_vruntime(struct cfs_rq *cfs_rq)
  */
 static void se_fi_update(struct sched_entity *se, unsigned int fi_seq, bool forceidle)
 {
+	bool root = true;
+	long old, new;
+
 	for_each_sched_entity(se) {
 		struct cfs_rq *cfs_rq = cfs_rq_of(se);
 
@@ -477,6 +480,15 @@ static void se_fi_update(struct sched_entity *se, unsigned int fi_seq, bool forc
 			if (cfs_rq->forceidle_seq == fi_seq)
 				break;
 			cfs_rq->forceidle_seq = fi_seq;
+		}
+
+
+		if (root) {
+			old = cfs_rq->min_vruntime_fi;
+			new = cfs_rq->min_vruntime;
+			root = false;
+			trace_printk("cfs_rq(min_vruntime_fi) %lu->%lu\n",
+				     old, new);
 		}
 
 		cfs_rq->min_vruntime_fi = cfs_rq->min_vruntime;

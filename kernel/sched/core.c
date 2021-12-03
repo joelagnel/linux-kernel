@@ -118,6 +118,10 @@ static inline bool prio_less(struct task_struct *a, struct task_struct *b, bool 
 
 	int pa = __task_prio(a), pb = __task_prio(b);
 
+	trace_printk("(%s/%d;%d,%Lu,%Lu) ?< (%s/%d;%d,%Lu,%Lu)\n",
+		     a->comm, a->pid, pa, a->se.vruntime, a->dl.deadline,
+		     b->comm, b->pid, pb, b->se.vruntime, b->dl.deadline);
+
 	if (-pa < -pb)
 		return true;
 
@@ -323,12 +327,16 @@ static void __sched_core_enable(void)
 
 	static_branch_enable(&__sched_core_enabled);
 	stop_machine(__sched_core_stopper, (void *)true, NULL);
+
+	printk("core sched enabled\n");
 }
 
 static void __sched_core_disable(void)
 {
 	stop_machine(__sched_core_stopper, (void *)false, NULL);
 	static_branch_disable(&__sched_core_enabled);
+
+	printk("core sched disabled\n");
 }
 
 DEFINE_STATIC_KEY_TRUE(sched_coresched_supported);
@@ -1886,6 +1894,10 @@ static inline void init_uclamp(void) { }
 
 static inline void enqueue_task(struct rq *rq, struct task_struct *p, int flags)
 {
+	char info[128];
+	sprintf(info, "enqueue to %d", rq->cpu);
+	trace_sched_info(p, rq, info);
+
 	if (sched_core_enabled(rq))
 		sched_core_enqueue(rq, p);
 
@@ -1903,6 +1915,10 @@ static inline void enqueue_task(struct rq *rq, struct task_struct *p, int flags)
 
 static inline void dequeue_task(struct rq *rq, struct task_struct *p, int flags)
 {
+	char info[128];
+	sprintf(info, "dequeue from %d", rq->cpu);
+	trace_sched_info(p, rq, info);
+
 	if (sched_core_enabled(rq))
 		sched_core_dequeue(rq, p);
 
@@ -2092,6 +2108,9 @@ static inline bool is_cpu_allowed(struct task_struct *p, int cpu)
 static struct rq *move_queued_task(struct rq *rq, struct rq_flags *rf,
 				   struct task_struct *p, int new_cpu)
 {
+	char info[128];
+	int old_cpu = rq->cpu;
+
 	lockdep_assert_held(rq_lockp(rq));
 
 	WRITE_ONCE(p->on_rq, TASK_ON_RQ_MIGRATING);
@@ -2102,6 +2121,10 @@ static struct rq *move_queued_task(struct rq *rq, struct rq_flags *rf,
 	rq = cpu_rq(new_cpu);
 
 	rq_lock(rq, rf);
+
+	sprintf(info, "migration %d->%d", old_cpu, new_cpu);
+	trace_sched_info(p, rq, info);
+
 	BUG_ON(task_cpu(p) != new_cpu);
 	enqueue_task(rq, p, 0);
 	p->on_rq = TASK_ON_RQ_QUEUED;
@@ -4649,8 +4672,15 @@ pick_task(struct rq *rq, const struct sched_class *class, struct task_struct *ma
 	unsigned long cookie = rq->core->core_cookie;
 
 	class_pick = class->pick_task(rq);
-	if (!class_pick)
+	if (!class_pick) {
+		trace_printk("cpu(%d) [nrr=%d]: Class (fair=%d) class pick is NULL, ret NULL", rq->cpu, rq->nr_running, (class == &fair_sched_class));
 		return NULL;
+	} else {
+		trace_printk("cpu(%d) [nrr=%d]: Class (fair=%d) class pick: %s/%d %lx\n",
+				rq->cpu, rq->nr_running, (class == &fair_sched_class),
+			     class_pick->comm, class_pick->pid,
+			     class_pick->core_cookie);
+	}
 
 	if (!cookie) {
 		/*
@@ -4671,7 +4701,6 @@ pick_task(struct rq *rq, const struct sched_class *class, struct task_struct *ma
 		return class_pick;
 
 	cookie_pick = sched_core_find(rq, cookie);
-
 	/*
 	 * If class > max && class > cookie, it is the highest priority task on
 	 * the core (so far) and it must be selected, otherwise we must go with
@@ -4680,6 +4709,15 @@ pick_task(struct rq *rq, const struct sched_class *class, struct task_struct *ma
 	if (prio_less(cookie_pick, class_pick, in_fi) &&
 	    (!max || prio_less(max, class_pick, in_fi)))
 		return class_pick;
+
+	if (!cookie_pick) {
+		trace_printk("cpu(%d) [nrr=%d]: Cookie pick is NULL, ret NULL", rq->cpu, rq->nr_running);
+	} else {
+		trace_printk("cpu(%d) [nrr=%d]: Class (fair=%d) cookie pick: %s/%d %lx\n",
+				rq->cpu, rq->nr_running, (class == &fair_sched_class),
+			     cookie_pick->comm, cookie_pick->pid,
+			     cookie_pick->core_cookie);
+	}
 
 	return cookie_pick;
 }
@@ -4731,6 +4769,13 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
 			put_prev_task(rq, prev);
 			set_next_task(rq, next);
 		}
+
+		trace_printk("pick pre selected (%u %u %u): %s/%d %lx\n",
+			     rq->core->core_task_seq,
+			     rq->core->core_pick_seq,
+			     rq->core_sched_seq,
+			     next->comm, next->pid,
+			     next->core_cookie);
 
 		rq->core_pick = NULL;
 		return next;
@@ -4813,8 +4858,11 @@ again:
 			 * core.
 			 */
 			p = pick_task(rq_i, class, max, fi_before);
-			if (!p)
+			if (!p) {
+				trace_printk("cpu(%d) [nrr=%d]: pick_task gave: NULL", i, rq_i->nr_running);
 				continue;
+			}
+			trace_printk("cpu(%d) [nrr=%d]: pick_task() gave: %s/%d %lx\n", i, rq_i->nr_running, p->comm, p->pid, p->core_cookie);
 
 			if (!is_task_rq_idle(p))
 				occ++;
@@ -4825,6 +4873,9 @@ again:
 				if (!fi_before)
 					rq->core->core_forceidle_seq++;
 			}
+
+			trace_printk("cpu(%d): selected: %s/%d %lx\n",
+				     i, p->comm, p->pid, p->core_cookie);
 
 			/*
 			 * If this new candidate is of higher priority than the
@@ -4841,6 +4892,8 @@ again:
 
 				rq->core->core_cookie = p->core_cookie;
 				max = p;
+
+				trace_printk("max: %s/%d %lx\n", max->comm, max->pid, max->core_cookie);
 
 				if (old_max) {
 					rq->core->core_forceidle = false;
@@ -4863,6 +4916,7 @@ again:
 
 	/* Something should have been selected for current CPU */
 	WARN_ON_ONCE(!next);
+	trace_printk("picked: %s/%d %lx\n", next->comm, next->pid, next->core_cookie);
 
 	/*
 	 * Reschedule siblings
@@ -4904,13 +4958,21 @@ again:
 		}
 
 		/* Did we break L1TF mitigation requirements? */
-		WARN_ON_ONCE(!cookie_match(next, rq_i->core_pick));
+		if (unlikely(!cookie_match(next, rq_i->core_pick))) {
+			trace_printk("[%d]: cookie mismatch. %s/%d/0x%lx/0x%lx\n",
+				     rq_i->cpu, rq_i->core_pick->comm,
+				     rq_i->core_pick->pid,
+				     rq_i->core_pick->core_cookie,
+				     rq_i->core->core_cookie);
+			WARN_ON_ONCE(1);
+		}
 
 		if (rq_i->curr == rq_i->core_pick) {
 			rq_i->core_pick = NULL;
 			continue;
 		}
 
+		trace_printk("IPI(%d)\n", i);
 		resched_curr(rq_i);
 	}
 
@@ -4949,6 +5011,10 @@ static bool try_steal_cookie(int this, int that)
 
 		if (p->core_occupation > dst->idle->core_occupation)
 			goto next;
+
+		trace_printk("core fill: %s/%d (%d->%d) %d %d %lx\n",
+			     p->comm, p->pid, that, this,
+			     p->core_occupation, dst->idle->core_occupation, cookie);
 
 		p->on_rq = TASK_ON_RQ_MIGRATING;
 		deactivate_task(src, p, 0);
