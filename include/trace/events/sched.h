@@ -61,7 +61,7 @@ TRACE_EVENT(sched_info,
 		__entry->rootse = p->se.parent ? 0 : 1;
 	),
 
-	TP_printk("info=%s comm=%s pid=%d prio=%d pcookie=%lx cpu=%d rqnr=%d vruntime=%lu rootse?=%d",
+	TP_printk("info=%s comm=%s pid=%d prio=%d pcookie=%lx cpu=%d rqnr=%d vruntime=%ld rootse?=%d",
 		  __entry->info, __entry->comm, __entry->pid, __entry->prio, __entry->pcookie, __entry->cpu,
 		  __entry->rq_nr_running, __entry->vr, __entry->rootse)
 );

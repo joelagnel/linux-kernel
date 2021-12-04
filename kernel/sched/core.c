@@ -183,10 +183,29 @@ static void sched_core_flush(int cpu)
 	rq->core->core_task_seq++;
 }
 
+static inline void dump_scrb(struct rb_node *root, int lvl, char *buf, int size)
+{
+	struct task_struct *node_task;
+	char info[256];
+
+	if (!root)
+		return;
+
+	node_task = container_of(root, struct task_struct, core_node);
+
+
+	sprintf(info, "[%d: %d,%ld] ", lvl, node_task->pid, node_task->se.vruntime);
+	strncat(buf, info, size);
+	dump_scrb(root->rb_left, lvl+1, buf, size);
+	dump_scrb(root->rb_right, lvl+1, buf, size);
+}
+
 static void sched_core_enqueue(struct rq *rq, struct task_struct *p)
 {
 	struct rb_node *parent, **node;
 	struct task_struct *node_task;
+	char info[512];
+        strcpy(info, "enq:");
 
 	rq->core->core_task_seq++;
 
@@ -195,6 +214,9 @@ static void sched_core_enqueue(struct rq *rq, struct task_struct *p)
 
 	node = &rq->core_tree.rb_node;
 	parent = *node;
+
+	dump_scrb(parent, 0, info, 256);
+	trace_printk("%s", info);
 
 	while (*node) {
 		node_task = container_of(*node, struct task_struct, core_node);
@@ -1894,10 +1916,7 @@ static inline void init_uclamp(void) { }
 
 static inline void enqueue_task(struct rq *rq, struct task_struct *p, int flags)
 {
-	char info[128];
-	sprintf(info, "enqueue to %d", rq->cpu);
-	trace_sched_info(p, rq, info);
-
+	char info[256];
 	if (!(flags & ENQUEUE_NOCLOCK))
 		update_rq_clock(rq);
 
@@ -1909,13 +1928,16 @@ static inline void enqueue_task(struct rq *rq, struct task_struct *p, int flags)
 	uclamp_rq_inc(rq, p);
 	p->sched_class->enqueue_task(rq, p, flags);
 
+	sprintf(info, "enqueue to %d", rq->cpu);
+	trace_sched_info(p, rq, info);
+
 	if (sched_core_enabled(rq))
 		sched_core_enqueue(rq, p);
 }
 
 static inline void dequeue_task(struct rq *rq, struct task_struct *p, int flags)
 {
-	char info[128];
+	char info[256];
 	sprintf(info, "dequeue from %d", rq->cpu);
 	trace_sched_info(p, rq, info);
 
@@ -2108,7 +2130,7 @@ static inline bool is_cpu_allowed(struct task_struct *p, int cpu)
 static struct rq *move_queued_task(struct rq *rq, struct rq_flags *rf,
 				   struct task_struct *p, int new_cpu)
 {
-	char info[128];
+	char info[256];
 	int old_cpu = rq->cpu;
 
 	lockdep_assert_held(rq_lockp(rq));
