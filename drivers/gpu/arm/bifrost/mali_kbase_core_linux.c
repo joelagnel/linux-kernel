@@ -112,6 +112,8 @@
 
 #include <mali_kbase_caps.h>
 
+MODULE_IMPORT_NS(DMA_BUF);
+
 /* GPU IRQ Tags */
 #define	JOB_IRQ_TAG	0
 #define MMU_IRQ_TAG	1
