@@ -4288,10 +4288,32 @@ void scheduler_tick(void)
 	struct rq *rq = cpu_rq(cpu);
 	struct task_struct *curr = rq->curr;
 	struct rq_flags rf;
-
+	char *info1;
+	char info[256];
+	struct rb_node *parent, **node;
+	
 	sched_clock_tick();
 
 	rq_lock(rq, &rf);
+
+	// New context switch detected, restart snaps
+	if (curr->sched_info.pcount_snap != curr->sched_info.pcount) {
+		curr->sched_info.pcount_snap = curr->sched_info.pcount;
+		curr->se.sum_exec_runtime_snap = curr->se.sum_exec_runtime;
+	} else {
+		if (rq->core_enabled) {
+			node = &rq->core_tree.rb_node;
+			parent = *node;
+			dump_scrb(parent, 0, info, 256);
+			info1 = info;
+		} else {
+			info1 = "";
+		}
+
+		trace_printk("Current runtime total: %lu, nr_running: %d   [  %s  ]\n",
+				(curr->se.sum_exec_runtime - curr->se.sum_exec_runtime_snap),
+				rq->nr_running, info1);
+	}
 
 	update_rq_clock(rq);
 	curr->sched_class->task_tick(rq, curr, 0);

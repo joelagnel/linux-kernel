@@ -288,6 +288,7 @@ struct sched_info {
 
 	/* # of times we have run on this CPU: */
 	unsigned long			pcount;
+	unsigned long			pcount_snap;
 
 	/* Time spent waiting on a runqueue: */
 	unsigned long long		run_delay;
@@ -451,6 +452,7 @@ struct sched_entity {
 
 	u64				exec_start;
 	u64				sum_exec_runtime;
+	u64				sum_exec_runtime_snap;
 	u64				vruntime;
 	u64				prev_sum_exec_runtime;
 
