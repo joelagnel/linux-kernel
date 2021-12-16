@@ -470,7 +470,6 @@ static inline u64 cfs_rq_min_vruntime(struct cfs_rq *cfs_rq)
  */
 static void se_fi_update(struct sched_entity *se, unsigned int fi_seq, bool forceidle)
 {
-	bool root = true;
 	long old, new;
 
 	for_each_sched_entity(se) {
@@ -482,12 +481,10 @@ static void se_fi_update(struct sched_entity *se, unsigned int fi_seq, bool forc
 			cfs_rq->forceidle_seq = fi_seq;
 		}
 
-
-		if (root) {
+		if (!se->parent) {
 			old = cfs_rq->min_vruntime_fi;
 			new = cfs_rq->min_vruntime;
-			root = false;
-			trace_printk("cfs_rq(min_vruntime_fi) %lu->%lu\n",
+			trace_printk("root cfs_rq.min_vruntime_fi: %lu->%lu\n",
 				     old, new);
 		}
 
@@ -539,6 +536,10 @@ bool cfs_prio_less(struct task_struct *a, struct task_struct *b, bool in_fi)
 	cfs_rqa = &task_rq(a)->cfs;
 	cfs_rqb = &task_rq(b)->cfs;
 #endif
+
+	trace_printk("cfs_prio_less (%s/%d vr=%Lu, root_vr=%Lu, mvr=%Lu, mvr_fi=%Lu, ck=%x) ?< (%s/%d vr=%Lu, root_vr=%Lu, mvr=%Lu, mvr_fi=%Lu, ck=%x)\n",
+			a->comm, a->pid, a->se.vruntime, sea->vruntime, cfs_rqa->min_vruntime, cfs_rqa->min_vruntime_fi, a->core_cookie,
+			b->comm, b->pid, b->se.vruntime, seb->vruntime, cfs_rqb->min_vruntime, cfs_rqb->min_vruntime_fi, b->core_cookie);
 
 	/*
 	 * Find delta after normalizing se's vruntime with its cfs_rq's
