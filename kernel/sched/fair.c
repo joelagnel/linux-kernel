@@ -4153,6 +4153,14 @@ static __always_inline void return_cfs_rq_runtime(struct cfs_rq *cfs_rq);
 static void
 dequeue_entity(struct cfs_rq *cfs_rq, struct sched_entity *se, int flags)
 {
+	unsigned long old_vr = 0;
+	struct task_struct *p = NULL;
+
+	if (entity_is_task(se)) {
+		p = task_of(se);
+		old_vr = se->vruntime;
+	}
+
 	/*
 	 * Update run-time statistics of the 'current'.
 	 */
@@ -4184,8 +4192,14 @@ dequeue_entity(struct cfs_rq *cfs_rq, struct sched_entity *se, int flags)
 	 * update_min_vruntime() again, which will discount @se's position and
 	 * can move min_vruntime forward still more.
 	 */
-	if (!(flags & DEQUEUE_SLEEP))
+	if (!(flags & DEQUEUE_SLEEP)) {
 		se->vruntime -= cfs_rq_min_vruntime(cfs_rq);
+
+		if (entity_is_task(se)) {
+			trace_printk("update vr of %s/%d old_vr=%Lu, new_vr=%Lu, mvr=%Lu, mvr_fi=%Lun",
+					p->comm, p->pid, old_vr,  se->vruntime, cfs_rq->min_vruntime, cfs_rq->min_vruntime_fi);
+		}
+	}
 
 	/* return excess runtime on last dequeue */
 	return_cfs_rq_runtime(cfs_rq);
@@ -5330,6 +5344,7 @@ enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags)
 	struct sched_entity *se = &p->se;
 	int idle_h_nr_running = task_has_idle_policy(p);
 	int task_new = !(flags & ENQUEUE_WAKEUP);
+	unsigned long old_vr;
 
 	/*
 	 * The code below (indirectly) updates schedutil which looks at
@@ -5347,18 +5362,31 @@ enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags)
 	if (p->in_iowait)
 		cpufreq_update_util(rq, SCHED_CPUFREQ_IOWAIT);
 
+	old_vr = se->vruntime;
 	for_each_sched_entity(se) {
-		if (se->on_rq)
+		if (se->on_rq) {
+			if (se == &p->se) {
+				trace_printk("update vr of %s/%d skipped as on_rq=1\n",
+						p->comm, p->pid);
+			}
 			break;
+		}
 		cfs_rq = cfs_rq_of(se);
 		enqueue_entity(cfs_rq, se, flags);
+
+		if (se == &p->se) {
+			trace_printk("update vr of %s/%d old_vr=%Lu, new_vr=%Lu, mvr=%Lu, mvr_fi=%Lun",
+					p->comm, p->pid, old_vr,  p->se.vruntime, cfs_rq->min_vruntime, cfs_rq->min_vruntime_fi);
+		}
 
 		cfs_rq->h_nr_running++;
 		cfs_rq->idle_h_nr_running += idle_h_nr_running;
 
 		/* end evaluation on encountering a throttled cfs_rq */
-		if (cfs_rq_throttled(cfs_rq))
+		if (cfs_rq_throttled(cfs_rq)) {
+			trace_printk("CFS RQ throttled");
 			goto enqueue_throttle;
+		}
 
 		flags = ENQUEUE_WAKEUP;
 	}
@@ -10537,6 +10565,7 @@ static void detach_task_cfs_rq(struct task_struct *p)
 {
 	struct sched_entity *se = &p->se;
 	struct cfs_rq *cfs_rq = cfs_rq_of(se);
+	unsigned long old_vr = p->se.vruntime;
 
 	if (!vruntime_normalized(p)) {
 		/*
@@ -10545,6 +10574,9 @@ static void detach_task_cfs_rq(struct task_struct *p)
 		 */
 		place_entity(cfs_rq, se, 0);
 		se->vruntime -= cfs_rq_min_vruntime(cfs_rq);
+
+		trace_printk("update vr of %s/%d old_vr=%Lu, new_vr=%Lu, mvr=%Lu, mvr_fi=%Lun",
+				p->comm, p->pid, old_vr,  p->se.vruntime, cfs_rq->min_vruntime, cfs_rq->min_vruntime_fi);
 	}
 
 	detach_entity_cfs_rq(se);
@@ -10554,11 +10586,16 @@ static void attach_task_cfs_rq(struct task_struct *p)
 {
 	struct sched_entity *se = &p->se;
 	struct cfs_rq *cfs_rq = cfs_rq_of(se);
+	unsigned long old_vr = p->se.vruntime;
 
 	attach_entity_cfs_rq(se);
 
-	if (!vruntime_normalized(p))
+	if (!vruntime_normalized(p)) {
 		se->vruntime += cfs_rq_min_vruntime(cfs_rq);
+
+		trace_printk("update vr of %s/%d old_vr=%Lu, new_vr=%Lu, mvr=%Lu, mvr_fi=%Lun",
+				p->comm, p->pid, old_vr,  p->se.vruntime, cfs_rq->min_vruntime, cfs_rq->min_vruntime_fi);
+	}
 }
 
 static void switched_from_fair(struct rq *rq, struct task_struct *p)
