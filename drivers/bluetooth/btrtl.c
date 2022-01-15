@@ -718,8 +718,9 @@ out_free:
 		}
 	}
 
-	/* The following chips supports the Microsoft vendor extension,
-	 * therefore set the corresponding VsMsftOpCode.
+	/* Both RTL8822B and RTL8852A support only one tracking device
+	 * per condition in firmware, the use of MSFT HCI extension is
+	 * eliminated. See b/200993792 for more details.
 	 */
 	if (btrtl_dev->ic_info->has_msft_ext)
 		hci_set_msft_opcode(hdev, 0xFCF0);
