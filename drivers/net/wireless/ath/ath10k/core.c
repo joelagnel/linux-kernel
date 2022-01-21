@@ -96,6 +96,7 @@ static const struct ath10k_hw_params ath10k_hw_params_list[] = {
 		.dynamic_sar_support = false,
 		.hw_restart_disconnect = false,
 		.tx_credit_limit = false,
+		.delay_unmap_buffer = false,
 	},
 	{
 		.id = QCA988X_HW_2_0_VERSION,
@@ -135,6 +136,7 @@ static const struct ath10k_hw_params ath10k_hw_params_list[] = {
 		.dynamic_sar_support = false,
 		.hw_restart_disconnect = false,
 		.tx_credit_limit = false,
+		.delay_unmap_buffer = false,
 	},
 	{
 		.id = QCA9887_HW_1_0_VERSION,
@@ -175,6 +177,7 @@ static const struct ath10k_hw_params ath10k_hw_params_list[] = {
 		.dynamic_sar_support = false,
 		.hw_restart_disconnect = false,
 		.tx_credit_limit = false,
+		.delay_unmap_buffer = false,
 	},
 	{
 		.id = QCA6174_HW_3_2_VERSION,
@@ -211,6 +214,7 @@ static const struct ath10k_hw_params ath10k_hw_params_list[] = {
 		.hw_restart_disconnect = false,
 		.start_retry = ATH10K_START_RETRY,
 		.tx_credit_limit = false,
+		.delay_unmap_buffer = false,
 	},
 	{
 		.id = QCA6174_HW_2_1_VERSION,
@@ -250,6 +254,7 @@ static const struct ath10k_hw_params ath10k_hw_params_list[] = {
 		.dynamic_sar_support = false,
 		.hw_restart_disconnect = false,
 		.tx_credit_limit = false,
+		.delay_unmap_buffer = false,
 	},
 	{
 		.id = QCA6174_HW_2_1_VERSION,
@@ -289,6 +294,7 @@ static const struct ath10k_hw_params ath10k_hw_params_list[] = {
 		.dynamic_sar_support = false,
 		.hw_restart_disconnect = false,
 		.tx_credit_limit = false,
+		.delay_unmap_buffer = false,
 	},
 	{
 		.id = QCA6174_HW_3_0_VERSION,
@@ -328,6 +334,7 @@ static const struct ath10k_hw_params ath10k_hw_params_list[] = {
 		.dynamic_sar_support = false,
 		.hw_restart_disconnect = false,
 		.tx_credit_limit = false,
+		.delay_unmap_buffer = false,
 	},
 	{
 		.id = QCA6174_HW_3_2_VERSION,
@@ -371,6 +378,7 @@ static const struct ath10k_hw_params ath10k_hw_params_list[] = {
 		.dynamic_sar_support = true,
 		.hw_restart_disconnect = false,
 		.tx_credit_limit = false,
+		.delay_unmap_buffer = false,
 	},
 	{
 		.id = QCA99X0_HW_2_0_DEV_VERSION,
@@ -416,6 +424,7 @@ static const struct ath10k_hw_params ath10k_hw_params_list[] = {
 		.dynamic_sar_support = false,
 		.hw_restart_disconnect = false,
 		.tx_credit_limit = false,
+		.delay_unmap_buffer = false,
 	},
 	{
 		.id = QCA9984_HW_1_0_DEV_VERSION,
@@ -468,6 +477,7 @@ static const struct ath10k_hw_params ath10k_hw_params_list[] = {
 		.dynamic_sar_support = false,
 		.hw_restart_disconnect = false,
 		.tx_credit_limit = false,
+		.delay_unmap_buffer = false,
 	},
 	{
 		.id = QCA9888_HW_2_0_DEV_VERSION,
@@ -517,6 +527,7 @@ static const struct ath10k_hw_params ath10k_hw_params_list[] = {
 		.dynamic_sar_support = false,
 		.hw_restart_disconnect = false,
 		.tx_credit_limit = false,
+		.delay_unmap_buffer = false,
 	},
 	{
 		.id = QCA9377_HW_1_0_DEV_VERSION,
@@ -556,6 +567,7 @@ static const struct ath10k_hw_params ath10k_hw_params_list[] = {
 		.dynamic_sar_support = false,
 		.hw_restart_disconnect = false,
 		.tx_credit_limit = false,
+		.delay_unmap_buffer = false,
 	},
 	{
 		.id = QCA9377_HW_1_1_DEV_VERSION,
@@ -597,6 +609,7 @@ static const struct ath10k_hw_params ath10k_hw_params_list[] = {
 		.dynamic_sar_support = false,
 		.hw_restart_disconnect = false,
 		.tx_credit_limit = false,
+		.delay_unmap_buffer = false,
 	},
 	{
 		.id = QCA9377_HW_1_1_DEV_VERSION,
@@ -674,6 +687,7 @@ static const struct ath10k_hw_params ath10k_hw_params_list[] = {
 		.dynamic_sar_support = false,
 		.hw_restart_disconnect = false,
 		.tx_credit_limit = false,
+		.delay_unmap_buffer = false,
 	},
 	{
 		.id = WCN3990_HW_1_0_DEV_VERSION,
@@ -706,6 +720,7 @@ static const struct ath10k_hw_params ath10k_hw_params_list[] = {
 		.dynamic_sar_support = true,
 		.hw_restart_disconnect = true,
 		.tx_credit_limit = true,
+		.delay_unmap_buffer = true,
 	},
 };
 
