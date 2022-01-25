@@ -293,7 +293,7 @@ int chromiumos_flush_inode_security_policies(struct super_block *sb)
 	sbm = chromiumos_super_block_lookup(sb);
 	if (sbm) {
 		fsnotify_clear_marks_by_group(sbm->fsn_group,
-					      FSNOTIFY_OBJ_ALL_TYPES_MASK);
+					      FSNOTIFY_OBJ_TYPE_ANY);
 		chromiumos_super_block_put(sbm);
 	}
 
