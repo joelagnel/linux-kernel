@@ -1077,12 +1077,8 @@ static void hidinput_configure_usage(struct hid_input *hidinput, struct hid_fiel
 		case 0x5b: /* TransducerSerialNumber */
 		case 0x6e: /* TransducerSerialNumber2 */
 			map_msc(MSC_SERIAL);
-			break;
-
-		case 0x6e: /* TransducerSerialNumberSecond32Bits */
 			hidinput_set_battery_sn_64bit(device);
-			usage->type = EV_MSC;
-			return;
+			break;
 
 		default:  goto unknown;
 		}
