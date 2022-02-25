@@ -847,7 +847,9 @@ void __put_task_struct(struct task_struct *tsk)
 	delayacct_tsk_free(tsk);
 	put_signal_struct(tsk->signal);
 	sched_core_free(tsk);
-	free_task(tsk);
+
+	if (!profile_handoff_task(tsk))
+		free_task(tsk);
 }
 EXPORT_SYMBOL_GPL(__put_task_struct);
 
