@@ -21,7 +21,6 @@
 #include <linux/device.h>
 #include <linux/device-mapper.h>
 #include <linux/err.h>
-#include <linux/genhd.h>
 #include <linux/kernel.h>
 #include <linux/module.h>
 #include <linux/mount.h>
@@ -154,7 +153,7 @@ static int chromeos_invalidate_kernel_bio(struct block_device *root_bdev)
 		goto failed_to_read;
 	}
 
-	bio = bio_alloc(GFP_NOIO, 1);
+	bio = bio_alloc(NULL, 1, 0, GFP_NOIO);
 	if (!bio) {
 		ret = -1;
 		goto failed_bio_alloc;
@@ -206,7 +205,7 @@ static int chromeos_invalidate_kernel_bio(struct block_device *root_bdev)
 	/* We re-use the same bio to do the write after the read. Need to reset
 	 * it to initialize bio->bi_remaining.
 	 */
-	bio_reset(bio);
+	bio_reset(bio, NULL, 0);
 
 	/*
 	 * Request write operation with REQ_FUA flag to ensure that I/O
