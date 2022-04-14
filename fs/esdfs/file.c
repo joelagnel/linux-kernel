@@ -11,6 +11,8 @@
  * published by the Free Software Foundation.
  */
 
+#include <linux/pagemap.h>
+
 #include "esdfs.h"
 
 static ssize_t esdfs_read(struct file *file, char __user *buf,
