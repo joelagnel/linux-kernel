@@ -166,7 +166,7 @@ typedef struct _PMR_DMA_BUF_DATA_
 	IMG_BOOL bPoisonOnFree;
 
 	/* Mapping information. */
-	struct dma_buf_map sMap;
+	struct iosys_map sMap;
 
 	/* Modified by PMR lock/unlock */
 	struct sg_table *psSgTable;
@@ -256,7 +256,7 @@ static PVRSRV_ERROR PMRFinalizeDmaBuf(PMR_IMPL_PRIVDATA pvPriv)
 
 	if (psPrivData->bPoisonOnFree)
 	{
-		struct dma_buf_map sMap;
+		struct iosys_map sMap;
 		int err;
 #if (LINUX_VERSION_CODE < KERNEL_VERSION(5, 6, 0))
 		int i;
@@ -562,7 +562,7 @@ PhysmemCreateNewDmaBufBackedPMR(PVRSRV_DEVICE_NODE *psDevNode,
 
 	if (bZeroOnAlloc || bPoisonOnAlloc)
 	{
-		struct dma_buf_map sMap;
+		struct iosys_map sMap;
 		int err;
 #if (LINUX_VERSION_CODE <KERNEL_VERSION(5, 6, 0))
 		int i;

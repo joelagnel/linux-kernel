@@ -304,9 +304,11 @@ static void kbase_gpu_release_atom(struct kbase_device *kbdev,
 				[katom->slot_nr]);
 
 		/* ***FALLTHROUGH: TRANSITION TO LOWER STATE*** */
+		fallthrough;
 
 	case KBASE_ATOM_GPU_RB_READY:
 		/* ***FALLTHROUGH: TRANSITION TO LOWER STATE*** */
+		fallthrough;
 
 	case KBASE_ATOM_GPU_RB_WAITING_FOR_CORE_AVAILABLE:
 		break;
@@ -367,6 +369,7 @@ static void kbase_gpu_release_atom(struct kbase_device *kbdev,
 		}
 
 		/* ***FALLTHROUGH: TRANSITION TO LOWER STATE*** */
+		fallthrough;
 
 	case KBASE_ATOM_GPU_RB_WAITING_PROTECTED_MODE_PREV:
 		/* ***FALLTHROUGH: TRANSITION TO LOWER STATE*** */
