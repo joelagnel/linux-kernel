@@ -46,7 +46,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <linux/moduleparam.h>
 #include <linux/workqueue.h>
 #include <linux/string.h>
-#include <stdbool.h>
 
 /* Common and SO layer */
 #include "img_defs.h"
