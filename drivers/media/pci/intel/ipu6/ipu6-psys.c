@@ -20,6 +20,8 @@
 #include "ipu-platform-regs.h"
 #include "ipu-trace.h"
 
+MODULE_IMPORT_NS(DMA_BUF);
+
 static bool early_pg_transfer;
 module_param(early_pg_transfer, bool, 0664);
 MODULE_PARM_DESC(early_pg_transfer,
