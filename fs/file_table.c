@@ -51,12 +51,61 @@ static void file_free_rcu(struct rcu_head *head)
 	kmem_cache_free(filp_cachep, f);
 }
 
+struct rcu_head *file_free_head;
+atomic_t file_count;
+
+/*
+   FOR DEBUG:
+static int get_list_size_full(void) {
+	struct rcu_head *head = READ_ONCE(file_free_head);
+	int count = 0;
+
+	while(head) {
+		count++;
+		head = head->next;
+	}
+	return count;
+}
+*/
+
+static int get_list_size(void) {
+	return (int)atomic_read(&file_count);
+}
+
+int file_rcu_flush(void);
+
 static inline void file_free(struct file *f)
 {
+	struct rcu_head *orig, *new;
+	// int ret;
+
 	security_file_free(f);
 	if (!(f->f_mode & FMODE_NOACCOUNT))
 		percpu_counter_dec(&nr_files);
-	call_rcu(&f->f_u.fu_rcuhead, file_free_rcu);
+
+	// Queue the new file into a callback. Shrinkers will RCU free them.
+	do {
+		orig = READ_ONCE(file_free_head);
+		new = &f->f_u.fu_rcuhead;
+		new->next = orig;
+	} while (cmpxchg(&file_free_head, orig, new) != orig);
+
+	atomic_inc(&file_count);
+
+	// If we have too many objects, force rcu flush.
+	if ((int)atomic_read(&file_count) == (65536 * 8))
+		file_rcu_flush();
+
+/*
+   FOR DEBUG:
+
+	ret = get_list_size();
+	if (ret % 20000 == 0) {
+		trace_printk("List now atomic %d full size %d\n", ret, get_list_size_full());
+	}
+*/
+
+	// call_rcu(&f->f_u.fu_rcuhead, file_free_rcu);
 }
 
 /*
@@ -413,11 +462,89 @@ void __fput_sync(struct file *file)
 
 EXPORT_SYMBOL(fput);
 
+struct shrinker file_shrinker;
+
+static unsigned long
+file_shrink_count(struct shrinker *shrink, struct shrink_control *sc)
+{
+	int count = get_list_size();
+
+	// trace_printk("count called, %ld\n", (unsigned long)count);
+	return count;
+}
+
+int file_rcu_flush(void)
+{
+	int count = 0;
+	struct rcu_head *new, *head, *head_last, *head_first, *next;
+
+	// trace_printk("scan called , sc->nr_to_scan %lu\n", sc->nr_to_scan);
+
+	head = xchg(&file_free_head, NULL);
+	if (!head) {
+		// trace_printk("scan head is NULL\n");
+		return 0;
+	}
+
+	// Now there is no way head is accessed by other CPUs.
+	while(head) {
+		next = head->next;
+		call_rcu(head, file_free_rcu);
+		atomic_dec(&file_count);
+		count++;
+		head = next;
+
+		// Do only 4K call_rcu()s at a time.
+		if (count >= (8 * 65536)) {
+			break;
+		}
+	}
+
+	// trace_printk("call_rcud %d\n", count);
+	// trace_printk("list size before queuing back rest: %d atomic count %d", get_list_size_full(), get_list_size());
+
+	// Queue back the rest.
+	if (count == (8 * 65538) && head) {
+		head_first = head;
+
+		// Goto the last element.
+		while(head->next) {
+			head = head->next;
+		}
+		head_last = head;
+
+		// Replace file_free_head with head_first.
+		new = head_first;
+		do {
+			head = READ_ONCE(file_free_head);
+			head_last->next = head;
+		} while (cmpxchg(&file_free_head, head, new) != head);
+	}
+
+	return count;
+}
+
+static unsigned long
+file_shrink_scan(struct shrinker *shrink, struct shrink_control *sc)
+{
+	int count = file_rcu_flush();
+
+	// trace_printk("list size after queuing back rest: %d atomic count %d", get_list_size_full(), get_list_size());
+	return count == 0 ? SHRINK_STOP : count;
+}
+
 void __init files_init(void)
 {
 	filp_cachep = kmem_cache_create("filp", sizeof(struct file), 0,
 			SLAB_HWCACHE_ALIGN | SLAB_PANIC | SLAB_ACCOUNT, NULL);
 	percpu_counter_init(&nr_files, 0, GFP_KERNEL);
+
+
+	file_shrinker.count_objects = file_shrink_count;
+	file_shrinker.scan_objects = file_shrink_scan;
+	file_shrinker.seeks = DEFAULT_SEEKS;
+
+	BUG_ON(register_shrinker(&file_shrinker));
 }
 
 /*
