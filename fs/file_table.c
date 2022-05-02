@@ -41,6 +41,7 @@ static struct files_stat_struct files_stat = {
 /* SLAB cache for file structures */
 static struct kmem_cache *filp_cachep __read_mostly;
 
+
 static struct percpu_counter nr_files __cacheline_aligned_in_smp;
 
 static void file_free_rcu(struct rcu_head *head)
@@ -51,27 +52,9 @@ static void file_free_rcu(struct rcu_head *head)
 	kmem_cache_free(filp_cachep, f);
 }
 
-struct rcu_head *file_free_head;
 atomic_t file_count;
 
-struct rcu_batch {
-	struct llist_head head;
-	atomic_t count;
-};
-static DEFINE_PER_CPU(struct rcu_batch, frb);
-
-static unsigned long get_list_size(void)
-{
-	unsigned long count = 0;
-	int cpu;
-
-	for_each_possible_cpu(cpu) {
-		count += atomic_read(&per_cpu(frb, cpu).count);
-	}
-	return count;
-}
-
-int file_rcu_flush(void);
+DEFINE_RCU_LAZY(file_table);
 
 static inline void file_free(struct file *f)
 {
@@ -82,16 +65,7 @@ static inline void file_free(struct file *f)
 	if (!(f->f_mode & FMODE_NOACCOUNT))
 		percpu_counter_dec(&nr_files);
 
-	// Queue the new file into a callback. Shrinkers will RCU free them.
-	preempt_disable();
-	rb = this_cpu_ptr(&frb);
-	preempt_enable();
-	atomic_inc(&rb->count);
-	llist_add(&f->f_u.fu_llist, &rb->head);
-
-	// If we have too many objects, force rcu flush.
-	if (atomic_read(&rb->count) >= 65536)
-		file_rcu_flush();
+	call_rcu(file_table, &f->f_u.fu_rcuhead, file_free_rcu);
 /*
    FOR DEBUG:
 
@@ -457,73 +431,6 @@ void __fput_sync(struct file *file)
 }
 
 EXPORT_SYMBOL(fput);
-
-struct shrinker file_shrinker;
-
-static unsigned long
-file_shrink_count(struct shrinker *shrink, struct shrink_control *sc)
-{
-	int count = get_list_size();
-
-	// trace_printk("count called, %ld\n", (unsigned long)count);
-	return count;
-}
-
-int file_rcu_flush(void)
-{
-	struct llist_node *node, *first, *last;
-	struct rcu_batch *rb;
-	struct file *f, *t;
-	int cpu, count;
-
-	for_each_possible_cpu(cpu) {
-		count = 0;
-
-		rb = per_cpu_ptr(&frb, cpu);
-		node = llist_del_all(&rb->head);
-
-		// trace_printk("scan called , sc->nr_to_scan %lu\n", sc->nr_to_scan);
-		if (!node) {
-			// trace_printk("scan node is NULL\n");
-			return 0;
-		}
-
-		llist_for_each_entry_safe(f, t, node, f_u.fu_llist) {
-			call_rcu(&f->f_u.fu_rcuhead, file_free_rcu);
-			atomic_dec(&file_count);
-			count++;
-
-			// Do only 64K per-cpu of call_rcu()s at a time.
-			if (count >= 65536) {
-				break;
-			}
-		}
-
-		// trace_printk("call_rcud %d\n", count);
-
-		// Queue back the rest.
-		if (count >= 65536 && t) {
-			// Get the last node in the list
-			first = last = &t->f_u.fu_llist;
-			while (llist_next(last)) {
-				last = llist_next(last);
-			}
-
-			llist_add_batch(first, last, &rb->head);
-		}
-	}
-
-	return count;
-}
-
-static unsigned long
-file_shrink_scan(struct shrinker *shrink, struct shrink_control *sc)
-{
-	int count = file_rcu_flush();
-
-	// trace_printk("list size after queuing back rest: %d atomic count %d", get_list_size_full(), get_list_size());
-	return count == 0 ? SHRINK_STOP : count;
-}
 
 void __init files_init(void)
 {

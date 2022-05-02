@@ -65,6 +65,8 @@ struct rcu_lazy {
 
 	/* Maximum number of jiffies to keep lazy callbacks around. */
 	unsigned long jiffies_to_flush;
+
+	struct rcu_lazy_pcp *rlp;
 };
 
 /* Helper macro for defining rcu_lazy structures. */
@@ -73,10 +75,10 @@ struct rcu_lazy {
 	struct rcu_lazy rcu_lazy_##name;
 
 #define call_rcu_lazy(head, func, rcu_lazy) __call_rcu_lazy(head, func,	\
-						&rcu_lazy_pcp_##name)
+						&rcu_lazy_##name)
 
 void __call_rcu_lazy(struct rcu_head *head, rcu_callback_t func,
-		     struct rcu_lazy_pcp);
+		     struct rcu_lazy *rl);
 #endif
 
 #ifdef CONFIG_PREEMPT_RCU
