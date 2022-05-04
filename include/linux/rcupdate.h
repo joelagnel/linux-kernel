@@ -43,42 +43,9 @@ void rcu_barrier_tasks_rude(void);
 void synchronize_rcu(void);
 
 #ifdef CONFIG_RCU_LAZY
-/* Per-cpu list for queuing RCU callbacks. */
-struct rcu_lazy_pcp {
-	struct llist_head head;
-	atomic_t count;
-};
-
-/*
- * Instance of an RCU lazy-callback invocation, create once in your
- * driver, subsystem or module. Can be used to tune the behavior of
- * accumulation and flushing of lazy callbacks.
- *
- * Some of these fields will be unused depending on lazy-RCU usecase.
- */
-struct rcu_lazy {
-	/* Optional shrinker to flush on memory pressure. */
-	struct shrinker shr;
-
-	/* Maximum amount of callbacks to accrue before a force flush. */
-	int max_batch;
-
-	/* Maximum number of jiffies to keep lazy callbacks around. */
-	unsigned long jiffies_to_flush;
-
-	struct rcu_lazy_pcp *rlp;
-};
-
-/* Helper macro for defining rcu_lazy structures. */
-#define DEFINE_RCU_LAZY(name)						\
-	DEFINE_PER_CPU(struct rcu_lazy_pcp, rcu_lazy_pcp_##name);	\
-	struct rcu_lazy rcu_lazy_##name;
-
-#define call_rcu_lazy(head, func, rcu_lazy) __call_rcu_lazy(head, func,	\
-						&rcu_lazy_##name)
-
-void __call_rcu_lazy(struct rcu_head *head, rcu_callback_t func,
-		     struct rcu_lazy *rl);
+void call_rcu_lazy(struct rcu_head *head, rcu_callback_t func);
+#else
+#define call_rcu_lazy(head, func) call_rcu(head, func)
 #endif
 
 #ifdef CONFIG_PREEMPT_RCU

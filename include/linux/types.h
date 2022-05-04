@@ -201,6 +201,7 @@ struct ustat {
 /**
  * struct callback_head - callback structure for use with RCU and task_work
  * @next: next update requests in a list
+ * @llist_node: useful for lockless queue and dequeue into an llist.
  * @func: actual update function to call after the grace period.
  *
  * The struct is aligned to size of pointer. On most architectures it happens
@@ -218,7 +219,10 @@ struct ustat {
  *    false-positive PageTail().
  */
 struct callback_head {
-	struct callback_head *next;
+	union {
+		struct callback_head *next;
+		struct llist_node *llist_node;
+	};
 	void (*func)(struct callback_head *head);
 } __attribute__((aligned(sizeof(void *))));
 #define rcu_head callback_head
