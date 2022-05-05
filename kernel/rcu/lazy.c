@@ -1,7 +1,8 @@
 /*
- * Lockless rcu_lazy implementation.
+ * Lockless lazy-RCU implementation.
  */
 #include <linux/rcupdate.h>
+#include <linux/workqueue.h>
 
 // How much to batch before flushing?
 #define MAX_LAZY_BATCH		64
@@ -16,8 +17,7 @@ struct rcu_lazy_pcp {
 };
 DEFINE_PER_CPU(struct rcu_lazy_pcp, rcu_lazy_pcp_ins);
 
-// Lockless flush of CPU, can be called concurrently from
-// more than 1 CPU.
+// Lockless flush of CPU, can be called concurrently.
 static void lazy_rcu_flush_cpu(struct rcu_lazy_pcp *rlp)
 {
 	node = llist_del_all(&rlp->head);
@@ -104,6 +104,7 @@ lazy_rcu_shrink_scan(struct shrinker *shrink, struct shrink_control *sc)
 static void lazy_work(struct work_struct *work)
 {
 	struct kfree_rcu_cpu *rlp = container_of(work, struct rcu_lazy_pcp, work.work);
+
 	lazy_rcu_flush_cpu(rlp);
 }
 
