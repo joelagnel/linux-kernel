@@ -2,13 +2,23 @@
  * Lockless lazy-RCU implementation.
  */
 #include <linux/rcupdate.h>
+#include <linux/shrinker.h>
 #include <linux/workqueue.h>
+#include "rcu.h"
 
 // How much to batch before flushing?
 #define MAX_LAZY_BATCH		64
 
 // How much to wait before flushing?
 #define MAX_LAZY_JIFFIES	30
+
+// We cast lazy_rcu_head to rcu_head and back. This keeps the API simple while
+// allowing us to use lockless list node in the head. Also, we use BUILD_BUG_ON
+// later to ensure that rcu_head and lazy_rcu_head are of the same size.
+struct lazy_rcu_head {
+	struct llist_node llist_node;
+	void (*func)(struct callback_head *head);
+} __attribute__((aligned(sizeof(void *))));
 
 struct rcu_lazy_pcp {
 	struct llist_head head;
@@ -20,19 +30,23 @@ DEFINE_PER_CPU(struct rcu_lazy_pcp, rcu_lazy_pcp_ins);
 // Lockless flush of CPU, can be called concurrently.
 static void lazy_rcu_flush_cpu(struct rcu_lazy_pcp *rlp)
 {
-	node = llist_del_all(&rlp->head);
+	struct llist_node *node = llist_del_all(&rlp->head);
+	struct lazy_rcu_head *cursor, *temp;
+
 	if (!node)
-		continue;
+		return;
 
 	llist_for_each_entry_safe(cursor, temp, node, llist_node) {
-		debug_rcu_head_unqueue(cursor);
-		call_rcu(cursor, cursor->func);
+		struct rcu_head *rh = (struct rcu_head *)cursor;
+		debug_rcu_head_unqueue(rh);
+		call_rcu(rh, rh->func);
 		atomic_dec(&rlp->count);
 	}
 }
 
-void call_rcu_lazy(struct rcu_head *head, rcu_callback_t func)
+void call_rcu_lazy(struct rcu_head *head_rcu, rcu_callback_t func)
 {
+	struct lazy_rcu_head *head = (struct lazy_rcu_head *)head_rcu;
 	struct rcu_lazy_pcp *rlp;
 
 	preempt_disable();
@@ -103,7 +117,7 @@ lazy_rcu_shrink_scan(struct shrinker *shrink, struct shrink_control *sc)
  */
 static void lazy_work(struct work_struct *work)
 {
-	struct kfree_rcu_cpu *rlp = container_of(work, struct rcu_lazy_pcp, work.work);
+	struct rcu_lazy_pcp *rlp = container_of(work, struct rcu_lazy_pcp, work.work);
 
 	lazy_rcu_flush_cpu(rlp);
 }
@@ -118,6 +132,8 @@ static struct shrinker lazy_rcu_shrinker = {
 void __init rcu_lazy_init(void)
 {
 	int cpu;
+
+	BUILD_BUG_ON(sizeof(struct lazy_rcu_head) != sizeof(struct rcu_head));
 
 	for_each_possible_cpu(cpu) {
 		struct rcu_lazy_pcp *rlp = per_cpu_ptr(&rcu_lazy_pcp_ins, cpu);

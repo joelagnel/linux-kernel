@@ -219,10 +219,7 @@ struct ustat {
  *    false-positive PageTail().
  */
 struct callback_head {
-	union {
-		struct callback_head *next;
-		struct llist_node *llist_node;
-	};
+	struct callback_head *next;
 	void (*func)(struct callback_head *head);
 } __attribute__((aligned(sizeof(void *))));
 #define rcu_head callback_head
