@@ -3606,6 +3606,9 @@ void kvfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
 	WRITE_ONCE(krcp->count, krcp->count + 1);
 
 	// Set timer to drain after KFREE_DRAIN_JIFFIES.
+	//
+	// XXX: monitor_todo flag not needed, schedule_delayed_work() wont
+	// schedule new work if previous work is in progress.
 	if (rcu_scheduler_active == RCU_SCHEDULER_RUNNING &&
 	    !krcp->monitor_todo) {
 		krcp->monitor_todo = true;
@@ -3643,7 +3646,8 @@ kfree_rcu_shrink_count(struct shrinker *shrink, struct shrink_control *sc)
 		atomic_set(&krcp->backoff_page_cache_fill, 1);
 	}
 
-	return count;
+	// XXX: Submit as a separate patch
+	return count == 0 ? SHRINK_EMPTY : count;
 }
 
 static unsigned long
@@ -3690,6 +3694,8 @@ void __init kfree_rcu_scheduler_running(void)
 			raw_spin_unlock_irqrestore(&krcp->lock, flags);
 			continue;
 		}
+
+		// XXX: no need this flag, use delayed_work_pending()
 		krcp->monitor_todo = true;
 		schedule_delayed_work_on(cpu, &krcp->monitor_work,
 					 KFREE_DRAIN_JIFFIES);
