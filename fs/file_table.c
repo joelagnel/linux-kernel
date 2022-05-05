@@ -41,7 +41,6 @@ static struct files_stat_struct files_stat = {
 /* SLAB cache for file structures */
 static struct kmem_cache *filp_cachep __read_mostly;
 
-
 static struct percpu_counter nr_files __cacheline_aligned_in_smp;
 
 static void file_free_rcu(struct rcu_head *head)
@@ -52,30 +51,13 @@ static void file_free_rcu(struct rcu_head *head)
 	kmem_cache_free(filp_cachep, f);
 }
 
-atomic_t file_count;
-
-DEFINE_RCU_LAZY(file_table);
-
 static inline void file_free(struct file *f)
 {
-	struct rcu_batch *rb;
-	// int ret;
-
 	security_file_free(f);
 	if (!(f->f_mode & FMODE_NOACCOUNT))
 		percpu_counter_dec(&nr_files);
 
-	call_rcu(file_table, &f->f_u.fu_rcuhead, file_free_rcu);
-/*
-   FOR DEBUG:
-
-	ret = get_list_size();
-	if (ret % 20000 == 0) {
-		trace_printk("List now atomic %d full size %d\n", ret, get_list_size_full());
-	}
-*/
-
-	// call_rcu(&f->f_u.fu_rcuhead, file_free_rcu);
+	call_rcu_lazy(&f->f_u.fu_rcuhead, file_free_rcu);
 }
 
 /*
@@ -437,13 +419,6 @@ void __init files_init(void)
 	filp_cachep = kmem_cache_create("filp", sizeof(struct file), 0,
 			SLAB_HWCACHE_ALIGN | SLAB_PANIC | SLAB_ACCOUNT, NULL);
 	percpu_counter_init(&nr_files, 0, GFP_KERNEL);
-
-
-	file_shrinker.count_objects = file_shrink_count;
-	file_shrinker.scan_objects = file_shrink_scan;
-	file_shrinker.seeks = DEFAULT_SEEKS;
-
-	BUG_ON(register_shrinker(&file_shrinker));
 }
 
 /*
