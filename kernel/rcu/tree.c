@@ -3320,7 +3320,7 @@ static inline bool queue_kfree_rcu_work(struct kfree_rcu_cpu *krcp)
 			 * channels have been detached following by each
 			 * other.
 			 */
-			queue_rcu_work(system_wq, &krwp->rcu_work);
+			queue_rcu_work_lazy(system_wq, &krwp->rcu_work);
 		}
 
 		// Repeat if any "free" corresponding channel is still busy.
