@@ -7,7 +7,7 @@
 #include "rcu.h"
 
 // How much to batch before flushing?
-#define MAX_LAZY_BATCH		128
+#define MAX_LAZY_BATCH		2048
 
 // How much to wait before flushing?
 #define MAX_LAZY_JIFFIES	10000

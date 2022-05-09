@@ -85,7 +85,7 @@ static void ioc_destroy_icq(struct io_cq *icq)
 	 */
 	icq->__rcu_icq_cache = et->icq_cache;
 	icq->flags |= ICQ_DESTROYED;
-	call_rcu(&icq->__rcu_head, icq_free_icq_rcu);
+	call_rcu_lazy(&icq->__rcu_head, icq_free_icq_rcu);
 }
 
 /*
