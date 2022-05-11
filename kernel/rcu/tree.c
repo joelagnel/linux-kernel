@@ -4775,6 +4775,8 @@ void __init rcu_init(void)
 		qovld_calc = DEFAULT_RCU_QOVLD_MULT * qhimark;
 	else
 		qovld_calc = qovld;
+
+	rcu_lazy_init();
 }
 
 #include "tree_stall.h"

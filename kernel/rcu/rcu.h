@@ -561,4 +561,9 @@ void show_rcu_tasks_trace_gp_kthread(void);
 static inline void show_rcu_tasks_trace_gp_kthread(void) {}
 #endif
 
+#ifdef CONFIG_RCU_LAZY
+void rcu_lazy_init(void);
+#else
+static inline void rcu_lazy_init(void) {}
+#endif
 #endif /* __LINUX_RCU_H */
