@@ -20,6 +20,7 @@ void rcu_cblist_init(struct rcu_cblist *rclp)
 	rclp->head = NULL;
 	rclp->tail = &rclp->head;
 	rclp->len = 0;
+	rclp->lazy_len = 0;
 }
 
 /*
@@ -30,6 +31,15 @@ void rcu_cblist_enqueue(struct rcu_cblist *rclp, struct rcu_head *rhp)
 	*rclp->tail = rhp;
 	rclp->tail = &rhp->next;
 	WRITE_ONCE(rclp->len, rclp->len + 1);
+}
+
+/*
+ * Enqueue an rcu_head structure onto the specified callback list.
+ */
+void rcu_cblist_enqueue_lazy(struct rcu_cblist *rclp, struct rcu_head *rhp)
+{
+	rcu_cblist_enqueue(rclp, rhp);
+	WRITE_ONCE(rclp->lazy_len, rclp->lazy_len + 1);
 }
 
 /*
@@ -58,6 +68,15 @@ void rcu_cblist_flush_enqueue(struct rcu_cblist *drclp,
 		srclp->tail = &rhp->next;
 		WRITE_ONCE(srclp->len, 1);
 	}
+}
+
+void rcu_cblist_flush_enqueue_lazy(struct rcu_cblist *drclp,
+			      struct rcu_cblist *srclp,
+			      struct rcu_head *rhp)
+{
+	rcu_cblist_flush_enqueue(drclp, srclp, rhp);
+	if (rhp)
+		WRITE_ONCE(srclp->lazy_len, 1);
 }
 
 /*
