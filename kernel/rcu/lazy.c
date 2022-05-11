@@ -12,6 +12,8 @@
 // How much to wait before flushing?
 #define MAX_LAZY_JIFFIES	10000
 
+unsigned int sysctl_rcu_lazy_batch = MAX_LAZY_BATCH;
+unsigned int sysctl_rcu_lazy_jiffies = MAX_LAZY_JIFFIES;
 unsigned int sysctl_rcu_lazy = 1;
 
 // We cast lazy_rcu_head to rcu_head and back. This keeps the API simple while
@@ -73,11 +75,11 @@ void call_rcu_lazy(struct rcu_head *head_rcu, rcu_callback_t func)
 	llist_add(&head->llist_node, &rlp->head);
 
 	// Flush queue if too big
-	if (atomic_inc_return(&rlp->count) >= MAX_LAZY_BATCH) {
+	if (atomic_inc_return(&rlp->count) >= sysctl_rcu_lazy_batch) {
 		lazy_rcu_flush_cpu(rlp);
 	} else {
 		if (!delayed_work_pending(&rlp->work)) {
-			schedule_delayed_work(&rlp->work, MAX_LAZY_JIFFIES);
+			schedule_delayed_work(&rlp->work, sysctl_rcu_lazy_jiffies);
 		}
 	}
 }
