@@ -3407,7 +3407,7 @@ static void kfree_rcu_monitor(struct work_struct *work)
 			// be that the work is in the pending state when
 			// channels have been detached following by each
 			// other.
-			queue_rcu_work(system_wq, &krwp->rcu_work);
+			queue_rcu_work_lazy(system_wq, &krwp->rcu_work);
 		}
 	}
 
