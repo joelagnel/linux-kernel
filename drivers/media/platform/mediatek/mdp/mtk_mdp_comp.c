@@ -16,22 +16,6 @@
 #include "mtk_mdp_comp.h"
 #include "mtk_mdp_core.h"
 
-/**
- * enum mtk_mdp_comp_type - the MDP component
- * @MTK_MDP_RDMA:		Read DMA
- * @MTK_MDP_RSZ:		Reszer
- * @MTK_MDP_WDMA:		Write DMA
- * @MTK_MDP_WROT:		Write DMA with rotation
- * @MTK_MDP_COMP_TYPE_MAX:	Placeholder for num elems in this enum
- */
-enum mtk_mdp_comp_type {
-	MTK_MDP_RDMA,
-	MTK_MDP_RSZ,
-	MTK_MDP_WDMA,
-	MTK_MDP_WROT,
-	MTK_MDP_COMP_TYPE_MAX,
-};
-
 static const struct of_device_id mtk_mdp_comp_driver_dt_match[] = {
 	{
 		.compatible = "mediatek,mt8173-mdp-rdma",
@@ -54,14 +38,6 @@ int mtk_mdp_comp_power_on(struct mtk_mdp_comp *comp)
 
 {
 	int err;
-
-	if (comp->larb_dev) {
-		err = mtk_smi_larb_get(comp->larb_dev);
-		if (err)
-			dev_err(dev,
-				"failed to get larb, err %d. type:%d\n",
-				err, comp->type);
-	}
 
 	err = pm_runtime_get_sync(comp->dev);
 	if (err < 0) {
