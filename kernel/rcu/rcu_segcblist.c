@@ -20,6 +20,7 @@ void rcu_cblist_init(struct rcu_cblist *rclp)
 	rclp->head = NULL;
 	rclp->tail = &rclp->head;
 	rclp->len = 0;
+	rclp->lazy_len = 0;
 }
 
 /*
@@ -230,6 +231,15 @@ void rcu_segcblist_inc_len(struct rcu_segcblist *rsclp)
 {
 	rcu_segcblist_add_len(rsclp, 1);
 }
+
+#ifdef CONFIG_RCU_NOCB_CPU
+void rcu_segcblist_inc_lazy_len(struct rcu_segcblist *rsclp)
+{
+	smp_mb__before_atomic(); // Read header comment on *add_len().
+	atomic_long_add(1, &rsclp->lazy_len);
+	smp_mb__after_atomic();  // Read header comment on *add_len().
+}
+#endif
 
 /*
  * Initialize an rcu_segcblist structure.
