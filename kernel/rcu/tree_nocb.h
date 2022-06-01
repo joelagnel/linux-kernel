@@ -267,6 +267,8 @@ static bool wake_nocb_gp(struct rcu_data *rdp, bool force)
 	return __wake_nocb_gp(rdp_gp, rdp, force, flags);
 }
 
+#define LAZY_FLUSH_JIFFES (10 * HZ)
+
 /*
  * Arrange to wake the GP kthread for this NOCB group at some future
  * time when it is safe to do so.
@@ -283,7 +285,10 @@ static void wake_nocb_gp_defer(struct rcu_data *rdp, int waketype,
 	 * Bypass wakeup overrides previous deferments. In case
 	 * of callback storm, no need to wake up too early.
 	 */
-	if (waketype == RCU_NOCB_WAKE_BYPASS) {
+	if (waketype == RCU_NOCB_WAKE_LAZY) {
+		mod_timer(&rdp_gp->nocb_timer, jiffies + LAZY_FLUSH_JIFFIES);
+		WRITE_ONCE(rdp_gp->nocb_defer_wakeup, waketype);
+	} else if (waketype == RCU_NOCB_WAKE_BYPASS) {
 		mod_timer(&rdp_gp->nocb_timer, jiffies + 2);
 		WRITE_ONCE(rdp_gp->nocb_defer_wakeup, waketype);
 	} else {
@@ -628,7 +633,7 @@ static inline bool nocb_gp_update_state_deoffloading(struct rcu_data *rdp,
 static void nocb_gp_wait(struct rcu_data *my_rdp)
 {
 	bool bypass = false;
-	long bypass_ncbs;
+	long bypass_ncbs, lazy_ncbs;
 	int __maybe_unused cpu = my_rdp->cpu;
 	unsigned long cur_gp_seq;
 	unsigned long flags;
@@ -677,12 +682,21 @@ static void nocb_gp_wait(struct rcu_data *my_rdp)
 		}
 
 		bypass_ncbs = rcu_cblist_n_cbs(&rdp->nocb_bypass);
-		if (bypass_ncbs &&
+		lazy_ncbs = rcu_cblist_n_lazy_cbs(&rdp->nocb_bypass);
+		if (lazy_ncbs &&
+		    (time_after(j, READ_ONCE(rdp->nocb_bypass_first) + LAZY_FLUSH_JIFFIES) ||
+		     (lazy_ncbs + bypass_ncbs) > qhimark)) {
+			// Bypass full or old, so flush it.
+			(void)rcu_nocb_try_flush_bypass(rdp, j);
+			bypass_ncbs = rcu_cblist_n_cbs(&rdp->nocb_bypass);
+			lazy_ncbs = rcu_cblist_n_lazy_cbs(&rdp->nocb_bypass);
+		} else if (bypass_ncbs &&
 		    (time_after(j, READ_ONCE(rdp->nocb_bypass_first) + 1) ||
 		     bypass_ncbs > 2 * qhimark)) {
 			// Bypass full or old, so flush it.
 			(void)rcu_nocb_try_flush_bypass(rdp, j);
 			bypass_ncbs = rcu_cblist_n_cbs(&rdp->nocb_bypass);
+			lazy_ncbs = rcu_cblist_n_lazy_cbs(&rdp->nocb_bypass);
 		} else if (!bypass_ncbs && rcu_segcblist_empty(&rdp->cblist)) {
 			rcu_nocb_unlock_irqrestore(rdp, flags);
 			if (needwake_state)
@@ -748,6 +762,14 @@ static void nocb_gp_wait(struct rcu_data *my_rdp)
 		wake_nocb_gp_defer(my_rdp, RCU_NOCB_WAKE_BYPASS,
 				   TPS("WakeBypassIsDeferred"));
 	}
+
+	// Currently, the bypass list only has lazy CBs. Add a deferred
+	// lazy wake up.
+	if (!bypass_ncbs && lazy_ncbs && !rcu_nocb_poll) {
+		wake_nocb_gp_defer(my_rdp, RCU_NOCB_WAKE_LAZY,
+				   TPS("WakeBypassIsDeferred"));
+	}
+
 	if (rcu_nocb_poll) {
 		/* Polling, so trace if first poll in the series. */
 		if (gotcbs)
