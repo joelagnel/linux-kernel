@@ -312,7 +312,7 @@ static void wake_nocb_gp_defer(struct rcu_data *rdp, int waketype,
  * Note that this function always returns true if rhp is NULL.
  */
 static bool rcu_nocb_do_flush_bypass(struct rcu_data *rdp, struct rcu_head *rhp,
-				     unsigned long j)
+				     unsigned long j, bool lazy)
 {
 	struct rcu_cblist rcl;
 
@@ -326,7 +326,12 @@ static bool rcu_nocb_do_flush_bypass(struct rcu_data *rdp, struct rcu_head *rhp,
 	/* Note: ->cblist.len already accounts for ->nocb_bypass contents. */
 	if (rhp)
 		rcu_segcblist_inc_len(&rdp->cblist); /* Must precede enqueue. */
-	rcu_cblist_flush_enqueue(&rcl, &rdp->nocb_bypass, rhp);
+
+	/* The lazy CBs are being flushed, but a new one might be enqueued. */
+	if (lazy)
+		rcu_cblist_flush_enqueue_lazy(&rcl, &rdp->nocb_bypass, rhp);
+	else
+		rcu_cblist_flush_enqueue(&rcl, &rdp->nocb_bypass, rhp);
 	rcu_segcblist_insert_pend_cbs(&rdp->cblist, &rcl);
 	WRITE_ONCE(rdp->nocb_bypass_first, j);
 	rcu_nocb_bypass_unlock(rdp);
@@ -342,13 +347,13 @@ static bool rcu_nocb_do_flush_bypass(struct rcu_data *rdp, struct rcu_head *rhp,
  * Note that this function always returns true if rhp is NULL.
  */
 static bool rcu_nocb_flush_bypass(struct rcu_data *rdp, struct rcu_head *rhp,
-				  unsigned long j)
+				  unsigned long j, bool lazy)
 {
 	if (!rcu_rdp_is_offloaded(rdp))
 		return true;
 	rcu_lockdep_assert_cblist_protected(rdp);
 	rcu_nocb_bypass_lock(rdp);
-	return rcu_nocb_do_flush_bypass(rdp, rhp, j);
+	return rcu_nocb_do_flush_bypass(rdp, rhp, j, lazy);
 }
 
 /*
@@ -361,7 +366,7 @@ static void rcu_nocb_try_flush_bypass(struct rcu_data *rdp, unsigned long j)
 	if (!rcu_rdp_is_offloaded(rdp) ||
 	    !rcu_nocb_bypass_trylock(rdp))
 		return;
-	WARN_ON_ONCE(!rcu_nocb_do_flush_bypass(rdp, NULL, j));
+	WARN_ON_ONCE(!rcu_nocb_do_flush_bypass(rdp, NULL, j, false));
 }
 
 /*
@@ -390,7 +395,7 @@ static bool rcu_nocb_try_bypass(struct rcu_data *rdp, struct rcu_head *rhp,
 	unsigned long cur_gp_seq;
 	unsigned long j = jiffies;
 	long ncbs = rcu_cblist_n_cbs(&rdp->nocb_bypass);
-	long n_lazy_cbs = rcu_cblist_n_lazy_cbs(&rdp->cblist);
+	long n_lazy_cbs = rcu_cblist_n_lazy_cbs(&rdp->nocb_bypass);
 	long total_cbs = ncbs + n_lazy_cbs;
 
 	lockdep_assert_irqs_disabled();
@@ -436,7 +441,7 @@ static bool rcu_nocb_try_bypass(struct rcu_data *rdp, struct rcu_head *rhp,
 	// If caller passed a non-lazy CB and there hasn't yet been all that
 	// many ->cblist enqueues this jiffy, tell the caller to enqueue it
 	// onto ->cblist.  But flush ->nocb_bypass first. Also do so, if total
-	// number of CBs (lazy + non-lazy)grows too much.
+	// number of CBs (lazy + non-lazy) grows too much.
 	//
 	// Note that if the bypass list has lazy CBs, and the main list is
 	// empty, and rhp happens to be non-lazy, then we end up flushing all
@@ -450,7 +455,7 @@ static bool rcu_nocb_try_bypass(struct rcu_data *rdp, struct rcu_head *rhp,
 		if (*was_alldone)
 			trace_rcu_nocb_wake(rcu_state.name, rdp->cpu,
 					    lazy ? TPS("FirstLazyQ") : TPS("FirstQ"));
-		WARN_ON_ONCE(!rcu_nocb_flush_bypass(rdp, NULL, j));
+		WARN_ON_ONCE(!rcu_nocb_flush_bypass(rdp, NULL, j, false));
 		WARN_ON_ONCE(rcu_cblist_n_cbs(&rdp->nocb_bypass));
 		return false; // Caller must enqueue the callback.
 	}
@@ -459,7 +464,7 @@ static bool rcu_nocb_try_bypass(struct rcu_data *rdp, struct rcu_head *rhp,
 	// flush ->nocb_bypass to ->cblist.
 	if ((ncbs && j != READ_ONCE(rdp->nocb_bypass_first)) || total_cbs >= qhimark) {
 		rcu_nocb_lock(rdp);
-		if (!rcu_nocb_flush_bypass(rdp, rhp, j)) {
+		if (!rcu_nocb_flush_bypass(rdp, rhp, j, true)) {
 			*was_alldone = !rcu_segcblist_pend_cbs(&rdp->cblist);
 			if (*was_alldone)
 				trace_rcu_nocb_wake(rcu_state.name, rdp->cpu,
@@ -482,11 +487,11 @@ static bool rcu_nocb_try_bypass(struct rcu_data *rdp, struct rcu_head *rhp,
 	rcu_nocb_bypass_lock(rdp);
 	ncbs = rcu_cblist_n_cbs(&rdp->nocb_bypass);
 	n_lazy_cbs = rcu_cblist_n_lazy_cbs(&rdp->nocb_bypass);
-	if (!lazy)
-		rcu_segcblist_inc_len(&rdp->cblist); /* Must precede enqueue. */
+	rcu_segcblist_inc_len(&rdp->cblist); /* Must precede enqueue. */
+	if (lazy)
+		rcu_cblist_enqueue_lazy(&rdp->nocb_bypass, rhp);
 	else
-		rcu_segcblist_inc_lazy_len(&rdp->cblist); /* Must precede enqueue. */
-	rcu_cblist_enqueue(&rdp->nocb_bypass, rhp);
+		rcu_cblist_enqueue(&rdp->nocb_bypass, rhp);
 	if (!ncbs && !lazy) {
 		WRITE_ONCE(rdp->nocb_bypass_first, j);
 		trace_rcu_nocb_wake(rcu_state.name, rdp->cpu, TPS("FirstBQ"));
@@ -496,7 +501,7 @@ static bool rcu_nocb_try_bypass(struct rcu_data *rdp, struct rcu_head *rhp,
 
 	rcu_nocb_bypass_unlock(rdp);
 	smp_mb(); /* Order enqueue before wake. */
-	if (ncbs || lazy) { /* Lazy CBs do not trigger RCU unless necessary. */
+	if (ncbs) {
 		local_irq_restore(flags);
 	} else {
 		// No-CBs GP kthread might be indefinitely asleep, if so, wake.
@@ -540,7 +545,7 @@ static void __call_rcu_nocb_wake(struct rcu_data *rdp, bool was_alldone,
 	// Need to actually to a wakeup.
 	len = rcu_segcblist_n_cbs(&rdp->cblist);
 	bypass_len = rcu_segcblist_n_cbs(&rdp->nocb_bypass);
-	lazy_len = rcu_segcblist_n_lazy_cbs(&rdp->cblist);
+	lazy_len = rcu_segcblist_n_lazy_cbs(&rdp->nocb_bypass);
 	if (was_alldone) {
 		rdp->qlen_last_fqs_check = len;
 		// Only lazy CBs in bypass list
