@@ -390,7 +390,7 @@ static bool rcu_nocb_try_bypass(struct rcu_data *rdp, struct rcu_head *rhp,
 	unsigned long cur_gp_seq;
 	unsigned long j = jiffies;
 	long ncbs = rcu_cblist_n_cbs(&rdp->nocb_bypass);
-	long n_lazy_cbs = rcu_cblist_n_lazy_cbs(&rdp->nocb_bypass);
+	long n_lazy_cbs = rcu_cblist_n_lazy_cbs(&rdp->cblist);
 	long total_cbs = ncbs + n_lazy_cbs;
 
 	lockdep_assert_irqs_disabled();
@@ -539,9 +539,16 @@ static void __call_rcu_nocb_wake(struct rcu_data *rdp, bool was_alldone,
 	}
 	// Need to actually to a wakeup.
 	len = rcu_segcblist_n_cbs(&rdp->cblist);
+	bypass_len = rcu_segcblist_n_cbs(&rdp->nocb_bypass);
+	lazy_len = rcu_segcblist_n_lazy_cbs(&rdp->cblist);
 	if (was_alldone) {
 		rdp->qlen_last_fqs_check = len;
-		if (!irqs_disabled_flags(flags)) {
+		// Only lazy CBs in bypass list
+		if (lazy_len && bypass_len == lazy_len) {
+			rcu_nocb_unlock_irqrestore(rdp, flags);
+			wake_nocb_gp_defer(rdp, RCU_NOCB_WAKE_LAZY,
+					   TPS("WakeLazy"));
+		} else if (!irqs_disabled_flags(flags)) {
 			/* ... if queue was empty ... */
 			rcu_nocb_unlock_irqrestore(rdp, flags);
 			wake_nocb_gp(rdp, false);
