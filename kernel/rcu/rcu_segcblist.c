@@ -34,6 +34,15 @@ void rcu_cblist_enqueue(struct rcu_cblist *rclp, struct rcu_head *rhp)
 }
 
 /*
+ * Enqueue an rcu_head structure onto the specified callback list.
+ */
+void rcu_cblist_enqueue_lazy(struct rcu_cblist *rclp, struct rcu_head *rhp)
+{
+	rcu_cblist_enqueue(rclp, rhp);
+	WRITE_ONCE(rclp->lazy_len, rclp->lazy_len + 1);
+}
+
+/*
  * Flush the second rcu_cblist structure onto the first one, obliterating
  * any contents of the first.  If rhp is non-NULL, enqueue it as the sole
  * element of the second rcu_cblist structure, but ensuring that the second
@@ -59,6 +68,15 @@ void rcu_cblist_flush_enqueue(struct rcu_cblist *drclp,
 		srclp->tail = &rhp->next;
 		WRITE_ONCE(srclp->len, 1);
 	}
+}
+
+void rcu_cblist_flush_enqueue_lazy(struct rcu_cblist *drclp,
+			      struct rcu_cblist *srclp,
+			      struct rcu_head *rhp)
+{
+	rcu_cblist_flush_enqueue(drclp, srclp, rhp);
+	if (rhp)
+		WRITE_ONCE(srclp->lazy_len, 1);
 }
 
 /*
@@ -231,15 +249,6 @@ void rcu_segcblist_inc_len(struct rcu_segcblist *rsclp)
 {
 	rcu_segcblist_add_len(rsclp, 1);
 }
-
-#ifdef CONFIG_RCU_NOCB_CPU
-void rcu_segcblist_inc_lazy_len(struct rcu_segcblist *rsclp)
-{
-	smp_mb__before_atomic(); // Read header comment on *add_len().
-	atomic_long_add(1, &rsclp->lazy_len);
-	smp_mb__after_atomic();  // Read header comment on *add_len().
-}
-#endif
 
 /*
  * Initialize an rcu_segcblist structure.

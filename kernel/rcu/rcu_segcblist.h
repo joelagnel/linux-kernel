@@ -19,7 +19,7 @@ static inline long rcu_cblist_n_cbs(struct rcu_cblist *rclp)
 static inline long rcu_cblist_n_lazy_cbs(struct rcu_cblist *rclp)
 {
 #ifdef CONFIG_RCU_LAZY
-	return READ_ONCE(rclp->len);
+	return READ_ONCE(rclp->lazy_len);
 #else
 	return 0;
 #endif
