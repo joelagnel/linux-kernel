@@ -1659,7 +1659,7 @@ static struct ctl_table kern_table[] = {
 		.mode		= 0644,
 		.proc_handler	= proc_dointvec,
 	},
-#ifdef CONFIG_RCU_LAZY
+#if 0
 	{
 		.procname	= "rcu_lazy",
 		.data		= &sysctl_rcu_lazy,
