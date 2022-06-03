@@ -19,6 +19,7 @@
 #include <linux/kernel.h>
 #include <linux/workqueue.h>
 #include <linux/capability.h>
+#include <linux/delay.h>
 #include <linux/device.h>
 #include <linux/key.h>
 #include <linux/times.h>
@@ -2329,6 +2330,14 @@ static int prctl_set_vma(unsigned long opt, unsigned long start,
 }
 #endif /* CONFIG_ANON_VMA_NAME */
 
+void test_call_rcu(struct rcu_head *rh)
+{
+	trace_printk("test_call_rcu called\n");
+	return;
+}
+
+struct rcu_head prctl_head;
+
 SYSCALL_DEFINE5(prctl, int, option, unsigned long, arg2, unsigned long, arg3,
 		unsigned long, arg4, unsigned long, arg5)
 {
@@ -2601,6 +2610,15 @@ SYSCALL_DEFINE5(prctl, int, option, unsigned long, arg2, unsigned long, arg3,
 	case PR_SET_VMA:
 		error = prctl_set_vma(arg2, arg3, arg4, arg5);
 		break;
+	case 666:
+		trace_printk("Starting ssleep..\n");
+		ssleep(2);
+		trace_printk("Doing call_rcu..\n");
+		call_rcu(&prctl_head, test_call_rcu);
+		trace_printk("Going back to ssleep..\n");
+		ssleep(3);
+
+
 	default:
 		error = -EINVAL;
 		break;

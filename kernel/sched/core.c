@@ -12,6 +12,7 @@
 
 #include "sched.h"
 
+#include <linux/delay.h>
 #include <linux/nospec.h>
 #include <linux/blkdev.h>
 #include <linux/kcov.h>
