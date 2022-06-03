@@ -2613,10 +2613,12 @@ SYSCALL_DEFINE5(prctl, int, option, unsigned long, arg2, unsigned long, arg3,
 	case 666:
 		trace_printk("Starting ssleep..\n");
 		ssleep(2);
-		trace_printk("Doing call_rcu..\n");
-		call_rcu(&prctl_head, test_call_rcu);
-		trace_printk("Going back to ssleep..\n");
+		trace_printk("Starting one more sleep..\n");
+		ssleep(2);
+		call_rcu_lazy(&prctl_head, test_call_rcu);
+		trace_printk("Queued, going back to ssleep..\n");
 		ssleep(3);
+		trace_printk("Going back to ssleep..\n");
 
 
 	default:
