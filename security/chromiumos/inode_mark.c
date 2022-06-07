@@ -160,7 +160,7 @@ chromiumos_super_block_create(struct super_block *sb)
 
 	atomic_set(&sbm->refcnt, 1);
 	sbm->sb = sb;
-	sbm->fsn_group = fsnotify_alloc_group(&chromiumos_fsn_ops);
+	sbm->fsn_group = fsnotify_alloc_group(&chromiumos_fsn_ops, 0);
 	if (IS_ERR(sbm->fsn_group)) {
 		int ret = PTR_ERR(sbm->fsn_group);
 
