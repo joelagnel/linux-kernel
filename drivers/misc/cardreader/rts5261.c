@@ -361,7 +361,7 @@ static void rts5261_init_from_hw(struct rtsx_pcr *pcr)
 {
 	struct pci_dev *pdev = pcr->pci;
 	u32 lval1, lval2, i;
-	u16 setting_reg1, setting_reg2;
+	u16 setting_reg1, setting_reg2 = 0;
 	u8 valid, efuse_valid, tmp;
 
 	rtsx_pci_write_register(pcr, RTS5261_REG_PME_FORCE_CTL,
