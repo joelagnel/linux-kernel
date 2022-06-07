@@ -1816,7 +1816,7 @@ static int zram_open(struct block_device *bdev, fmode_t mode)
 	 * the maximum number of opens to 2, we ensure there are no prior open
 	 * references before swap is enabled.
 	 */
-	if (bdev->bd_openers > 1)
+	if (atomic_read(&bdev->bd_openers) > 1)
 		return -EBUSY;
 
 	zram = bdev->bd_disk->private_data;
