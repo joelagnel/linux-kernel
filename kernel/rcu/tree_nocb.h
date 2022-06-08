@@ -1159,7 +1159,7 @@ void __init rcu_init_nohz(void)
 	struct rcu_data *rdp;
 
 #if defined(CONFIG_RCU_NOCB_CPU_DEFAULT_ALL)
-	if (!rcu_nocb_is_setup) {
+	if (!rcu_state.nocb_is_setup) {
 		need_rcu_nocb_mask = true;
 		offload_all = true;
 	}
