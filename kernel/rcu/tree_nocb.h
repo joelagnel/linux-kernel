@@ -1262,6 +1262,51 @@ int rcu_nocb_cpu_offload(int cpu)
 }
 EXPORT_SYMBOL_GPL(rcu_nocb_cpu_offload);
 
+static unsigned long
+lazy_rcu_shrink_count(struct shrinker *shrink, struct shrink_control *sc) {
+	int cpu;
+	unsigned long count = 0;
+
+	/* Snapshot count of all CPUs */
+	for_each_possible_cpu(cpu) {
+		struct rcu_data *rdp = per_cpu_ptr(&rcu_data, cpu);
+		count += rcu_cblist_n_lazy_cbs(&rdp->nocb_bypass);
+	}
+
+	trace_printk("call_rcu_lazy shrink counted %ld callbacks\n", count);
+	return count ? count : SHRINK_EMPTY;
+}
+
+static unsigned long
+lazy_rcu_shrink_scan(struct shrinker *shrink, struct shrink_control *sc) {
+	int cpu;
+	unsigned long flags;
+	unsigned long count = 0;
+
+	/* Snapshot count of all CPUs */
+	for_each_possible_cpu(cpu) {
+		struct rcu_data *rdp = per_cpu_ptr(&rcu_data, cpu);
+		int _count = rcu_cblist_n_lazy_cbs(&rdp->nocb_bypass);
+		trace_printk("rdp %d has %ld callbacks\n", rdp->cpu, rcu_cblist_n_lazy_cbs(&rdp->nocb_bypass));
+		if (_count == 0)
+			continue;
+		rcu_nocb_lock_irqsave(rdp, flags);
+		rcu_cblist_reset_lazy_len(&rdp->nocb_bypass);
+		rcu_nocb_unlock_irqrestore(rdp, flags);
+		wake_nocb_gp(rdp, false);
+		count += _count;
+	}
+	trace_printk("call_rcu_lazy shrink scanned %ld callbacks\n", count);
+	return count ? count : SHRINK_STOP;
+}
+
+static struct shrinker lazy_rcu_shrinker = {
+	.count_objects = lazy_rcu_shrink_count,
+	.scan_objects = lazy_rcu_shrink_scan,
+	.batch = 0,
+	.seeks = DEFAULT_SEEKS,
+};
+
 void __init rcu_init_nohz(void)
 {
 	int cpu;
@@ -1295,6 +1340,9 @@ void __init rcu_init_nohz(void)
 
 	if (!rcu_state.nocb_is_setup)
 		return;
+
+	if (register_shrinker(&lazy_rcu_shrinker))
+		pr_err("Failed to register lazy_rcu shrinker!\n");
 
 #if defined(CONFIG_NO_HZ_FULL)
 	if (tick_nohz_full_running)
