@@ -15,15 +15,25 @@ static inline long rcu_cblist_n_cbs(struct rcu_cblist *rclp)
 	return READ_ONCE(rclp->len);
 }
 
+#ifdef CONFIG_RCU_LAZY
 /* Return number of callbacks in the specified callback list. */
 static inline long rcu_cblist_n_lazy_cbs(struct rcu_cblist *rclp)
 {
-#ifdef CONFIG_RCU_LAZY
 	return READ_ONCE(rclp->lazy_len);
-#else
-	return 0;
-#endif
 }
+
+static inline void rcu_cblist_reset_lazy_len(struct rcu_cblist *rclp)
+{
+	WRITE_ONCE(rclp->lazy_len, 0);
+}
+#else
+static inline long rcu_cblist_n_lazy_cbs(struct rcu_cblist *rclp)
+{
+	return 0;
+}
+
+static inline void rcu_cblist_reset_lazy_len(struct rcu_cblist *rclp) {}
+#endif
 
 /* Return number of callbacks in segmented callback list by summing seglen. */
 long rcu_segcblist_n_segment_cbs(struct rcu_segcblist *rsclp);

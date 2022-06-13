@@ -1242,9 +1242,8 @@ lazy_rcu_shrink_scan(struct shrinker *shrink, struct shrink_control *sc) {
 		trace_printk("rdp %d has %ld callbacks\n", rdp->cpu, rcu_cblist_n_lazy_cbs(&rdp->nocb_bypass));
 		if (_count == 0)
 			continue;
-		local_irq_save(flags);
-		rcu_nocb_lock(rdp);
-		rcu_nocb_flush_bypass(rdp, NULL, jiffies, false);
+		rcu_nocb_lock_irqsave(rdp, flags);
+		rcu_cblist_reset_lazy_len(&rdp->nocb_bypass);
 		rcu_nocb_unlock_irqrestore(rdp, flags);
 		wake_nocb_gp(rdp, false);
 		count += _count;
