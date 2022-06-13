@@ -396,7 +396,6 @@ static bool rcu_nocb_try_bypass(struct rcu_data *rdp, struct rcu_head *rhp,
 	unsigned long j = jiffies;
 	long ncbs = rcu_cblist_n_cbs(&rdp->nocb_bypass);
 	long n_lazy_cbs = rcu_cblist_n_lazy_cbs(&rdp->nocb_bypass);
-	long total_cbs = ncbs + n_lazy_cbs;
 
 	lockdep_assert_irqs_disabled();
 
@@ -462,7 +461,7 @@ static bool rcu_nocb_try_bypass(struct rcu_data *rdp, struct rcu_head *rhp,
 
 	// If ->nocb_bypass has been used too long or is too full,
 	// flush ->nocb_bypass to ->cblist.
-	if ((ncbs && j != READ_ONCE(rdp->nocb_bypass_first)) || total_cbs >= qhimark) {
+	if ((ncbs && j != READ_ONCE(rdp->nocb_bypass_first)) || ncbs >= qhimark) {
 		rcu_nocb_lock(rdp);
 		if (!rcu_nocb_flush_bypass(rdp, rhp, j, true)) {
 			*was_alldone = !rcu_segcblist_pend_cbs(&rdp->cblist);
@@ -492,9 +491,10 @@ static bool rcu_nocb_try_bypass(struct rcu_data *rdp, struct rcu_head *rhp,
 		rcu_cblist_enqueue_lazy(&rdp->nocb_bypass, rhp);
 	else
 		rcu_cblist_enqueue(&rdp->nocb_bypass, rhp);
-	if (!ncbs && !lazy) {
+	if (!ncbs) {
 		WRITE_ONCE(rdp->nocb_bypass_first, j);
-		trace_rcu_nocb_wake(rcu_state.name, rdp->cpu, TPS("FirstBQ"));
+		trace_rcu_nocb_wake(rcu_state.name, rdp->cpu,
+				    lazy ? TPS("FirstLazyBQ") : TPS("FirstBQ"));
 	} else if (!n_lazy_cbs && lazy) {
 		trace_rcu_nocb_wake(rcu_state.name, rdp->cpu, TPS("FirstLazyBQ"));
 	}
@@ -697,7 +697,7 @@ static void nocb_gp_wait(struct rcu_data *my_rdp)
 		lazy_ncbs = rcu_cblist_n_lazy_cbs(&rdp->nocb_bypass);
 		if (lazy_ncbs &&
 		    (time_after(j, READ_ONCE(rdp->nocb_bypass_first) + LAZY_FLUSH_JIFFIES) ||
-		     (lazy_ncbs + bypass_ncbs) > qhimark)) {
+		     bypass_ncbs > qhimark)) {
 			// Bypass full or old, so flush it.
 			(void)rcu_nocb_try_flush_bypass(rdp, j);
 			bypass_ncbs = rcu_cblist_n_cbs(&rdp->nocb_bypass);
@@ -777,7 +777,7 @@ static void nocb_gp_wait(struct rcu_data *my_rdp)
 
 	// Currently, the bypass list only has lazy CBs. Add a deferred
 	// lazy wake up.
-	if (!bypass_ncbs && lazy_ncbs && !rcu_nocb_poll) {
+	if (lazy_ncbs && !rcu_nocb_poll) {
 		wake_nocb_gp_defer(my_rdp, RCU_NOCB_WAKE_LAZY,
 				   TPS("WakeBypassIsDeferred"));
 	}
