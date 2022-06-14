@@ -4,12 +4,16 @@
  */
 
 /dts-v1/;
-#include "mt8183-kukui-jacuzzi.dtsi"
-#include "mt8183-kukui-audio-da7219-max98357a.dtsi"
+#include "mt8183-kukui-jacuzzi-cerise.dtsi"
+#include "mt8183-kukui-audio-da7219-rt1015p.dtsi"
 
 / {
-	model = "Google damu board";
-	compatible = "google,damu", "mediatek,mt8183";
+	model = "Google stern board";
+	compatible = "google,cerise-sku1", "google,cerise", "mediatek,mt8183";
+};
+
+&mt6358codec {
+	mediatek,dmic-mode = <0>; /* two-wire */
 };
 
 &touchscreen {
@@ -26,14 +30,6 @@
 	hid-descr-addr = <0x0001>;
 };
 
-&mt6358codec {
-	mediatek,dmic-mode = <1>; /* one-wire */
-};
-
 &qca_wifi {
-	qcom,ath10k-calibration-variant = "GO_DAMU";
-};
-
-&i2c2 {
-	i2c-scl-internal-delay-ns = <20000>;
+	qcom,ath10k-calibration-variant = "GO_STERN";
 };

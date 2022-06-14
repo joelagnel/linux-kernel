@@ -8,8 +8,9 @@
 #include "mt8183-kukui-audio-ts3a227e-max98357a.dtsi"
 
 / {
-	model = "Google cozmo board";
-	compatible = "google,cozmo", "mediatek,mt8183";
+	model = "Google pico6 board";
+	compatible = "google,pico-sku2", "google,pico", "mediatek,mt8183";
+
 };
 
 &i2c2 {
@@ -29,6 +30,17 @@
 	};
 };
 
-&qca_wifi {
-	qcom,ath10k-calibration-variant = "GO_COZMO";
+&wifi_pwrseq {
+	post-power-on-delay-ms = <50>;
+
+	/* Toggle WIFI_ENABLE to reset the chip. */
+	reset-gpios = <&pio 8 1>;
 };
+
+&wifi_pins_pwrseq {
+	pins_wifi_enable {
+		pinmux = <PINMUX_GPIO8__FUNC_GPIO8>;
+	};
+};
+
+/delete-node/ &bluetooth;
