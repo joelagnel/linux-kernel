@@ -80,6 +80,19 @@ int xhci_handshake(void __iomem *ptr, u32 mask, u32 done, u64 timeout_us)
 	return ret;
 }
 
+/* return 1 if there is a pending interrupt, -ENODEV on error, 0 otherwise */
+int xhci_pending_interrupt(struct xhci_hcd *xhci)
+{
+	u32 status;
+
+	status = readl(&xhci->op_regs->status);
+
+	if (status == ~(u32)0)
+		return -ENODEV;
+
+	return !!(status & STS_EINT);
+}
+
 /*
  * Disable interrupts and begin the xHCI halting process.
  */
@@ -198,7 +211,8 @@ int xhci_reset(struct xhci_hcd *xhci, u64 timeout_us)
 	if (xhci->quirks & XHCI_INTEL_HOST)
 		udelay(1000);
 
-	ret = xhci_handshake(&xhci->op_regs->command, CMD_RESET, 0, timeout_us);
+	ret = xhci_handshake(&xhci->op_regs->command,
+			CMD_RESET, 0, 20 * 1000 * 1000);
 	if (ret)
 		return ret;
 
@@ -782,6 +796,8 @@ static void xhci_stop(struct usb_hcd *hcd)
 void xhci_shutdown(struct usb_hcd *hcd)
 {
 	struct xhci_hcd *xhci = hcd_to_xhci(hcd);
+	unsigned long flags;
+	int i;
 
 	if (xhci->quirks & XHCI_SPURIOUS_REBOOT)
 		usb_disable_xhci_ports(to_pci_dev(hcd->self.sysdev));
@@ -797,12 +813,20 @@ void xhci_shutdown(struct usb_hcd *hcd)
 		del_timer_sync(&xhci->shared_hcd->rh_timer);
 	}
 
-	spin_lock_irq(&xhci->lock);
+	spin_lock_irqsave(&xhci->lock, flags);
 	xhci_halt(xhci);
+
+	/* Power off USB3 ports*/
+	for (i = 0; i < xhci->usb3_rhub.num_ports; i++)
+		xhci_set_port_power(xhci, xhci->shared_hcd, i, false, &flags);
+	/* Power off USB2 ports*/
+	for (i = 0; i < xhci->usb2_rhub.num_ports; i++)
+		xhci_set_port_power(xhci, xhci->main_hcd, i, false, &flags);
+
 	/* Workaround for spurious wakeups at shutdown with HSW */
 	if (xhci->quirks & XHCI_SPURIOUS_WAKEUP)
 		xhci_reset(xhci, XHCI_RESET_SHORT_USEC);
-	spin_unlock_irq(&xhci->lock);
+	spin_unlock_irqrestore(&xhci->lock, flags);
 
 	xhci_cleanup_msix(xhci);
 
@@ -948,12 +972,11 @@ static bool xhci_pending_portevent(struct xhci_hcd *xhci)
 {
 	struct xhci_port	**ports;
 	int			port_index;
-	u32			status;
 	u32			portsc;
 
-	status = readl(&xhci->op_regs->status);
-	if (status & STS_EINT)
+	if (xhci_pending_interrupt(xhci) > 0)
 		return true;
+
 	/*
 	 * Checking STS_EINT is not enough as there is a lag between a change
 	 * bit being set and the Port Status Change Event that it generated
