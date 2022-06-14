@@ -38,7 +38,15 @@ const struct cred *ovl_override_creds(struct super_block *sb)
 {
 	struct ovl_fs *ofs = sb->s_fs_info;
 
+	if (!ofs->config.override_creds)
+		return NULL;
 	return override_creds(ofs->creator_cred);
+}
+
+void ovl_revert_creds(struct super_block *sb, const struct cred *old_cred)
+{
+	if (old_cred)
+		revert_creds(old_cred);
 }
 
 /*
@@ -580,7 +588,7 @@ void ovl_copy_up_end(struct dentry *dentry)
 
 bool ovl_path_check_origin_xattr(struct ovl_fs *ofs, struct path *path)
 {
-	int res;
+	ssize_t res;
 
 	res = ovl_path_getxattr(ofs, path, OVL_XATTR_ORIGIN, NULL, 0);
 
@@ -594,7 +602,7 @@ bool ovl_path_check_origin_xattr(struct ovl_fs *ofs, struct path *path)
 bool ovl_path_check_dir_xattr(struct ovl_fs *ofs, struct path *path,
 			       enum ovl_xattr ox)
 {
-	int res;
+	ssize_t res;
 	char val;
 
 	if (!d_is_dir(path->dentry))
@@ -927,7 +935,7 @@ int ovl_nlink_start(struct dentry *dentry)
 	 * value relative to the upper inode nlink in an upper inode xattr.
 	 */
 	err = ovl_set_nlink_upper(dentry);
-	revert_creds(old_cred);
+	ovl_revert_creds(dentry->d_sb, old_cred);
 
 out:
 	if (err)
@@ -945,7 +953,7 @@ void ovl_nlink_end(struct dentry *dentry)
 
 		old_cred = ovl_override_creds(dentry->d_sb);
 		ovl_cleanup_index(dentry);
-		revert_creds(old_cred);
+		ovl_revert_creds(dentry->d_sb, old_cred);
 	}
 
 	ovl_inode_unlock(inode);
@@ -973,7 +981,7 @@ err:
 /* err < 0, 0 if no metacopy xattr, 1 if metacopy xattr found */
 int ovl_check_metacopy_xattr(struct ovl_fs *ofs, struct path *path)
 {
-	int res;
+	ssize_t res;
 
 	/* Only regular files can have metacopy xattr */
 	if (!S_ISREG(d_inode(path->dentry)->i_mode))
@@ -995,7 +1003,7 @@ int ovl_check_metacopy_xattr(struct ovl_fs *ofs, struct path *path)
 
 	return 1;
 out:
-	pr_warn_ratelimited("failed to get metacopy (%i)\n", res);
+	pr_warn_ratelimited("failed to get metacopy (%zi)\n", res);
 	return res;
 }
 

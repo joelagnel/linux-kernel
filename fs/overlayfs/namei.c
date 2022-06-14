@@ -109,7 +109,8 @@ int ovl_check_fb_len(struct ovl_fb *fb, int fb_len)
 static struct ovl_fh *ovl_get_fh(struct ovl_fs *ofs, struct dentry *upperdentry,
 				 enum ovl_xattr ox)
 {
-	int res, err;
+	ssize_t res;
+	int err;
 	struct ovl_fh *fh = NULL;
 
 	res = ovl_getxattr_upper(ofs, upperdentry, ox, NULL, 0);
@@ -144,10 +145,10 @@ out:
 	return NULL;
 
 fail:
-	pr_warn_ratelimited("failed to get origin (%i)\n", res);
+	pr_warn_ratelimited("failed to get origin (%zi)\n", res);
 	goto out;
 invalid:
-	pr_warn_ratelimited("invalid origin (%*phN)\n", res, fh);
+	pr_warn_ratelimited("invalid origin (%*phN)\n", (int)res, fh);
 	goto out;
 }
 
@@ -1119,7 +1120,7 @@ struct dentry *ovl_lookup(struct inode *dir, struct dentry *dentry,
 	ovl_dentry_update_reval(dentry, upperdentry,
 			DCACHE_OP_REVALIDATE | DCACHE_OP_WEAK_REVALIDATE);
 
-	revert_creds(old_cred);
+	ovl_revert_creds(dentry->d_sb, old_cred);
 	if (origin_path) {
 		dput(origin_path->dentry);
 		kfree(origin_path);
@@ -1146,7 +1147,7 @@ out_put_upper:
 	kfree(upperredirect);
 out:
 	kfree(d.redirect);
-	revert_creds(old_cred);
+	ovl_revert_creds(dentry->d_sb, old_cred);
 	return ERR_PTR(err);
 }
 
@@ -1198,7 +1199,7 @@ bool ovl_lower_positive(struct dentry *dentry)
 			dput(this);
 		}
 	}
-	revert_creds(old_cred);
+	ovl_revert_creds(dentry->d_sb, old_cred);
 
 	return positive;
 }
