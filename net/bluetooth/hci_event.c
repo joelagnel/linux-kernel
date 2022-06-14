@@ -3137,6 +3137,12 @@ static void hci_conn_complete_evt(struct hci_dev *hdev, void *data,
 	}
 
 	if (!status) {
+		int mask = hdev->link_mode;
+		__u8 flags = 0;
+
+		mask |= hci_proto_connect_ind(hdev, &ev->bdaddr, ev->link_type,
+					      &flags);
+
 		conn->handle = __le16_to_cpu(ev->handle);
 		if (conn->handle > HCI_CONN_HANDLE_MAX) {
 			bt_dev_err(hdev, "Invalid handle: 0x%4.4x > 0x%4.4x",
@@ -3165,6 +3171,19 @@ static void hci_conn_complete_evt(struct hci_dev *hdev, void *data,
 
 		if (test_bit(HCI_ENCRYPT, &hdev->flags))
 			set_bit(HCI_CONN_ENCRYPT, &conn->flags);
+
+		/* Attempt to remain in the central role if preferred */
+		if ((conn->mode == HCI_ROLE_MASTER && (mask & HCI_LM_MASTER)) &&
+		    (conn->link_policy & HCI_LP_RSWITCH)) {
+			struct hci_cp_write_link_policy cp;
+
+			conn->link_policy &= ~HCI_LP_RSWITCH;
+
+			cp.handle = ev->handle;
+			cp.policy = conn->link_policy;
+			hci_send_cmd(hdev, HCI_OP_WRITE_LINK_POLICY,
+				     sizeof(cp), &cp);
+		}
 
 		/* Get remote features */
 		if (conn->type == ACL_LINK) {
@@ -3368,7 +3387,7 @@ static void hci_disconn_complete_evt(struct hci_dev *hdev, void *data,
 				reason, mgmt_connected);
 
 	if (conn->type == ACL_LINK) {
-		if (test_bit(HCI_CONN_FLUSH_KEY, &conn->flags))
+		if (test_and_clear_bit(HCI_CONN_FLUSH_KEY, &conn->flags))
 			hci_remove_link_key(hdev, &conn->dst);
 
 		hci_req_update_scan(hdev);
@@ -5551,10 +5570,12 @@ static void le_conn_complete_evt(struct hci_dev *hdev, u8 status,
 
 	hci_dev_lock(hdev);
 
-	/* All controllers implicitly stop advertising in the event of a
-	 * connection, so ensure that the state bit is cleared.
+	/* When entering a connection in the slave role, the controller will
+	 * disable advertising. To avoid a lapse in service, we restart any
+	 * previously active advertising instances.
 	 */
-	hci_dev_clear_flag(hdev, HCI_LE_ADV);
+	if (role == HCI_ROLE_SLAVE)
+		hci_req_enable_paused_adv(hdev);
 
 	conn = hci_lookup_le_connect(hdev);
 	if (!conn) {
@@ -5794,15 +5815,35 @@ static void hci_le_ext_adv_term_evt(struct hci_dev *hdev, void *data,
 
 		if (hdev->adv_addr_type != ADDR_LE_DEV_RANDOM ||
 		    bacmp(&conn->resp_addr, BDADDR_ANY))
-			goto unlock;
+			goto cleanup_instance;
 
 		if (!ev->handle) {
 			bacpy(&conn->resp_addr, &hdev->random_addr);
-			goto unlock;
+			goto cleanup_instance;
 		}
 
 		if (adv)
 			bacpy(&conn->resp_addr, &adv->random_addr);
+	}
+
+cleanup_instance:
+	/* Since the controller tells us this instance is no longer active, we
+	 * remove it.
+	 *
+	 * One caveat is that if the status is HCI_ERROR_CANCELLED_BY_HOST, this
+	 * event is being fired as a result of a hci_cp_le_set_ext_adv_enable
+	 * disable request, which will have its own callback and cleanup via
+	 * the hci_cc_le_set_ext_adv_enable path. If this is the case, we will
+	 * not remove the instance, as it may only be a temporary disable.
+	 */
+	if (ev->status != HCI_ERROR_CANCELLED_BY_HOST) {
+		hci_remove_adv_instance(hdev, ev->handle);
+
+		/* If we are no longer advertising, clear HCI_LE_ADV */
+		if (list_empty(&hdev->adv_instances) &&
+		    !hdev->ext_directed_advertising) {
+			hci_dev_clear_flag(hdev, HCI_LE_ADV);
+		}
 	}
 
 unlock:
@@ -6919,6 +6960,72 @@ static void hci_event_func(struct hci_dev *hdev, u8 event, struct sk_buff *skb,
 			     req_complete_skb);
 	else
 		ev->func(hdev, data, skb);
+}
+
+void hci_handle_userchannel_packet(struct hci_dev *hdev, struct sk_buff *skb)
+{
+	struct hci_event_hdr *hdr = (void *)skb->data;
+	struct hci_ev_conn_complete *cc_ev;
+	struct hci_ev_sync_conn_complete *scc_ev;
+	struct hci_ev_disconn_complete *dcc_ev;
+
+	struct hci_conn *conn;
+	u8 event = hdr->evt;
+	int conn_type;
+
+	skb_pull(skb, HCI_EVENT_HDR_SIZE);
+
+	switch (event) {
+	case HCI_EV_CONN_COMPLETE:
+		cc_ev = (void *)skb->data;
+		if (!cc_ev->status) {
+			conn_type = (cc_ev->link_type == ACL_LINK) ? ACL_LINK :
+								     SCO_LINK;
+
+			conn = hci_conn_hash_lookup_ba(hdev, conn_type,
+						       &cc_ev->bdaddr);
+			if (!conn) {
+				conn = hci_conn_add(hdev, conn_type,
+						    &cc_ev->bdaddr, 0);
+			}
+
+			if (conn) {
+				conn->handle = __le16_to_cpu(cc_ev->handle);
+				conn->type = conn_type;
+				bt_dev_dbg(hdev, "%d handle(%d) type (%d)",
+					   event, conn->handle, conn->type);
+
+				if (conn->type == SCO_LINK && hdev->notify)
+					hdev->notify(hdev, HCI_NOTIFY_ENABLE_SCO_CVSD);
+			}
+		}
+		break;
+	case HCI_EV_SYNC_CONN_COMPLETE:
+		scc_ev = (void *)skb->data;
+		if (!scc_ev->status) {
+			conn = hci_conn_hash_lookup_ba(hdev, SCO_LINK,
+						       &scc_ev->bdaddr);
+			if (!conn) {
+				conn = hci_conn_add(hdev, SCO_LINK,
+						    &scc_ev->bdaddr, 0);
+			}
+
+			if (conn && hdev->notify)
+				hdev->notify(hdev, HCI_NOTIFY_ENABLE_SCO_CVSD);
+		}
+		break;
+	case HCI_EV_DISCONN_COMPLETE:
+		dcc_ev = (void *)skb->data;
+		conn = hci_conn_hash_lookup_handle(hdev,
+						   __le16_to_cpu(dcc_ev->handle));
+		if (conn)
+			hci_conn_del(conn);
+		break;
+	default:
+		break;
+	}
+
+	kfree_skb(skb);
 }
 
 void hci_event_packet(struct hci_dev *hdev, struct sk_buff *skb)
