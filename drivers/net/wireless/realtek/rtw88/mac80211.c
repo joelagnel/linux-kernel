@@ -632,6 +632,7 @@ static void rtw_ops_sw_scan_start(struct ieee80211_hw *hw,
 
 	mutex_lock(&rtwdev->mutex);
 	rtw_core_scan_start(rtwdev, rtwvif, mac_addr, false);
+	rtw_restore_no_ir_flag(rtwdev);
 	mutex_unlock(&rtwdev->mutex);
 }
 
