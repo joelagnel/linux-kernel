@@ -327,6 +327,7 @@ static bool rcu_nocb_do_flush_bypass(struct rcu_data *rdp, struct rcu_head *rhp,
 	if (rhp)
 		rcu_segcblist_inc_len(&rdp->cblist); /* Must precede enqueue. */
 
+	trace_printk("call_rcu_lazy callbacks = %ld\n", READ_ONCE(rdp->nocb_bypass.lazy_len));
 	/* The lazy CBs are being flushed, but a new one might be enqueued. */
 	if (lazy)
 		rcu_cblist_flush_enqueue_lazy(&rcl, &rdp->nocb_bypass, rhp);
