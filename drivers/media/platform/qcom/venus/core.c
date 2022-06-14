@@ -99,7 +99,8 @@ static void venus_sys_error_handler(struct work_struct *work)
 	core->state = CORE_UNINIT;
 
 	for (i = 0; i < max_attempts; i++) {
-		if (!pm_runtime_active(core->dev_dec) && !pm_runtime_active(core->dev_enc))
+		if ((!core->dev_dec && !pm_runtime_active(core->dev_dec)) &&
+		    (!core->dev_enc && !pm_runtime_active(core->dev_enc)))
 			break;
 		msleep(10);
 	}

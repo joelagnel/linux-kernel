@@ -453,9 +453,7 @@ static struct iommu_device *mtk_iommu_v1_probe_device(struct device *dev)
 	struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(dev);
 	struct of_phandle_args iommu_spec;
 	struct mtk_iommu_v1_data *data;
-	int err, idx = 0, larbid, larbidx;
-	struct device_link *link;
-	struct device *larbdev;
+	int err, idx = 0;
 
 	/*
 	 * In the deferred case, free the existed fwspec.
@@ -485,29 +483,6 @@ static struct iommu_device *mtk_iommu_v1_probe_device(struct device *dev)
 
 	data = dev_iommu_priv_get(dev);
 
-	/* Link the consumer device with the smi-larb device(supplier) */
-	larbid = mt2701_m4u_to_larb(fwspec->ids[0]);
-	if (larbid >= MT2701_LARB_NR_MAX)
-		return ERR_PTR(-EINVAL);
-
-	for (idx = 1; idx < fwspec->num_ids; idx++) {
-		larbidx = mt2701_m4u_to_larb(fwspec->ids[idx]);
-		if (larbid != larbidx) {
-			dev_err(dev, "Can only use one larb. Fail@larb%d-%d.\n",
-				larbid, larbidx);
-			return ERR_PTR(-EINVAL);
-		}
-	}
-
-	larbdev = data->larb_imu[larbid].dev;
-	if (!larbdev)
-		return ERR_PTR(-EINVAL);
-
-	link = device_link_add(dev, larbdev,
-			       DL_FLAG_PM_RUNTIME | DL_FLAG_STATELESS);
-	if (!link)
-		dev_err(dev, "Unable to link %s\n", dev_name(larbdev));
-
 	return &data->iommu;
 }
 
@@ -528,17 +503,9 @@ static void mtk_iommu_v1_probe_finalize(struct device *dev)
 static void mtk_iommu_v1_release_device(struct device *dev)
 {
 	struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(dev);
-	struct mtk_iommu_v1_data *data;
-	struct device *larbdev;
-	unsigned int larbid;
 
 	if (!fwspec || fwspec->ops != &mtk_iommu_v1_ops)
 		return;
-
-	data = dev_iommu_priv_get(dev);
-	larbid = mt2701_m4u_to_larb(fwspec->ids[0]);
-	larbdev = data->larb_imu[larbid].dev;
-	device_link_remove(dev, larbdev);
 
 	iommu_fwspec_free(dev);
 }
