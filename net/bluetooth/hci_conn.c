@@ -118,6 +118,9 @@ static void hci_conn_cleanup(struct hci_conn *conn)
 	if (test_bit(HCI_CONN_PARAM_REMOVAL_PEND, &conn->flags))
 		hci_conn_params_del(conn->hdev, &conn->dst, conn->dst_type);
 
+	if (test_and_clear_bit(HCI_CONN_FLUSH_KEY, &conn->flags))
+		hci_remove_link_key(hdev, &conn->dst);
+
 	hci_chan_list_flush(conn);
 
 	hci_conn_hash_del(hdev, conn);
@@ -225,8 +228,6 @@ static void hci_acl_create_connection(struct hci_conn *conn)
 	conn->role = HCI_ROLE_MASTER;
 
 	conn->attempt++;
-
-	conn->link_policy = hdev->link_policy;
 
 	memset(&cp, 0, sizeof(cp));
 	bacpy(&cp.bdaddr, &conn->dst);
@@ -704,6 +705,7 @@ struct hci_conn *hci_conn_add(struct hci_dev *hdev, int type, bdaddr_t *dst,
 	conn->rssi = HCI_RSSI_INVALID;
 	conn->tx_power = HCI_TX_POWER_INVALID;
 	conn->max_tx_power = HCI_TX_POWER_INVALID;
+	conn->link_policy = hdev->link_policy;
 
 	set_bit(HCI_CONN_POWER_SAVE, &conn->flags);
 	conn->disc_timeout = HCI_DISCONN_TIMEOUT;
@@ -1100,6 +1102,7 @@ struct hci_conn *hci_connect_le_scan(struct hci_dev *hdev, bdaddr_t *dst,
 				     enum conn_reasons conn_reason)
 {
 	struct hci_conn *conn;
+	struct smp_irk *irk;
 
 	/* Let's make sure that le is enabled.*/
 	if (!hci_dev_test_flag(hdev, HCI_LE_ENABLED)) {
@@ -1123,6 +1126,20 @@ struct hci_conn *hci_connect_le_scan(struct hci_dev *hdev, bdaddr_t *dst,
 		if (conn->pending_sec_level < sec_level)
 			conn->pending_sec_level = sec_level;
 		goto done;
+	}
+
+	/* If we don't have an Irk or that we have a recent rpa, skip the extra
+	 * scan and try to connect immediately.
+	 */
+	irk = hci_find_irk_by_addr(hdev, dst, dst_type);
+	if (!irk ||
+	    time_before(jiffies, irk->rpa_timestamp + msecs_to_jiffies(2000))) {
+		bt_dev_info(hdev, "Skipping le scan before connect");
+
+		return hci_connect_le(hdev, dst, dst_type,
+				sec_level, false,
+				HCI_LE_CONN_TIMEOUT,
+				HCI_ROLE_MASTER);
 	}
 
 	BT_DBG("requesting refresh of dst_addr");

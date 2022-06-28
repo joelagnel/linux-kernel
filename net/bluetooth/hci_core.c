@@ -1227,6 +1227,7 @@ struct smp_irk *hci_find_irk_by_rpa(struct hci_dev *hdev, bdaddr_t *rpa)
 	list_for_each_entry_rcu(irk, &hdev->identity_resolving_keys, list) {
 		if (smp_irk_matches(hdev, irk->val, rpa)) {
 			bacpy(&irk->rpa, rpa);
+			irk->rpa_timestamp = jiffies;
 			irk_to_return = irk;
 			goto done;
 		}
@@ -1373,6 +1374,7 @@ struct smp_irk *hci_add_irk(struct hci_dev *hdev, bdaddr_t *bdaddr,
 
 	memcpy(irk->val, val, 16);
 	bacpy(&irk->rpa, rpa);
+	irk->rpa_timestamp = jiffies;
 
 	return irk;
 }
@@ -2431,6 +2433,8 @@ struct hci_dev *hci_alloc_dev_priv(int sizeof_priv)
 	hdev->adv_instance_cnt = 0;
 	hdev->cur_adv_instance = 0x00;
 	hdev->adv_instance_timeout = 0;
+	hdev->ext_directed_advertising = false;
+	hdev->eir_max_name_len = 48;
 
 	hdev->advmon_allowlist_duration = 300;
 	hdev->advmon_no_filter_duration = 500;
@@ -2639,12 +2643,9 @@ int hci_register_dev(struct hci_dev *hdev)
 	hci_sock_dev_event(hdev, HCI_DEV_REG);
 	hci_dev_hold(hdev);
 
-	if (!test_bit(HCI_QUIRK_NO_SUSPEND_NOTIFIER, &hdev->quirks)) {
-		hdev->suspend_notifier.notifier_call = hci_suspend_notifier;
-		error = register_pm_notifier(&hdev->suspend_notifier);
-		if (error)
-			goto err_wqueue;
-	}
+	error = hci_register_suspend_notifier(hdev);
+	if (error)
+		goto err_wqueue;
 
 	queue_work(hdev->req_workqueue, &hdev->power_on);
 
@@ -2677,8 +2678,7 @@ void hci_unregister_dev(struct hci_dev *hdev)
 
 	hci_cmd_sync_clear(hdev);
 
-	if (!test_bit(HCI_QUIRK_NO_SUSPEND_NOTIFIER, &hdev->quirks))
-		unregister_pm_notifier(&hdev->suspend_notifier);
+	hci_unregister_suspend_notifier(hdev);
 
 	msft_unregister(hdev);
 
@@ -2741,6 +2741,29 @@ void hci_release_dev(struct hci_dev *hdev)
 	kfree(hdev);
 }
 EXPORT_SYMBOL(hci_release_dev);
+
+int hci_register_suspend_notifier(struct hci_dev *hdev)
+{
+	int ret = 0;
+
+	if (!test_bit(HCI_QUIRK_NO_SUSPEND_NOTIFIER, &hdev->quirks)) {
+		hdev->suspend_notifier.notifier_call = hci_suspend_notifier;
+		ret = register_pm_notifier(&hdev->suspend_notifier);
+	}
+
+	return ret;
+}
+
+int hci_unregister_suspend_notifier(struct hci_dev *hdev)
+{
+	int ret = 0;
+
+	if (!test_bit(HCI_QUIRK_NO_SUSPEND_NOTIFIER, &hdev->quirks)) {
+		ret = unregister_pm_notifier(&hdev->suspend_notifier);
+	}
+
+	return ret;
+}
 
 /* Suspend HCI device */
 int hci_suspend_dev(struct hci_dev *hdev)
@@ -3795,7 +3818,15 @@ static void hci_rx_work(struct work_struct *work)
 		 */
 		if (hci_dev_test_flag(hdev, HCI_USER_CHANNEL) &&
 		    !test_bit(HCI_INIT, &hdev->flags)) {
-			kfree_skb(skb);
+			/* If the device has been opened in HCI_USER_CHANNEL,
+			 * we still want to process event packets for connection
+			 * management. We need to keep track of how many
+			 * connections are up and notify the driver.
+			 */
+			if (hci_skb_pkt_type(skb) == HCI_EVENT_PKT)
+				hci_handle_userchannel_packet(hdev, skb);
+			else
+				kfree_skb(skb);
 			continue;
 		}
 
