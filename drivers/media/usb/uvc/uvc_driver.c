@@ -7,6 +7,7 @@
  */
 
 #include <linux/atomic.h>
+#include <linux/dmi.h>
 #include <linux/gpio/consumer.h>
 #include <linux/kernel.h>
 #include <linux/list.h>
@@ -261,7 +262,7 @@ static struct uvc_format_desc *uvc_format_by_guid(const u8 guid[16])
 static enum v4l2_colorspace uvc_colorspace(const u8 primaries)
 {
 	static const enum v4l2_colorspace colorprimaries[] = {
-		V4L2_COLORSPACE_SRGB,  /* Unspecified */
+		V4L2_COLORSPACE_DEFAULT,  /* Unspecified */
 		V4L2_COLORSPACE_SRGB,
 		V4L2_COLORSPACE_470_SYSTEM_M,
 		V4L2_COLORSPACE_470_SYSTEM_BG,
@@ -272,7 +273,7 @@ static enum v4l2_colorspace uvc_colorspace(const u8 primaries)
 	if (primaries < ARRAY_SIZE(colorprimaries))
 		return colorprimaries[primaries];
 
-	return V4L2_COLORSPACE_SRGB;  /* Reserved */
+	return V4L2_COLORSPACE_DEFAULT;  /* Reserved */
 }
 
 static enum v4l2_xfer_func uvc_xfer_func(const u8 transfer_characteristics)
@@ -774,8 +775,6 @@ static int uvc_parse_format(struct uvc_device *dev,
 
 		buflen -= buffer[0];
 		buffer += buffer[0];
-	} else {
-		format->colorspace = V4L2_COLORSPACE_SRGB;
 	}
 
 	return buffer - start;
@@ -1155,10 +1154,8 @@ static int uvc_parse_vendor_control(struct uvc_device *dev,
 					       + n;
 		memcpy(unit->extension.bmControls, &buffer[23+p], 2*n);
 
-		if (buffer[24+p+2*n] != 0)
-			usb_string(udev, buffer[24+p+2*n], unit->name,
-				   sizeof(unit->name));
-		else
+		if (buffer[24+p+2*n] == 0 ||
+		    usb_string(udev, buffer[24+p+2*n], unit->name, sizeof(unit->name)) < 0)
 			sprintf(unit->name, "Extension %u", buffer[3]);
 
 		list_add_tail(&unit->list, &dev->entities);
@@ -1282,15 +1279,15 @@ static int uvc_parse_standard_control(struct uvc_device *dev,
 			memcpy(term->media.bmTransportModes, &buffer[10+n], p);
 		}
 
-		if (buffer[7] != 0)
-			usb_string(udev, buffer[7], term->name,
-				   sizeof(term->name));
-		else if (UVC_ENTITY_TYPE(term) == UVC_ITT_CAMERA)
-			sprintf(term->name, "Camera %u", buffer[3]);
-		else if (UVC_ENTITY_TYPE(term) == UVC_ITT_MEDIA_TRANSPORT_INPUT)
-			sprintf(term->name, "Media %u", buffer[3]);
-		else
-			sprintf(term->name, "Input %u", buffer[3]);
+		if (buffer[7] == 0 ||
+		    usb_string(udev, buffer[7], term->name, sizeof(term->name)) < 0) {
+			if (UVC_ENTITY_TYPE(term) == UVC_ITT_CAMERA)
+				sprintf(term->name, "Camera %u", buffer[3]);
+			if (UVC_ENTITY_TYPE(term) == UVC_ITT_MEDIA_TRANSPORT_INPUT)
+				sprintf(term->name, "Media %u", buffer[3]);
+			else
+				sprintf(term->name, "Input %u", buffer[3]);
+		}
 
 		list_add_tail(&term->list, &dev->entities);
 		break;
@@ -1322,10 +1319,8 @@ static int uvc_parse_standard_control(struct uvc_device *dev,
 
 		memcpy(term->baSourceID, &buffer[7], 1);
 
-		if (buffer[8] != 0)
-			usb_string(udev, buffer[8], term->name,
-				   sizeof(term->name));
-		else
+		if (buffer[8] == 0 ||
+		    usb_string(udev, buffer[8], term->name, sizeof(term->name)) < 0)
 			sprintf(term->name, "Output %u", buffer[3]);
 
 		list_add_tail(&term->list, &dev->entities);
@@ -1347,10 +1342,8 @@ static int uvc_parse_standard_control(struct uvc_device *dev,
 
 		memcpy(unit->baSourceID, &buffer[5], p);
 
-		if (buffer[5+p] != 0)
-			usb_string(udev, buffer[5+p], unit->name,
-				   sizeof(unit->name));
-		else
+		if (buffer[5+p] == 0 ||
+		    usb_string(udev, buffer[5+p], unit->name, sizeof(unit->name)) < 0)
 			sprintf(unit->name, "Selector %u", buffer[3]);
 
 		list_add_tail(&unit->list, &dev->entities);
@@ -1380,10 +1373,8 @@ static int uvc_parse_standard_control(struct uvc_device *dev,
 		if (dev->uvc_version >= 0x0110)
 			unit->processing.bmVideoStandards = buffer[9+n];
 
-		if (buffer[8+n] != 0)
-			usb_string(udev, buffer[8+n], unit->name,
-				   sizeof(unit->name));
-		else
+		if (buffer[8+n] == 0 ||
+		    usb_string(udev, buffer[8+n], unit->name, sizeof(unit->name)) < 0)
 			sprintf(unit->name, "Processing %u", buffer[3]);
 
 		list_add_tail(&unit->list, &dev->entities);
@@ -1411,10 +1402,8 @@ static int uvc_parse_standard_control(struct uvc_device *dev,
 		unit->extension.bmControls = (u8 *)unit + sizeof(*unit);
 		memcpy(unit->extension.bmControls, &buffer[23+p], n);
 
-		if (buffer[23+p+n] != 0)
-			usb_string(udev, buffer[23+p+n], unit->name,
-				   sizeof(unit->name));
-		else
+		if (buffer[23+p+n] == 0 ||
+		    usb_string(udev, buffer[23+p+n], unit->name, sizeof(unit->name)) < 0)
 			sprintf(unit->name, "Extension %u", buffer[3]);
 
 		list_add_tail(&unit->list, &dev->entities);
@@ -1482,7 +1471,7 @@ next_descriptor:
  * Privacy GPIO
  */
 
-static void uvc_gpio_event(struct uvc_device *dev)
+void uvc_gpio_event(struct uvc_device *dev)
 {
 	struct uvc_entity *unit = dev->gpio_unit;
 	struct uvc_video_chain *chain;
@@ -1491,18 +1480,28 @@ static void uvc_gpio_event(struct uvc_device *dev)
 	if (!unit)
 		return;
 
-	new_val = gpiod_get_value_cansleep(unit->gpio.gpio_privacy);
+	mutex_lock(&unit->gpio.event_mutex);
 
-	/* GPIO entities are always on the first chain. */
-	chain = list_first_entry(&dev->chains, struct uvc_video_chain, list);
-	uvc_ctrl_status_event(chain, unit->controls, &new_val);
+	new_val = gpiod_get_value_cansleep(unit->gpio.gpio_privacy);
+	if (unit->gpio.last_event_val != new_val) {
+		/* GPIO entities are always on the first chain. */
+		chain = list_first_entry(&dev->chains,
+					 struct uvc_video_chain, list);
+		uvc_ctrl_status_event(chain, unit->controls, &new_val);
+	}
+	unit->gpio.last_event_val = new_val;
+
+	mutex_unlock(&unit->gpio.event_mutex);
 }
 
 static int uvc_gpio_get_cur(struct uvc_device *dev, struct uvc_entity *entity,
 			    u8 cs, void *data, u16 size)
 {
-	if (cs != UVC_CT_PRIVACY_CONTROL || size < 1)
+	if (cs != UVC_CT_PRIVACY_CONTROL || size < 1 || !dev->gpio_unit)
 		return -EINVAL;
+
+	if (!dev->gpio_unit->gpio.is_gpio_ready)
+		return -EBUSY;
 
 	*(u8 *)data = gpiod_get_value_cansleep(entity->gpio.gpio_privacy);
 
@@ -1523,9 +1522,30 @@ static irqreturn_t uvc_gpio_irq(int irq, void *data)
 {
 	struct uvc_device *dev = data;
 
+	if (!dev->gpio_unit->gpio.is_gpio_ready)
+		return IRQ_HANDLED;
+
 	uvc_gpio_event(dev);
 	return IRQ_HANDLED;
 }
+
+static const struct dmi_system_id privacy_valid_during_streamon[] = {
+	{
+		.ident = "HP Elite c1030 Chromebook",
+		.matches = {
+			DMI_MATCH(DMI_SYS_VENDOR, "HP"),
+			DMI_MATCH(DMI_PRODUCT_NAME, "Jinlon"),
+		},
+	},
+	{
+		.ident = "HP Pro c640 Chromebook",
+		.matches = {
+			DMI_MATCH(DMI_SYS_VENDOR, "HP"),
+			DMI_MATCH(DMI_PRODUCT_NAME, "Dratini"),
+		},
+	},
+	{ } /* terminate list */
+};
 
 static int uvc_gpio_parse(struct uvc_device *dev)
 {
@@ -1551,6 +1571,7 @@ static int uvc_gpio_parse(struct uvc_device *dev)
 	}
 
 	unit->gpio.gpio_privacy = gpio_privacy;
+	unit->gpio.last_event_val = -1;
 	unit->gpio.irq = irq;
 	unit->gpio.bControlSize = 1;
 	unit->gpio.bmControls = (u8 *)unit + sizeof(*unit);
@@ -1558,6 +1579,18 @@ static int uvc_gpio_parse(struct uvc_device *dev)
 	unit->get_cur = uvc_gpio_get_cur;
 	unit->get_info = uvc_gpio_get_info;
 	strscpy(unit->name, "GPIO", sizeof(unit->name));
+	mutex_init(&unit->gpio.event_mutex);
+
+	/*
+	 * Note: This quirk will not match external UVC cameras,
+	 * as they will not have the corresponding ACPI GPIO entity.
+	 */
+	if (dmi_check_system(privacy_valid_during_streamon)) {
+		dev->quirks |= UVC_QUIRK_PRIVACY_DURING_STREAM;
+		unit->gpio.is_gpio_ready = false;
+	} else {
+		unit->gpio.is_gpio_ready = true;
+	}
 
 	list_add_tail(&unit->list, &dev->entities);
 
@@ -2170,17 +2203,28 @@ static void uvc_unregister_video(struct uvc_device *dev)
 {
 	struct uvc_streaming *stream;
 
+	mutex_lock(&dev->lock);
+
 	list_for_each_entry(stream, &dev->streams, list) {
 		if (!video_is_registered(&stream->vdev))
 			continue;
+
+		mutex_lock(&stream->mutex);
+		mutex_lock(&stream->queue.mutex);
 
 		video_unregister_device(&stream->vdev);
 		video_unregister_device(&stream->meta.vdev);
 
 		uvc_debugfs_cleanup_stream(stream);
+
+		vb2_queue_release(&stream->queue.queue);
+
+		mutex_unlock(&stream->queue.mutex);
+		mutex_unlock(&stream->mutex);
 	}
 
 	uvc_status_unregister(dev);
+	uvc_ctrl_stop_device(dev);
 
 	if (dev->vdev.dev)
 		v4l2_device_unregister(&dev->vdev);
@@ -2188,6 +2232,7 @@ static void uvc_unregister_video(struct uvc_device *dev)
 	if (media_devnode_is_registered(dev->mdev.devnode))
 		media_device_unregister(&dev->mdev);
 #endif
+	mutex_unlock(&dev->lock);
 }
 
 int uvc_register_video_device(struct uvc_device *dev,
