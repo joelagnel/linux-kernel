@@ -597,6 +597,15 @@ static struct ctl_table net_core_table[] = {
 
 static struct ctl_table netns_core_table[] = {
 	{
+		.procname	= "android_paranoid",
+		.data		= &init_net.core.sysctl_android_paranoid,
+		.maxlen		= sizeof(int),
+		.mode		= 0644,
+		.extra1		= SYSCTL_ZERO,
+		.extra2		= SYSCTL_ONE,
+		.proc_handler	= proc_dointvec_minmax
+	},
+	{
 		.procname	= "somaxconn",
 		.data		= &init_net.core.sysctl_somaxconn,
 		.maxlen		= sizeof(int),
@@ -633,6 +642,8 @@ static __net_init int sysctl_core_net_init(struct net *net)
 {
 	struct ctl_table *tbl, *tmp;
 
+	net->core.sysctl_android_paranoid = 0;
+
 	tbl = netns_core_table;
 	if (!net_eq(net, &init_net)) {
 		tbl = kmemdup(tbl, sizeof(netns_core_table), GFP_KERNEL);
@@ -642,9 +653,12 @@ static __net_init int sysctl_core_net_init(struct net *net)
 		for (tmp = tbl; tmp->procname; tmp++)
 			tmp->data += (char *)net - (char *)&init_net;
 
-		/* Don't export any sysctls to unprivileged users */
+		/* Don't export sysctls other than android_paranoid
+		 * to unprivileged users
+		 */
 		if (net->user_ns != &init_user_ns) {
-			tbl[0].procname = NULL;
+			tbl[1].procname = NULL;
+			tbl[2].procname = NULL;
 		}
 	}
 
