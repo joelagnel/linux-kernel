@@ -52,6 +52,7 @@ struct loop_device {
 	loff_t		lo_offset;
 	loff_t		lo_sizelimit;
 	int		lo_flags;
+	bool		block_open_on_autoclear;
 	char		lo_file_name[LO_NAME_SIZE];
 
 	struct file *	lo_backing_file;
@@ -92,9 +93,19 @@ struct loop_cmd {
 #define LOOP_IDLE_WORKER_TIMEOUT (60 * HZ)
 #define LOOP_DEFAULT_HW_Q_DEPTH (128)
 
+static const char kBlockOpenOnAutoclearPrefix[] = "__block_open_on_autoclear__";
+
 static DEFINE_IDR(loop_index_idr);
 static DEFINE_MUTEX(loop_ctl_mutex);
 static DEFINE_MUTEX(loop_validate_mutex);
+
+static bool should_block_open_on_autoclear(struct file *file)
+{
+	const size_t prefix_len = strlen(kBlockOpenOnAutoclearPrefix);
+	const char *fname = file->f_path.dentry->d_name.name;
+
+	return !strncmp(fname, kBlockOpenOnAutoclearPrefix, prefix_len);
+}
 
 /**
  * loop_global_lock_killable() - take locks for safe loop_validate_file() test
@@ -607,6 +618,8 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
 	blk_mq_freeze_queue(lo->lo_queue);
 	mapping_set_gfp_mask(old_file->f_mapping, lo->old_gfp_mask);
 	lo->lo_backing_file = file;
+	if (should_block_open_on_autoclear(file))
+		lo->block_open_on_autoclear = true;
 	lo->old_gfp_mask = mapping_gfp_mask(file->f_mapping);
 	mapping_set_gfp_mask(file->f_mapping,
 			     lo->old_gfp_mask & ~(__GFP_IO|__GFP_FS));
@@ -1068,6 +1081,8 @@ static int loop_configure(struct loop_device *lo, fmode_t mode,
 	lo->use_dio = lo->lo_flags & LO_FLAGS_DIRECT_IO;
 	lo->lo_device = bdev;
 	lo->lo_backing_file = file;
+	if (should_block_open_on_autoclear(file))
+		lo->block_open_on_autoclear = true;
 	lo->old_gfp_mask = mapping_gfp_mask(mapping);
 	mapping_set_gfp_mask(mapping, lo->old_gfp_mask & ~(__GFP_IO|__GFP_FS));
 
@@ -1147,6 +1162,7 @@ static void __loop_clr_fd(struct loop_device *lo, bool release)
 	spin_lock_irq(&lo->lo_lock);
 	filp = lo->lo_backing_file;
 	lo->lo_backing_file = NULL;
+	lo->block_open_on_autoclear = false;
 	spin_unlock_irq(&lo->lo_lock);
 
 	lo->lo_device = NULL;
