@@ -290,6 +290,7 @@ static const struct sof_dai_types sof_dais[] = {
 	{"ACP", SOF_DAI_AMD_BT},
 	{"ACPSP", SOF_DAI_AMD_SP},
 	{"ACPDMIC", SOF_DAI_AMD_DMIC},
+	{"ACPHS", SOF_DAI_AMD_HS},
 	{"AFE", SOF_DAI_MEDIATEK_AFE},
 };
 
@@ -1708,6 +1709,10 @@ static int sof_link_load(struct snd_soc_component *scomp, int index, struct snd_
 	case SOF_DAI_MEDIATEK_AFE:
 		token_id = SOF_AFE_TOKENS;
 		num_tuples += token_list[SOF_AFE_TOKENS].count;
+		break;
+	case SOF_DAI_AMD_DMIC:
+		token_id = SOF_ACPDMIC_TOKENS;
+		num_tuples += token_list[SOF_ACPDMIC_TOKENS].count;
 		break;
 	default:
 		break;
