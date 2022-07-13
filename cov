@@ -1,0 +1,29 @@
+Just a refresh of v3 with one additional debug patch. v3's cover letter is here:
+ https://lore.kernel.org/all/20220713213237.1596225-1-joel@joelfernandes.org/
+
+I just started working on this again while I have some time during paternity
+leave ;-) So I thought I'll just send it out again. No other changes other
+than that 1 debug patch I added on the top.
+
+Next I am going to go refine the power results as mentioned in Paul's comments
+on the last cover letter.
+
+====
+add this:
+Here is another big selling point for call_rcu_lazy().
+Instead of _lazy(), if you just increased jiffies_till_first_fqs, and
+slowed *all* call_rcu() down to achieve the same effect, that would
+affect percpu refcounters switching to atomic-mode, for example.
+
+They switch to atomic mode by calling __percpu_ref_switch_mode() which
+is called by percpu_ref_switch_to_atomic_sync().
+
+This will slow this call down for the full lazy duration which will slow
+down suspend in blk_pre_runtime_suspend().
+
+This is why, we cannot assume call_rcu() users will mostly just want to
+free memory. There could be cases just like this, and just blanket slow
+down of call_rcu() might bite at unexpected times.
+
+option-prefix PATCH v4
+option-subject Implement call_rcu_lazy() and miscellaneous fixes
