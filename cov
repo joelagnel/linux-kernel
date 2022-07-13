@@ -1,0 +1,85 @@
+v7 version of RCU lazy patches based on rcu/next branch.
+
+To facilitate easier merge, I dropped tracing and other patches and just
+implemented the new changes. I will post the tracing patches later along with
+rcutop as I need to add new tracepoints that Frederic suggested.
+
+Main recent changes:
+1. rcu_barrier() wake up only for lazy bypass list.
+2. Make all call_rcu() default-lazy and add call_rcu_flush() API.
+3. Take care of some callers using call_rcu_flush() API.
+4. Several refactorings suggested by Paul/Frederic.
+5. New call_rcu() to call_rcu_flush() conversions by Joel/Vlad/Paul.
+
+I am seeing good performance and power with these patches on real ChromeOS x86
+asymmetric hardware.
+
+Earlier cover letter with lots of details is here:
+https://lore.kernel.org/all/20220901221720.1105021-1-joel@joelfernandes.org/
+
+List of recent changes:
+    
+    [ Frederic Weisbec: Program the lazy timer only if WAKE_NOT, since other
+      deferral levels wake much earlier so for those it is not needed. ]
+    
+    [ Frederic Weisbec: Use flush flags to keep bypass API code clean. ]
+    
+    [ Frederic Weisbec: Make rcu_barrier() wake up only if main list empty. ]
+    
+    [ Frederic Weisbec: Remove extra 'else if' branch in rcu_nocb_try_bypass(). ]
+    
+    [ Joel: Fix issue where I was not resetting lazy_len after moving it to rdp ]
+    
+    [ Paul/Thomas/Joel: Make call_rcu() default lazy so users don't mess up. ]
+    
+    [ Paul/Frederic : Cosmetic changes, split out wakeup of nocb thread. ]
+    
+    [ Vlad/Joel : More call_rcu -> flush conversions ]
+
+    [ debug code for detecting "wake" in kernel's call_rcu() callbacks. ]
+
+The following 2 scripts can be used to check if any callbacks in the kernel are
+doing a wake up (it is best effort and may miss some things, but we found
+issues using it)
+
+1. Script to search for call_rcu() references and dump the callback list to a file:
+#!/bin/bash
+
+rm func-list
+touch func-list
+
+for f in $(find . \( -name "*.c" -o -name "*.h" \) | grep -v rcu); do
+
+	funcs=$(perl -0777 -ne 'while(m/call_rcu\([&]?.+,\s?(.+)\).*;/g){print "$1\n";}' $f)
+
+	if [ "x$funcs" != "x" ]; then
+		for func in $funcs; do
+			echo "$f $func" >> func-list
+			echo "$f $func"
+		done
+	fi
+
+done
+
+cat func-list | sort | uniq | tee func-list-sorted
+
+2. Script to search "wake" after callback references:
+
+#!/bin/bash
+
+while read fl; do
+	file=$(echo $fl | cut -d " " -f1)
+	func=$(echo $fl | cut -d " " -f2)
+
+	grep -A 30 $func $file | grep wake > /dev/null
+
+	if [ $? -eq 0 ]; then
+		echo "keyword wake found after function reference $func in $file"
+		echo "Output:"
+		grep -A 30 $func $file 
+		echo "==========================================================="
+	fi
+done < func-list-sorted
+
+option-subject rcu: call_rcu() power improvements
+option-skip-checkpatch
