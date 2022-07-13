@@ -1,0 +1,35 @@
+Here is v5 of call_rcu_lazy() based on the latest RCU -dev branch. Main changes are:
+- moved length field into rcu_data (Frederic suggestion)
+- added new traces to aid debugging and testing.
+	- the new trace patch (along with the rcuscale and rcutorture tests)
+	  gives confidence that the patches work well. Also it is tested on
+	  real ChromeOS hardware and the boot time is looking good even though
+	  lazy callbacks are being queued (i.e. the lazy ones do not effect the
+	  synchronous non-lazy ones that effect boot time)
+- rewrote some parts of the core patch.
+- for rcutop, please apply the diff in the following link to the BCC repo:
+  https://lore.kernel.org/r/Yn+79v4q+1c9lXdc@google.com
+  Then, cd libbpf-tools/ and run make to build the rcutop static binary.
+  (If you need an x86 binary, ping me and I'll email you).
+  In the future, I will attempt to make rcutop built within the kernel repo.
+  This is already done for another tool (see tools/bpf/runqslower) so is doable.
+
+The 2 mm patches are what Vlastimil pulled into slab-next. I included them in
+this series so that the tracing patch builds.
+
+Previous series was posted here:
+ https://lore.kernel.org/all/20220713213237.1596225-1-joel@joelfernandes.org/
+
+Linked below [1] is some power data I collected with Turbostat on an x86
+ChromeOS ADL machine. The numbers are not based on -next, but rather 5.19
+kernel as that's what booted on my ChromeOS machine).
+
+These are output by Turbostat, by running:
+turbostat -S -s PkgWatt,CorWatt --interval 5
+PkgWatt - summary of package power in Watts 5 second interval.
+CoreWatt - summary of core power in Watts 5 second interval.
+
+[1] https://lore.kernel.org/r/b4145008-6840-fc69-a6d6-e38bc218009d@joelfernandes.org
+
+option-prefix PATCH v5
+option-subject Implement call_rcu_lazy and miscellaneous fixes
