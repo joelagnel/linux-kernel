@@ -1,0 +1,10 @@
+Hello,
+
+Just sending a few patches before lazy rcu v6 can come out. That can come out
+after more testing to check feasibility of ideas discussed at LPC. I will try
+to get rcutop pushed as well before that, but in the meanwhile I don't see much
+reason to block these few patches for 6.1. These apply to Paul's rcu/next
+branch. What do you think?
+
+option-prefix PATCH rcu/next
+option-subject Preparatory patches borrowed from lazy rcu v5
