@@ -266,6 +266,9 @@ static bool wake_nocb_gp(struct rcu_data *rdp, bool force)
 #define LAZY_FLUSH_JIFFIES (10 * HZ)
 unsigned long jiffies_till_flush = LAZY_FLUSH_JIFFIES;
 
+unsigned int sysctl_rcu_lazy_jiffies = LAZY_FLUSH_JIFFIES;
+unsigned int sysctl_rcu_lazy = 1;
+
 #ifdef CONFIG_RCU_LAZY
 // To be called only from test code.
 void rcu_lazy_set_jiffies_till_flush(unsigned long jif)
@@ -291,6 +294,9 @@ static void wake_nocb_gp_defer(struct rcu_data *rdp, int waketype,
 	unsigned long flags;
 	struct rcu_data *rdp_gp = rdp->nocb_gp_rdp;
 	unsigned long mod_jif = 0;
+
+	/* debug: not for merge */
+	rcu_lazy_set_jiffies_till_flush(sysctl_rcu_lazy_jiffies);
 
 	raw_spin_lock_irqsave(&rdp_gp->nocb_gp_lock, flags);
 
@@ -730,6 +736,9 @@ static void nocb_gp_wait(struct rcu_data *my_rdp)
 	struct rcu_node *rnp;
 	unsigned long wait_gp_seq = 0; // Suppress "use uninitialized" warning.
 	bool wasempty = false;
+
+	/* debug: not for merge */
+	rcu_lazy_set_jiffies_till_flush(sysctl_rcu_lazy_jiffies);
 
 	/*
 	 * Each pass through the following loop checks for CBs and for the
