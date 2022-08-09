@@ -266,6 +266,8 @@ static bool wake_nocb_gp(struct rcu_data *rdp, bool force)
 #define LAZY_FLUSH_JIFFIES (10 * HZ)
 static unsigned long jiffies_till_flush = LAZY_FLUSH_JIFFIES;
 
+unsigned int sysctl_rcu_lazy = 1;
+
 #ifdef CONFIG_RCU_LAZY
 // To be called only from test code.
 void rcu_lazy_set_jiffies_till_flush(unsigned long jif)
@@ -437,6 +439,8 @@ static bool rcu_nocb_try_bypass(struct rcu_data *rdp, struct rcu_head *rhp,
 	unsigned long j = jiffies;
 	long ncbs = rcu_cblist_n_cbs(&rdp->nocb_bypass);
 	bool bypass_is_lazy = (ncbs == READ_ONCE(rdp->lazy_len));
+
+	lazy = (sysctl_rcu_lazy == 1) && lazy;
 
 	lockdep_assert_irqs_disabled();
 
