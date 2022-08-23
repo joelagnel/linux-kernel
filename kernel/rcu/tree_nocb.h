@@ -341,6 +341,9 @@ static void wake_nocb_gp_defer(struct rcu_data *rdp, int waketype,
  * proves to be initially empty, just return false because the no-CB GP
  * kthread may need to be awakened in this case.
  *
+ * Return true if there was something to be flushed and it succeeded, otherwise
+ * false.
+ *
  * Note that this function always returns true if rhp is NULL.
  */
 static bool rcu_nocb_do_flush_bypass(struct rcu_data *rdp, struct rcu_head *rhp,
@@ -506,8 +509,13 @@ static bool rcu_nocb_try_bypass(struct rcu_data *rdp, struct rcu_head *rhp,
 
 	// If ->nocb_bypass has been used too long or is too full,
 	// flush ->nocb_bypass to ->cblist.
-	if ((ncbs && j != READ_ONCE(rdp->nocb_bypass_first)) || ncbs >= qhimark) {
+	//
+	// XXX: BUG: Lazy cbs will get flushed after a jiffie! Bad.
+
+	if ((ncbs && ncbs != n_lazy_cbs && j != READ_ONCE(rdp->nocb_bypass_first)) ||
+		    ncbs >= qhimark) {
 		rcu_nocb_lock(rdp);
+
 		if (!rcu_nocb_flush_bypass(rdp, rhp, j, lazy, false)) {
 			*was_alldone = !rcu_segcblist_pend_cbs(&rdp->cblist) ||
 				(!lazy && n_lazy_cbs);
@@ -517,6 +525,8 @@ static bool rcu_nocb_try_bypass(struct rcu_data *rdp, struct rcu_head *rhp,
 			WARN_ON_ONCE(rcu_cblist_n_cbs(&rdp->nocb_bypass));
 			return false; // Caller must enqueue the callback.
 		}
+
+
 		if (j != rdp->nocb_gp_adv_time &&
 		    rcu_segcblist_nextgp(&rdp->cblist, &cur_gp_seq) &&
 		    rcu_seq_done(&rdp->mynode->gp_seq, cur_gp_seq)) {
