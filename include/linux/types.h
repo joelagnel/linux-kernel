@@ -220,6 +220,7 @@ struct ustat {
 struct callback_head {
 	struct callback_head *next;
 	void (*func)(struct callback_head *head);
+	char buf[4];
 } __attribute__((aligned(sizeof(void *))));
 #define rcu_head callback_head
 
