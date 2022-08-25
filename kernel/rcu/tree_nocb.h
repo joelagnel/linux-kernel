@@ -363,6 +363,7 @@ static bool rcu_nocb_do_flush_bypass(struct rcu_data *rdp, struct rcu_head *rhp,
 		rcu_segcblist_inc_len(&rdp->cblist); /* Must precede enqueue. */
 
 	/* The lazy CBs are being flushed, but a new one might be enqueued. */
+	WARN_ON_ONCE(rhp && lazy != !!(rhp->di.flags & BIT(CB_LAZY)));
 	rcu_cblist_flush_enqueue(&rcl, &rdp->nocb_bypass, rhp, lazy);
 	rcu_segcblist_insert_pend_cbs(&rdp->cblist, &rcl);
 	WRITE_ONCE(rdp->nocb_bypass_first, j);
@@ -387,6 +388,7 @@ static bool rcu_nocb_flush_bypass(struct rcu_data *rdp, struct rcu_head *rhp,
 		return true;
 	rcu_lockdep_assert_cblist_protected(rdp);
 	rcu_nocb_bypass_lock(rdp);
+
 	ret = rcu_nocb_do_flush_bypass(rdp, rhp, j, lazy);
 
 	if (wake_gp)

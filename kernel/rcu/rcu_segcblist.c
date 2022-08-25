@@ -39,8 +39,10 @@ void rcu_cblist_enqueue(struct rcu_cblist *rclp, struct rcu_head *rhp,
 
 /*
  * Set a debug flag on all CBs in the unsegmented cblist @rclp.
+ *
+ * The callback causing the flush. Should be NULL if its a timer that does it.
  */
-static void rcu_cblist_set_flush(struct rcu_cblist *rcl)
+static void rcu_cblist_set_flush(struct rcu_cblist *rcl, bool lazy)
 {
 	if (!rcl || !rcl->head)
 		return;
@@ -48,6 +50,8 @@ static void rcu_cblist_set_flush(struct rcu_cblist *rcl)
 	for (struct rcu_head *head = rcl->head;
 			head && head != *(rcl->tail); head = head->next) {
 		head->di.flags |= BIT(CB_FLUSHED);
+		if (!lazy)
+			head->di.flags |= BIT(CB_NON_LAZY_FLUSHED);
 		head->di.cb_flush_jiff = jiffies;
 	}
 
@@ -66,7 +70,7 @@ void rcu_cblist_flush_enqueue(struct rcu_cblist *drclp,
 			      struct rcu_head *rhp,
 			      bool lazy)
 {
-	rcu_cblist_set_flush(srclp);
+	rcu_cblist_set_flush(srclp, lazy);
 
 	drclp->head = srclp->head;
 	if (drclp->head)
