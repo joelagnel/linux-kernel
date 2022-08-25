@@ -200,10 +200,24 @@ struct ustat {
 
 /*
  * Debug information that a caller can store within a callback_head.
- * Its expected to provide at least 32 bytes.
+ * Its expected to provide at least 12 bytes before BUILD_BUG starts
+ * complaining.
  */
+enum cb_flags {
+	CB_KFREE,
+	CB_LAZY,
+	CB_BYPASS,
+	CB_FLUSHED,
+	CB_NON_LAZY_FLUSHED,
+};
+
 struct debug_info {
-	char mem[8];
+	// 16-bit jiffies can provide upto 60 seconds of a resolution @ HZ=1000
+	// before wrapping. That's enough for debug.
+	u16 cb_queue_jiff;
+	u16 cb_exec_jiff;
+	u16 cb_flush_jiff;
+	enum cb_flags flags:16;
 };
 
 /**
