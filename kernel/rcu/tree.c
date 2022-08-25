@@ -2510,6 +2510,8 @@ int rcutree_dead_cpu(unsigned int cpu)
 	return 0;
 }
 
+unsigned long jiffies_first;
+
 /*
  * Invoke any RCU callbacks that have made it to the end of their grace
  * period.  Throttle as specified by rdp->blimit.
@@ -2523,6 +2525,9 @@ static void rcu_do_batch(struct rcu_data *rdp)
 	struct rcu_cblist rcl = RCU_CBLIST_INITIALIZER(rcl);
 	long bl, count = 0;
 	long pending, tlimit = 0;
+
+	if (!jiffies_first)
+		jiffies_first = jiffies;
 
 	/* If no callbacks are ready, just return. */
 	if (!rcu_segcblist_ready_cbs(&rdp->cblist)) {
