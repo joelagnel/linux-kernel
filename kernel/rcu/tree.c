@@ -2579,11 +2579,12 @@ static void rcu_do_batch(struct rcu_data *rdp)
 		rcu_lock_acquire(&rcu_callback_map);
 
 		if (!(rhp->di.flags & BIT(CB_KFREE))) {
-			trace_printk("DEBUG: cb execed: lazy=%lu, bypass=%lu, flushed=%lu, wait_jiffies=%d %u %lu\n",
-					rhp->di.flags & BIT(CB_LAZY),
-					rhp->di.flags & BIT(CB_BYPASS),
-					rhp->di.flags & BIT(CB_FLUSHED),
-					((u16)jiffies - rhp->di.cb_queue_jiff),
+			trace_printk("DEBUG: cb execed: lazy=%d, bypass=%d, flushed=%d, non_lazy_flushed=%d, wait_jiffies=%ld [%u %lu]\n",
+					!!(rhp->di.flags & BIT(CB_LAZY)),
+					!!(rhp->di.flags & BIT(CB_BYPASS)),
+					!!(rhp->di.flags & BIT(CB_FLUSHED)),
+					!!(rhp->di.flags & BIT(CB_NON_LAZY_FLUSHED)),
+					(jiffies - jiffies_first) - rhp->di.cb_queue_jiff,
 					rhp->di.cb_queue_jiff,
 					jiffies);
 		}
@@ -3118,7 +3119,7 @@ __call_rcu_common(struct rcu_head *head, rcu_callback_t func, bool lazy)
 	check_cb_ovld(rdp);
 
 	head->di.flags = 0;
-	head->di.cb_queue_jiff = (u16)jiffies;
+	head->di.cb_queue_jiff = (u16)(jiffies - jiffies_first);
 
 	if (__is_kvfree_rcu_offset((unsigned long)func)) {
 		trace_rcu_kvfree_callback(rcu_state.name, head,
