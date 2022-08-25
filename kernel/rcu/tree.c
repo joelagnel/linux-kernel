@@ -2572,6 +2572,16 @@ static void rcu_do_batch(struct rcu_data *rdp)
 		debug_rcu_head_unqueue(rhp);
 
 		rcu_lock_acquire(&rcu_callback_map);
+
+		if (!(rhp->di.flags & BIT(CB_KFREE))) {
+			trace_printk("DEBUG: cb execed: lazy=%lu, bypass=%lu, flushed=%lu, wait_jiffies=%d %u %lu\n",
+					rhp->di.flags & BIT(CB_LAZY),
+					rhp->di.flags & BIT(CB_BYPASS),
+					rhp->di.flags & BIT(CB_FLUSHED),
+					((u16)jiffies - rhp->di.cb_queue_jiff),
+					rhp->di.cb_queue_jiff,
+					jiffies);
+		}
 		trace_rcu_invoke_callback(rcu_state.name, rhp);
 
 		f = rhp->func;
@@ -3102,13 +3112,21 @@ __call_rcu_common(struct rcu_head *head, rcu_callback_t func, bool lazy)
 
 	check_cb_ovld(rdp);
 
-	if (__is_kvfree_rcu_offset((unsigned long)func))
+	head->di.flags = 0;
+	head->di.cb_queue_jiff = (u16)jiffies;
+
+	if (__is_kvfree_rcu_offset((unsigned long)func)) {
 		trace_rcu_kvfree_callback(rcu_state.name, head,
 					 (unsigned long)func,
 					 rcu_segcblist_n_cbs(&rdp->cblist));
-	else
+		head->di.flags |= BIT(CB_KFREE);
+	} else {
 		trace_rcu_callback(rcu_state.name, head,
 				   rcu_segcblist_n_cbs(&rdp->cblist));
+
+		if (lazy)
+			head->di.flags |= BIT(CB_LAZY);
+	}
 
 	if (rcu_nocb_try_bypass(rdp, head, &was_alldone, flags, lazy))
 		return; // Enqueued onto ->nocb_bypass, so just leave.

@@ -38,6 +38,22 @@ void rcu_cblist_enqueue(struct rcu_cblist *rclp, struct rcu_head *rhp,
 }
 
 /*
+ * Set a debug flag on all CBs in the unsegmented cblist @rclp.
+ */
+static void rcu_cblist_set_flush(struct rcu_cblist *rcl)
+{
+	if (!rcl || !rcl->head)
+		return;
+
+	for (struct rcu_head *head = rcl->head;
+			head && head != *(rcl->tail); head = head->next) {
+		head->di.flags |= BIT(CB_FLUSHED);
+		head->di.cb_flush_jiff = jiffies;
+	}
+
+}
+
+/*
  * Flush the second rcu_cblist structure onto the first one, obliterating
  * any contents of the first.  If rhp is non-NULL, enqueue it as the sole
  * element of the second rcu_cblist structure, but ensuring that the second
@@ -50,6 +66,8 @@ void rcu_cblist_flush_enqueue(struct rcu_cblist *drclp,
 			      struct rcu_head *rhp,
 			      bool lazy)
 {
+	rcu_cblist_set_flush(srclp);
+
 	drclp->head = srclp->head;
 	if (drclp->head)
 		drclp->tail = srclp->tail;
