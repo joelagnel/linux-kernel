@@ -198,19 +198,10 @@ struct ustat {
 	char			f_fpack[6];
 };
 
-/*
- * Debug information that a caller can store within a callback_head.
- * Its expected to provide at least 32 bytes.
- */
-struct debug_info {
-	char mem[16];
-};
-
 /**
  * struct callback_head - callback structure for use with RCU and task_work
  * @next: next update requests in a list
  * @func: actual update function to call after the grace period.
- * @di: debug information that can be stored.
  *
  * The struct is aligned to size of pointer. On most architectures it happens
  * naturally due ABI requirements, but some architectures (like CRIS) have
@@ -229,7 +220,6 @@ struct debug_info {
 struct callback_head {
 	struct callback_head *next;
 	void (*func)(struct callback_head *head);
-	struct debug_info di;
 } __attribute__((aligned(sizeof(void *))));
 #define rcu_head callback_head
 
