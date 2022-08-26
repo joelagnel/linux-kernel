@@ -509,7 +509,7 @@ static bool rcu_nocb_try_bypass(struct rcu_data *rdp, struct rcu_head *rhp,
 	// flush ->nocb_bypass to ->cblist.
 	if ((ncbs && !bypass_is_lazy && j != READ_ONCE(rdp->nocb_bypass_first)) ||
 	    (ncbs &&  bypass_is_lazy &&
-		j > READ_ONCE(rdp->nocb_bypass_first) + jiffies_to_flush) ||
+		j > READ_ONCE(rdp->nocb_bypass_first) + jiffies_till_flush) ||
 	    ncbs >= qhimark) {
 		rcu_nocb_lock(rdp);
 		if (!rcu_nocb_flush_bypass(rdp, rhp, lazy, j, false)) {
@@ -530,7 +530,7 @@ static bool rcu_nocb_try_bypass(struct rcu_data *rdp, struct rcu_head *rhp,
 		// The flush succeeded and we moved CBs into the ->cblist.
 		// However, the bypass timer might still be running. Wakeup the
 		// GP thread with was_all_done set so it actually wakes it up.
-		__call_rcu_nocb_wake(rdp, true, flags)
+		__call_rcu_nocb_wake(rdp, true, flags);
 
 		return true; // Callback already enqueued.
 	}
@@ -540,7 +540,7 @@ static bool rcu_nocb_try_bypass(struct rcu_data *rdp, struct rcu_head *rhp,
 	rcu_nocb_bypass_lock(rdp);
 	ncbs = rcu_cblist_n_cbs(&rdp->nocb_bypass);
 	rcu_segcblist_inc_len(&rdp->cblist); /* Must precede enqueue. */
-	rcu_cblist_enqueue(&rdp->nocb_bypass, rhp);
+	rcu_cblist_enqueue(&rdp->nocb_bypass, rhp, lazy);
 	if (!ncbs) {
 		WRITE_ONCE(rdp->nocb_bypass_first, j);
 		trace_rcu_nocb_wake(rcu_state.name, rdp->cpu, TPS("FirstBQ"));
@@ -554,7 +554,7 @@ static bool rcu_nocb_try_bypass(struct rcu_data *rdp, struct rcu_head *rhp,
 	// Or, the new CB is lazy and the old bypass-CBs were also lazy. In this
 	// case the old lazy timer would have been setup. When that expires,
 	// the new lazy one will be handled.
-	if (ncbs && (!bypass_lazy || lazy)) {
+	if (ncbs && (!bypass_is_lazy || lazy)) {
 		local_irq_restore(flags);
 	} else {
 		// No-CBs GP kthread might be indefinitely asleep, if so, wake.
@@ -563,7 +563,7 @@ static bool rcu_nocb_try_bypass(struct rcu_data *rdp, struct rcu_head *rhp,
 			trace_rcu_nocb_wake(rcu_state.name, rdp->cpu,
 					    TPS("FirstBQwake"));
 			__call_rcu_nocb_wake(rdp, true, flags);
-		} else if (bypass_lazy && !lazy) {
+		} else if (bypass_is_lazy && !lazy) {
 			trace_rcu_nocb_wake(rcu_state.name, rdp->cpu,
 					    TPS("FirstBQwakeLazy2Non"));
 			__call_rcu_nocb_wake(rdp, true, flags);
