@@ -2510,7 +2510,7 @@ int rcutree_dead_cpu(unsigned int cpu)
 	return 0;
 }
 
-unsigned long cb_debug_jiffies_first;
+static unsigned long cb_debug_jiffies_first;
 
 /*
  * Invoke any RCU callbacks that have made it to the end of their grace
@@ -2526,7 +2526,7 @@ static void rcu_do_batch(struct rcu_data *rdp)
 	long bl, count = 0;
 	long pending, tlimit = 0;
 
-	if (!cb_debug_jiffies_first)
+	if (IS_ENABLED(RCU_CB_DEBUG) && !cb_debug_jiffies_first)
 		cb_debug_jiffies_first = jiffies;
 
 	/* If no callbacks are ready, just return. */
@@ -2578,7 +2578,7 @@ static void rcu_do_batch(struct rcu_data *rdp)
 
 		rcu_lock_acquire(&rcu_callback_map);
 
-		if (!(rhp->di.flags & BIT(CB_DEBUG_KFREE))) {
+		if (IS_ENABLED(RCU_CB_DEBUG) && !(rhp->di.flags & BIT(CB_DEBUG_KFREE))) {
 			trace_printk("DEBUG: cb execed: lazy=%d, bypass=%d, "
 					"non_lazy_flushed=%d, bp_flushed=%d, bp_lazy_flushed=%d, "
 					"gp_thread_flushed=%d, wait_jiffies=%ld, slack=%d, first_jiff=%u q2flush=%d\n",
