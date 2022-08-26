@@ -69,6 +69,10 @@ static inline long rcu_segcblist_n_cbs(struct rcu_segcblist *rsclp)
 #endif
 }
 
+void rcu_cblist_set_flush(struct rcu_cblist *rcl,
+			 enum cb_debug_flags flags,
+			 unsigned long flush_jiff);
+
 static inline void rcu_segcblist_set_flags(struct rcu_segcblist *rsclp,
 					   int flags)
 {
