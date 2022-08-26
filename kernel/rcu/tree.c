@@ -2728,6 +2728,22 @@ static void check_cb_ovld(struct rcu_data *rdp)
 	raw_spin_unlock_rcu_node(rnp);
 }
 
+/*
+ * Trace RCU callback helper, call after enqueuing callback.
+ */
+static inline void __trace_rcu_callback(struct rcu_head *head,
+				      struct rcu_data *rdp)
+{
+	if (trace_rcu_kvfree_callback_enabled() &&
+	    __is_kvfree_rcu_offset((unsigned long)head->func))
+		trace_rcu_kvfree_callback(rcu_state.name, head,
+					 (unsigned long)head->func,
+					 rcu_segcblist_n_cbs(&rdp->cblist));
+	else if (trace_rcu_callback_enabled())
+		trace_rcu_callback(rcu_state.name, head,
+				   rcu_segcblist_n_cbs(&rdp->cblist));
+}
+
 /**
  * call_rcu() - Queue an RCU callback for invocation after a grace period.
  * @head: structure to be used for queueing the RCU updates.
@@ -2809,17 +2825,15 @@ void call_rcu(struct rcu_head *head, rcu_callback_t func)
 	}
 
 	check_cb_ovld(rdp);
-	if (rcu_nocb_try_bypass(rdp, head, &was_alldone, flags))
+
+	if (rcu_nocb_try_bypass(rdp, head, &was_alldone, flags)) {
+		__trace_rcu_callback(head, rdp);
 		return; // Enqueued onto ->nocb_bypass, so just leave.
+	}
+
 	// If no-CBs CPU gets here, rcu_nocb_try_bypass() acquired ->nocb_lock.
 	rcu_segcblist_enqueue(&rdp->cblist, head);
-	if (__is_kvfree_rcu_offset((unsigned long)func))
-		trace_rcu_kvfree_callback(rcu_state.name, head,
-					 (unsigned long)func,
-					 rcu_segcblist_n_cbs(&rdp->cblist));
-	else
-		trace_rcu_callback(rcu_state.name, head,
-				   rcu_segcblist_n_cbs(&rdp->cblist));
+	__trace_rcu_callback(head, rdp);
 
 	trace_rcu_segcb_stats(&rdp->cblist, TPS("SegCBQueued"));
 
