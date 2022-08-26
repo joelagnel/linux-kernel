@@ -509,7 +509,7 @@ static bool rcu_nocb_try_bypass(struct rcu_data *rdp, struct rcu_head *rhp,
 	// flush ->nocb_bypass to ->cblist.
 	if ((ncbs && !bypass_is_lazy && j != READ_ONCE(rdp->nocb_bypass_first)) ||
 	    (ncbs &&  bypass_is_lazy &&
-		j > READ_ONCE(rdp->nocb_bypass_first) + jiffies_till_flush) ||
+		(time_after(j, READ_ONCE(rdp->nocb_bypass_first) + jiffies_till_flush)) ||
 	    ncbs >= qhimark) {
 		rcu_nocb_lock(rdp);
 		if (!rcu_nocb_flush_bypass(rdp, rhp, lazy, j, false)) {
@@ -756,7 +756,7 @@ static void nocb_gp_wait(struct rcu_data *my_rdp)
 		bypass_ncbs = rcu_cblist_n_cbs(&rdp->nocb_bypass);
 		lazy_ncbs = rcu_cblist_n_lazy_cbs(&rdp->nocb_bypass);
 
-		if (lazy_ncbs &&
+		if (bypass_ncbs && (lazy_ncbs == bypass_ncbs) &&
 		    (time_after(j, READ_ONCE(rdp->nocb_bypass_first) + jiffies_till_flush) ||
 		     bypass_ncbs > 2 * qhimark)) {
 			flush_bypass = true;
