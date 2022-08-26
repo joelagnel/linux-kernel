@@ -2509,6 +2509,8 @@ int rcutree_dead_cpu(unsigned int cpu)
 	return 0;
 }
 
+static unsigned long cb_debug_jiffies_first;
+
 /*
  * Invoke any RCU callbacks that have made it to the end of their grace
  * period.  Throttle as specified by rdp->blimit.
@@ -2522,6 +2524,9 @@ static void rcu_do_batch(struct rcu_data *rdp)
 	struct rcu_cblist rcl = RCU_CBLIST_INITIALIZER(rcl);
 	long bl, count = 0;
 	long pending, tlimit = 0;
+
+	if (IS_ENABLED(CONFIG_RCU_CB_DEBUG) && !cb_debug_jiffies_first)
+		cb_debug_jiffies_first = jiffies;
 
 	/* If no callbacks are ready, just return. */
 	if (!rcu_segcblist_ready_cbs(&rdp->cblist)) {
@@ -2571,6 +2576,25 @@ static void rcu_do_batch(struct rcu_data *rdp)
 		debug_rcu_head_unqueue(rhp);
 
 		rcu_lock_acquire(&rcu_callback_map);
+
+#ifdef CONFIG_RCU_CB_DEBUG
+		// Replace with actual debug checks.
+		if (!(rhp->di.flags & BIT(CB_DEBUG_KFREE))) {
+			trace_printk("DEBUG: cb execed: lazy=%d, bypass=%d, "
+					"non_lazy_flushed=%d, bp_flushed=%d, bp_lazy_flushed=%d, "
+					"gp_thread_flushed=%d, wait_jiffies=%ld, slack=%d, first_jiff=%u q2flush=%d\n",
+					!!(rhp->di.flags & BIT(CB_DEBUG_LAZY)),
+					!!(rhp->di.flags & BIT(CB_DEBUG_BYPASS)),
+					!!(rhp->di.flags & BIT(CB_DEBUG_NON_LAZY_FLUSHED)),
+					!!(rhp->di.flags & BIT(CB_DEBUG_BYPASS_FLUSHED)),
+					!!(rhp->di.flags & BIT(CB_DEBUG_BYPASS_LAZY_FLUSHED)),
+					!!(rhp->di.flags & BIT(CB_DEBUG_GPTHREAD_FLUSHED)),
+					(jiffies - cb_debug_jiffies_first) - rhp->di.cb_queue_jiff,
+					rhp->di.cb_queue_jiff - rhp->di.first_bp_jiff,
+					rhp->di.first_bp_jiff,
+					(rhp->di.flags & BIT(CB_DEBUG_BYPASS)) ? rhp->di.cb_flush_jiff - rhp->di.cb_queue_jiff : 0);
+		}
+#endif
 		trace_rcu_invoke_callback(rcu_state.name, rhp);
 
 		f = rhp->func;
@@ -3101,13 +3125,27 @@ __call_rcu_common(struct rcu_head *head, rcu_callback_t func, bool lazy)
 
 	check_cb_ovld(rdp);
 
-	if (__is_kvfree_rcu_offset((unsigned long)func))
+#ifdef CONFIG_RCU_CB_DEBUG
+	head->di.flags = 0;
+	head->di.cb_queue_jiff = (u16)(jiffies - cb_debug_jiffies_first);
+#endif
+
+	if (__is_kvfree_rcu_offset((unsigned long)func)) {
 		trace_rcu_kvfree_callback(rcu_state.name, head,
 					 (unsigned long)func,
 					 rcu_segcblist_n_cbs(&rdp->cblist));
-	else
+#ifdef CONFIG_RCU_CB_DEBUG
+		head->di.flags |= BIT(CB_DEBUG_KFREE);
+#endif
+	} else {
 		trace_rcu_callback(rcu_state.name, head,
 				   rcu_segcblist_n_cbs(&rdp->cblist));
+
+#ifdef CONFIG_RCU_CB_DEBUG
+		if (lazy)
+			head->di.flags |= BIT(CB_DEBUG_LAZY);
+#endif
+	}
 
 	if (rcu_nocb_try_bypass(rdp, head, &was_alldone, flags, lazy))
 		return; // Enqueued onto ->nocb_bypass, so just leave.
