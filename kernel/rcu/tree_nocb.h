@@ -356,6 +356,11 @@ static bool rcu_nocb_do_flush_bypass(struct rcu_data *rdp, struct rcu_head *rhp,
 	if (rhp)
 		rcu_segcblist_inc_len(&rdp->cblist); /* Must precede enqueue. */
 
+	/* The lazy CBs are being flushed, but a new one might be enqueued. */
+#ifdef CONFIG_RCU_CB_DEBUG
+	WARN_ON_ONCE(rhp && lazy != !!(rhp->di.flags & BIT(CB_DEBUG_LAZY)));
+#endif
+
 	/*
 	 * If the new CB requested was a lazy one, queue it onto the main
 	 * ->cblist so we can take advantage of a sooner grade period.
@@ -408,6 +413,10 @@ static void rcu_nocb_try_flush_bypass(struct rcu_data *rdp, unsigned long j)
 	if (!rcu_rdp_is_offloaded(rdp) ||
 	    !rcu_nocb_bypass_trylock(rdp))
 		return;
+
+	rcu_cblist_set_flush(&rdp->nocb_bypass, BIT(CB_DEBUG_GPTHREAD_FLUSHED),
+			     (j - READ_ONCE(cb_debug_jiffies_first)));
+
 	WARN_ON_ONCE(!rcu_nocb_do_flush_bypass(rdp, NULL, j, false));
 }
 
@@ -491,6 +500,9 @@ static bool rcu_nocb_try_bypass(struct rcu_data *rdp, struct rcu_head *rhp,
 			trace_rcu_nocb_wake(rcu_state.name, rdp->cpu,
 					    TPS("FirstQ"));
 
+		rcu_cblist_set_flush(&rdp->nocb_bypass, BIT(CB_DEBUG_NON_LAZY_FLUSHED),
+				     (j - READ_ONCE(cb_debug_jiffies_first)));
+
 		WARN_ON_ONCE(!rcu_nocb_flush_bypass(rdp, NULL, false, j, false));
 		WARN_ON_ONCE(rcu_cblist_n_cbs(&rdp->nocb_bypass));
 		return false; // Caller must enqueue the callback.
@@ -503,6 +515,10 @@ static bool rcu_nocb_try_bypass(struct rcu_data *rdp, struct rcu_head *rhp,
 		(time_after(j, READ_ONCE(rdp->nocb_bypass_first) + jiffies_till_flush))) ||
 	    ncbs >= qhimark) {
 		rcu_nocb_lock(rdp);
+
+		rcu_cblist_set_flush(&rdp->nocb_bypass,
+				lazy ? BIT(CB_DEBUG_BYPASS_LAZY_FLUSHED) : BIT(CB_DEBUG_BYPASS_FLUSHED),
+				(j - READ_ONCE(cb_debug_jiffies_first)));
 
 		if (!rcu_nocb_flush_bypass(rdp, rhp, lazy, j, false)) {
 			*was_alldone = !rcu_segcblist_pend_cbs(&rdp->cblist);
@@ -538,6 +554,11 @@ static bool rcu_nocb_try_bypass(struct rcu_data *rdp, struct rcu_head *rhp,
 		WRITE_ONCE(rdp->nocb_bypass_first, j);
 		trace_rcu_nocb_wake(rcu_state.name, rdp->cpu, TPS("FirstBQ"));
 	}
+
+#ifdef CONFIG_RCU_CB_DEBUG
+	rhp->di.flags |= BIT(CB_DEBUG_BYPASS);
+	rhp->di.first_bp_jiff = READ_ONCE(rdp->nocb_bypass_first) - READ_ONCE(cb_debug_jiffies_first);
+#endif
 
 	rcu_nocb_bypass_unlock(rdp);
 	smp_mb(); /* Order enqueue before wake. */
@@ -1120,6 +1141,10 @@ static long rcu_nocb_rdp_deoffload(void *arg)
 	 * return false, which means that future calls to rcu_nocb_try_bypass()
 	 * will refuse to put anything into the bypass.
 	 */
+
+	rcu_cblist_set_flush(&rdp->nocb_bypass, BIT(CB_DEBUG_DEOFFLOAD_FLUSHED),
+			(jiffies - READ_ONCE(cb_debug_jiffies_first)));
+
 	WARN_ON_ONCE(!rcu_nocb_flush_bypass(rdp, NULL, jiffies, false, false));
 	/*
 	 * Start with invoking rcu_core() early. This way if the current thread

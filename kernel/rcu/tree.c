@@ -2509,6 +2509,12 @@ int rcutree_dead_cpu(unsigned int cpu)
 	return 0;
 }
 
+static unsigned long cb_debug_jiffies_first;
+
+#if defined(CONFIG_RCU_CB_DEBUG) && defined(CONFIG_RCU_LAZY)
+extern unsigned long jiffies_till_flush;
+#endif
+
 /*
  * Invoke any RCU callbacks that have made it to the end of their grace
  * period.  Throttle as specified by rdp->blimit.
@@ -2566,12 +2572,32 @@ static void rcu_do_batch(struct rcu_data *rdp)
 
 	for (; rhp; rhp = rcu_cblist_dequeue(&rcl)) {
 		rcu_callback_t f;
+#ifdef CONFIG_RCU_CB_DEBUG
+		int lazy_lifetime = (rhp->di.cb_flush_jiff - rhp->di.first_bp_jiff);
+
+		// This check ensures that a lazy CB was not flushed too soon
+		// or too late (under normal circumstances i.e. excluding
+		// non-lazy arriving and prematurely flushing) with up to a
+		// tolerance of 10%. This verifies the timers, flush duration
+		// and several code paths. In the future we can check for
+		// bounded CB latency for all CBs as well.
+		WARN_ON_ONCE (!(rhp->di.flags & BIT(CB_DEBUG_KFREE)) &&
+		      rhp->di.flags & BIT(CB_DEBUG_LAZY) &&
+		      rhp->di.flags & BIT(CB_DEBUG_GPTHREAD_FLUSHED) &&
+		      READ_ONCE(cb_debug_jiffies_first) != 0 &&
+		      (abs(lazy_lifetime - jiffies_till_flush) > jiffies_till_flush / 10));
+#endif
 
 		count++;
 		debug_rcu_head_unqueue(rhp);
 
 		rcu_lock_acquire(&rcu_callback_map);
-		trace_rcu_invoke_callback(rcu_state.name, rhp);
+
+		trace_rcu_invoke_callback(rcu_state.name, rhp
+#ifdef CONFIG_RCU_CB_DEBUG
+			, READ_ONCE(cb_debug_jiffies_first)
+#endif
+		);
 
 		f = rhp->func;
 		WRITE_ONCE(rhp->func, (rcu_callback_t)0L);
@@ -3066,6 +3092,17 @@ __call_rcu_common(struct rcu_head *head, rcu_callback_t func, bool lazy)
 	struct rcu_data *rdp;
 	bool was_alldone;
 
+	/*
+	 * For CB debugging, record the starting reference to jiffies while
+	 * making sure it does not wrap around. The starting reference is
+	 * used to calculate 16-bit jiffie deltas. To be safe, reset the
+	 * reference once the delta exceeds 15-bits worth.
+	 */
+	if (IS_ENABLED(CONFIG_RCU_CB_DEBUG) &&
+		(!READ_ONCE(cb_debug_jiffies_first) ||
+		 (jiffies - READ_ONCE(cb_debug_jiffies_first) > (1 << 15))))
+		WRITE_ONCE(cb_debug_jiffies_first, jiffies);
+
 	/* Misaligned rcu_head! */
 	WARN_ON_ONCE((unsigned long)head & (sizeof(void *) - 1));
 
@@ -3101,13 +3138,28 @@ __call_rcu_common(struct rcu_head *head, rcu_callback_t func, bool lazy)
 
 	check_cb_ovld(rdp);
 
-	if (__is_kvfree_rcu_offset((unsigned long)func))
+#ifdef CONFIG_RCU_CB_DEBUG
+	head->di.flags = 0;
+	WARN_ON_ONCE(jiffies - READ_ONCE(cb_debug_jiffies_first) > 65535);
+	head->di.cb_queue_jiff = (u16)(jiffies - READ_ONCE(cb_debug_jiffies_first));
+#endif
+
+	if (__is_kvfree_rcu_offset((unsigned long)func)) {
 		trace_rcu_kvfree_callback(rcu_state.name, head,
 					 (unsigned long)func,
 					 rcu_segcblist_n_cbs(&rdp->cblist));
-	else
+#ifdef CONFIG_RCU_CB_DEBUG
+		head->di.flags |= BIT(CB_DEBUG_KFREE);
+#endif
+	} else {
 		trace_rcu_callback(rcu_state.name, head,
 				   rcu_segcblist_n_cbs(&rdp->cblist));
+
+#ifdef CONFIG_RCU_CB_DEBUG
+		if (lazy)
+			head->di.flags |= BIT(CB_DEBUG_LAZY);
+#endif
+	}
 
 	if (rcu_nocb_try_bypass(rdp, head, &was_alldone, flags, lazy))
 		return; // Enqueued onto ->nocb_bypass, so just leave.
@@ -4097,6 +4149,9 @@ static void rcu_barrier_entrain(struct rcu_data *rdp)
 	rdp->barrier_head.func = rcu_barrier_callback;
 	debug_rcu_head_queue(&rdp->barrier_head);
 	rcu_nocb_lock(rdp);
+
+	rcu_cblist_set_flush(&rdp->nocb_bypass, BIT(CB_DEBUG_BARRIER_FLUSHED),
+			(jiffies - READ_ONCE(cb_debug_jiffies_first)));
 	WARN_ON_ONCE(!rcu_nocb_flush_bypass(rdp, NULL, jiffies, false,
 		     /* wake gp thread */ true));
 	if (rcu_segcblist_entrain(&rdp->cblist, &rdp->barrier_head)) {
