@@ -547,7 +547,14 @@ static bool rcu_nocb_try_bypass(struct rcu_data *rdp, struct rcu_head *rhp,
 	}
 	rcu_nocb_bypass_unlock(rdp);
 	smp_mb(); /* Order enqueue before wake. */
-	if (ncbs) {
+
+	// We had CBs in the bypass list before. There is nothing else to do if:
+	// There were only non-lazy CBs before, in this case, the bypass timer
+	// or GP-thread would have handle the CBs including any new lazy ones.
+	// Or, the new CB is lazy and the old bypass-CBs were also lazy. In this
+	// case the old lazy timer would have been setup. When that expires,
+	// the new lazy one will be handled.
+	if (ncbs && (!bypass_lazy || lazy)) {
 		local_irq_restore(flags);
 	} else {
 		// No-CBs GP kthread might be indefinitely asleep, if so, wake.
@@ -555,6 +562,10 @@ static bool rcu_nocb_try_bypass(struct rcu_data *rdp, struct rcu_head *rhp,
 		if (!rcu_segcblist_pend_cbs(&rdp->cblist)) {
 			trace_rcu_nocb_wake(rcu_state.name, rdp->cpu,
 					    TPS("FirstBQwake"));
+			__call_rcu_nocb_wake(rdp, true, flags);
+		} else if (bypass_lazy && !lazy) {
+			trace_rcu_nocb_wake(rcu_state.name, rdp->cpu,
+					    TPS("FirstBQwakeLazy2Non"));
 			__call_rcu_nocb_wake(rdp, true, flags);
 		} else {
 			trace_rcu_nocb_wake(rcu_state.name, rdp->cpu,
