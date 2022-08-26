@@ -447,7 +447,12 @@ static bool rcu_nocb_try_bypass(struct rcu_data *rdp, struct rcu_head *rhp,
 			rcu_advance_cbs_nowake(rdp->mynode, rdp);
 			rdp->nocb_gp_adv_time = j;
 		}
-		rcu_nocb_unlock_irqrestore(rdp, flags);
+
+		// The flush succeeded and we moved CBs into the ->cblist.
+		// However, the bypass timer might still be running. Wakeup the
+		// GP thread with was_all_done set so it actually wakes it up.
+		__call_rcu_nocb_wake(rdp, true, flags)
+
 		return true; // Callback already enqueued.
 	}
 
