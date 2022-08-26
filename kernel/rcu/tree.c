@@ -2579,14 +2579,19 @@ static void rcu_do_batch(struct rcu_data *rdp)
 		rcu_lock_acquire(&rcu_callback_map);
 
 		if (!(rhp->di.flags & BIT(CB_KFREE))) {
-			trace_printk("DEBUG: cb execed: lazy=%d, bypass=%d, flushed=%d, non_lazy_flushed=%d, wait_jiffies=%ld [%u %lu]\n",
+			trace_printk("DEBUG: cb execed: lazy=%d, bypass=%d, "
+					"non_lazy_flushed=%d, bp_flushed=%d, bp_lazy_flushed=%d, "
+					"gp_thread_flushed=%d, wait_jiffies=%ld, slack=%d, first_jiff=%u q2flush=%d\n",
 					!!(rhp->di.flags & BIT(CB_LAZY)),
 					!!(rhp->di.flags & BIT(CB_BYPASS)),
-					!!(rhp->di.flags & BIT(CB_FLUSHED)),
 					!!(rhp->di.flags & BIT(CB_NON_LAZY_FLUSHED)),
+					!!(rhp->di.flags & BIT(CB_BYPASS_FLUSHED)),
+					!!(rhp->di.flags & BIT(CB_BYPASS_LAZY_FLUSHED)),
+					!!(rhp->di.flags & BIT(CB_GPTHREAD_FLUSHED)),
 					(jiffies - jiffies_first) - rhp->di.cb_queue_jiff,
-					rhp->di.cb_queue_jiff,
-					jiffies);
+					rhp->di.cb_queue_jiff - rhp->di.first_bp_jiff,
+					rhp->di.first_bp_jiff,
+					(rhp->di.flags & BIT(CB_BYPASS)) ? rhp->di.cb_flush_jiff - rhp->di.cb_queue_jiff : 0);
 		}
 		trace_rcu_invoke_callback(rcu_state.name, rhp);
 

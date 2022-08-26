@@ -42,19 +42,18 @@ void rcu_cblist_enqueue(struct rcu_cblist *rclp, struct rcu_head *rhp,
  *
  * The callback causing the flush. Should be NULL if its a timer that does it.
  */
-static void rcu_cblist_set_flush(struct rcu_cblist *rcl, bool lazy)
+void rcu_cblist_set_flush(struct rcu_cblist *rcl,
+			 enum cb_flags flags,
+			 unsigned long flush_jiff)
 {
 	if (!rcl || !rcl->head)
 		return;
 
 	for (struct rcu_head *head = rcl->head;
 			head && head != *(rcl->tail); head = head->next) {
-		head->di.flags |= BIT(CB_FLUSHED);
-		if (!lazy)
-			head->di.flags |= BIT(CB_NON_LAZY_FLUSHED);
-		head->di.cb_flush_jiff = jiffies;
+		head->di.flags |= flags;
+		head->di.cb_flush_jiff = flush_jiff;
 	}
-
 }
 
 /*
@@ -70,8 +69,6 @@ void rcu_cblist_flush_enqueue(struct rcu_cblist *drclp,
 			      struct rcu_head *rhp,
 			      bool lazy)
 {
-	rcu_cblist_set_flush(srclp, lazy);
-
 	drclp->head = srclp->head;
 	if (drclp->head)
 		drclp->tail = srclp->tail;

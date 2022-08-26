@@ -418,6 +418,10 @@ static void rcu_nocb_try_flush_bypass(struct rcu_data *rdp, unsigned long j)
 	if (!rcu_rdp_is_offloaded(rdp) ||
 	    !rcu_nocb_bypass_trylock(rdp))
 		return;
+
+	rcu_cblist_set_flush(&rdp->nocb_bypass, BIT(CB_GPTHREAD_FLUSHED),
+			     (j - jiffies_first));
+
 	WARN_ON_ONCE(!rcu_nocb_do_flush_bypass(rdp, NULL, j, false));
 }
 
@@ -500,6 +504,10 @@ static bool rcu_nocb_try_bypass(struct rcu_data *rdp, struct rcu_head *rhp,
 		if (*was_alldone)
 			trace_rcu_nocb_wake(rcu_state.name, rdp->cpu,
 					    TPS("FirstQ"));
+
+		rcu_cblist_set_flush(&rdp->nocb_bypass, BIT(CB_NON_LAZY_FLUSHED),
+				     (j - jiffies_first));
+
 		WARN_ON_ONCE(!rcu_nocb_flush_bypass(rdp, NULL, false, j, false));
 		WARN_ON_ONCE(rcu_cblist_n_cbs(&rdp->nocb_bypass));
 		return false; // Caller must enqueue the callback.
@@ -509,9 +517,14 @@ static bool rcu_nocb_try_bypass(struct rcu_data *rdp, struct rcu_head *rhp,
 	// flush ->nocb_bypass to ->cblist.
 	if ((ncbs && !bypass_is_lazy && j != READ_ONCE(rdp->nocb_bypass_first)) ||
 	    (ncbs &&  bypass_is_lazy &&
-		(time_after(j, READ_ONCE(rdp->nocb_bypass_first) + jiffies_till_flush)) ||
+		(time_after(j, READ_ONCE(rdp->nocb_bypass_first) + jiffies_till_flush))) ||
 	    ncbs >= qhimark) {
 		rcu_nocb_lock(rdp);
+
+		rcu_cblist_set_flush(&rdp->nocb_bypass,
+				lazy ? BIT(CB_BYPASS_LAZY_FLUSHED) : BIT(CB_BYPASS_FLUSHED),
+				(j - jiffies_first));
+
 		if (!rcu_nocb_flush_bypass(rdp, rhp, lazy, j, false)) {
 			*was_alldone = !rcu_segcblist_pend_cbs(&rdp->cblist);
 			if (*was_alldone)
@@ -538,6 +551,7 @@ static bool rcu_nocb_try_bypass(struct rcu_data *rdp, struct rcu_head *rhp,
 	// We need to use the bypass.
 	rcu_nocb_wait_contended(rdp);
 	rcu_nocb_bypass_lock(rdp);
+
 	ncbs = rcu_cblist_n_cbs(&rdp->nocb_bypass);
 	rcu_segcblist_inc_len(&rdp->cblist); /* Must precede enqueue. */
 	rcu_cblist_enqueue(&rdp->nocb_bypass, rhp, lazy);
@@ -545,6 +559,10 @@ static bool rcu_nocb_try_bypass(struct rcu_data *rdp, struct rcu_head *rhp,
 		WRITE_ONCE(rdp->nocb_bypass_first, j);
 		trace_rcu_nocb_wake(rcu_state.name, rdp->cpu, TPS("FirstBQ"));
 	}
+
+	rhp->di.flags |= BIT(CB_BYPASS);
+	rhp->di.first_bp_jiff = READ_ONCE(rdp->nocb_bypass_first) - jiffies_first;
+
 	rcu_nocb_bypass_unlock(rdp);
 	smp_mb(); /* Order enqueue before wake. */
 

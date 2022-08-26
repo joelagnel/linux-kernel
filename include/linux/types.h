@@ -207,15 +207,25 @@ enum cb_flags {
 	CB_KFREE,
 	CB_LAZY,
 	CB_BYPASS,
-	CB_FLUSHED,
+
+	// A new non-lazy CB showed up and we decided to not use
+	// the bypass list for it. So we flushed the old ones.
 	CB_NON_LAZY_FLUSHED,
+
+	// We decided to use the bypass list but had to flush
+	// the old bypass CBs because they got too old or too big.
+	CB_BYPASS_FLUSHED,
+	CB_BYPASS_LAZY_FLUSHED,
+
+	// The GP thread flushed the bypass CBs if they got old or big.
+	CB_GPTHREAD_FLUSHED
 };
 
 struct debug_info {
 	// 16-bit jiffies can provide upto 60 seconds of a resolution @ HZ=1000
 	// before wrapping. That's enough for debug.
 	u16 cb_queue_jiff;
-	u16 cb_exec_jiff;
+	u16 first_bp_jiff;
 	u16 cb_flush_jiff;
 	enum cb_flags flags:16;
 };
