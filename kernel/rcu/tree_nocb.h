@@ -514,12 +514,13 @@ static bool rcu_nocb_try_bypass(struct rcu_data *rdp, struct rcu_head *rhp,
 	    ncbs >= qhimark) {
 		rcu_nocb_lock(rdp);
 
+		*was_alldone = !rcu_segcblist_pend_cbs(&rdp->cblist);
+
 		rcu_cblist_set_flush(&rdp->nocb_bypass,
 				lazy ? BIT(CB_DEBUG_BYPASS_LAZY_FLUSHED) : BIT(CB_DEBUG_BYPASS_FLUSHED),
 				(j - READ_ONCE(cb_debug_jiffies_first)));
 
 		if (!rcu_nocb_flush_bypass(rdp, rhp, j, lazy, false)) {
-			*was_alldone = !rcu_segcblist_pend_cbs(&rdp->cblist);
 			if (*was_alldone)
 				trace_rcu_nocb_wake(rcu_state.name, rdp->cpu,
 						    TPS("FirstQ"));
@@ -537,7 +538,7 @@ static bool rcu_nocb_try_bypass(struct rcu_data *rdp, struct rcu_head *rhp,
 		// However, the bypass timer might still be running. Wakeup the
 		// GP thread by calling a helper with was_all_done set so that
 		// wake up happens (needed if main CB list was empty before).
-		__call_rcu_nocb_wake(rdp, true, flags)
+		__call_rcu_nocb_wake(rdp, *was_all_done, flags)
 
 		return true; // Callback already enqueued.
 	}
