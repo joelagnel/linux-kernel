@@ -577,10 +577,6 @@ static bool rcu_nocb_try_bypass(struct rcu_data *rdp, struct rcu_head *rhp,
 			trace_rcu_nocb_wake(rcu_state.name, rdp->cpu,
 					    TPS("FirstBQwake"));
 			__call_rcu_nocb_wake(rdp, true, flags);
-		} else if (bypass_is_lazy && !lazy) {
-			trace_rcu_nocb_wake(rcu_state.name, rdp->cpu,
-					    TPS("FirstBQwakeLazy2Non"));
-			__call_rcu_nocb_wake(rdp, true, flags);
 		} else {
 			trace_rcu_nocb_wake(rcu_state.name, rdp->cpu,
 					    TPS("FirstBQnoWake"));
