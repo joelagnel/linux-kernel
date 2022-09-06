@@ -1376,7 +1376,7 @@ void __init rcu_init_nohz(void)
 	if (!rcu_state.nocb_is_setup)
 		return;
 
-	if (register_shrinker(&lazy_rcu_shrinker, "rcu-lazy"))
+	if (register_shrinker(&lazy_rcu_shrinker /* ,"rcu-lazy" */))
 		pr_err("Failed to register lazy_rcu shrinker!\n");
 
 #if defined(CONFIG_NO_HZ_FULL)
