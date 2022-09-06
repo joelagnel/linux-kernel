@@ -611,6 +611,7 @@ static void __call_rcu_nocb_wake(struct rcu_data *rdp, bool was_alldone,
 	len = rcu_segcblist_n_cbs(&rdp->cblist);
 	bypass_len = rcu_cblist_n_cbs(&rdp->nocb_bypass);
 	lazy_len = READ_ONCE(rdp->lazy_len);
+	trace_printk("bpl %ld ll %ld", bypass_len, lazy_len);
 	if (was_alldone) {
 		rdp->qlen_last_fqs_check = len;
 		// Only lazy CBs in bypass list
@@ -1376,7 +1377,7 @@ void __init rcu_init_nohz(void)
 	if (!rcu_state.nocb_is_setup)
 		return;
 
-	if (register_shrinker(&lazy_rcu_shrinker /* ,"rcu-lazy" */))
+	if (register_shrinker(&lazy_rcu_shrinker)) // , "rcu-lazy"))
 		pr_err("Failed to register lazy_rcu shrinker!\n");
 
 #if defined(CONFIG_NO_HZ_FULL)

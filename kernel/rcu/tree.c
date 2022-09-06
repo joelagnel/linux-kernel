@@ -3140,7 +3140,7 @@ __call_rcu_common(struct rcu_head *head, rcu_callback_t func, bool lazy)
 	} else {
 		trace_rcu_callback(rcu_state.name, head,
 				   rcu_segcblist_n_cbs(&rdp->cblist));
-
+		trace_printk("CB is lazy?\n %d", lazy);
 #ifdef CONFIG_RCU_TRACE_CB
 		if (lazy)
 			head->di.flags |= BIT(CB_DEBUG_LAZY);

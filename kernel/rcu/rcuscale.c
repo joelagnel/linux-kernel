@@ -831,6 +831,8 @@ kfree_scale_init(void)
 
 		if (WARN_ON_ONCE(jiffies_at_lazy_cb - jif_start < 2 * HZ)) {
 			pr_alert("ERROR: Lazy CBs are not being lazy as expected!\n");
+			tracing_stop();
+			panic("notlazy");
 			WARN_ON_ONCE(1);
 			return -1;
 		}
