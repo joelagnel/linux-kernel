@@ -382,15 +382,19 @@ static bool rcu_nocb_flush_bypass(struct rcu_data *rdp, struct rcu_head *rhp,
 				  unsigned long j, unsigned long flush_flags)
 {
 	bool ret;
+	bool was_alldone;
 
 	if (!rcu_rdp_is_offloaded(rdp))
 		return true;
 	rcu_lockdep_assert_cblist_protected(rdp);
 	rcu_nocb_bypass_lock(rdp);
+	if (flush_flags & FLUSH_BP_WAKE)
+		was_alldone = !rcu_segcblist_pend_cbs(&rdp->cblist);
+
 	ret = rcu_nocb_do_flush_bypass(rdp, rhp, j, flush_flags);
 
-	if (flush_flags & FLUSH_BP_WAKE)
-		wake_nocb_gp(rdp, true);
+	if (flush_flags & FLUSH_BP_WAKE && was_alldone)
+		wake_nocb_gp(rdp, false);
 
 	return ret;
 }
