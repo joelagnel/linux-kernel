@@ -565,12 +565,12 @@ static bool rcu_nocb_try_bypass(struct rcu_data *rdp, struct rcu_head *rhp,
 	rcu_nocb_bypass_unlock(rdp);
 	smp_mb(); /* Order enqueue before wake. */
 
-	// We had CBs in the bypass list before. There is nothing else to do if:
-	// There were only non-lazy CBs before, in this case, the bypass timer
-	// or GP-thread will handle the CBs including any new lazy ones.
-	// Or, the new CB is lazy and the old bypass-CBs were also lazy. In this
-	// case the old lazy timer would have been setup. When that expires,
-	// the new lazy one will be handled.
+	// A wake up of the grace period kthread or timer adjustment needs to
+	// be done only if:
+	// 1. Bypass list was fully empty before (this is the first bypass list entry).
+	//	Or, both the below conditions are met:
+	// 1. Bypass list had only lazy CBs before.
+	// 2. The new CB is non-lazy.
 	if (ncbs && (!bypass_is_lazy || lazy)) {
 		local_irq_restore(flags);
 	} else {
