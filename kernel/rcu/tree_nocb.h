@@ -375,18 +375,27 @@ static bool rcu_nocb_flush_bypass(struct rcu_data *rdp, struct rcu_head *rhp,
 				  unsigned long j, unsigned long flush_flags)
 {
 	bool ret;
-	bool was_alldone;
+	bool was_alldone = false;
+	bool bypass_all_lazy = false;
+	long bypass_ncbs;
 
 	if (!rcu_rdp_is_offloaded(rdp))
 		return true;
 	rcu_lockdep_assert_cblist_protected(rdp);
 	rcu_nocb_bypass_lock(rdp);
-	if (flush_flags & FLUSH_BP_WAKE)
+
+	if (flush_flags & FLUSH_BP_WAKE) {
 		was_alldone = !rcu_segcblist_pend_cbs(&rdp->cblist);
+		bypass_ncbs = rcu_cblist_n_cbs(&rdp->nocb_bypass);
+		bypass_all_lazy = bypass_ncbs && (bypass_ncbs == rdp->lazy_len);
+	}
 
 	ret = rcu_nocb_do_flush_bypass(rdp, rhp, j, flush_flags);
 
-	if (flush_flags & FLUSH_BP_WAKE && was_alldone)
+	// Wake up the nocb GP thread if needed. GP thread could be sleeping
+	// while waiting for lazy timer to expire (otherwise rcu_barrier may
+	// end up waiting for the duration of the lazy timer).
+	if (flush_flags & FLUSH_BP_WAKE && was_alldone && bypass_all_lazy)
 		wake_nocb_gp(rdp, false);
 
 	return ret;
