@@ -3733,8 +3733,15 @@ ttwu_do_activate(struct rq *rq, struct task_struct *p, int wake_flags,
 			raw_spin_unlock(&pp->blocked_lock);
 			break;
 		}
+		/* XXX can't call set_task_cpu() because we are not holding
+		 * neither pp->pi_lock nor task's rq lock. This should however
+		 * be fine as this task can't be woken up as it is blocked on
+		 * this mutex atm.
+		 * A problem however might be that __set_task_cpu() calls
+		 * set_task_rq() which deals with groups and such...
+		 */
+		__set_task_cpu(pp, cpu_of(rq));
 		activate_task(rq, pp, en_flags);
-		pp->on_rq = TASK_ON_RQ_QUEUED;
 		resched_curr(rq);
 		raw_spin_unlock(&pp->blocked_lock);
 	}
@@ -7114,7 +7121,8 @@ static inline void sched_submit_work(struct task_struct *tsk)
 	 * If a worker goes to sleep, notify and ask workqueue whether it
 	 * wants to wake up a task to maintain concurrency.
 	 */
-	if (task_flags & (PF_WQ_WORKER | PF_IO_WORKER)) {
+	if ((task_flags & (PF_WQ_WORKER | PF_IO_WORKER)) &&
+	    !task_is_blocked(tsk)) {
 		if (task_flags & PF_WQ_WORKER)
 			wq_worker_sleeping(tsk);
 		else
