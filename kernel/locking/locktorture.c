@@ -48,6 +48,8 @@ torture_param(int, stat_interval, 60,
 torture_param(int, stutter, 5, "Number of jiffies to run/halt test, 0=disable");
 torture_param(int, verbose, 1,
 	     "Enable verbose debugging printk()s");
+torture_param(int, nlocks, 1,
+	      "Number of locks");
 
 static char *torture_type = "spin_lock";
 module_param(torture_type, charp, 0444);
@@ -327,6 +329,8 @@ static struct lock_torture_ops rw_lock_irq_ops = {
 };
 
 static DEFINE_MUTEX(torture_mutex);
+static DEFINE_MUTEX(torture_mutex2);
+static DEFINE_MUTEX(torture_mutex3);
 
 static int torture_mutex_lock(int tid __maybe_unused)
 __acquires(torture_mutex)
@@ -666,6 +670,7 @@ static struct lock_torture_ops percpu_rwsem_lock_ops = {
  */
 static int lock_torture_writer(void *arg)
 {
+	bool twolocks = false, threelocks = false;
 	struct lock_stress_stats *lwsp = arg;
 	int tid = lwsp - cxt.lwsa;
 	DEFINE_TORTURE_RANDOM(rand);
@@ -677,6 +682,12 @@ static int lock_torture_writer(void *arg)
 		if ((torture_random(&rand) & 0xfffff) == 0)
 			schedule_timeout_uninterruptible(1);
 
+		twolocks = nlocks > 1 ? (torture_random(&rand) & 0x1) : 0;
+		if (twolocks)
+			mutex_lock(&torture_mutex2);
+		threelocks = nlocks > 2 ? (torture_random(&rand) & 0x2) : 0;
+		if (threelocks)
+			mutex_lock(&torture_mutex3);
 		cxt.cur_ops->task_boost(&rand);
 		cxt.cur_ops->writelock(tid);
 		if (WARN_ON_ONCE(lock_is_write_held))
@@ -690,6 +701,11 @@ static int lock_torture_writer(void *arg)
 		lock_is_write_held = false;
 		WRITE_ONCE(last_lock_release, jiffies);
 		cxt.cur_ops->writeunlock(tid);
+
+		if (threelocks)
+			mutex_unlock(&torture_mutex3);
+		if (twolocks)
+			mutex_unlock(&torture_mutex2);
 
 		stutter_wait("lock_torture_writer");
 	} while (!torture_must_stop());
@@ -830,11 +846,11 @@ lock_torture_print_module_parms(struct lock_torture_ops *cur_ops,
 				const char *tag)
 {
 	pr_alert("%s" TORTURE_FLAG
-		 "--- %s%s: nwriters_stress=%d nreaders_stress=%d stat_interval=%d verbose=%d shuffle_interval=%d stutter=%d shutdown_secs=%d onoff_interval=%d onoff_holdoff=%d\n",
+		 "--- %s%s: nwriters_stress=%d nreaders_stress=%d stat_interval=%d verbose=%d shuffle_interval=%d stutter=%d shutdown_secs=%d onoff_interval=%d onoff_holdoff=%d nlocks=%d\n",
 		 torture_type, tag, cxt.debug_lock ? " [debug]": "",
 		 cxt.nrealwriters_stress, cxt.nrealreaders_stress, stat_interval,
 		 verbose, shuffle_interval, stutter, shutdown_secs,
-		 onoff_interval, onoff_holdoff);
+		 onoff_interval, onoff_holdoff, nlocks);
 }
 
 static void lock_torture_cleanup(void)
