@@ -1013,6 +1013,13 @@ void wake_up_q(struct wake_q_head *head)
 		wake_up_process(task);
 		put_task_struct(task);
 	}
+	/*
+	 * XXX connoro: seems this is needed now that ww_ctx_wake() passes in a
+	 * wake_q_head that is embedded in struct ww_acquire_ctx rather than
+	 * declared locally.
+	 */
+	head->first = node;
+	head->lastp = &head->first;
 }
 
 /*

@@ -161,6 +161,11 @@ static inline void lockdep_assert_wait_lock_held(struct rt_mutex *lock)
 
 #endif /* WW_RT */
 
+void ww_ctx_wake(struct ww_acquire_ctx *ww_ctx)
+{
+	wake_up_q(&ww_ctx->wake_q);
+}
+
 /*
  * Wait-Die:
  *   The newer transactions are killed when:
@@ -284,7 +289,7 @@ __ww_mutex_die(struct MUTEX *lock, struct MUTEX_WAITER *waiter,
 #ifndef WW_RT
 		debug_mutex_wake_waiter(lock, waiter);
 #endif
-		wake_up_process(waiter->task);
+		wake_q_add(&ww_ctx->wake_q, waiter->task);
 	}
 
 	return true;
@@ -331,7 +336,7 @@ static bool __ww_mutex_wound(struct MUTEX *lock,
 		 * wakeup pending to re-read the wounded state.
 		 */
 		if (owner != current)
-			wake_up_process(owner);
+			wake_q_add(&ww_ctx->wake_q, owner);
 
 		return true;
 	}
