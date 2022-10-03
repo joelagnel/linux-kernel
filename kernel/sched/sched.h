@@ -1014,7 +1014,12 @@ struct rq {
 	 */
 	unsigned int		nr_uninterruptible;
 
-	struct task_struct __rcu	*curr;
+	/*
+	 * XXX connoro: could different names (e.g. exec_ctx and sched_ctx) help
+	 * with readability?
+	 */
+	struct task_struct __rcu	*curr;  /* Execution context */
+	struct task_struct	*proxy; /* Scheduling context (policy) */
 	struct task_struct	*idle;
 	struct task_struct	*stop;
 	unsigned long		next_balance;
@@ -2055,9 +2060,23 @@ static inline u64 global_rt_runtime(void)
 	return (u64)sysctl_sched_rt_runtime * NSEC_PER_USEC;
 }
 
+/*
+ * Is p the current execution context?
+ */
 static inline int task_current(struct rq *rq, struct task_struct *p)
 {
 	return rq->curr == p;
+}
+
+/*
+ * Is p the current scheduling context?
+ *
+ * Note that it might be the current execution context at the same time if
+ * rq->curr == rq->proxy == p.
+ */
+static inline int task_current_proxy(struct rq *rq, struct task_struct *p)
+{
+	return rq->proxy == p;
 }
 
 static inline int task_running(struct rq *rq, struct task_struct *p)
@@ -2214,7 +2233,7 @@ struct sched_class {
 
 static inline void put_prev_task(struct rq *rq, struct task_struct *prev)
 {
-	WARN_ON_ONCE(rq->curr != prev);
+	WARN_ON_ONCE(rq->proxy != prev);
 	prev->sched_class->put_prev_task(rq, prev);
 }
 
