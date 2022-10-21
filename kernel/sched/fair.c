@@ -7204,6 +7204,42 @@ select_task_rq_fair(struct task_struct *p, int prev_cpu, int wake_flags)
 	if (wake_flags & WF_TTWU) {
 		record_wakee(p);
 
+		/*
+		 * ChromeOS: If a sync wakeup chain is in progress, do same-CPU wake.
+		 * If userspace got it wrong, then next savior of the day is load-balance.
+		 */
+		if (current->sync_chain)
+			trace_printk("Doing sync_chain wake (trying)");
+		if (current->sync_chain
+				/*
+				 * a series of wakes that quickly happen can temporarily
+				 * make nr_running > 1. So if just checked == 1, we might break
+				 * the optimization. We should probably have a timer that
+				 * calbirates this based on how much time nr_running is > 1.
+				 */
+				&& cpu_rq(cpu)->nr_running < 4
+				/*
+				 * A sync wake chain always starts and continues via
+				 * userspace initiated wakeups. Ignore IRQ wakeups.
+				 * So timers waking up short-lived threads like RCU will
+				 * not trigger newidle balancing.
+				 */
+				&& !in_interrupt()
+				&& cpumask_test_cpu(cpu, p->cpus_ptr)
+				/* Seems to return 0 on qemu sometimes:
+				   && task_fits_capacity(p, capacity_of(cpu))
+				*/ ) {
+			trace_printk("Success, return: %d", cpu);
+			current->sync_chain = false;
+			p->sync_chain = true;
+			return cpu;
+		} else if (current->sync_chain) {
+			trace_printk("Failed (nr=%d, tfc=%d, ii=%d), doing normal wake.",
+					cpu_rq(cpu)->nr_running,
+					task_fits_capacity(p, capacity_of(cpu)),
+					!!in_interrupt());
+		}
+
 		if (sched_energy_enabled()) {
 			new_cpu = find_energy_efficient_cpu(p, prev_cpu);
 			if (new_cpu >= 0)
@@ -8053,6 +8089,12 @@ int can_migrate_task(struct task_struct *p, struct lb_env *env)
 	int tsk_cache_hot;
 
 	lockdep_assert_rq_held(env->src_rq);
+
+	// Do not let newidle balancing disturb a sync chain.
+	if (env->idle == CPU_NEWLY_IDLE && p->sync_chain) {
+		trace_printk("Skipping sync task pull from idle balance");
+		return 0;
+	}
 
 	/*
 	 * We do not migrate tasks that are:
