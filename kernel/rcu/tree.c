@@ -4615,6 +4615,8 @@ void __init rcu_init(void)
 		qovld_calc = DEFAULT_RCU_QOVLD_MULT * qhimark;
 	else
 		qovld_calc = qovld;
+
+	pr_info("Joel: Lazy enabled=%d (with kfree batching optimization from vlad).\n", IS_ENABLED(CONFIG_RCU_LAZY));
 }
 
 #include "tree_stall.h"
