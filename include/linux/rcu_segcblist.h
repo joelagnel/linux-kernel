@@ -203,6 +203,32 @@ struct rcu_cblist {
 #define SEGCBLIST_KTHREAD_GP	BIT(4)
 #define SEGCBLIST_OFFLOADED	BIT(5)
 
+// Manage the entry in the list of stats
+#define CB_STATS_VALID		BIT(0)
+#define CB_STATS_LAZY		BIT(1)
+
+struct rcu_cb_stats {
+	unsigned long func;
+
+	// Useful also check for mixed usages of lazy/non-lazy.
+	int flags;
+
+	// The timestamp in jiffies of the last time the callback was queued.
+	unsigned long last_queued;
+	// The maximum duration in jiffies that the callback was waiting on the queue.
+	unsigned long max_pending;
+
+	// How many times did the callback encounter an rcu_barrier().
+	int count_barriers;
+
+	// How many times did the callback get forced to be non-lazy due to a lazy CB.
+	int count_promoted_to_nonlazy;
+
+	// What was the last non-lazy callback that forced this callback to become non-lazy?
+	// Only counted if the callback is lazy.
+	unsigned long last_nonlazy_disturbing_func;
+};
+
 struct rcu_segcblist {
 	struct rcu_head *head;
 	struct rcu_head **tails[RCU_CBLIST_NSEGS];
@@ -213,6 +239,9 @@ struct rcu_segcblist {
 	long len;
 #endif
 	long seglen[RCU_CBLIST_NSEGS];
+#ifdef CONFIG_RCU_CB_DEBUG
+	struct rcu_cb_stats cb_stats[1024];
+#endif
 	u8 flags;
 };
 
