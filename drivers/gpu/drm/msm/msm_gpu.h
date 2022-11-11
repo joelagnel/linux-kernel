@@ -214,6 +214,9 @@ struct msm_gpu {
 	/* does gpu need hw_init? */
 	bool needs_hw_init;
 
+	/* is the GPU shutdown? */
+	bool is_shutdown;
+
 	/**
 	 * global_faults: number of GPU hangs not attributed to a particular
 	 * address space

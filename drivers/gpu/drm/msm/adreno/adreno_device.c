@@ -612,6 +612,7 @@ static void adreno_shutdown(struct platform_device *pdev)
 {
 	struct msm_gpu *gpu = dev_to_gpu(&pdev->dev);
 
+	gpu->is_shutdown = true;
 	WARN_ON_ONCE(adreno_system_suspend(&pdev->dev));
 }
 

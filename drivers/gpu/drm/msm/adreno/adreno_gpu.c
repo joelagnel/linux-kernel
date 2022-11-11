@@ -251,7 +251,7 @@ int adreno_get_param(struct msm_gpu *gpu, struct msm_file_private *ctx,
 	struct adreno_gpu *adreno_gpu = to_adreno_gpu(gpu);
 
 	/* No pointer params yet */
-	if (*len != 0)
+	if (*len != 0 || gpu->is_shutdown)
 		return -EINVAL;
 
 	switch (param) {
