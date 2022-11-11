@@ -607,9 +607,12 @@ static int adreno_remove(struct platform_device *pdev)
 	return 0;
 }
 
+static int adreno_system_suspend(struct device *dev);
 static void adreno_shutdown(struct platform_device *pdev)
 {
-	pm_runtime_force_suspend(&pdev->dev);
+	struct msm_gpu *gpu = dev_to_gpu(&pdev->dev);
+
+	WARN_ON_ONCE(adreno_system_suspend(&pdev->dev));
 }
 
 static const struct of_device_id dt_match[] = {
