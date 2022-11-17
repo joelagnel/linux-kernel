@@ -1067,7 +1067,7 @@ static void qdisc_destroy(struct Qdisc *qdisc)
 
 	trace_qdisc_destroy(qdisc);
 
-	call_rcu(&qdisc->rcu, qdisc_free_cb);
+	call_rcu_flush(&qdisc->rcu, qdisc_free_cb);
 }
 
 void qdisc_put(struct Qdisc *qdisc)
