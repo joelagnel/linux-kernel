@@ -1057,6 +1057,7 @@ struct rq {
 	unsigned long		cpu_capacity_orig;
 
 	struct callback_head	*balance_callback;
+	raw_spinlock_t		balance_lock;
 
 	unsigned char		nohz_idle_balance;
 	unsigned char		idle_balance;
@@ -1748,18 +1749,22 @@ queue_balance_callback(struct rq *rq,
 		       void (*func)(struct rq *rq))
 {
 	lockdep_assert_rq_held(rq);
+	raw_spin_lock(&rq->balance_lock);
 
 	/*
 	 * Don't (re)queue an already queued item; nor queue anything when
 	 * balance_push() is active, see the comment with
 	 * balance_push_callback.
 	 */
-	if (unlikely(head->next || rq->balance_callback == &balance_push_callback))
+	if (unlikely(head->next || rq->balance_callback == &balance_push_callback)) {
+		raw_spin_unlock(&rq->balance_lock);
 		return;
+	}
 
 	head->func = (void (*)(struct callback_head *))func;
 	head->next = rq->balance_callback;
 	rq->balance_callback = head;
+	raw_spin_unlock(&rq->balance_lock);
 }
 
 #define rcu_dereference_check_sched_domain(p) \

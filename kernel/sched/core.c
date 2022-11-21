@@ -634,6 +634,29 @@ struct rq *__task_rq_lock(struct task_struct *p, struct rq_flags *rf)
 }
 
 /*
+ * Helper to call __task_rq_lock safely, in scenarios where we might be about to
+ * queue a balance callback on a remote CPU. That CPU might be in proxy(), and
+ * could have released its rq lock while holding balance_lock. So release rq
+ * lock in such a situation to avoid deadlock, and retry.
+ */
+struct rq *__task_rq_lock_balance(struct task_struct *p, struct rq_flags *rf)
+{
+	struct rq *rq;
+	bool locked = false;
+
+	do {
+		if (locked) {
+			__task_rq_unlock(rq, rf);
+			cpu_relax();
+		}
+		rq = __task_rq_lock(p, rf);
+		locked = true;
+	} while (raw_spin_is_locked(&rq->balance_lock));
+
+	return rq;
+}
+
+/*
  * task_rq_lock - lock p->pi_lock and lock the rq @p resides on.
  */
 struct rq *task_rq_lock(struct task_struct *p, struct rq_flags *rf)
@@ -673,6 +696,29 @@ struct rq *task_rq_lock(struct task_struct *p, struct rq_flags *rf)
 		while (unlikely(task_on_rq_migrating(p)))
 			cpu_relax();
 	}
+}
+
+/*
+ * Helper to call task_rq_lock safely, in scenarios where we might be about to
+ * queue a balance callback on a remote CPU. That CPU might be in proxy(), and
+ * could have released its rq lock while holding balance_lock. So release rq
+ * lock in such a situation to avoid deadlock, and retry.
+ */
+struct rq *task_rq_lock_balance(struct task_struct *p, struct rq_flags *rf)
+{
+	struct rq *rq;
+	bool locked = false;
+
+	do {
+		if (locked) {
+			task_rq_unlock(rq, p, rf);
+			cpu_relax();
+		}
+		rq = task_rq_lock(p, rf);
+		locked = true;
+	} while (raw_spin_is_locked(&rq->balance_lock));
+
+	return rq;
 }
 
 /*
@@ -6739,6 +6785,12 @@ migrate_task:
 		p->wake_cpu = wake_cpu;
 	}
 
+	/*
+	 * Prevent other CPUs from queuing balance callbacks while we migrate
+	 * tasks in the migrate_list with the rq lock released.
+	 */
+	raw_spin_lock(&rq->balance_lock);
+
 	rq_unpin_lock(rq, rf);
 	raw_spin_rq_unlock(rq);
 	raw_spin_rq_lock(that_rq);
@@ -6758,7 +6810,21 @@ migrate_task:
 	}
 
 	raw_spin_rq_unlock(that_rq);
+
+	/*
+	 * This may make lockdep unhappy as we acquire rq->lock with
+	 * balance_lock held. But that should be a false positive, as the
+	 * following pattern happens only on the current CPU with interrupts
+	 * disabled:
+	 * rq_lock()
+	 * balance_lock();
+	 * rq_unlock();
+	 * rq_lock();
+	 */
 	raw_spin_rq_lock(rq);
+
+	raw_spin_unlock(&rq->balance_lock);
+
 	rq_repin_lock(rq, rf);
 
 	return NULL; /* Retry task selection on _this_ CPU. */
@@ -7489,7 +7555,7 @@ void rt_mutex_setprio(struct task_struct *p, struct task_struct *pi_task)
 	if (p->pi_top_task == pi_task && prio == p->prio && !dl_prio(prio))
 		return;
 
-	rq = __task_rq_lock(p, &rf);
+	rq = __task_rq_lock_balance(p, &rf);
 	update_rq_clock(rq);
 	/*
 	 * Set under pi_lock && rq->lock, such that the value can be used under
@@ -8093,7 +8159,8 @@ recheck:
 	 * To be able to change p->policy safely, the appropriate
 	 * runqueue lock must be held.
 	 */
-	rq = task_rq_lock(p, &rf);
+	rq = task_rq_lock_balance(p, &rf);
+
 	update_rq_clock(rq);
 
 	/*
@@ -10312,6 +10379,7 @@ void __init sched_init(void)
 
 		rq = cpu_rq(i);
 		raw_spin_lock_init(&rq->__lock);
+		raw_spin_lock_init(&rq->balance_lock);
 		rq->nr_running = 0;
 		rq->calc_load_active = 0;
 		rq->calc_load_update = jiffies + LOAD_FREQ;
