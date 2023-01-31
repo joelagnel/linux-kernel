@@ -152,6 +152,7 @@ void init_rt_rq(struct rt_rq *rt_rq)
 
 	rt_rq->rt_time = 0;
 	rt_rq->rt_bw_throttled = 0;
+	rt_rq->rt_se_running = 0;
 	rt_rq->rt_runtime = 0;
 	raw_spin_lock_init(&rt_rq->rt_runtime_lock);
 }
@@ -1318,6 +1319,7 @@ static void __delist_rt_entity(struct sched_rt_entity *rt_se, struct rt_prio_arr
 	if (list_empty(array->queue + rt_se_prio(rt_se)))
 		__clear_bit(rt_se_prio(rt_se), array->bitmap);
 
+	rt_rq->rt_se_running--;
 	rt_se->on_list = 0;
 }
 
@@ -1453,6 +1455,7 @@ static void __enqueue_rt_entity(struct sched_rt_entity *rt_se, unsigned int flag
 		else
 			list_add_tail(&rt_se->run_list, queue);
 
+		rt_rq->rt_se_running++;
 		__set_bit(rt_se_prio(rt_se), array->bitmap);
 		rt_se->on_list = 1;
 	}

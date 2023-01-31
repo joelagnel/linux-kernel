@@ -664,6 +664,7 @@ struct rt_rq {
 	struct rt_prio_array	active;
 	unsigned int		rt_nr_running;
 	unsigned int		rr_nr_running;
+	unsigned int		rt_se_running; /* number of runnable child SEs */
 #if defined CONFIG_SMP || defined CONFIG_RT_GROUP_SCHED
 	struct {
 		int		curr; /* highest queued rt task prio */
