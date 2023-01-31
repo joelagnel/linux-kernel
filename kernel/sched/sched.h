@@ -683,6 +683,8 @@ struct rt_rq {
 	int			rt_queued;
 
 	int			rt_bw_throttled; /* bandwidth throttled? */
+	/* All child groups throttled? Then this rt_rq is throttled even if it has bw */
+	int			rt_cg_throttled;
 	u64			rt_time;
 	u64			rt_runtime;
 	/* Nests inside the rq lock: */
@@ -690,6 +692,8 @@ struct rt_rq {
 
 #ifdef CONFIG_RT_GROUP_SCHED
 	unsigned int		rt_nr_boosted;
+	/* Number of immediate runnable child groups that are throttled (bw or cg) */
+	int			rt_nr_cg_throttled;
 
 	struct rq		*rq;
 	struct task_group	*tg;
