@@ -681,7 +681,7 @@ struct rt_rq {
 #endif /* CONFIG_SMP */
 	int			rt_queued;
 
-	int			rt_throttled;
+	int			rt_bw_throttled; /* bandwidth throttled? */
 	u64			rt_time;
 	u64			rt_runtime;
 	/* Nests inside the rq lock: */

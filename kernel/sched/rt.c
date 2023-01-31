@@ -151,7 +151,7 @@ void init_rt_rq(struct rt_rq *rt_rq)
 	rt_rq->rt_queued = 0;
 
 	rt_rq->rt_time = 0;
-	rt_rq->rt_throttled = 0;
+	rt_rq->rt_bw_throttled = 0;
 	rt_rq->rt_runtime = 0;
 	raw_spin_lock_init(&rt_rq->rt_runtime_lock);
 }
@@ -611,7 +611,7 @@ static void sched_rt_rq_dequeue(struct rt_rq *rt_rq)
 
 static inline int rt_rq_throttled(struct rt_rq *rt_rq)
 {
-	return rt_rq->rt_throttled && !rt_rq->rt_nr_boosted;
+	return rt_rq->rt_bw_throttled && !rt_rq->rt_nr_boosted;
 }
 
 static int rt_se_boosted(struct sched_rt_entity *rt_se)
@@ -692,7 +692,7 @@ static inline void sched_rt_rq_dequeue(struct rt_rq *rt_rq)
 
 static inline int rt_rq_throttled(struct rt_rq *rt_rq)
 {
-	return rt_rq->rt_throttled;
+	return rt_rq->rt_bw_throttled;
 }
 
 static inline const struct cpumask *sched_rt_period_mask(void)
@@ -850,7 +850,7 @@ balanced:
 		 * runtime - in which case borrowing doesn't make sense.
 		 */
 		rt_rq->rt_runtime = RUNTIME_INF;
-		rt_rq->rt_throttled = 0;
+		rt_rq->rt_bw_throttled = 0;
 		raw_spin_unlock(&rt_rq->rt_runtime_lock);
 		raw_spin_unlock(&rt_b->rt_runtime_lock);
 
@@ -877,7 +877,7 @@ static void __enable_runtime(struct rq *rq)
 		raw_spin_lock(&rt_rq->rt_runtime_lock);
 		rt_rq->rt_runtime = rt_b->rt_runtime;
 		rt_rq->rt_time = 0;
-		rt_rq->rt_throttled = 0;
+		rt_rq->rt_bw_throttled = 0;
 		raw_spin_unlock(&rt_rq->rt_runtime_lock);
 		raw_spin_unlock(&rt_b->rt_runtime_lock);
 	}
@@ -943,12 +943,12 @@ static int do_sched_rt_period_timer(struct rt_bandwidth *rt_b, int overrun)
 			u64 runtime;
 
 			raw_spin_lock(&rt_rq->rt_runtime_lock);
-			if (rt_rq->rt_throttled)
+			if (rt_rq->rt_bw_throttled)
 				balance_runtime(rt_rq);
 			runtime = rt_rq->rt_runtime;
 			rt_rq->rt_time -= min(rt_rq->rt_time, overrun*runtime);
-			if (rt_rq->rt_throttled && rt_rq->rt_time < runtime) {
-				rt_rq->rt_throttled = 0;
+			if (rt_rq->rt_bw_throttled && rt_rq->rt_time < runtime) {
+				rt_rq->rt_bw_throttled = 0;
 				enqueue = 1;
 
 				/*
@@ -969,7 +969,7 @@ static int do_sched_rt_period_timer(struct rt_bandwidth *rt_b, int overrun)
 			if (!rt_rq_throttled(rt_rq))
 				enqueue = 1;
 		}
-		if (rt_rq->rt_throttled)
+		if (rt_rq->rt_bw_throttled)
 			throttled = 1;
 
 		if (enqueue)
@@ -999,7 +999,7 @@ static int sched_rt_runtime_exceeded(struct rt_rq *rt_rq)
 {
 	u64 runtime = sched_rt_runtime(rt_rq);
 
-	if (rt_rq->rt_throttled)
+	if (rt_rq->rt_bw_throttled)
 		return rt_rq_throttled(rt_rq);
 
 	if (runtime >= sched_rt_period(rt_rq))
@@ -1018,7 +1018,7 @@ static int sched_rt_runtime_exceeded(struct rt_rq *rt_rq)
 		 * but accrue some time due to boosting.
 		 */
 		if (likely(rt_b->rt_runtime)) {
-			rt_rq->rt_throttled = 1;
+			rt_rq->rt_bw_throttled = 1;
 			printk_deferred_once("sched: RT throttling activated\n");
 		} else {
 			/*
