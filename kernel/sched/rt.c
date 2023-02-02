@@ -920,7 +920,6 @@ static int do_sched_rt_period_timer(struct rt_bandwidth *rt_b, int overrun)
 		span = cpu_online_mask;
 #endif
 	for_each_cpu(i, span) {
-		int enqueue = 0;
 		struct rt_rq *rt_rq = sched_rt_period_rt_rq(rt_b, i);
 		struct rq *rq = rq_of_rt_rq(rt_rq);
 		struct rq_flags rf;
