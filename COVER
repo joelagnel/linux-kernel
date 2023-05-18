@@ -1,0 +1,68 @@
+Hello!
+
+Here is v5 of the mremap start address optimization / fix for exec warning.
+
+Description of patches
+======================
+These patches optimizes the start addresses in move_page_tables() and tests the
+changes. It addresses a warning [1] that occurs due to a downward, overlapping
+move on a mutually-aligned offset within a PMD during exec. By initiating the
+copy process at the PMD level when such alignment is present, we can prevent
+this warning and speed up the copying process at the same time. Linus Torvalds
+suggested this idea.
+
+Please check the individual patches for more details.
+
+[1] https://lore.kernel.org/all/ZB2GTBD%2FLWTrkOiO@dhcp22.suse.cz/
+
+Link to v4:
+https://lore.kernel.org/all/20230531220807.2048037-1-joel@joelfernandes.org/
+
+History of patches:
+v4->v5:
+1. Rebased on mainline.
+2. Several improvement suggestions from Lorenzo.
+
+v3->v4:
+1. Care to be taken to move purely within a VMA, in other words this check
+   in call_align_down():
+    if (vma->vm_start != addr_masked)
+            return false;
+
+    As an example of why this is needed:
+    Consider the following range which is 2MB aligned and is
+    a part of a larger 10MB range which is not shown. Each
+    character is 256KB below making the source and destination
+    2MB each. The lower case letters are moved (s to d) and the
+    upper case letters are not moved.
+
+    |DDDDddddSSSSssss|
+
+    If we align down 'ssss' to start from the 'SSSS', we will end up destroying
+    SSSS. The above if statement prevents that and I verified it.
+
+    I also added a test for this in the last patch.
+
+2. Handle the stack case separately. We do not care about #1 for stack movement
+   because the 'SSSS' does not matter during this move. Further we need to do this
+   to prevent the stack move warning.
+
+    if (!for_stack && vma->vm_start <= addr_masked)
+            return false;
+
+v2->v3:
+1. Masked address was stored in int, fixed it to unsigned long to avoid truncation.
+2. We now handle moves happening purely within a VMA, a new test is added to handle this.
+3. More code comments.
+
+v1->v2:
+1. Trigger the optimization for mremaps smaller than a PMD. I tested by tracing
+that it works correctly.
+
+2. Fix issue with bogus return value found by Linus if we broke out of the
+above loop for the first PMD itself.
+
+v1: Initial RFC.
+
+option-subject Optimize mremap during mutual alignment within PMD
+option-prefix PATCH v5
