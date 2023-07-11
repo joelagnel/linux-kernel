@@ -9,7 +9,7 @@
 #
 # Usage: kvm-test-1-run.sh config builddir resdir seconds qemu-args boot_args
 #
-# qemu-args defaults to "-enable-kvm -nographic", along with arguments
+# qemu-args defaults to "-enable-kvm -nographic -no-reboot", along with arguments
 #			specifying the number of CPUs and other options
 #			generated from the underlying CPU architecture.
 # boot_args defaults to value returned by the per_version_boot_params
@@ -132,7 +132,7 @@ then
 fi
 
 # Generate -smp qemu argument.
-qemu_args="-enable-kvm -nographic $qemu_args"
+qemu_args="-enable-kvm -nographic -no-reboot $qemu_args"
 cpu_count=`configNR_CPUS.sh $resdir/ConfigFragment`
 cpu_count=`configfrag_boot_cpus "$boot_args" "$config_template" "$cpu_count"`
 if test "$cpu_count" -gt "$TORTURE_ALLOTED_CPUS"
