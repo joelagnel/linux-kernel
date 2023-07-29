@@ -671,21 +671,67 @@ static void nocb_gp_sleep(struct rcu_data *my_rdp, int cpu)
 }
 
 /*
+ * Given an rdp, flush its bypass list if needed and return information about
+ * if a deferred-wakeup needs to be organized depending on whether things are
+ * still in the bypass list. Also tell caller if the list was flushed and if it
+ * is still empty after any flushing.
+ */
+static int nocb_gp_flush_wake(struct rcu_data *rdp, bool *empty, bool *flush)
+{
+	long bypass_ncbs;
+	long lazy_ncbs;
+	unsigned long j = jiffies;
+
+	trace_rcu_nocb_wake(rcu_state.name, rdp->cpu, TPS("Check"));
+	lockdep_assert_held(&rdp->nocb_lock);
+	bypass_ncbs = rcu_cblist_n_cbs(&rdp->nocb_bypass);
+	lazy_ncbs = READ_ONCE(rdp->lazy_len);
+
+	*flush = false;
+	*empty = false;
+	if (bypass_ncbs && (lazy_ncbs == bypass_ncbs) &&
+	    (time_after(j, READ_ONCE(rdp->nocb_bypass_first) + jiffies_till_flush) ||
+	     bypass_ncbs > 2 * qhimark)) {
+		*flush = true;
+	} else if (bypass_ncbs && (lazy_ncbs != bypass_ncbs) &&
+			(time_after(j, READ_ONCE(rdp->nocb_bypass_first) + 1) ||
+			 bypass_ncbs > 2 * qhimark)) {
+		*flush = true;
+	} else if (!bypass_ncbs && rcu_segcblist_empty(&rdp->cblist)) {
+		*empty = true;
+		return RCU_NOCB_WAKE_NOT;
+	}
+
+	if (*flush) {
+		// Bypass full or old, so flush it.
+		(void)rcu_nocb_try_flush_bypass(rdp, j);
+		bypass_ncbs = rcu_cblist_n_cbs(&rdp->nocb_bypass);
+		lazy_ncbs = READ_ONCE(rdp->lazy_len);
+	}
+
+	if (bypass_ncbs) {
+		trace_rcu_nocb_wake(rcu_state.name, rdp->cpu,
+				    bypass_ncbs == lazy_ncbs ? TPS("Lazy") : TPS("Bypass"));
+		return (bypass_ncbs == lazy_ncbs ? RCU_NOCB_WAKE_LAZY :
+						   RCU_NOCB_WAKE_BYPASS);
+	}
+	return RCU_NOCB_WAKE_NOT;
+}
+
+/*
  * No-CBs GP kthreads come here to wait for additional callbacks to show up
  * or for grace periods to end.
  */
 static void nocb_gp_wait(struct rcu_data *my_rdp)
 {
-	bool bypass = false;
 	int __maybe_unused cpu = my_rdp->cpu;
 	unsigned long cur_gp_seq;
 	unsigned long flags;
 	bool gotcbs = false;
-	unsigned long j = jiffies;
-	bool lazy = false;
 	bool needwait_gp = false; // This prevents actual uninitialized use.
 	bool needwake;
 	bool needwake_gp;
+	int defer_wake_type = RCU_NOCB_WAKE_NOT;
 	struct rcu_data *rdp, *rdp_toggling = NULL;
 	struct rcu_node *rnp;
 	unsigned long wait_gp_seq = 0; // Suppress "use uninitialized" warning.
@@ -712,44 +758,24 @@ static void nocb_gp_wait(struct rcu_data *my_rdp)
 	 * won't be ignored for long.
 	 */
 	list_for_each_entry(rdp, &my_rdp->nocb_head_rdp, nocb_entry_rdp) {
-		long bypass_ncbs;
-		bool flush_bypass = false;
-		long lazy_ncbs;
+		int defer_wake_type_one = RCU_NOCB_WAKE_NOT;
+		bool flushed;
+		bool empty;
 
-		trace_rcu_nocb_wake(rcu_state.name, rdp->cpu, TPS("Check"));
 		rcu_nocb_lock_irqsave(rdp, flags);
-		lockdep_assert_held(&rdp->nocb_lock);
-		bypass_ncbs = rcu_cblist_n_cbs(&rdp->nocb_bypass);
-		lazy_ncbs = READ_ONCE(rdp->lazy_len);
+		defer_wake_type_one = nocb_gp_flush_wake(rdp, &empty, &flushed);
 
-		if (bypass_ncbs && (lazy_ncbs == bypass_ncbs) &&
-		    (time_after(j, READ_ONCE(rdp->nocb_bypass_first) + jiffies_till_flush) ||
-		     bypass_ncbs > 2 * qhimark)) {
-			flush_bypass = true;
-		} else if (bypass_ncbs && (lazy_ncbs != bypass_ncbs) &&
-		    (time_after(j, READ_ONCE(rdp->nocb_bypass_first) + 1) ||
-		     bypass_ncbs > 2 * qhimark)) {
-			flush_bypass = true;
-		} else if (!bypass_ncbs && rcu_segcblist_empty(&rdp->cblist)) {
+		// We may need to do a deferred wakeup later for bypass/lazy
+		// So note down what we learnt from the rdp.
+		defer_wake_type = max(defer_wake_type_one, defer_wake_type);
+
+		// Did we make any updates to main cblist? If not, no
+		// non-deferred wake up to do for this rdp.
+		if (!flushed && empty) {
 			rcu_nocb_unlock_irqrestore(rdp, flags);
-			continue; /* No callbacks here, try next. */
+			continue;
 		}
 
-		if (flush_bypass) {
-			// Bypass full or old, so flush it.
-			(void)rcu_nocb_try_flush_bypass(rdp, j);
-			bypass_ncbs = rcu_cblist_n_cbs(&rdp->nocb_bypass);
-			lazy_ncbs = READ_ONCE(rdp->lazy_len);
-		}
-
-		if (bypass_ncbs) {
-			trace_rcu_nocb_wake(rcu_state.name, rdp->cpu,
-					    bypass_ncbs == lazy_ncbs ? TPS("Lazy") : TPS("Bypass"));
-			if (bypass_ncbs == lazy_ncbs)
-				lazy = true;
-			else
-				bypass = true;
-		}
 		rnp = rdp->mynode;
 
 		// Advance callbacks if helpful and low contention.
@@ -792,23 +818,16 @@ static void nocb_gp_wait(struct rcu_data *my_rdp)
 			rcu_gp_kthread_wake();
 	}
 
-	my_rdp->nocb_gp_bypass = bypass;
+	my_rdp->nocb_gp_bypass = (defer_wake_type == RCU_NOCB_WAKE_BYPASS);
 	my_rdp->nocb_gp_gp = needwait_gp;
 	my_rdp->nocb_gp_seq = needwait_gp ? wait_gp_seq : 0;
 
 	// At least one child with non-empty ->nocb_bypass, so set
 	// timer in order to avoid stranding its callbacks.
-	if (!rcu_nocb_poll) {
-		// If bypass list only has lazy CBs. Add a deferred lazy wake up.
-		if (lazy && !bypass) {
-			wake_nocb_gp_defer(my_rdp, RCU_NOCB_WAKE_LAZY,
-					TPS("WakeLazyIsDeferred"));
-		// Otherwise add a deferred bypass wake up.
-		} else if (bypass) {
-			wake_nocb_gp_defer(my_rdp, RCU_NOCB_WAKE_BYPASS,
-					TPS("WakeBypassIsDeferred"));
-		}
-	}
+	if (!rcu_nocb_poll && defer_wake_type != RCU_NOCB_WAKE_NOT)
+		wake_nocb_gp_defer(my_rdp, defer_wake_type,
+				   defer_wake_type == RCU_NOCB_WAKE_LAZY ?
+				   TPS("WakeLazyIsDeferred") : TPS("WakeBypassIsDeferred"));
 
 	if (rcu_nocb_poll) {
 		/* Polling, so trace if first poll in the series. */
