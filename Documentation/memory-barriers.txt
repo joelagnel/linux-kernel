@@ -435,6 +435,11 @@ Memory barriers come in four basic varieties:
      variables such as READ_ONCE() and rcu_dereference() provide implicit
      address-dependency barriers.
 
+     [!] Note that address dependency barriers can be destroyed by comparison
+     of a pointer obtained by a marked accessor such as READ_ONCE() or
+     rcu_dereference() with some value.  For an example of this, see
+     rcu_dereference.rst (part where the comparison of pointers is discussed).
+
  (3) Read (or load) memory barriers.
 
      A read barrier is an address-dependency barrier plus a guarantee that all
