@@ -376,6 +376,38 @@ mechanism, most commonly locking or reference counting
 .. |high-quality implementation of C11 memory_order_consume [PDF]| replace:: high-quality implementation of C11 ``memory_order_consume`` [PDF]
 .. _high-quality implementation of C11 memory_order_consume [PDF]: http://www.rdrop.com/users/paulmck/RCU/consume.2015.07.13a.pdf
 
+Note that, there can be strange side effects (due to compiler optimizations) if
+``gp`` is ever accessed using a plain load (i.e. without ``READ_ONCE()`` or
+``rcu_dereference()``) potentially hurting any succeeding
+``rcu_dereference()``. For example, consider the code:
+
+   ::
+
+       1 bool do_something_gp(void)
+       2 {
+       3   void *tmp;
+       4   rcu_read_lock();
+       5   tmp = gp; // Plain-load of GP.
+       6   printk("Point gp = %p\n", tmp);
+       7
+       8   p = rcu_dereference(gp);
+       9   if (p) {
+      10     do_something(p->a, p->b);
+      11     rcu_read_unlock();
+      12     return true;
+      13   }
+      14   rcu_read_unlock();
+      15   return false;
+      16 }
+
+The behavior of plain accesses involved in a data race is non-deterministic in
+the face of compiler optimizations. Since accesses to the ``gp`` pointer is
+by-design a data race, the compiler could trip this code by caching the value
+of ``gp`` into a register in line 5, and then using the value of the register
+to satisfy the load in line 10. Thus it is important to never mix
+plain accesses of a memory location with rcu_dereference() of the same memory
+location, in code involved in a data race.
+
 In short, updaters use rcu_assign_pointer() and readers use
 rcu_dereference(), and these two RCU API elements work together to
 ensure that readers have a consistent view of newly added data elements.
