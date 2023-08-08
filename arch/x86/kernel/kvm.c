@@ -322,7 +322,7 @@ static void kvm_register_steal_time(void)
 
 	if (!has_steal_clock)
 		return;
-
+pr_info("stealtime: before wrmsr tglx\n");
 	wrmsrl(MSR_KVM_STEAL_TIME, (slow_virt_to_phys(st) | KVM_MSR_ENABLED));
 	pr_info("stealtime: cpu %d, msr %llx\n", cpu,
 		(unsigned long long) slow_virt_to_phys(st));
