@@ -485,6 +485,10 @@ static int lapic_next_deadline(unsigned long delta,
 static int lapic_timer_shutdown(struct clock_event_device *evt)
 {
 	unsigned int v;
+	static int c;
+
+	if (c++ % 1000 == 0)
+		trace_printk("lapic_timer_shutdown %d\n", c);
 
 	/* Lapic used as dummy for broadcast ? */
 	if (evt->features & CLOCK_EVT_FEAT_DUMMY)
@@ -500,6 +504,11 @@ static int lapic_timer_shutdown(struct clock_event_device *evt)
 static inline int
 lapic_timer_set_periodic_oneshot(struct clock_event_device *evt, bool oneshot)
 {
+	static int c;
+
+	if (c++ % 1000 == 0)
+		trace_printk("lapic_timer_set_periodic_oneshot %d\n", c);
+
 	/* Lapic used as dummy for broadcast ? */
 	if (evt->features & CLOCK_EVT_FEAT_DUMMY)
 		return 0;
