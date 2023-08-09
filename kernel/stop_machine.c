@@ -199,6 +199,8 @@ notrace void __weak stop_machine_yield(const struct cpumask *cpumask)
 	cpu_relax();
 }
 
+DEFINE_PER_CPU(ktime_t, lockup_ts);
+
 /* This is the cpu_stop function which stops the CPU. */
 static int multi_cpu_stop(void *data)
 {
@@ -222,6 +224,8 @@ static int multi_cpu_stop(void *data)
 		cpumask = msdata->active_cpus;
 		is_active = cpumask_test_cpu(cpu, cpumask);
 	}
+
+	WRITE_ONCE(per_cpu(lockup_ts, cpu), ktime_get_mono_fast_ns());
 
 	/* Simple state machine */
 	do {
@@ -251,8 +255,18 @@ static int multi_cpu_stop(void *data)
 			 */
 			touch_nmi_watchdog();
 		}
+		// Make sure diff bn now and lockup_ts is less than 30s and panic if not
+		if (READ_ONCE(per_cpu(lockup_ts, cpu)) &&
+		    ktime_to_ns(ktime_sub(ktime_get_mono_fast_ns(),
+					  READ_ONCE(per_cpu(lockup_ts, cpu)))) >
+			    2 * NSEC_PER_SEC) {
+			panic("CPU %d stuck for %lld ns\n", cpu,  ktime_to_ns(ktime_sub(ktime_get_mono_fast_ns(), READ_ONCE(lockup_ts))));
+		}
+
 		rcu_momentary_dyntick_idle();
 	} while (curstate != MULTI_STOP_EXIT);
+
+	WRITE_ONCE(per_cpu(lockup_ts, cpu), 0);
 
 	local_irq_restore(flags);
 	return err;
