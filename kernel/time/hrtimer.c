@@ -469,9 +469,32 @@ debug_init(struct hrtimer *timer, clockid_t clockid,
 	trace_hrtimer_init(timer, clockid, mode);
 }
 
+// last hrtimer expiry time
+DEFINE_PER_CPU(s64, last_exp);
+
+// number of times the same expiry time value was seen
+DEFINE_PER_CPU(int, last_exp_count);
+
 static inline void debug_activate(struct hrtimer *timer,
 				  enum hrtimer_mode mode)
 {
+	if (per_cpu(last_exp, smp_processor_id()) == hrtimer_get_expires(timer)) {
+		per_cpu(last_exp_count, smp_processor_id())++;
+	} else {
+		per_cpu(last_exp_count, smp_processor_id()) = 1;
+	}
+
+	if (per_cpu(last_exp_count, smp_processor_id()) > 500) {
+		per_cpu(last_exp_count, smp_processor_id()) = 1;
+		trace_printk("hrtimer hung\n");
+		trace_printk("hrtimer: CPU %d hung for %lld usecs\n",
+		      smp_processor_id(),
+		      (long long)ktime_to_us(hrtimer_get_expires(timer)));
+		tracing_off();
+	}
+
+	per_cpu(last_exp, smp_processor_id()) = hrtimer_get_expires(timer);
+
 	debug_hrtimer_activate(timer, mode);
 	trace_hrtimer_start(timer, mode);
 }
