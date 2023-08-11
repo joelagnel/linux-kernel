@@ -34,8 +34,12 @@ do
 	scenariobasedir="`echo ${scenariodir} | sed -e 's/\.[0-9]*$//'`"
 	if grep -E -q "error:|warning:|^ld: .*undefined reference to" < $i
 	then
-		grep -E "error:|warning:|^ld: .*undefined reference to" < $i > $i.diags
-		files="$files $i.diags $i"
+		egrep "error:|warning:|^ld: .*undefined reference to" < $i | grep -v "objtool" > $i.diags
+		if [ -s "$i.diags" ]; then
+			files="$files $i.diags $i"
+		else
+			rm "$i.diags"
+		fi
 	elif ! test -f ${scenariobasedir}/vmlinux && ! test -f ${scenariobasedir}/vmlinux.xz && ! test -f "${rundir}/re-run"
 	then
 		echo No ${scenariobasedir}/vmlinux file > $i.diags
