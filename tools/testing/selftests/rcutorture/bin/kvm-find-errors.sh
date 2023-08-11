@@ -30,12 +30,17 @@ editor=${EDITOR-vi}
 files=
 for i in ${rundir}/*/Make.out
 do
-	if egrep -q "error:|warning:" < $i
-	then
-		egrep "error:|warning:" < $i > $i.diags
-		files="$files $i.diags $i"
-	fi
+        if egrep -q "error:|warning:" < $i
+        then
+                egrep "error:|warning:" < $i | grep -v "objtool" > $i.diags
+                if [ -s "$i.diags" ]; then
+                    files="$files $i.diags $i"
+                else
+                    rm "$i.diags"
+                fi
+        fi
 done
+
 if test -n "$files"
 then
 	$editor $files
