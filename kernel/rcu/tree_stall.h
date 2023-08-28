@@ -160,6 +160,7 @@ void rcu_cpu_stall_reset(void)
 {
 	WRITE_ONCE(rcu_state.nr_fqs_jiffies_stall, 3);
 	WRITE_ONCE(rcu_state.jiffies_stall, ULONG_MAX);
+	WRITE_ONCE(rcu_state.jiffies_last_fqs, 0);
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -177,6 +178,7 @@ static void record_gp_stall_check_time(void)
 	smp_mb(); // ->gp_start before ->jiffies_stall and caller's ->gp_seq.
 	WRITE_ONCE(rcu_state.nr_fqs_jiffies_stall, 0);
 	WRITE_ONCE(rcu_state.jiffies_stall, j + j1);
+	WRITE_ONCE(rcu_state.jiffies_last_fqs, 0);
 	rcu_state.jiffies_resched = j + j1 / 2;
 	rcu_state.n_force_qs_gpstart = READ_ONCE(rcu_state.n_force_qs);
 }
