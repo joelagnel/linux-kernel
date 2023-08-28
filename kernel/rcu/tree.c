@@ -1560,13 +1560,14 @@ static void rcu_gp_fqs(bool first_time)
 
 	WARN_ON_ONCE(nr_fqs > 3);
 	/* Only countdown nr_fqs for stall purposes if jiffies moves. */
-	if (nr_fqs) {
+	if (nr_fqs && jiffies != READ_ONCE(rcu_state.jiffies_last_fqs)) {
 		if (nr_fqs == 1) {
 			WRITE_ONCE(rcu_state.jiffies_stall,
 				   jiffies + rcu_jiffies_till_stall_check());
 		}
 		WRITE_ONCE(rcu_state.nr_fqs_jiffies_stall, --nr_fqs);
 	}
+	WRITE_ONCE(rcu_state.jiffies_last_fqs, jiffies);
 
 	if (first_time) {
 		/* Collect dyntick-idle snapshots. */

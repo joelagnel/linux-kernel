@@ -386,6 +386,8 @@ struct rcu_state {
 						/*  in jiffies. */
 	unsigned long jiffies_stall;		/* Time at which to check */
 						/*  for CPU stalls. */
+	unsigned long jiffies_last_fqs;		/* jiffies value at last FQS.
+						   to confirm jiffies moves. */
 	int nr_fqs_jiffies_stall;		/* Number of fqs loops after
 						 * which read jiffies and set
 						 * jiffies_stall. Stall
