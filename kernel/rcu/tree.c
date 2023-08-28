@@ -1559,6 +1559,7 @@ static void rcu_gp_fqs(bool first_time)
 	WRITE_ONCE(rcu_state.n_force_qs, rcu_state.n_force_qs + 1);
 
 	WARN_ON_ONCE(nr_fqs > 3);
+	WARN_ON_ONCE(nr_fqs && jiffies == READ_ONCE(rcu_state.jiffies_last_fqs));
 	/* Only countdown nr_fqs for stall purposes if jiffies moves. */
 	if (nr_fqs && jiffies != READ_ONCE(rcu_state.jiffies_last_fqs)) {
 		if (nr_fqs == 1) {
