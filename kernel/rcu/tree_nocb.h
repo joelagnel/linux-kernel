@@ -1069,7 +1069,7 @@ static void do_nocb_deferred_wakeup_timer(struct timer_list *t)
 
 	raw_spin_lock_irqsave(&rdp->nocb_gp_lock, flags);
 	smp_mb__after_spinlock(); /* Timer expire before wakeup. */
-	do_nocb_deferred_wakeup_common(rdp, rdp, RCU_NOCB_WAKE_BYPASS, flags);
+	do_nocb_deferred_wakeup_common(rdp, rdp, RCU_NOCB_WAKE_LAZY, flags);
 }
 
 /*
