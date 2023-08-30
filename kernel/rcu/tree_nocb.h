@@ -676,33 +676,34 @@ static void nocb_gp_sleep(struct rcu_data *my_rdp, int cpu)
  * still in the bypass list. Also tell caller if the list was flushed and if it
  * is still empty after any flushing.
  */
-static int nocb_gp_flush_wake(struct rcu_data *rdp, bool *empty, bool *flush)
+static int nocb_gp_flush_wake(struct rcu_data *rdp, bool *wakeup_defer)
 {
 	long bypass_ncbs;
 	long lazy_ncbs;
+	bool flush = false;
 	unsigned long j = jiffies;
 
+	*wakeup_defer = false;
 	trace_rcu_nocb_wake(rcu_state.name, rdp->cpu, TPS("Check"));
 	lockdep_assert_held(&rdp->nocb_lock);
 	bypass_ncbs = rcu_cblist_n_cbs(&rdp->nocb_bypass);
 	lazy_ncbs = READ_ONCE(rdp->lazy_len);
 
-	*flush = false;
-	*empty = false;
 	if (bypass_ncbs && (lazy_ncbs == bypass_ncbs) &&
 	    (time_after(j, READ_ONCE(rdp->nocb_bypass_first) + jiffies_till_flush) ||
 	     bypass_ncbs > 2 * qhimark)) {
-		*flush = true;
+		flush = true;
 	} else if (bypass_ncbs && (lazy_ncbs != bypass_ncbs) &&
 			(time_after(j, READ_ONCE(rdp->nocb_bypass_first) + 1) ||
 			 bypass_ncbs > 2 * qhimark)) {
-		*flush = true;
+		flush = true;
 	} else if (!bypass_ncbs && rcu_segcblist_empty(&rdp->cblist)) {
-		*empty = true;
 		return RCU_NOCB_WAKE_NOT;
 	}
 
-	if (*flush) {
+	if (flush) {
+		// Let the caller do a deferred wakeup.
+		*wakeup_defer = true;
 		// Bypass full or old, so flush it.
 		(void)rcu_nocb_try_flush_bypass(rdp, j);
 		bypass_ncbs = rcu_cblist_n_cbs(&rdp->nocb_bypass);
@@ -759,11 +760,10 @@ static void nocb_gp_wait(struct rcu_data *my_rdp)
 	 */
 	list_for_each_entry(rdp, &my_rdp->nocb_head_rdp, nocb_entry_rdp) {
 		int defer_wake_type_one = RCU_NOCB_WAKE_NOT;
-		bool flushed;
-		bool empty;
+		bool wakeup_defer;
 
 		rcu_nocb_lock_irqsave(rdp, flags);
-		defer_wake_type_one = nocb_gp_flush_wake(rdp, &empty, &flushed);
+		defer_wake_type_one = nocb_gp_flush_wake(rdp, &wakeup_defer);
 
 		// We may need to do a deferred wakeup later for bypass/lazy
 		// So note down what we learnt from the rdp.
@@ -771,7 +771,7 @@ static void nocb_gp_wait(struct rcu_data *my_rdp)
 
 		// Did we make any updates to main cblist? If not, no
 		// non-deferred wake up to do for this rdp.
-		if (!flushed && empty) {
+		if (!wakeup_defer) {
 			rcu_nocb_unlock_irqrestore(rdp, flags);
 			continue;
 		}
