@@ -1112,7 +1112,10 @@ static int rcu_torture_boost(void *arg)
 				failed = rcu_torture_boost_failed(gp_state, &gp_state_time);
 			// If we don't have a grace period in flight, start one.
 			if (!gp_initiated || cur_ops->poll_gp_state(gp_state)) {
+				trace_printk("Boost test: About to start GP, cur gp_seq %lx\n", cur_ops->get_gp_seq());
 				gp_state = cur_ops->start_gp_poll();
+				trace_printk("Boost test: Started GP, cur gp_seq %lx, gp_state %lx (%ld)\n",
+					     cur_ops->get_gp_seq(), gp_state, gp_state);
 				gp_initiated = true;
 				gp_state_time = jiffies;
 			}

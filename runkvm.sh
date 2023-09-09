@@ -41,9 +41,9 @@ trace_events=(
 	)
 
 # Call kvm.sh with the arrays
-tools/testing/selftests/rcutorture/bin/kvm.sh \
-		--cpus 48 \
-		--duration 240 \
-		--configs "2*TREE04" \
+sudo tools/testing/selftests/rcutorture/bin/kvm.sh \
+		--cpus 80 \
+		--duration 60 \
+		--configs "20*TREE03" \
 		--kconfig "$(IFS=" "; echo "${kconfigs[*]}")" \
 		--bootargs "trace_event=$(IFS=,; echo "${trace_events[*]}") $(IFS=" "; echo "${bootargs[*]}")"
