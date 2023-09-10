@@ -2475,6 +2475,53 @@ static inline bool is_cpu_allowed(struct task_struct *p, int cpu)
 }
 
 /*
+ * Per-CPU kthreads are allowed to run on !active && online CPUs, see
+ * __set_cpus_allowed_ptr() and select_fallback_rq().
+ */
+static inline bool is_cpu_allowed_diags(struct task_struct *p, int cpu)
+{
+	/* When not in the task's cpumask, no point in looking further. */
+	if (!cpumask_test_cpu(cpu, p->cpus_ptr)) {
+		trace_printk("CPU %d not in cpus_ptr (%*pbl) of task %s[%d]\n",
+			     cpu, cpumask_pr_args(p->cpus_ptr),
+			     p->comm, task_pid_nr(p));
+		return false;
+	}
+
+	/* migrate_disabled() must be allowed to finish. */
+	if (is_migration_disabled(p)) {
+		trace_printk("task %s[%d] migration disabled\n",
+			     p->comm, task_pid_nr(p));
+		return cpu_online(cpu);
+	}
+
+	/* Non kernel threads are not allowed during either online or offline. */
+	if (!(p->flags & PF_KTHREAD)) {
+		trace_printk("task %s[%d] not PF_KTHREAD\n",
+			     p->comm, task_pid_nr(p));
+		return cpu_active(cpu) && task_cpu_possible(cpu, p);
+	}
+
+	/* KTHREAD_IS_PER_CPU is always allowed. */
+	if (kthread_is_per_cpu(p)) {
+		trace_printk("task %s[%d] KTHREAD_IS_PER_CPU\n",
+			     p->comm, task_pid_nr(p));
+		return cpu_online(cpu);
+	}
+
+	/* Regular kernel threads don't get to stay during offline. */
+	if (cpu_dying(cpu)) {
+		trace_printk("cpu %d dying\n", cpu);
+		return false;
+	}
+
+	trace_printk("returning cpu_online(%d)=%d\n", cpu, cpu_online(cpu));
+
+	/* But are allowed during online. */
+	return cpu_online(cpu);
+}
+
+/*
  * This is how migration works:
  *
  * 1) we invoke migration_cpu_stop() on the target CPU using
@@ -2543,8 +2590,11 @@ static struct rq *__migrate_task(struct rq *rq, struct rq_flags *rf,
 				 struct task_struct *p, int dest_cpu)
 {
 	/* Affinity changed (again). */
-	if (!is_cpu_allowed(p, dest_cpu))
+	if (!is_cpu_allowed(p, dest_cpu)) {
+		trace_printk("CPU %d is not allowed\n", dest_cpu);
+		is_cpu_allowed_diags(p, dest_cpu);
 		return rq;
+	}
 
 	rq = move_queued_task(rq, rf, p, dest_cpu);
 
@@ -9437,8 +9487,11 @@ static int __balance_push_cpu_stop(void *arg)
 	update_rq_clock(rq);
 
 	if (task_rq(p) == rq && task_on_rq_queued(p)) {
+		trace_printk("attempt push task %d currently on cpu %d to...\n", task_pid_nr(p), rq->cpu);
 		cpu = select_fallback_rq(rq->cpu, p);
+		trace_printk("to new cpu %d\n", cpu);
 		rq = __migrate_task(rq, &rf, p, cpu);
+		trace_printk("After __migrate_task, new cpu = %d\n", rq->cpu);
 	}
 
 	rq_unlock(rq, &rf);

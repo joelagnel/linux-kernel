@@ -505,6 +505,8 @@ repeat:
 		int ret;
 
 		/* cpu stop callbacks must not sleep, make in_atomic() == T */
+		// trace_printk the caller and fn
+		trace_printk("cpu_stop: caller=%pS fn=%pS on cpu %d\n", (void *)work->caller, (void *)fn, cpu);
 		stopper->caller = work->caller;
 		stopper->fn = fn;
 		preempt_count_inc();
