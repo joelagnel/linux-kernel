@@ -1,0 +1,1 @@
+gcc -fno-asynchronous-unwind-tables -fno-ident          -nostdlib -include ../../../../include/nolibc/nolibc.h          -s -static -Os -o init init.c -lgcc

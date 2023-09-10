@@ -71,11 +71,14 @@ if echo -e "#if __x86_64__||__i386__||__i486__||__i586__||__i686__" \
         ${CROSS_COMPILE}gcc -fno-asynchronous-unwind-tables -fno-ident \
 		-nostdlib -include ../../../../include/nolibc/nolibc.h \
 		-s -static -Os -o init init.c -lgcc
+
+        echo "${CROSS_COMPILE}gcc -fno-asynchronous-unwind-tables -fno-ident \
+		-nostdlib -include ../../../../include/nolibc/nolibc.h \
+		-s -static -Os -o init init.c -lgcc"
 else
 	${CROSS_COMPILE}gcc -s -static -Os -o init init.c
 fi
 
-rm init.c
 echo "Done creating a statically linked C-language initrd"
 
 exit 0

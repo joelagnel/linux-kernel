@@ -1,0 +1,23 @@
+[
+  {
+    "arguments": [
+      "/usr/lib/ccache/gcc",
+      "-c",
+      "-fno-asynchronous-unwind-tables",
+      "-fno-ident",
+      "-include",
+      "../../../../include/nolibc/nolibc.h",
+      "-Os",
+      "-I",
+      "/s/",
+      "-I",
+      "/s/",
+      "-o",
+      "init",
+      "init.c"
+    ],
+    "directory": "/usr/local/google/home/joelaf/btrfs-chrome-linux/linux-stable-staging/src/tools/testing/selftests/rcutorture/initrd",
+    "file": "/usr/local/google/home/joelaf/btrfs-chrome-linux/linux-stable-staging/src/tools/testing/selftests/rcutorture/initrd/init.c",
+    "output": "/usr/local/google/home/joelaf/btrfs-chrome-linux/linux-stable-staging/src/tools/testing/selftests/rcutorture/initrd/init"
+  }
+]
