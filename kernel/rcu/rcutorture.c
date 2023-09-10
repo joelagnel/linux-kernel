@@ -1049,8 +1049,10 @@ static bool rcu_torture_boost_failed(unsigned long gp_state, unsigned long *star
 			// At most one persisted message per boost test.
 			j = jiffies;
 			lp = READ_ONCE(last_persist);
-			if (time_after(j, lp + mininterval) && cmpxchg(&last_persist, lp, j) == lp)
+			if (time_after(j, lp + mininterval) && cmpxchg(&last_persist, lp, j) == lp) {
 				pr_info("Boost inversion persisted: No QS from CPU %d\n", cpu);
+				trace_printk("Boost inversion persisted: No QS from CPU %d\n", cpu);
+			}
 			return false; // passed on a technicality
 		}
 		VERBOSE_TOROUT_STRING("rcu_torture_boost boosting failed");
@@ -1058,15 +1060,20 @@ static bool rcu_torture_boost_failed(unsigned long gp_state, unsigned long *star
 		if (!xchg(&dbg_done, 1) && cur_ops->gp_kthread_dbg) {
 			pr_info("Boost inversion thread ->rt_priority %u gp_state %lu jiffies %lu\n",
 				current->rt_priority, gp_state, end - *start);
+			trace_printk("Boost inversion thread ->rt_priority %u gp_state %lu jiffies %lu\n",
+				     current->rt_priority, gp_state, end - *start);
 			cur_ops->gp_kthread_dbg();
 			// Recheck after print to flag grace period ending during splat.
 			gp_done = cur_ops->poll_gp_state(gp_state);
 			pr_info("Boost inversion: GP %lu %s.\n", gp_state,
 				gp_done ? "ended already" : "still pending");
+			trace_printk("Boost inversion: GP %lu %s.\n", gp_state,
+				     gp_done ? "ended already" : "still pending");
 
 		}
 
 		/* Warn on boost failures so we can dump traces at this point than later. */
+		trace_printk("Boost failed\n");
 		WARN_ON(1);
 
 		return true; // failed
