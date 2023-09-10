@@ -1066,6 +1066,9 @@ static bool rcu_torture_boost_failed(unsigned long gp_state, unsigned long *star
 
 		}
 
+		/* Warn on boost failures so we can dump traces at this point than later. */
+		WARN_ON(1);
+
 		return true; // failed
 	} else if (cur_ops->check_boost_failed && !cur_ops->check_boost_failed(gp_state, NULL)) {
 		*start = jiffies;
