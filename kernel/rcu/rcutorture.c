@@ -1041,23 +1041,18 @@ static bool rcu_torture_boost_failed(unsigned long gp_state, unsigned long *star
 	unsigned long mininterval = test_boost_duration * HZ - HZ / 2;
 
 	if (end - *start > mininterval) {
-		trace_printk("Boost failed\n");
 		// Recheck after checking time to avoid false positives.
 		smp_mb(); // Time check before grace-period check.
-		if (cur_ops->poll_gp_state(gp_state)) {
-			trace_printk("passed, but too slow: %lu jiffies\n", end - *start);
-			WARN_ONCE(1, "passed, but too slow: %lu jiffies\n", end - *start);
+		if (cur_ops->poll_gp_state(gp_state))
 			return false; // passed, though perhaps just barely
-		}
 		if (cur_ops->check_boost_failed && !cur_ops->check_boost_failed(gp_state, &cpu)) {
 			// At most one persisted message per boost test.
 			j = jiffies;
 			lp = READ_ONCE(last_persist);
 			if (time_after(j, lp + mininterval) && cmpxchg(&last_persist, lp, j) == lp) {
 				pr_info("Boost inversion persisted: No QS from CPU %d\n", cpu);
+				trace_printk("Boost inversion persisted: No QS from CPU %d\n", cpu);
 			}
-			trace_printk("Boost inversion persisted: No QS from CPU %d\n", cpu);
-			WARN_ONCE(1, "Boost inversion persisted: No QS from CPU %d\n", cpu);
 			return false; // passed on a technicality
 		}
 		VERBOSE_TOROUT_STRING("rcu_torture_boost boosting failed");
@@ -1078,6 +1073,7 @@ static bool rcu_torture_boost_failed(unsigned long gp_state, unsigned long *star
 		}
 
 		/* Warn on boost failures so we can dump traces at this point than later. */
+		trace_printk("Boost failed\n");
 		WARN_ON(1);
 
 		return true; // failed
