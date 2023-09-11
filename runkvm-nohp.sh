@@ -45,6 +45,6 @@ trace_events=(
 sudo tools/testing/selftests/rcutorture/bin/kvm.sh \
 		--cpus 40 \
 		--duration 60 \
-		--configs "40*TREE03" \
+		--configs "60*TREE03" \
 		--kconfig "$(IFS=" "; echo "${kconfigs[*]}")" \
 		--bootargs "trace_event=$(IFS=,; echo "${trace_events[*]}") $(IFS=" "; echo "${bootargs[*]}")"
