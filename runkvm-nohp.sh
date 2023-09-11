@@ -26,6 +26,7 @@ bootargs=(
 		"rcutorture.test_boost=2" # changed from default of 1
 		"rcutorture.test_boost_duration=3" # changed from default of 4
 		"rcutorture.test_boost_interval=1" # changed from default of 7
+		"rcutorture.onoff_interval=0" # just testing.
 	)
 
 # Define the trace events array passed to bootargs.
