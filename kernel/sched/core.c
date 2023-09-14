@@ -3622,31 +3622,10 @@ static int select_fallback_rq(int cpu, struct task_struct *p)
 	if (nid != -1) {
 		nodemask = cpumask_of_node(nid);
 
-		/*
-		 * Look for allowed, online CPU in same node but only if they
-		 * have either fair or idle tasks.
-		 */
+		/* Look for allowed, online CPU in same node. */
 		for_each_cpu(dest_cpu, nodemask) {
-			if (is_cpu_allowed(p, dest_cpu)) {
-				struct rq *rq = cpu_rq(dest_cpu);
-				struct task_struct *cur = rq->curr;
-
-				if (cur && is_cpu_allowed(cur, cpu)
-					&& (is_idle_task(cur)
-						|| cur->sched_class == &fair_sched_class)) {
-					return dest_cpu;
-				}
-			}
-		}
-
-		/*
-		 * Try again but now look for any allowed, online CPU in the
-		 * same node.
-		 */
-		for_each_cpu(dest_cpu, nodemask) {
-			if (is_cpu_allowed(p, dest_cpu)) {
+			if (is_cpu_allowed(p, dest_cpu))
 				return dest_cpu;
-			}
 		}
 	}
 
