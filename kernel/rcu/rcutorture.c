@@ -1115,7 +1115,6 @@ static int rcu_torture_boost(void *arg)
 		}
 
 		// Do one boost-test interval.
-		cpus_read_lock();
 		endtime = oldstarttime + test_boost_duration * HZ;
 		while (time_before(jiffies, endtime)) {
 			// Has current GP gone too long?
@@ -1165,7 +1164,7 @@ static int rcu_torture_boost(void *arg)
 			}
 			schedule_timeout_uninterruptible(1);
 		}
-		cpus_read_unlock();
+
 		/* Go do the stutter. */
 checkwait:	if (stutter_wait("rcu_torture_boost"))
 			sched_set_fifo_low(current);
