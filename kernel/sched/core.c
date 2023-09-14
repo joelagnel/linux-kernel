@@ -2552,6 +2552,12 @@ static struct rq *move_queued_task(struct rq *rq, struct rq_flags *rf,
 	rq = cpu_rq(new_cpu);
 
 	rq_lock(rq, rf);
+	if (rq->curr) {
+		trace_printk("Curr on new_cpu (%d) is: %s[%d]\n",
+				new_cpu, rq->curr->comm, task_pid_nr(rq->curr));
+	} else {
+		trace_printk("Curr on new_cpu (%d) is NULL\n", new_cpu);
+	}
 	WARN_ON_ONCE(task_cpu(p) != new_cpu);
 	activate_task(rq, p, 0);
 	check_preempt_curr(rq, p, 0);
@@ -3593,6 +3599,20 @@ static int select_fallback_rq(int cpu, struct task_struct *p)
 	const struct cpumask *nodemask = NULL;
 	enum { cpuset, possible, fail } state = cpuset;
 	int dest_cpu;
+
+	// Dump state of each cpu and its currently running task
+	for_each_cpu(dest_cpu, p->cpus_ptr) {
+		trace_printk("CPU %d state: cpu_online=%d, cpu_active=%d,"
+				"cpu_dying=%d, cur=(pid:%d,prio:%d)[%s]\n",
+				dest_cpu, cpu_online(dest_cpu),
+				cpu_active(dest_cpu), cpu_dying(dest_cpu),
+				cpu_rq(dest_cpu)->curr ?
+					task_pid_nr(cpu_rq(dest_cpu)->curr) : -1,
+				cpu_rq(dest_cpu)->curr ?
+					cpu_rq(dest_cpu)->curr->prio : -1,
+				cpu_rq(dest_cpu)->curr ?
+					cpu_rq(dest_cpu)->curr->comm : "NULL");
+	}
 
 	/*
 	 * If the node that the CPU is on has been offlined, cpu_to_node()
@@ -9490,6 +9510,13 @@ static int __balance_push_cpu_stop(void *arg)
 		trace_printk("attempt push task %d currently on cpu %d to...\n", task_pid_nr(p), rq->cpu);
 		cpu = select_fallback_rq(rq->cpu, p);
 		trace_printk("to new cpu %d\n", cpu);
+		trace_printk("for new cpu: is_cpu_allowed=%d, md(p)=%d, pf_kthread=%d, kthread_is_per_cpu=%d, cpu_online=%d, cpu_dying=%d\n",
+				is_cpu_allowed(p, cpu),
+				is_migration_disabled(p),
+				p->flags & PF_KTHREAD, kthread_is_per_cpu(p),
+				cpu_online(cpu), cpu_dying(cpu));
+		trace_printk("Current cpu before migration, cpu_online=%d, cpu_dying=%d\n",
+				cpu_online(rq->cpu), cpu_dying(rq->cpu));
 		rq = __migrate_task(rq, &rf, p, cpu);
 		trace_printk("After __migrate_task, new cpu = %d\n", rq->cpu);
 	}

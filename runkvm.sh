@@ -42,7 +42,7 @@ trace_events=(
 
 # Call kvm.sh with the arrays
 sudo tools/testing/selftests/rcutorture/bin/kvm.sh \
-		--cpus 40 \
+		--cpus 56 \
 		--duration 60 \
 		--configs "40*TREE03" \
 		--kconfig "$(IFS=" "; echo "${kconfigs[*]}")" \
