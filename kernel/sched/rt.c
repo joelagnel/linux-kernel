@@ -526,6 +526,11 @@ static inline bool rt_task_fits_capacity(struct task_struct *p, int cpu)
 }
 #endif
 
+static inline bool rt_task_fits_in_cpu(struct task_struct *p, int cpu)
+{
+	return rt_task_fits_capacity(p, cpu) && !cpu_dying(cpu);
+}
+
 #ifdef CONFIG_RT_GROUP_SCHED
 
 static inline u64 sched_rt_runtime(struct rt_rq *rt_rq)
@@ -1641,14 +1646,14 @@ select_task_rq_rt(struct task_struct *p, int cpu, int flags)
 	       unlikely(rt_task(curr)) &&
 	       (curr->nr_cpus_allowed < 2 || curr->prio <= p->prio);
 
-	if (test || !rt_task_fits_capacity(p, cpu)) {
+	if (test || !rt_task_fits_in_cpu(p, cpu)) {
 		int target = find_lowest_rq(p);
 
 		/*
 		 * Bail out if we were forcing a migration to find a better
 		 * fitting CPU but our search failed.
 		 */
-		if (!test && target != -1 && !rt_task_fits_capacity(p, target))
+		if (!test && target != -1 && !rt_task_fits_in_cpu(p, target))
 			goto out_unlock;
 
 		/*
@@ -1892,21 +1897,9 @@ static int find_lowest_rq(struct task_struct *task)
 	if (task->nr_cpus_allowed == 1)
 		return -1; /* No other targets possible */
 
-	/*
-	 * If we're on asym system ensure we consider the different capacities
-	 * of the CPUs when searching for the lowest_mask.
-	 */
-	if (sched_asym_cpucap_active()) {
-
-		ret = cpupri_find_fitness(&task_rq(task)->rd->cpupri,
+	ret = cpupri_find_fitness(&task_rq(task)->rd->cpupri,
 					  task, lowest_mask,
-					  rt_task_fits_capacity);
-	} else {
-
-		ret = cpupri_find(&task_rq(task)->rd->cpupri,
-				  task, lowest_mask);
-	}
-
+					  rt_task_fits_in_cpu);
 	if (!ret)
 		return -1; /* No targets found */
 
