@@ -2034,7 +2034,7 @@ ftrace_set_trace_pidns_read(struct file *filp, char __user *ubuf, size_t cnt,
 
 	mutex_lock(&event_mutex);
 	if (tr->filtered_ns)
-		snprintf(buf, sizeof(buf), "pid:%lu", tr->filtered_ns->ns.inum);
+		snprintf(buf, sizeof(buf), "pid:%u", tr->filtered_ns->ns.inum);
 	else
 		strcpy(buf, "not set");
 	mutex_unlock(&event_mutex);

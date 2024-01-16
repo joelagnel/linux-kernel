@@ -276,8 +276,7 @@ static int snapshot_set_block_device(struct snapshot_data *data, __u32 device)
 
 	data->dev = dev;
 	data->bdev = bdev;
-	pr_info("snapshot block device set to %02x:%02x: %ld blocks", MAJOR(dev), MINOR(dev),
-		i_size_read(bdev->bd_inode) >> PAGE_SHIFT);
+	pr_info("snapshot block device set to");
 	return 0;
 }
 
