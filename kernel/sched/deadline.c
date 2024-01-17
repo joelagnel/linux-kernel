@@ -1475,8 +1475,8 @@ void dl_server_start(struct sched_dl_entity *dl_se)
 	 * this before getting generic.
 	 */
 	if (!dl_server(dl_se)) {
-		u64 runtime = 5 * NSEC_PER_MSEC;
-		u64 period = 30 * NSEC_PER_MSEC;
+		u64 runtime = 50 * NSEC_PER_MSEC;
+		u64 period = 1000 * NSEC_PER_MSEC;
 
 		dl_server_apply_params(dl_se, runtime, period, 1);
 
