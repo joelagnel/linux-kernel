@@ -2034,7 +2034,7 @@ ftrace_set_trace_pidns_read(struct file *filp, char __user *ubuf, size_t cnt,
 
 	mutex_lock(&event_mutex);
 	if (tr->filtered_ns)
-		snprintf(buf, sizeof(buf), "pid:%lu", tr->filtered_ns->ns.inum);
+		snprintf(buf, sizeof(buf), "pid:%u", tr->filtered_ns->ns.inum);
 	else
 		strcpy(buf, "not set");
 	mutex_unlock(&event_mutex);
@@ -3861,7 +3861,7 @@ static __init int event_trace_memsetup(void)
 static __init void
 early_enable_events(struct trace_array *tr, bool disable_first)
 {
-	char *buf = bootup_event_buf;
+	char *buf = "sched:sched_switch,sched:sched_waking,sched:sched_wakeup";  // bootup_event_buf;
 	char *token;
 	int ret;
 

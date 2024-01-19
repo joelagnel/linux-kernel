@@ -57,7 +57,7 @@
  * On boot up, the ring buffer is set to the minimum size, so that
  * we do not waste memory on systems that are not using tracing.
  */
-bool ring_buffer_expanded;
+bool ring_buffer_expanded = true; // as done by setup_trace_event
 
 /*
  * We need to change this state when a selftest is running.
@@ -134,10 +134,10 @@ cpumask_var_t __read_mostly	tracing_buffer_mask;
  * Set 2 if you want to dump the buffer of the CPU that triggered oops
  */
 
-enum ftrace_dump_mode ftrace_dump_on_oops;
+enum ftrace_dump_mode ftrace_dump_on_oops = DUMP_ALL;
 
 /* When set, tracing will stop when a WARN*() is hit */
-int __disable_trace_on_warning;
+int __disable_trace_on_warning = 1;
 
 #ifdef CONFIG_TRACE_EVAL_MAP_FILE
 /* Map of enums to their values, for "eval_map" file */
