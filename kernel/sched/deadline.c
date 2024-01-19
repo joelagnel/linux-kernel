@@ -1478,6 +1478,8 @@ void dl_server_start(struct sched_dl_entity *dl_se)
 		u64 runtime = 50 * NSEC_PER_MSEC;
 		u64 period = 1000 * NSEC_PER_MSEC;
 
+		trace_printk("dl_server_start: apply params for dl_se of cpu=%d\n", cpu_of(dl_se->rq));
+
 		dl_server_apply_params(dl_se, runtime, period, 1);
 
 		dl_se->dl_defer = 1;
@@ -1485,11 +1487,14 @@ void dl_server_start(struct sched_dl_entity *dl_se)
 		setup_new_dl_entity(dl_se);
 	}
 
+	trace_printk("dl_server_start: enqueue for dl_se of cpu=%d\n", cpu_of(dl_se->rq));
 	enqueue_dl_entity(dl_se, ENQUEUE_WAKEUP);
 }
 
 void dl_server_stop(struct sched_dl_entity *dl_se)
 {
+	trace_printk("dl_server_stop: dequeue for dl_se of cpu=%d\n", cpu_of(dl_se->rq));
+
 	dequeue_dl_entity(dl_se, DEQUEUE_SLEEP);
 	hrtimer_try_to_cancel(&dl_se->dl_timer);
 	dl_se->dl_defer_armed = 0;
@@ -2125,15 +2130,20 @@ again:
 	BUG_ON(!dl_se);
 
 	if (dl_server(dl_se)) {
+		trace_printk("pick_task_dl: Doing FAIR ->server_pick() for dl_se of cpu=%d\n", cpu_of(rq));
 		p = dl_se->server_pick(dl_se);
 		if (!p) {
+			trace_printk("pick_task_dl: FAIR ->server_pick() returned NULL\n");
 			WARN_ON_ONCE(1);
 			dl_se->dl_yielded = 1;
 			update_curr_dl_se(rq, dl_se, 0);
 			goto again;
-		}
+		}		
+		trace_printk("pick_task_dl: Found FAIR task %d associated with DL server\n", task_pid_nr(p));
+
 		p->dl_server = dl_se;
-	} else {
+	} else {		
+		trace_printk("pick_task_dl: dl_se of cpu=%d is regular DL task, picking it\n", cpu_of(rq));
 		p = dl_task_of(dl_se);
 	}
 
@@ -2148,8 +2158,14 @@ static struct task_struct *pick_next_task_dl(struct rq *rq)
 	if (!p)
 		return p;
 
-	if (!p->dl_server)
+	if (!p->dl_server) {
+		trace_printk("pick_next_task_dl: set_next for Non DL-server Regular DL task PID %d\n",
+			     task_pid_nr(p));
 		set_next_task_dl(rq, p, true);
+	} else {		
+		trace_printk("pick_next_task_dl: returning CFS task %d associated with DL server\n",
+			     task_pid_nr(p));
+	}
 
 	if (hrtick_enabled(rq))
 		start_hrtick_dl(rq, &p->dl);
