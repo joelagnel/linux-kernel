@@ -5686,6 +5686,9 @@ __pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
 		 */
 		if (p->dl_server)
 			p->dl_server = NULL;
+			
+		if (prev->dl_server)
+			prev->dl_server = NULL;
 
 		return p;
 	}
