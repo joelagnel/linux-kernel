@@ -816,7 +816,6 @@ int tracing_is_enabled(void)
  * If the dump on oops happens, it will be much appreciated
  * to not have to wait for all that output. Anyway this can be
  * boot time and run time configurable.
- * 1441792UL /* 16384 * 88 (sizeof(entry)) */
  */
 #define TRACE_BUF_SIZE_DEFAULT	16384UL
 
