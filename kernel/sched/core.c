@@ -5680,10 +5680,13 @@ __pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
 			p = pick_next_task_idle(rq);
 		}
 
+		if (prev->dl_server)
+			prev->dl_server = NULL;
 		/*
-		 * This is the fast path; it cannot be a DL server pick;
-		 * therefore even if @p == @prev, ->dl_server must be NULL.
+		 * XXX it seems to still be possible for p->dl_server to be set
+		 * here. Why?
 		 */
+		//BUG_ON(p->dl_server);
 		if (p->dl_server)
 			p->dl_server = NULL;
 
