@@ -1555,11 +1555,13 @@ void dl_server_stop(struct sched_dl_entity *dl_se)
 
 void dl_server_init(struct sched_dl_entity *dl_se, struct rq *rq,
 		    dl_server_has_tasks_f has_tasks,
-		    dl_server_pick_f pick)
+		    dl_server_pick_f pick_next,
+		    dl_server_pick_f pick_task)
 {
 	dl_se->rq = rq;
 	dl_se->server_has_tasks = has_tasks;
-	dl_se->server_pick = pick;
+	dl_se->server_pick_next = pick_next;
+	dl_se->server_pick_task = pick_task;
 }
 
 int dl_server_apply_params(struct sched_dl_entity *dl_se, u64 runtime, u64 period, bool init)
@@ -2259,6 +2261,35 @@ static struct sched_dl_entity *pick_next_dl_entity(struct dl_rq *dl_rq)
 	return __node_2_dle(left);
 }
 
+static struct task_struct *pick_task_dl_next(struct rq *rq)
+{
+	struct sched_dl_entity *dl_se;
+	struct dl_rq *dl_rq = &rq->dl;
+	struct task_struct *p;
+
+again:
+	if (!sched_dl_runnable(rq))
+		return NULL;
+
+	dl_se = pick_next_dl_entity(dl_rq);
+	BUG_ON(!dl_se);
+
+	if (dl_server(dl_se)) {
+		p = dl_se->server_pick_next(dl_se);
+		if (!p) {
+			WARN_ON_ONCE(1);
+			dl_se->dl_yielded = 1;
+			update_curr_dl_se(rq, dl_se, 0);
+			goto again;
+		}
+		p->dl_server = dl_se;
+	} else {
+		p = dl_task_of(dl_se);
+		p->dl_server = NULL;
+	}
+
+	return p;
+}
 static struct task_struct *pick_task_dl(struct rq *rq)
 {
 	struct sched_dl_entity *dl_se;
@@ -2273,13 +2304,13 @@ again:
 	WARN_ON_ONCE(!dl_se);
 
 	if (dl_server(dl_se)) {
-		p = dl_se->server_pick(dl_se);
+		p = dl_se->server_pick_task(dl_se);
 		if (!p) {
 			WARN_ON_ONCE(1);
-			dl_se->dl_yielded = 1;
-			update_curr_dl_se(rq, dl_se, 0);
 			goto again;
 		}
+
+		/* Set after ->server_pick_task() since that may clear it. */
 		p->dl_server = dl_se;
 	} else {
 		p = dl_task_of(dl_se);
@@ -2292,7 +2323,7 @@ static struct task_struct *pick_next_task_dl(struct rq *rq)
 {
 	struct task_struct *p;
 
-	p = pick_task_dl(rq);
+	p = pick_task_dl_next(rq);
 	if (!p)
 		return p;
 

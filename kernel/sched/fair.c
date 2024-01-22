@@ -8363,6 +8363,14 @@ again:
 		cfs_rq = group_cfs_rq(se);
 	} while (cfs_rq);
 
+	/*
+	 * This can be called from either DL's pick_task or directly from
+	 * pick_next_task() when core scheduling is enabled. DL will set the
+	 * ->dl_server pointer after calling this function, so its Ok to clear
+	 * it. For a direct call, we are picking directly so it can stay cleared.
+	 */
+	task_of(se)->dl_server = NULL;
+
 	return task_of(se);
 }
 #endif
@@ -8522,7 +8530,12 @@ static bool fair_server_has_tasks(struct sched_dl_entity *dl_se)
 	return !!dl_se->rq->cfs.nr_running;
 }
 
-static struct task_struct *fair_server_pick(struct sched_dl_entity *dl_se)
+static struct task_struct *fair_server_pick_task(struct sched_dl_entity *dl_se)
+{
+	return pick_task_fair(dl_se->rq);
+}
+
+static struct task_struct *fair_server_pick_next(struct sched_dl_entity *dl_se)
 {
 	return pick_next_task_fair(dl_se->rq, NULL, NULL);
 }
@@ -8532,7 +8545,8 @@ void fair_server_init(struct rq *rq)
 	struct sched_dl_entity *dl_se = &rq->fair_server;
 
 	init_dl_entity(dl_se);
-	dl_server_init(dl_se, rq, fair_server_has_tasks, fair_server_pick);
+	dl_server_init(dl_se, rq, fair_server_has_tasks, fair_server_pick_next,
+		       fair_server_pick_task);
 }
 
 /*
