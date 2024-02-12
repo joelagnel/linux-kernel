@@ -194,7 +194,7 @@ static inline bool prio_less(const struct task_struct *a,
 		return false;
 
 	if (pa == -1) { /* dl_prio() doesn't work because of stop_class above */
-		struct sched_dl_entity *a_dl, *b_dl;
+		const struct sched_dl_entity *a_dl, *b_dl;
 
 		a_dl = &a->dl;
 		if (a->dl_server)
