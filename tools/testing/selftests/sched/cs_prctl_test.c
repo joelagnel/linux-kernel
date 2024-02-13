@@ -28,9 +28,10 @@
 #include <unistd.h>
 #include <time.h>
 #include <errno.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#include "common.h"
 
 #if __GLIBC_PREREQ(2, 30) == 0
 #include <sys/syscall.h>
@@ -80,7 +81,7 @@ static int _prctl(int option, unsigned long arg2, unsigned long arg3, unsigned l
 	int res;
 
 	res = prctl(option, arg2, arg3, arg4, arg5);
-	printf("%d = prctl(%d, %ld, %ld, %ld, %lx)\n", res, option, (long)arg2, (long)arg3,
+	ksft_print_msg("%d = prctl(%d, %ld, %ld, %ld, %lx)\n", res, option, (long)arg2, (long)arg3,
 	       (long)arg4, arg5);
 	return res;
 }
@@ -91,21 +92,20 @@ static int _prctl(int option, unsigned long arg2, unsigned long arg3, unsigned l
 static void __handle_error(char *fn, int ln, char *msg)
 {
 	int pidx;
-	printf("(%s:%d) - ", fn, ln);
+	ksft_print_msg("(%s:%d) - ", fn, ln);
 	perror(msg);
 	if (need_cleanup) {
 		for (pidx = 0; pidx < num_processes; ++pidx)
 			kill(procs[pidx].cpid, 15);
 		need_cleanup = 0;
 	}
-	exit(EXIT_FAILURE);
+	ksft_exit_fail();
 }
 
 static void handle_usage(int rc, char *msg)
 {
-	puts(USAGE);
-	puts(msg);
-	putchar('\n');
+	ksft_print_msg("%s\n", USAGE);
+	ksft_print_msg("%s\n\n", msg);
 	exit(rc);
 }
 
@@ -117,7 +117,7 @@ static unsigned long get_cs_cookie(int pid)
 	ret = prctl(PR_SCHED_CORE, PR_SCHED_CORE_GET, pid, PIDTYPE_PID,
 		    (unsigned long)&cookie);
 	if (ret) {
-		printf("Not a core sched system\n");
+		ksft_print_msg("Not a core sched system\n");
 		return -1UL;
 	}
 
@@ -160,7 +160,7 @@ static int child_func_process(void *arg)
 
 	ret = write(ca->pfd[1], &ca->thr_tids, sizeof(int) * ca->num_threads);
 	if (ret == -1)
-		printf("write failed on pfd[%d] - error (%s)\n",
+		ksft_print_msg("write failed on pfd[%d] - error (%s)\n",
 			ca->pfd[1], strerror(errno));
 
 	close(ca->pfd[1]);
@@ -192,7 +192,7 @@ void create_processes(int num_processes, int num_threads, struct child_args proc
 	for (i = 0; i < num_processes; ++i) {
 		ret = read(proc[i].pfd[0], &proc[i].thr_tids, sizeof(int) * proc[i].num_threads);
 		if (ret == -1)
-			printf("read failed on proc[%d].pfd[0] error (%s)\n",
+			ksft_print_msg("read failed on proc[%d].pfd[0] error (%s)\n",
 				i, strerror(errno));
 		close(proc[i].pfd[0]);
 	}
@@ -202,30 +202,29 @@ void disp_processes(int num_processes, struct child_args proc[])
 {
 	int i, j;
 
-	printf("tid=%d, / tgid=%d / pgid=%d: %lx\n", gettid(), getpid(), getpgid(0),
+	ksft_print_msg("tid=%d, / tgid=%d / pgid=%d: %lx\n", gettid(), getpid(), getpgid(0),
 	       get_cs_cookie(getpid()));
 
 	for (i = 0; i < num_processes; ++i) {
-		printf("    tid=%d, / tgid=%d / pgid=%d: %lx\n", proc[i].cpid, proc[i].cpid,
+		ksft_print_msg("    tid=%d, / tgid=%d / pgid=%d: %lx\n", proc[i].cpid, proc[i].cpid,
 		       getpgid(proc[i].cpid), get_cs_cookie(proc[i].cpid));
 		for (j = 0; j < proc[i].num_threads; ++j) {
-			printf("        tid=%d, / tgid=%d / pgid=%d: %lx\n", proc[i].thr_tids[j],
+			ksft_print_msg("        tid=%d, / tgid=%d / pgid=%d: %lx\n", proc[i].thr_tids[j],
 			       proc[i].cpid, getpgid(0), get_cs_cookie(proc[i].thr_tids[j]));
 		}
 	}
 	puts("\n");
 }
 
-static int errors;
-
 #define validate(v) _validate(__LINE__, v, #v)
 void _validate(int line, int val, char *msg)
 {
 	if (!val) {
-		++errors;
-		printf("(%d) FAILED: %s\n", line, msg);
+		ksft_print_msg("(%d) FAILED: %s\n", line, msg);
+		ksft_inc_fail_cnt();
 	} else {
-		printf("(%d) PASSED: %s\n", line, msg);
+		ksft_print_msg("(%d) PASSED: %s\n", line, msg);
+		ksft_inc_pass_cnt();
 	}
 }
 
@@ -254,11 +253,15 @@ int main(int argc, char *argv[])
 			keypress = 1;
 			break;
 		case 'h':
-			printf(USAGE);
+			ksft_print_msg(USAGE);
 			exit(EXIT_SUCCESS);
 		default:
 			handle_usage(20, "unknown option");
 		}
+	}
+
+	if (!hyperthreading_enabled()) {
+		ksft_exit_skip("This test requires hyperthreading to be enabled\n");
 	}
 
 	if (num_processes < 1 || num_processes > MAX_PROCESSES)
@@ -272,17 +275,22 @@ int main(int argc, char *argv[])
 
 	srand(time(NULL));
 
-	/* put into separate process group */
+	/* Put into separate process group */
 	if (setpgid(0, 0) != 0)
 		handle_error("process group");
 
-	printf("\n## Create a thread/process/process group hiearchy\n");
+	ksft_print_header();
+
+	/* Increase the count if adding more validate() statements. */
+	ksft_set_plan(17);
+
+	ksft_print_msg("\n## Create a thread/process/process group hiearchy\n");
 	create_processes(num_processes, num_threads, procs);
 	need_cleanup = 1;
 	disp_processes(num_processes, procs);
 	validate(get_cs_cookie(0) == 0);
 
-	printf("\n## Set a cookie on entire process group\n");
+	ksft_print_msg("\n## Set a cookie on entire process group\n");
 	if (_prctl(PR_SCHED_CORE, PR_SCHED_CORE_CREATE, 0, PIDTYPE_PGID, 0) < 0)
 		handle_error("core_sched create failed -- PGID");
 	disp_processes(num_processes, procs);
@@ -296,7 +304,7 @@ int main(int argc, char *argv[])
 	validate(get_cs_cookie(0) == get_cs_cookie(pid));
 	validate(get_cs_cookie(0) == get_cs_cookie(procs[pidx].thr_tids[0]));
 
-	printf("\n## Set a new cookie on entire process/TGID [%d]\n", pid);
+	ksft_print_msg("\n## Set a new cookie on entire process/TGID [%d]\n", pid);
 	if (_prctl(PR_SCHED_CORE, PR_SCHED_CORE_CREATE, pid, PIDTYPE_TGID, 0) < 0)
 		handle_error("core_sched create failed -- TGID");
 	disp_processes(num_processes, procs);
@@ -305,7 +313,7 @@ int main(int argc, char *argv[])
 	validate(get_cs_cookie(pid) != 0);
 	validate(get_cs_cookie(pid) == get_cs_cookie(procs[pidx].thr_tids[0]));
 
-	printf("\n## Copy the cookie of current/PGID[%d], to pid [%d] as PIDTYPE_PID\n",
+	ksft_print_msg("\n## Copy the cookie of current/PGID[%d], to pid [%d] as PIDTYPE_PID\n",
 	       getpid(), pid);
 	if (_prctl(PR_SCHED_CORE, PR_SCHED_CORE_SHARE_TO, pid, PIDTYPE_PID, 0) < 0)
 		handle_error("core_sched share to itself failed -- PID");
@@ -315,7 +323,7 @@ int main(int argc, char *argv[])
 	validate(get_cs_cookie(pid) != 0);
 	validate(get_cs_cookie(pid) != get_cs_cookie(procs[pidx].thr_tids[0]));
 
-	printf("\n## Copy cookie from a thread [%d] to current/PGID [%d] as PIDTYPE_PID\n",
+	ksft_print_msg("\n## Copy cookie from a thread [%d] to current/PGID [%d] as PIDTYPE_PID\n",
 	       procs[pidx].thr_tids[0], getpid());
 	if (_prctl(PR_SCHED_CORE, PR_SCHED_CORE_SHARE_FROM, procs[pidx].thr_tids[0],
 		   PIDTYPE_PID, 0) < 0)
@@ -325,7 +333,7 @@ int main(int argc, char *argv[])
 	validate(get_cs_cookie(0) == get_cs_cookie(procs[pidx].thr_tids[0]));
 	validate(get_cs_cookie(pid) != get_cs_cookie(procs[pidx].thr_tids[0]));
 
-	printf("\n## Copy cookie from current [%d] to current as pidtype PGID\n", getpid());
+	ksft_print_msg("\n## Copy cookie from current [%d] to current as pidtype PGID\n", getpid());
 	if (_prctl(PR_SCHED_CORE, PR_SCHED_CORE_SHARE_TO, 0, PIDTYPE_PGID, 0) < 0)
 		handle_error("core_sched share to self failed -- PGID");
 	disp_processes(num_processes, procs);
@@ -340,20 +348,16 @@ int main(int argc, char *argv[])
 	validate(_prctl(PR_SCHED_CORE, PR_SCHED_CORE_SHARE_TO, 0, PIDTYPE_PGID, 1) < 0
 		&& errno == EINVAL);
 
-	if (errors) {
-		printf("TESTS FAILED. errors: %d\n", errors);
-		res = 10;
-	} else {
-		printf("SUCCESS !!!\n");
-	}
-
-	if (keypress)
+	if (keypress) {
+		ksft_print_msg("Waiting for keypress to exit\n");
 		getchar();
-	else
+	} else {
 		sleep(delay);
+	}
 
 	for (pidx = 0; pidx < num_processes; ++pidx)
 		kill(procs[pidx].cpid, 15);
 
+	ksft_finished();
 	return res;
 }
