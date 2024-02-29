@@ -6399,6 +6399,8 @@ enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags)
 		/* Account for idle runtime */
 		if (!rq->nr_running)
 			dl_server_update_idle_time(rq, rq->curr);
+
+		trace_printk("Starting dlserver\n");
 		dl_server_start(&rq->fair_server);
 	}
 
@@ -6579,8 +6581,10 @@ static void dequeue_task_fair(struct rq *rq, struct task_struct *p, int flags)
 		rq->next_balance = jiffies;
 
 dequeue_throttle:
-	if (!rq->cfs.h_nr_running)
+	if (!rq->cfs.h_nr_running) {
+		trace_printk("Stopping dlserver\n");
 		dl_server_stop(&rq->fair_server);
+	}
 
 	util_est_update(&rq->cfs, p, task_sleep);
 	hrtick_update(rq);
