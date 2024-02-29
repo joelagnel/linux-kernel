@@ -6536,8 +6536,10 @@ static void dequeue_task_fair(struct rq *rq, struct task_struct *p, int flags)
 			idle_h_nr_running = 1;
 
 		/* end evaluation on encountering a throttled cfs_rq */
-		if (cfs_rq_throttled(cfs_rq))
+		if (cfs_rq_throttled(cfs_rq)) {
+			trace_printk("CFS being throttled 1\n");
 			goto dequeue_throttle;
+		}
 
 		/* Don't dequeue parent if it has other entities besides us */
 		if (cfs_rq->load.weight) {
@@ -6568,9 +6570,10 @@ static void dequeue_task_fair(struct rq *rq, struct task_struct *p, int flags)
 			idle_h_nr_running = 1;
 
 		/* end evaluation on encountering a throttled cfs_rq */
-		if (cfs_rq_throttled(cfs_rq))
+		if (cfs_rq_throttled(cfs_rq)) {
+			trace_printk("CFS being throttled 2\n");
 			goto dequeue_throttle;
-
+		}
 	}
 
 	/* At this point se is NULL and we are at root level*/
