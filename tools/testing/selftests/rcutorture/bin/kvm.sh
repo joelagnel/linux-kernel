@@ -275,10 +275,7 @@ do
 	shift
 done
 
-if test -n "$dryrun" || test -z "$TORTURE_INITRD" || tools/testing/selftests/rcutorture/bin/mkinitrd.sh
-then
-	:
-else
+if test -z "$dryrun" && test -n "$TORTURE_INITRD" && !tools/testing/selftests/rcutorture/bin/mkinitrd.sh
 	echo No initrd and unable to create one, aborting test >&2
 	exit 1
 fi
