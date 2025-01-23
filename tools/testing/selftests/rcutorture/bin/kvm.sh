@@ -42,13 +42,15 @@ TORTURE_JITTER_STOP=""
 TORTURE_KCONFIG_KASAN_ARG=""
 TORTURE_KCONFIG_KCSAN_ARG=""
 TORTURE_KMAKE_ARG=""
+TORTURE_MOD=rcutorture
 TORTURE_NO_AFFINITY=""
 TORTURE_QEMU_MEM=512
 torture_qemu_mem_default=1
 TORTURE_REMOTE=
 TORTURE_SHUTDOWN_GRACE=180
+TORTURE_STRESS_NG=
+TORTURE_STRESS_NG_DEFAULT_ARGS="--cpu 1 --cpu-method matrixprod --cpu-ops 1000000 --perf -t 5"
 TORTURE_SUITE=rcu
-TORTURE_MOD=rcutorture
 TORTURE_TRUST_MAKE=""
 debuginfo="CONFIG_DEBUG_INFO_NONE=n CONFIG_DEBUG_INFO_DWARF_TOOLCHAIN_DEFAULT=y"
 resdir=""
@@ -90,6 +92,8 @@ usage () {
 	echo "       --remote"
 	echo "       --results absolute-pathname"
 	echo "       --shutdown-grace seconds"
+	echo "       --stress-ng"
+	echo "       --stress-ng-args \"stress-ng arguments\""
 	echo "       --torture lock|rcu|rcuscale|refscale|scf|X*"
 	echo "       --trust-make"
 	exit 1
@@ -251,6 +255,14 @@ do
 		TORTURE_SHUTDOWN_GRACE=$2
 		shift
 		;;
+	--stress-ng)
+		TORTURE_STRESS_NG=1
+		;;
+	--stress-ng-args)
+		checkarg --stress-ng-args "(stress-ng arguments)" "$#" "$2" '.*' '^error'
+		TORTURE_STRESS_NG_DEFAULT_ARGS="$2"
+		shift
+		;;
 	--torture)
 		checkarg --torture "(suite name)" "$#" "$2" '^\(lock\|rcu\|rcuscale\|refscale\|scf\|X.*\)$' '^--'
 		TORTURE_SUITE=$2
@@ -275,9 +287,27 @@ do
 	shift
 done
 
-if test -z "$dryrun" && test -n "$TORTURE_INITRD" && !tools/testing/selftests/rcutorture/bin/mkinitrd.sh
-	echo No initrd and unable to create one, aborting test >&2
-	exit 1
+if test -n "$TORTURE_STRESS_NG"
+then
+	if ! "$RCUTORTURE/bin/mkstress-ng.sh"
+	then
+		echo "Failed to build stress-ng, aborting test" >&2
+		exit 1
+	fi
+fi
+
+if test -z "$dryrun" && test -n "$TORTURE_INITRD"
+then
+	stress_args=""
+	if test -n "$TORTURE_STRESS_NG"
+	then
+		stress_args="stress-ng $TORTURE_STRESS_NG_DEFAULT_ARGS"
+	fi
+	if ! "$RCUTORTURE/bin/mkinitrd.sh" $stress_args
+	then
+		echo "No initrd and unable to create one, aborting test" >&2
+		exit 1
+	fi
 fi
 
 CONFIGFRAG=${RCUTORTURE}/configs/${TORTURE_SUITE}; export CONFIGFRAG
