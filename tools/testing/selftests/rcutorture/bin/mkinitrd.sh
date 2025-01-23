@@ -17,10 +17,6 @@ if [ ! -d "$D" ]; then
     echo >&2 "$D does not exist: Malformed kernel source tree?"
     exit 1
 fi
-if [ -s "$D/initrd/init" ]; then
-    echo "$D/initrd/init already exists, no need to create it"
-    exit 0
-fi
 
 # Create a C-language initrd/init infinite-loop program and statically
 # link it.  This results in a very small initrd.
@@ -29,8 +25,10 @@ cd $D
 mkdir -p initrd
 cd initrd
 
-# Generate the init.c with optional command
-cat > init.c << 'EOF_HEAD'
+# Generate an init-tmp.c with optional command. This will then be compared
+# with any existing init.c. The reason for this is, we want to force a
+# rebuild if the optional command or command line arguments have changed.
+cat > init-tmp.c << 'EOF_HEAD'
 #ifndef NOLIBC
 #include <unistd.h>
 #include <sys/time.h>
@@ -45,7 +43,7 @@ if [ $# -gt 0 ]; then
     # If command provided, generate run_optional_command() with the specified command.
     # We use printf to generate the command and args.
     # Example: echo $(printf '"%s", ' cmd a1 a2) gives: "cmd", "a1", "a2",
-    cat >> init.c << EOF
+    cat >> init-tmp.c << EOF
     pid_t pid = fork();
     if (pid == 0) {
         char *args[] = {$(printf '"%s", ' "$@")NULL};
@@ -54,11 +52,11 @@ if [ $# -gt 0 ]; then
 EOF
 else
     # If no command provided, function will be empty
-    echo "    /* No command specified */" >> init.c
+    echo "    /* No command specified */" >> init-tmp.c
 fi
 
 # Add the rest of the program
-cat >> init.c << 'EOF_TAIL'
+cat >> init-tmp.c << 'EOF_TAIL'
 }
 
 int main(int argc, char *argv[])
@@ -95,6 +93,23 @@ int main(int argc, char *argv[])
 }
 EOF_TAIL
 
+# Check if init.c exists and compare with init-tmp.c
+if [ -f "init.c" ]; then
+    if ! cmp -s "init.c" "init-tmp.c"; then
+        mv "init-tmp.c" "init.c"
+    else
+        rm "init-tmp.c"
+    fi
+else
+    mv "init-tmp.c" "init.c"
+fi
+
+# Now check if init binary exists and is up to date
+if [ -s "init" ] && [ "init" -nt "init.c" ]; then
+    echo "$D/initrd/init already exists and is up to date"
+    exit 0
+fi
+
 # build using nolibc on supported archs (smaller executable) and fall
 # back to regular glibc on other ones.
 if echo -e "#if __x86_64__||__i386__||__i486__||__i586__||__i686__" \
@@ -120,7 +135,6 @@ then
 	exit "$ret"
 fi
 
-rm init.c
 echo "Done creating a statically linked C-language initrd"
 
 exit 0
