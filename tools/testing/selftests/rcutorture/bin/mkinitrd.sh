@@ -2,6 +2,9 @@
 # SPDX-License-Identifier: GPL-2.0+
 #
 # Create an initrd directory if one does not already exist.
+# Usage: mkinitrd.sh [command [args...]]
+# Example: mkinitrd.sh stress-ng --cpu 1 --cpu-method matrixprod --cpu-ops 1000000 --perf -t 5
+# Note that command/args are optional.
 #
 # Copyright (C) IBM Corporation, 2013
 #
@@ -25,13 +28,38 @@ echo "Creating a statically linked C-language initrd"
 cd $D
 mkdir -p initrd
 cd initrd
-cat > init.c << '___EOF___'
+
+# Generate the init.c with optional command
+cat > init.c << 'EOF_HEAD'
 #ifndef NOLIBC
 #include <unistd.h>
 #include <sys/time.h>
 #endif
 
 volatile unsigned long delaycount;
+
+void run_optional_command() {
+EOF_HEAD
+
+if [ $# -gt 0 ]; then
+    # If command provided, generate run_optional_command() with the specified command.
+    # We use printf to generate the command and args.
+    # Example: echo $(printf '"%s", ' cmd a1 a2) gives: "cmd", "a1", "a2",
+    cat >> init.c << EOF
+    pid_t pid = fork();
+    if (pid == 0) {
+        char *args[] = {$(printf '"%s", ' "$@")NULL};
+        execve(args[0], args, NULL);
+    }
+EOF
+else
+    # If no command provided, function will be empty
+    echo "    /* No command specified */" >> init.c
+fi
+
+# Add the rest of the program
+cat >> init.c << 'EOF_TAIL'
+}
 
 int main(int argc, char *argv[])
 {
@@ -43,6 +71,9 @@ int main(int argc, char *argv[])
 	for (i = 0; i < argc; i++)
 		printf(" %s", argv[i]);
 	printf("\n");
+
+	run_optional_command();
+
 	for (;;) {
 		sleep(1);
 		/* Need some userspace time. */
@@ -62,7 +93,7 @@ int main(int argc, char *argv[])
 	}
 	return 0;
 }
-___EOF___
+EOF_TAIL
 
 # build using nolibc on supported archs (smaller executable) and fall
 # back to regular glibc on other ones.
